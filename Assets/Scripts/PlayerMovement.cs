@@ -7,10 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 2f;
     public float walkSpeed = 2f;
     public float runSpeed = 3f;
-    public bool isMovingSideways;
 
-    Animator anim;
-    Animator legsAnim;
+    Animator anim, legsAnim;
     Rigidbody2D rb;
     Camera cam;
 
@@ -57,15 +55,20 @@ public class PlayerMovement : MonoBehaviour
             if (horizontalMove > 0)
             {
                 move += transform.right;
-                legsAnim.SetBool("isMovingSideways", true);
+                legsAnim.SetBool("isMovingLeft", false);
+                legsAnim.SetBool("isMovingRight", true);
             }
             else if (horizontalMove < 0)
             {
                 move -= transform.right;
-                legsAnim.SetBool("isMovingSideways", true);
+                legsAnim.SetBool("isMovingLeft", true);
+                legsAnim.SetBool("isMovingRight", false);
             }
             else
-                legsAnim.SetBool("isMovingSideways", false);
+            {
+                legsAnim.SetBool("isMovingLeft", false);
+                legsAnim.SetBool("isMovingRight", false);
+            }
 
             move = move.normalized * moveSpeed * Time.fixedDeltaTime;
             transform.position += move;
@@ -74,7 +77,8 @@ public class PlayerMovement : MonoBehaviour
         {
             anim.SetBool("isMoving", false);
             legsAnim.SetBool("isMoving", false);
-            legsAnim.SetBool("isMovingSideways", false);
+            legsAnim.SetBool("isMovingLeft", false);
+            legsAnim.SetBool("isMovingRight", false);
         }
     }
 

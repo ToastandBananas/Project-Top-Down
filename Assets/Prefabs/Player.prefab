@@ -45,10 +45,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,10 +126,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -205,10 +207,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -285,10 +288,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -365,10 +369,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -409,7 +414,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5363199645066194799}
-  - component: {fileID: 5363199645066194798}
   - component: {fileID: 5363199645066194769}
   - component: {fileID: 1273616031}
   - component: {fileID: 2354799989132348104}
@@ -440,22 +444,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &5363199645066194798
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5363199645066194768}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.002607602, y: -0.1482931}
-  m_Size: {x: 0.93992865, y: 0.44688433}
-  m_Direction: 1
 --- !u!70 &5363199645066194769
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -506,7 +494,6 @@ MonoBehaviour:
   moveSpeed: 2
   walkSpeed: 2
   runSpeed: 3
-  isMovingSideways: 0
 --- !u!50 &256753153932934012
 Rigidbody2D:
   serializedVersion: 4
@@ -538,6 +525,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5363199645069364972}
   - component: {fileID: 5363199645069364973}
+  - component: {fileID: 1180161039}
+  - component: {fileID: 5363199644069411280}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -573,10 +562,11 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -608,6 +598,77 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &1180161039
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645069364975}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.21875, y: -0.015625}
+      - {x: 0.109375, y: 0.015625}
+      - {x: 0, y: 0.03125}
+      - {x: -0.109375, y: 0.015625}
+      - {x: -0.234375, y: -0.015625}
+      - {x: -0.34375, y: -0.0625}
+      - {x: -0.390625, y: -0.140625}
+      - {x: -0.375, y: -0.203125}
+      - {x: -0.296875, y: -0.265625}
+      - {x: -0.171875, y: -0.296875}
+      - {x: 0, y: -0.3125}
+      - {x: 0.15625, y: -0.296875}
+      - {x: 0.265625, y: -0.25}
+      - {x: 0.328125, y: -0.203125}
+      - {x: 0.375, y: -0.125}
+      - {x: 0.328125, y: -0.046875}
+--- !u!114 &5363199644069411280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645069364975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000c1417713
+  m_ShapePath:
+  - {x: -0.39341402, y: -0.28682846, z: 0}
+  - {x: -0.010388851, y: -0.36470333, z: 0}
+  - {x: 0.40356493, y: -0.322357, z: 0}
+  - {x: 0.4920864, y: -0.16168275, z: 0}
+  - {x: 0.44924498, y: -0.017702341, z: 0}
+  - {x: 0.004837513, y: 0.066715345, z: 0}
+  - {x: -0.43401837, y: -0.032928824, z: 0}
+  - {x: -0.48748732, y: -0.18198484, z: 0}
+  m_ShapePathHash: -821238727
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -28658
 --- !u!1 &7098057324818503375
 GameObject:
   m_ObjectHideFlags: 0
