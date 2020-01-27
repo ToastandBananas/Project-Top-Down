@@ -9,7 +9,7 @@ public class CompositeShadows : MonoBehaviour
     public void Start()
     {
         tilemapCollider = GetComponent<CompositeCollider2D>();
-        GameObject shadowCasterContainer = GameObject.Find("shadow_casters");
+        GameObject shadowCasterContainer = GameObject.Find("Shadow Casters");
         for (int i = 0; i < tilemapCollider.pathCount; i++)
         {
             Vector2[] pathVertices = new Vector2[tilemapCollider.GetPathPointCount(i)];
