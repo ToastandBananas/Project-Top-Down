@@ -7,7 +7,7 @@ public enum ALLIANCE { NEUTRAL, PLAYER, BANDITS };
 
 public class NPCMovement : MonoBehaviour
 {
-    public STATE currentState = STATE.IDLE;
+    public STATE currentState;
     public ALLIANCE currentAlliance = ALLIANCE.NEUTRAL;
 
     public Transform targetPos;
@@ -18,6 +18,7 @@ public class NPCMovement : MonoBehaviour
     public float runSpeed = 3f;
     public float attackDistance = 1.3f;
 
+    FieldOfView fov;
     AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
@@ -26,17 +27,24 @@ public class NPCMovement : MonoBehaviour
     float angle;
     Vector3 dir;
     Vector3 move;
+
+    Transform closestTarget;
+    float closestTargetDist;
     
     void Start()
     {
+        currentState = STATE.IDLE;
+
         anim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
+
+        fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
         AIPath = GetComponent<Pathfinding.AIPath>();
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
 
         AIPath.maxSpeed = walkSpeed;
-        attackTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        // attackTarget = GameObject.FindGameObjectWithTag("Player").transform;
         patrolPoint = transform.Find("Patrol Point");
 
         if (attackTarget != null)
@@ -51,7 +59,34 @@ public class NPCMovement : MonoBehaviour
     void FixedUpdate()
     {
         // AstarPath.Scan(AstarPath.graphs);
+        DetermineState();
         Movement();
+    }
+
+    void DetermineState()
+    {
+        if (fov.visibleTargets.Count > 0)
+        {
+            closestTarget = null;
+            closestTargetDist = -100;
+
+            foreach (Transform target in fov.visibleTargets)
+            {
+                float dist = Vector2.Distance(transform.position, target.position);
+                if (closestTargetDist == -100 || dist < closestTargetDist)
+                {
+                    closestTargetDist = dist;
+                    closestTarget = target;
+                }
+            }
+
+            if (closestTarget != null)
+            {
+                attackTarget = closestTarget;
+                AIDestSetter.target = attackTarget;
+                currentState = STATE.PURSUE;
+            }
+        }
     }
 
     void Movement()
@@ -89,12 +124,5 @@ public class NPCMovement : MonoBehaviour
             anim.SetBool("isMoving", false);
             legsAnim.SetBool("isMoving", false);
         }
-    }
-
-    void LookAtTarget()
-    {
-        dir = targetPos.position - transform.position;
-        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }

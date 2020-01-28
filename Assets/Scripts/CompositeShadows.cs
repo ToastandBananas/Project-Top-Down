@@ -16,7 +16,7 @@ public class CompositeShadows : MonoBehaviour
             tilemapCollider.GetPath(i, pathVertices);
             GameObject shadowCaster = new GameObject("shadow_caster_" + i);
             PolygonCollider2D shadowPolygon = (PolygonCollider2D)shadowCaster.AddComponent(typeof(PolygonCollider2D));
-            //shadowCaster.transform.parent = shadowCasterContainer.transform;
+            shadowCaster.transform.parent = shadowCasterContainer.transform;
             shadowPolygon.points = pathVertices;
             shadowPolygon.enabled = false;
             ShadowCaster2D shadowCasterComponent = shadowCaster.AddComponent<ShadowCaster2D>();
