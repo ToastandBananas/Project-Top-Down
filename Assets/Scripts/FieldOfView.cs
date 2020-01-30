@@ -7,6 +7,7 @@ public class FieldOfView : MonoBehaviour
     [Range(0, 360)]
     public float viewAngle;
     public float viewRadius;
+    public bool showFOV = false;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
@@ -34,7 +35,8 @@ public class FieldOfView : MonoBehaviour
 
     void LateUpdate()
     {
-        DrawFieldOfView();
+        if (showFOV)
+            DrawFieldOfView();
     }
 
     IEnumerator FindTargetsWithDelay(float delay)

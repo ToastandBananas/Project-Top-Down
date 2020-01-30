@@ -4,43 +4,70 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    Animator armsAnim;
+    Arms arms;
+    Animator rightArmAnim, leftArmAnim;
 
     float timer = 0;
-    float delayTime = 0.25f;
+    float delayTime = 0.5f;
 
-    bool isAttacking;
+    public float minAttackTime = 0.3f;
+
+    bool isAttacking, isBlocking;
 
     void Start()
     {
-        armsAnim = transform.Find("Arms").GetComponent<Animator>();
+        arms = transform.Find("Arms").GetComponent<Arms>();
+        rightArmAnim = arms.transform.Find("Right Arm").GetComponent<Animator>();
+        leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
     }
     
     void Update()
+    {
+        UpdateLeftArm();
+        UpdateRightArm();
+
+        Debug.Log(timer);
+    }
+
+    void UpdateLeftArm()
+    {
+        if (arms.leftShieldEquipped) {
+            if (Input.GetButton("Left Action"))
+            {
+                isBlocking = true;
+                leftArmAnim.SetBool("isBlocking", true);
+            }
+            else if (Input.GetButtonUp("Left Action"))
+            {
+                isBlocking = false;
+                leftArmAnim.SetBool("isBlocking", false);
+            }
+        }
+    }
+
+    void UpdateRightArm()
     {
         if (Input.GetButton("Right Action") && isAttacking == false) // Right click || R2 (controller)
         {
             timer += Time.deltaTime;
 
-            armsAnim.SetBool("startAttack", true);
+            rightArmAnim.SetBool("startAttack", true);
         }
 
-        if (Input.GetButtonUp("Right Action") && timer > 0.25f) // Right click || R2 (controller)
+        if (Input.GetButtonUp("Right Action") && timer > minAttackTime) // Right click || R2 (controller)
         {
             isAttacking = true;
-            armsAnim.SetBool("startAttack", false);
-            armsAnim.SetBool("doAttack", true);
+            rightArmAnim.SetBool("startAttack", false);
+            rightArmAnim.SetBool("doAttack", true);
 
             StartCoroutine(ResetTimer(delayTime));
         }
         else if (Input.GetButtonUp("Right Action"))
         {
-            armsAnim.SetBool("startAttack", false);
+            rightArmAnim.SetBool("startAttack", false);
 
             StartCoroutine(ResetTimer(delayTime));
         }
-
-        Debug.Log(timer);
     }
 
     IEnumerator ResetTimer(float time)
@@ -48,6 +75,6 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(time);
         timer = 0;
         isAttacking = false;
-        armsAnim.SetBool("doAttack", false);
+        rightArmAnim.SetBool("doAttack", false);
     }
 }
