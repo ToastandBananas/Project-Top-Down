@@ -7,12 +7,15 @@ public class PlayerAttack : MonoBehaviour
     Arms arms;
     Animator rightArmAnim, leftArmAnim;
 
-    float timer = 0;
+    float attackTimerLeftArm = 0;
+    float attackTimerRightArm = 0;
     float delayTime = 0.5f;
 
     public float minAttackTime = 0.3f;
+    public bool isBlocking;
 
-    bool isAttacking, isBlocking;
+    bool leftArmAttacking, rightArmAttacking;
+    bool isUsingController;
 
     void Start()
     {
@@ -26,55 +29,127 @@ public class PlayerAttack : MonoBehaviour
         UpdateLeftArm();
         UpdateRightArm();
 
-        Debug.Log(timer);
+        Debug.Log(Input.GetAxis("Controller Right Action"));
+        // Debug.Log(attackTimerLeftArm);
+        Debug.Log(attackTimerRightArm);
     }
 
     void UpdateLeftArm()
     {
         if (arms.leftShieldEquipped) {
-            if (Input.GetButton("Left Action"))
+            if (Input.GetButton("Left Action") || Input.GetAxisRaw("Controller Left Action") == 1)
             {
+                if (Input.GetAxisRaw("Controller Left Action") == 1)
+                    isUsingController = true;
+                else
+                    isUsingController = false;
+
                 isBlocking = true;
                 leftArmAnim.SetBool("isBlocking", true);
             }
-            else if (Input.GetButtonUp("Left Action"))
+
+            if (Input.GetButtonUp("Left Action") || (isUsingController && Input.GetAxisRaw("Controller Left Action") == 0))
             {
                 isBlocking = false;
                 leftArmAnim.SetBool("isBlocking", false);
+            }
+        }
+
+        if (arms.leftWeaponEquipped)
+        {
+            if ((Input.GetButton("Left Action") || Input.GetAxisRaw("Controller Left Action") == 1) && leftArmAttacking == false) // Left click || L2 (controller)
+            {
+                if (Input.GetAxisRaw("Controller Left Action") == 1)
+                    isUsingController = true;
+                else
+                    isUsingController = false;
+
+                attackTimerLeftArm += Time.smoothDeltaTime;
+
+                leftArmAnim.SetBool("startAttack", true);
+            }
+
+            if (Input.GetButtonUp("Left Action") || (isUsingController && Input.GetAxisRaw("Controller Left Action") == 0)) // Left click || L2 (controller)
+            {
+                if (attackTimerLeftArm > minAttackTime)
+                {
+                    leftArmAttacking = true;
+                    leftArmAnim.SetBool("startAttack", false);
+                    leftArmAnim.SetBool("doAttack", true);
+                }
+                else
+                    leftArmAnim.SetBool("startAttack", false);
+
+                StartCoroutine(ResetAttackTimerLeftArm(delayTime));
             }
         }
     }
 
     void UpdateRightArm()
     {
-        if (Input.GetButton("Right Action") && isAttacking == false) // Right click || R2 (controller)
+        if (arms.rightShieldEquipped)
         {
-            timer += Time.deltaTime;
+            if (Input.GetButton("Right Action") || Input.GetAxisRaw("Controller Right Action") == 1)
+            {
+                if (Input.GetAxisRaw("Controller Right Action") == 1)
+                    isUsingController = true;
+                else
+                    isUsingController = false;
 
-            rightArmAnim.SetBool("startAttack", true);
+                isBlocking = true;
+                rightArmAnim.SetBool("isBlocking", true);
+            }
+
+            if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0))
+            {
+                isBlocking = false;
+                rightArmAnim.SetBool("isBlocking", false);
+            }
         }
 
-        if (Input.GetButtonUp("Right Action") && timer > minAttackTime) // Right click || R2 (controller)
+        if (arms.rightWeaponEquipped)
         {
-            isAttacking = true;
-            rightArmAnim.SetBool("startAttack", false);
-            rightArmAnim.SetBool("doAttack", true);
+            if ((Input.GetButton("Right Action") || Input.GetAxis("Controller Right Action") == 1) && rightArmAttacking == false) // Right click || R2 (controller)
+            {
+                if (Input.GetAxisRaw("Controller Right Action") == 1)
+                    isUsingController = true;
+                else
+                    isUsingController = false;
 
-            StartCoroutine(ResetTimer(delayTime));
-        }
-        else if (Input.GetButtonUp("Right Action"))
-        {
-            rightArmAnim.SetBool("startAttack", false);
+                attackTimerRightArm += Time.smoothDeltaTime;
 
-            StartCoroutine(ResetTimer(delayTime));
+                rightArmAnim.SetBool("startAttack", true);
+            }
+
+            if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0)) // Right click || R2 (controller)
+            {
+                if (attackTimerRightArm > minAttackTime)
+                {
+                    rightArmAttacking = true;
+                    rightArmAnim.SetBool("startAttack", false);
+                    rightArmAnim.SetBool("doAttack", true);
+                }
+                else
+                    rightArmAnim.SetBool("startAttack", false);
+                
+                StartCoroutine(ResetAttackTimerRightArm(delayTime));
+            }
         }
     }
 
-    IEnumerator ResetTimer(float time)
+    IEnumerator ResetAttackTimerLeftArm(float time)
     {
         yield return new WaitForSeconds(time);
-        timer = 0;
-        isAttacking = false;
+        attackTimerLeftArm = 0;
+        leftArmAttacking = false;
+        leftArmAnim.SetBool("doAttack", false);
+    }
+
+    IEnumerator ResetAttackTimerRightArm(float time)
+    {
+        yield return new WaitForSeconds(time);
+        attackTimerRightArm = 0;
+        rightArmAttacking = false;
         rightArmAnim.SetBool("doAttack", false);
     }
 }

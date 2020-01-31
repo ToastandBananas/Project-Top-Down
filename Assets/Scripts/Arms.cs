@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This class basically just detects what type of weapon(s) we have equipped and sets bools needed for idle and walk anims for both arms.
+/// </summary>
 public class Arms : MonoBehaviour
 {
     [Header("Left Arm")]
@@ -25,13 +28,14 @@ public class Arms : MonoBehaviour
         leftArmAnim = leftArm.GetComponent<Animator>();
         rightArmAnim = rightArm.GetComponent<Animator>();
 
-        SetAnims();
+        SetLeftAnims();
+        SetRightAnims();
     }
 
-    public void SetAnims()
+    public void SetLeftAnims()
     {
-        leftWeapon  = leftArm.GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
-        rightWeapon = rightArm.GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
+        leftWeapon  = leftArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
+        rightWeapon = rightArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
 
         if (leftWeapon != null)
         {
@@ -39,30 +43,51 @@ public class Arms : MonoBehaviour
             {
                 leftShieldEquipped = true;
                 leftWeaponEquipped = false;
+                leftArmAnim.SetBool("weaponEquipped", false);
                 leftArmAnim.SetBool("shieldEquipped", true);
             }
-            else if (leftWeapon.generalClassification == GENERAL_CLASSIFICATION.WEAPON)
+            else if (leftWeapon.generalClassification == GENERAL_CLASSIFICATION.WEAPON_1H)
             {
                 leftShieldEquipped = false;
                 leftWeaponEquipped = true;
                 leftArmAnim.SetBool("weaponEquipped", true);
+                leftArmAnim.SetBool("shieldEquipped", false);
             }
         }
+        else
+        {
+            leftShieldEquipped = false;
+            leftWeaponEquipped = false;
+            leftArmAnim.SetBool("weaponEquipped", false);
+            leftArmAnim.SetBool("shieldEquipped", false);
+        }
+    }
 
+    public void SetRightAnims()
+    {
         if (rightWeapon != null)
         {
             if (rightWeapon.generalClassification == GENERAL_CLASSIFICATION.SHIELD)
             {
                 rightShieldEquipped = true;
                 rightWeaponEquipped = false;
+                rightArmAnim.SetBool("weaponEquipped", false);
                 rightArmAnim.SetBool("shieldEquipped", true);
             }
-            else if (rightWeapon.generalClassification == GENERAL_CLASSIFICATION.WEAPON)
+            else if (rightWeapon.generalClassification == GENERAL_CLASSIFICATION.WEAPON_1H)
             {
                 rightShieldEquipped = false;
                 rightWeaponEquipped = true;
                 rightArmAnim.SetBool("weaponEquipped", true);
+                rightArmAnim.SetBool("shieldEquipped", false);
             }
+        }
+        else
+        {
+            rightShieldEquipped = false;
+            rightWeaponEquipped = false;
+            rightArmAnim.SetBool("weaponEquipped", false);
+            rightArmAnim.SetBool("shieldEquipped", false);
         }
     }
 }

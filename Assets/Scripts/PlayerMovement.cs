@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 2f;
-    public float walkSpeed = 2f;
+    public float moveSpeed;
     public float runSpeed = 3f;
+    float walkSpeed;
+    float blockSpeed;
 
     Animator anim, legsAnim, rightArmAnim, leftArmAnim;
     Rigidbody2D rb;
     Camera cam;
+    PlayerAttack playerAttack;
 
     float horizontalMove, verticalMove;
     float angle;
@@ -22,9 +24,12 @@ public class PlayerMovement : MonoBehaviour
         cam  = Camera.main;
         rb   = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerAttack = GetComponent<PlayerAttack>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
+
+        CalculateMoveSpeeds();
     }
     
     void FixedUpdate()
@@ -43,7 +48,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Movement()
     {
-        if (Input.GetButton("Sprint"))
+        if (playerAttack.isBlocking)
+            moveSpeed = blockSpeed;
+        else if (Input.GetButton("Sprint"))
             moveSpeed = walkSpeed;
         else
             moveSpeed = runSpeed;
@@ -103,5 +110,11 @@ public class PlayerMovement : MonoBehaviour
         legsAnim.SetBool("isMoving", false);
         legsAnim.SetBool("isMovingLeft", false);
         legsAnim.SetBool("isMovingRight", false);
+    }
+
+    void CalculateMoveSpeeds()
+    {
+        walkSpeed = runSpeed / 2;
+        blockSpeed = (runSpeed / 3) * 2;
     }
 }
