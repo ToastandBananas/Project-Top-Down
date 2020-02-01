@@ -11,11 +11,14 @@ public class Door : MonoBehaviour
 
     Quaternion newRotation;
 
+    PlayerAttack player;
+
     List<GameObject> NPCGameObjectsInRange;
 
     void Start()
     {
         NPCGameObjectsInRange = new List<GameObject>();
+        player = FindObjectOfType<PlayerAttack>();
     }
     
     void Update()

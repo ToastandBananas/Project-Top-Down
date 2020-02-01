@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum QuickAttackTurn { LEFT, RIGHT }
+
 public class PlayerAttack : MonoBehaviour
 {
+    QuickAttackTurn currentQuickAttackTurn;
+
     Arms arms;
     Animator rightArmAnim, leftArmAnim;
 
+    float leftArmCooldown = 0;
+    float rightArmCooldown = 0;
     float attackTimerLeftArm = 0;
     float attackTimerRightArm = 0;
     float delayTime = 0.5f;
@@ -26,17 +32,64 @@ public class PlayerAttack : MonoBehaviour
     
     void Update()
     {
-        UpdateLeftArm();
-        UpdateRightArm();
+        Update_QuickAttack();
+        Update_LeftArmAnims();
+        Update_RightArmAnims();
 
-        Debug.Log(Input.GetAxis("Controller Right Action"));
         // Debug.Log(attackTimerLeftArm);
-        Debug.Log(attackTimerRightArm);
+        // Debug.Log(attackTimerRightArm);
     }
 
-    void UpdateLeftArm()
+    void Update_QuickAttack()
     {
-        if (arms.leftShieldEquipped) {
+        // TODO: Set cooldowns
+        if (Input.GetButtonDown("Quick Attack"))
+        {
+            if (currentQuickAttackTurn == QuickAttackTurn.LEFT && leftArmAttacking == false)
+            {
+                leftArmAttacking = true;
+                leftArmAnim.SetBool("doQuickAttack", true);
+                currentQuickAttackTurn = QuickAttackTurn.RIGHT;
+            }
+            else if (rightArmAttacking == false)
+            {
+                rightArmAttacking = true;
+                // Do right quick attack (set anim bools)
+                currentQuickAttackTurn = QuickAttackTurn.LEFT;
+            }
+        }
+    }
+
+    void Update_LeftArmAnims()
+    {
+        if (arms.leftShieldEquipped)
+        {
+            LeftShield_Block();
+        }
+
+        if (arms.leftWeaponEquipped)
+        {
+            Left1H_ChargeAttack();
+        }
+    }
+
+    void Update_RightArmAnims()
+    {
+        if (arms.rightShieldEquipped)
+        {
+            RightShield_Block();
+        }
+
+        if (arms.rightWeaponEquipped)
+        {
+            Right1H_ChargeAttack();
+        }
+    }
+
+    void LeftShield_Block()
+    {
+        if (arms.leftShieldEquipped)
+        {
             if (Input.GetButton("Left Action") || Input.GetAxisRaw("Controller Left Action") == 1)
             {
                 if (Input.GetAxisRaw("Controller Left Action") == 1)
@@ -54,86 +107,83 @@ public class PlayerAttack : MonoBehaviour
                 leftArmAnim.SetBool("isBlocking", false);
             }
         }
+    }
 
-        if (arms.leftWeaponEquipped)
+    void RightShield_Block()
+    {
+        if (Input.GetButton("Right Action") || Input.GetAxisRaw("Controller Right Action") == 1)
         {
-            if ((Input.GetButton("Left Action") || Input.GetAxisRaw("Controller Left Action") == 1) && leftArmAttacking == false) // Left click || L2 (controller)
-            {
-                if (Input.GetAxisRaw("Controller Left Action") == 1)
-                    isUsingController = true;
-                else
-                    isUsingController = false;
+            if (Input.GetAxisRaw("Controller Right Action") == 1)
+                isUsingController = true;
+            else
+                isUsingController = false;
 
-                attackTimerLeftArm += Time.smoothDeltaTime;
+            isBlocking = true;
+            rightArmAnim.SetBool("isBlocking", true);
+        }
 
-                leftArmAnim.SetBool("startAttack", true);
-            }
-
-            if (Input.GetButtonUp("Left Action") || (isUsingController && Input.GetAxisRaw("Controller Left Action") == 0)) // Left click || L2 (controller)
-            {
-                if (attackTimerLeftArm > minAttackTime)
-                {
-                    leftArmAttacking = true;
-                    leftArmAnim.SetBool("startAttack", false);
-                    leftArmAnim.SetBool("doAttack", true);
-                }
-                else
-                    leftArmAnim.SetBool("startAttack", false);
-
-                StartCoroutine(ResetAttackTimerLeftArm(delayTime));
-            }
+        if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0))
+        {
+            isBlocking = false;
+            rightArmAnim.SetBool("isBlocking", false);
         }
     }
 
-    void UpdateRightArm()
+    void Left1H_ChargeAttack()
     {
-        if (arms.rightShieldEquipped)
+        if ((Input.GetButton("Left Action") || Input.GetAxisRaw("Controller Left Action") == 1) && leftArmAttacking == false) // Left click || L2 (controller)
         {
-            if (Input.GetButton("Right Action") || Input.GetAxisRaw("Controller Right Action") == 1)
-            {
-                if (Input.GetAxisRaw("Controller Right Action") == 1)
-                    isUsingController = true;
-                else
-                    isUsingController = false;
+            if (Input.GetAxisRaw("Controller Left Action") == 1)
+                isUsingController = true;
+            else
+                isUsingController = false;
 
-                isBlocking = true;
-                rightArmAnim.SetBool("isBlocking", true);
-            }
+            attackTimerLeftArm += Time.smoothDeltaTime;
 
-            if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0))
-            {
-                isBlocking = false;
-                rightArmAnim.SetBool("isBlocking", false);
-            }
+            leftArmAnim.SetBool("startAttack", true);
         }
 
-        if (arms.rightWeaponEquipped)
+        if (Input.GetButtonUp("Left Action") || (isUsingController && Input.GetAxisRaw("Controller Left Action") == 0)) // Left click || L2 (controller)
         {
-            if ((Input.GetButton("Right Action") || Input.GetAxis("Controller Right Action") == 1) && rightArmAttacking == false) // Right click || R2 (controller)
+            if (attackTimerLeftArm > minAttackTime)
             {
-                if (Input.GetAxisRaw("Controller Right Action") == 1)
-                    isUsingController = true;
-                else
-                    isUsingController = false;
-
-                attackTimerRightArm += Time.smoothDeltaTime;
-
-                rightArmAnim.SetBool("startAttack", true);
+                leftArmAttacking = true;
+                leftArmAnim.SetBool("startAttack", false);
+                leftArmAnim.SetBool("doAttack", true);
             }
+            else
+                leftArmAnim.SetBool("startAttack", false);
 
-            if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0)) // Right click || R2 (controller)
+            StartCoroutine(ResetAttackTimerLeftArm(delayTime));
+        }
+    }
+
+    void Right1H_ChargeAttack()
+    {
+        if ((Input.GetButton("Right Action") || Input.GetAxis("Controller Right Action") == 1) && rightArmAttacking == false) // Right click || R2 (controller)
+        {
+            if (Input.GetAxisRaw("Controller Right Action") == 1)
+                isUsingController = true;
+            else
+                isUsingController = false;
+
+            attackTimerRightArm += Time.smoothDeltaTime;
+
+            rightArmAnim.SetBool("startAttack", true);
+        }
+
+        if (Input.GetButtonUp("Right Action") || (isUsingController && Input.GetAxisRaw("Controller Right Action") == 0)) // Right click || R2 (controller)
+        {
+            if (attackTimerRightArm > minAttackTime)
             {
-                if (attackTimerRightArm > minAttackTime)
-                {
-                    rightArmAttacking = true;
-                    rightArmAnim.SetBool("startAttack", false);
-                    rightArmAnim.SetBool("doAttack", true);
-                }
-                else
-                    rightArmAnim.SetBool("startAttack", false);
-                
-                StartCoroutine(ResetAttackTimerRightArm(delayTime));
+                rightArmAttacking = true;
+                rightArmAnim.SetBool("startAttack", false);
+                rightArmAnim.SetBool("doAttack", true);
             }
+            else
+                rightArmAnim.SetBool("startAttack", false);
+
+            StartCoroutine(ResetAttackTimerRightArm(delayTime));
         }
     }
 
