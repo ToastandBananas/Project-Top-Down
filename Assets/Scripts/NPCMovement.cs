@@ -37,6 +37,7 @@ public class NPCMovement : MonoBehaviour
 
         anim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
+        patrolPoint = transform.Find("Patrol Point");
 
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
@@ -44,8 +45,7 @@ public class NPCMovement : MonoBehaviour
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
 
         AIPath.maxSpeed = walkSpeed;
-        // attackTarget = GameObject.FindGameObjectWithTag("Player").transform;
-        patrolPoint = transform.Find("Patrol Point");
+        AIPath.endReachedDistance = attackDistance;
 
         if (attackTarget != null)
         {
@@ -119,7 +119,7 @@ public class NPCMovement : MonoBehaviour
 
             Debug.Log(name + " attacked you.");
         }
-        else
+        else // Idle
         {
             anim.SetBool("isMoving", false);
             legsAnim.SetBool("isMoving", false);

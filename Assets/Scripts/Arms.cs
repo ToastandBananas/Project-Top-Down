@@ -34,8 +34,10 @@ public class Arms : MonoBehaviour
 
     public void SetLeftAnims()
     {
-        leftWeapon  = leftArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
-        rightWeapon = rightArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
+        if (leftArm.GetChild(0).GetChild(0).childCount > 0)
+            leftWeapon  = leftArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
+        if (rightArm.GetChild(0).GetChild(0).childCount > 0)
+            rightWeapon = rightArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponStats>();
 
         if (leftWeapon != null)
         {

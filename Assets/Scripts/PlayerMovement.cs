@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Transform effectsPrefab;
+
+    float dodgeDistance = 1f;
     public float moveSpeed;
     public float runSpeed = 3f;
     float walkSpeed;
@@ -18,20 +21,30 @@ public class PlayerMovement : MonoBehaviour
     float angle;
     Vector3 dir;
     Vector3 move;
+    Vector3 lastMoveDir;
+    bool canDodge;
+
+    LayerMask obstacleMask;
     
     void Start()
     {
         cam  = Camera.main;
         rb   = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        playerAttack = GetComponent<PlayerAttack>();
+        playerAttack = PlayerAttack.instance;
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
+        obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         CalculateMoveSpeeds();
     }
-    
+
+    void Update()
+    {
+        Dodge();
+    }
+
     void FixedUpdate()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal");
@@ -86,12 +99,25 @@ public class PlayerMovement : MonoBehaviour
                 legsAnim.SetBool("isMovingRight", false);
             }
 
+            lastMoveDir = move.normalized;
+
             move = move.normalized * moveSpeed * Time.fixedDeltaTime;
             transform.position += move;
         }
         else
-        {
             ResetAnims();
+    }
+
+    void Dodge()
+    {
+        if (Input.GetButtonDown("Dodge"))
+        {
+            // Vector3 beforeDashPos = transform.position;
+
+            canDodge = CanDodge(lastMoveDir, dodgeDistance);
+
+            if (canDodge)
+                StartCoroutine(SmoothMovement(transform.position + lastMoveDir * dodgeDistance));
         }
     }
 
@@ -116,5 +142,25 @@ public class PlayerMovement : MonoBehaviour
     {
         walkSpeed = runSpeed / 2;
         blockSpeed = (runSpeed / 3) * 2;
+    }
+
+    bool CanDodge(Vector3 dir, float distance)
+    {
+        return Physics2D.Raycast(transform.position, dir, distance, obstacleMask).collider == null;
+    }
+
+    IEnumerator DestroyEffect(Transform effect, float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        Destroy(effect.gameObject);
+    }
+
+    IEnumerator SmoothMovement(Vector3 targetPos)
+    {
+        while (Vector2.Distance(transform.position, targetPos) > 0.01f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
+            yield return null; // Pause for one frame
+        }
     }
 }

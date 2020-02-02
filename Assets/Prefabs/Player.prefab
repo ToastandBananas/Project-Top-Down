@@ -140,7 +140,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5363199645066194799}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4851659880429100248
 GameObject:
@@ -172,7 +172,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5363199645066194799}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8791679001258756540
 MeshFilter:
@@ -412,7 +412,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &1711786068
@@ -608,7 +608,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &671787726
@@ -745,11 +745,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5363199644083448251}
-  - {fileID: 1007832192677994266}
-  - {fileID: 4205812763118659987}
   - {fileID: 5363199645069364972}
   - {fileID: 8189785680589746289}
   - {fileID: 2951199296106186332}
+  - {fileID: 1007832192677994266}
+  - {fileID: 4205812763118659987}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -800,6 +800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4faee47c2743149a4fb3a2968bc40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashEffectPrefab: {fileID: 0}
   moveSpeed: 2
   runSpeed: 3
 --- !u!50 &256753153932934012
@@ -861,8 +862,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7ea5af6080264691f86ee9338a32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minAttackTime: 0.1
+  attackTimerLeftArm: 0
+  attackTimerRightArm: 0
+  shieldBashTime: 0
+  minChargeAttackTime: 0.3
   isBlocking: 0
+  leftArmAttacking: 0
+  rightArmAttacking: 0
 --- !u!1 &5363199645069364975
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,7 +900,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5363199645066194799}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5363199645069364973
 SpriteRenderer:
@@ -1011,7 +1017,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1194
+  m_InstanceId: 42454
 --- !u!1 &6471104657826024039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,7 +1131,7 @@ Transform:
   - {fileID: 5363199643522546944}
   - {fileID: 5363199645066139830}
   m_Father: {fileID: 5363199645066194799}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &744786107652438206
 Animator:
@@ -1177,7 +1183,7 @@ Transform:
   - {fileID: 5363199645053670275}
   - {fileID: 5363199643864657094}
   m_Father: {fileID: 5363199645066194799}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &414860139
 MonoBehaviour:

@@ -12,7 +12,11 @@ public class SmoothCamera : MonoBehaviour
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player");
-        targetPos = target.transform.position;
+
+        if (target != null)
+            targetPos = target.transform.position;
+        else
+            Debug.LogError("Player gameobject not found!");
     }
 
     // Update is called once per frame
