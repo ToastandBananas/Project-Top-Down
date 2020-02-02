@@ -15,9 +15,9 @@ public class PlayerAttack : MonoBehaviour
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
     
-    [HideInInspector]
+    //[HideInInspector]
     public float attackTimerLeftArm = 0;
-    [HideInInspector]
+    //[HideInInspector]
     public float attackTimerRightArm = 0;
 
     float leftQuickAttackTime, rightQuickAttackTime;
@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
     public bool leftArmAttacking, rightArmAttacking;
 
     bool leftQuickAttacking, rightQuickAttacking;
-    bool isUsingController;
+    bool isUsingControllerLeft, isUsingControllerRight;
 
     void Awake()
     {
@@ -127,15 +127,15 @@ public class PlayerAttack : MonoBehaviour
         if (Input.GetButton("Left Charge Attack") || Input.GetAxisRaw("Controller Left Charge Attack") == 1)
         {
             if (Input.GetAxisRaw("Controller Left Charge Attack") == 1)
-                isUsingController = true;
+                isUsingControllerLeft = true;
             else
-                isUsingController = false;
+                isUsingControllerLeft = false;
 
             isBlocking = true;
             leftArmAnim.SetBool("isBlocking", true);
         }
 
-        if (Input.GetButtonUp("Left Charge Attack") || (isUsingController && Input.GetAxisRaw("Controller Left Charge Attack") == 0))
+        if (Input.GetButtonUp("Left Charge Attack") || (isUsingControllerLeft && Input.GetAxisRaw("Controller Left Charge Attack") == 0))
         {
             isBlocking = false;
             leftArmAnim.SetBool("isBlocking", false);
@@ -147,15 +147,15 @@ public class PlayerAttack : MonoBehaviour
         if (Input.GetButton("Right Charge Attack") || Input.GetAxisRaw("Controller Right Charge Attack") == 1)
         {
             if (Input.GetAxisRaw("Controller Right Charge Attack") == 1)
-                isUsingController = true;
+                isUsingControllerRight = true;
             else
-                isUsingController = false;
+                isUsingControllerRight = false;
 
             isBlocking = true;
             rightArmAnim.SetBool("isBlocking", true);
         }
 
-        if (Input.GetButtonUp("Right Charge Attack") || (isUsingController && Input.GetAxisRaw("Controller Right Charge Attack") == 0))
+        if (Input.GetButtonUp("Right Charge Attack") || (isUsingControllerRight && Input.GetAxisRaw("Controller Right Charge Attack") == 0))
         {
             isBlocking = false;
             rightArmAnim.SetBool("isBlocking", false);
@@ -167,16 +167,16 @@ public class PlayerAttack : MonoBehaviour
         if ((Input.GetButton("Left Charge Attack") || Input.GetAxisRaw("Controller Left Charge Attack") == 1) && leftArmAttacking == false) // Left click || L2 (controller)
         {
             if (Input.GetAxisRaw("Controller Left Charge Attack") == 1)
-                isUsingController = true;
+                isUsingControllerLeft = true;
             else
-                isUsingController = false;
+                isUsingControllerLeft = false;
 
             attackTimerLeftArm += Time.smoothDeltaTime;
 
             leftArmAnim.SetBool("startAttack", true);
         }
 
-        if (Input.GetButtonUp("Left Charge Attack") || (isUsingController && Input.GetAxisRaw("Controller Left Charge Attack") == 0)) // Left click || L2 (controller)
+        if (Input.GetButtonUp("Left Charge Attack") || (isUsingControllerLeft && Input.GetAxisRaw("Controller Left Charge Attack") == 0 && attackTimerLeftArm > 0)) // Left click || L2 (controller)
         {
             if (attackTimerLeftArm > minChargeAttackTime)
             {
@@ -189,10 +189,21 @@ public class PlayerAttack : MonoBehaviour
                 leftArmAnim.SetBool("startAttack", false);
                 leftQuickAttacking = true;
                 leftArmAnim.SetBool("doQuickAttack", true);
-                StartCoroutine(ResetLeftQuickAttackTimer(leftQuickAttackTime));
+                attackTimerLeftArm = 0;
+                StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
             }
 
+            isUsingControllerLeft = false;
             StartCoroutine(ResetChargeAttackTimerLeftArm(leftChargeAttackTime));
+        }
+        else if (Input.GetButton("Left Charge Attack") == false && Input.GetAxisRaw("Controller Left Charge Attack") == 0 && attackTimerLeftArm == 0)
+        {
+            // Failsafe in case GetButtonUp isn't detected for whatever odd reason
+            leftArmAttacking = false;
+            leftArmAnim.SetBool("startAttack", false);
+            leftArmAnim.SetBool("doAttack", false);
+            leftQuickAttacking = false;
+            leftArmAnim.SetBool("doQuickAttack", false);
         }
     }
 
@@ -201,16 +212,16 @@ public class PlayerAttack : MonoBehaviour
         if ((Input.GetButton("Right Charge Attack") || Input.GetAxis("Controller Right Charge Attack") == 1) && rightArmAttacking == false) // Right click || R2 (controller)
         {
             if (Input.GetAxisRaw("Controller Right Charge Attack") == 1)
-                isUsingController = true;
+                isUsingControllerRight = true;
             else
-                isUsingController = false;
+                isUsingControllerRight = false;
 
             attackTimerRightArm += Time.smoothDeltaTime;
 
             rightArmAnim.SetBool("startAttack", true);
         }
 
-        if (Input.GetButtonUp("Right Charge Attack") || (isUsingController && Input.GetAxisRaw("Controller Right Charge Attack") == 0)) // Right click || R2 (controller)
+        if (Input.GetButtonUp("Right Charge Attack") || (isUsingControllerRight && Input.GetAxisRaw("Controller Right Charge Attack") == 0 && attackTimerRightArm > 0)) // Right click || R2 (controller)
         {
             if (attackTimerRightArm > minChargeAttackTime)
             {
@@ -223,10 +234,21 @@ public class PlayerAttack : MonoBehaviour
                 rightArmAnim.SetBool("startAttack", false);
                 rightQuickAttacking = true;
                 rightArmAnim.SetBool("doQuickAttack", true);
-                StartCoroutine(ResetRightQuickAttackTimer(rightQuickAttackTime));
+                attackTimerRightArm = 0;
+                StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
             }
 
+            isUsingControllerRight = false;
             StartCoroutine(ResetChargeAttackTimerRightArm(rightChargeAttackTime));
+        }
+        else if (Input.GetButton("Right Charge Attack") == false && Input.GetAxisRaw("Controller Right Charge Attack") == 0 && attackTimerRightArm == 0)
+        {
+            // Failsafe in case GetButtonUp isn't detected for whatever odd reason
+            rightArmAttacking = false;
+            rightArmAnim.SetBool("startAttack", false);
+            rightArmAnim.SetBool("doAttack", false);
+            rightQuickAttacking = false;
+            rightArmAnim.SetBool("doQuickAttack", false);
         }
     }
 
@@ -268,14 +290,14 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    IEnumerator ResetLeftQuickAttackTimer(float waitTime)
+    IEnumerator ResetLeftQuickAttack(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         leftQuickAttacking = false;
         leftArmAnim.SetBool("doQuickAttack", false);
     }
 
-    IEnumerator ResetRightQuickAttackTimer(float waitTime)
+    IEnumerator ResetRightQuickAttack(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         rightQuickAttacking = false;

@@ -112,8 +112,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Dodge"))
         {
-            // Vector3 beforeDashPos = transform.position;
-
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 
             if (canDodge)
