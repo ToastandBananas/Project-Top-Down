@@ -34,8 +34,11 @@ public class PlayerSpecialAttack : MonoBehaviour
 
     void SpecialAttackLeft()
     {
-        if (Input.GetButtonDown("Special Attack Q") && playerAttack.leftArmAttacking == false && playerAttack.attackTimerLeftArm == 0 && (arms.leftWeaponEquipped || arms.leftShieldEquipped))
-        {
+        if (GameControls.gamePlayActions.playerLeftSpecialAttack.WasPressed 
+            && playerAttack.leftArmAttacking == false 
+            && playerAttack.attackTimerLeftArm == 0 
+            && (arms.leftWeaponEquipped || arms.leftShieldEquipped))
+        { 
             switch (specialAttackSlotQ)
             {
                 case SPECIAL_ATTACK.SHIELD_BASH:
@@ -47,7 +50,10 @@ public class PlayerSpecialAttack : MonoBehaviour
 
     void SpecialAttackRight()
     {
-        if (Input.GetButtonDown("Special Attack E") && playerAttack.rightArmAttacking == false && playerAttack.attackTimerRightArm == 0 && (arms.rightWeaponEquipped || arms.rightShieldEquipped))
+        if (GameControls.gamePlayActions.playerRightSpecialAttack.WasPressed 
+            && playerAttack.rightArmAttacking == false 
+            && playerAttack.attackTimerRightArm == 0 
+            && (arms.rightWeaponEquipped || arms.rightShieldEquipped))
         {
             switch (specialAttackSlotE)
             {

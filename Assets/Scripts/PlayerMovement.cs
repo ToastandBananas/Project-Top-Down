@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -17,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     Camera cam;
     PlayerAttack playerAttack;
 
-    float horizontalMove, verticalMove;
+    Vector2 movementInput;
     float angle;
     Vector3 dir;
     Vector3 move;
@@ -47,8 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal");
-        verticalMove   = Input.GetAxisRaw("Vertical");
+        movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
 
         if (Vector2.Distance(transform.position, cam.ScreenToWorldPoint(Input.mousePosition)) > 0.25f)
         {
@@ -63,12 +61,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerAttack.isBlocking)
             moveSpeed = blockSpeed;
-        else if (Input.GetButton("Sprint"))
+        else if (GameControls.gamePlayActions.playerSprint.IsPressed)
             moveSpeed = walkSpeed;
         else
             moveSpeed = runSpeed;
         
-        if ((Mathf.Abs(horizontalMove) != 0 || Mathf.Abs(verticalMove) != 0))
+        if (movementInput.x > 0.3f || movementInput.x < -0.3f || movementInput.y > 0.3f || movementInput.y < -0.3f)
         {
             anim.SetBool("isMoving", true);
             legsAnim.SetBool("isMoving", true);
@@ -76,20 +74,20 @@ public class PlayerMovement : MonoBehaviour
             leftArmAnim.SetBool("isMoving", true);
             move = Vector3.zero;
 
-            if (verticalMove > 0)
-                move += transform.up;
-            else if (verticalMove < 0)
-                move -= transform.up;
+            if (movementInput.y > 0.3f)
+                move += Vector3.up;
+            else if (movementInput.y < -0.3f)
+                move += Vector3.down;
 
-            if (horizontalMove > 0)
+            if (movementInput.x > 0.3f)
             {
-                move += transform.right;
+                move += Vector3.right;
                 legsAnim.SetBool("isMovingLeft", false);
                 legsAnim.SetBool("isMovingRight", true);
             }
-            else if (horizontalMove < 0)
+            else if (movementInput.x < -0.3f)
             {
-                move -= transform.right;
+                move += Vector3.left;
                 legsAnim.SetBool("isMovingLeft", true);
                 legsAnim.SetBool("isMovingRight", false);
             }
@@ -110,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Dodge()
     {
-        if (Input.GetButtonDown("Dodge"))
+        if (GameControls.gamePlayActions.playerDodge.WasPressed)
         {
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 

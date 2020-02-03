@@ -31,7 +31,6 @@ public class PlayerAttack : MonoBehaviour
     public bool leftArmAttacking, rightArmAttacking;
 
     bool leftQuickAttacking, rightQuickAttacking;
-    bool isUsingControllerLeft, isUsingControllerRight;
 
     void Awake()
     {
@@ -124,18 +123,13 @@ public class PlayerAttack : MonoBehaviour
 
     void LeftShield_Block()
     {
-        if (Input.GetButton("Left Charge Attack") || Input.GetAxisRaw("Controller Left Charge Attack") == 1)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
         {
-            if (Input.GetAxisRaw("Controller Left Charge Attack") == 1)
-                isUsingControllerLeft = true;
-            else
-                isUsingControllerLeft = false;
-
             isBlocking = true;
             leftArmAnim.SetBool("isBlocking", true);
         }
-
-        if (Input.GetButtonUp("Left Charge Attack") || (isUsingControllerLeft && Input.GetAxisRaw("Controller Left Charge Attack") == 0))
+        
+        if (GameControls.gamePlayActions.playerLeftAttack.WasReleased)
         {
             isBlocking = false;
             leftArmAnim.SetBool("isBlocking", false);
@@ -144,18 +138,13 @@ public class PlayerAttack : MonoBehaviour
 
     void RightShield_Block()
     {
-        if (Input.GetButton("Right Charge Attack") || Input.GetAxisRaw("Controller Right Charge Attack") == 1)
+        if (GameControls.gamePlayActions.playerRightAttack.IsPressed)
         {
-            if (Input.GetAxisRaw("Controller Right Charge Attack") == 1)
-                isUsingControllerRight = true;
-            else
-                isUsingControllerRight = false;
-
             isBlocking = true;
             rightArmAnim.SetBool("isBlocking", true);
         }
 
-        if (Input.GetButtonUp("Right Charge Attack") || (isUsingControllerRight && Input.GetAxisRaw("Controller Right Charge Attack") == 0))
+        if (GameControls.gamePlayActions.playerRightAttack.WasReleased)
         {
             isBlocking = false;
             rightArmAnim.SetBool("isBlocking", false);
@@ -164,19 +153,13 @@ public class PlayerAttack : MonoBehaviour
 
     void Left1H_Attack()
     {
-        if ((Input.GetButton("Left Charge Attack") || Input.GetAxisRaw("Controller Left Charge Attack") == 1) && leftArmAttacking == false) // Left click || L2 (controller)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftArmAttacking == false)
         {
-            if (Input.GetAxisRaw("Controller Left Charge Attack") == 1)
-                isUsingControllerLeft = true;
-            else
-                isUsingControllerLeft = false;
-
             attackTimerLeftArm += Time.smoothDeltaTime;
-
             leftArmAnim.SetBool("startAttack", true);
         }
 
-        if (Input.GetButtonUp("Left Charge Attack") || (isUsingControllerLeft && Input.GetAxisRaw("Controller Left Charge Attack") == 0 && attackTimerLeftArm > 0)) // Left click || L2 (controller)
+        if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimerLeftArm > 0)
         {
             if (attackTimerLeftArm > minChargeAttackTime)
             {
@@ -193,10 +176,9 @@ public class PlayerAttack : MonoBehaviour
                 StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
             }
 
-            isUsingControllerLeft = false;
             StartCoroutine(ResetChargeAttackTimerLeftArm(leftChargeAttackTime));
         }
-        else if (Input.GetButton("Left Charge Attack") == false && Input.GetAxisRaw("Controller Left Charge Attack") == 0 && attackTimerLeftArm == 0)
+        else if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false && attackTimerLeftArm == 0)
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
             leftArmAttacking = false;
@@ -209,19 +191,13 @@ public class PlayerAttack : MonoBehaviour
 
     void Right1H_Attack()
     {
-        if ((Input.GetButton("Right Charge Attack") || Input.GetAxis("Controller Right Charge Attack") == 1) && rightArmAttacking == false) // Right click || R2 (controller)
+        if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightArmAttacking == false)
         {
-            if (Input.GetAxisRaw("Controller Right Charge Attack") == 1)
-                isUsingControllerRight = true;
-            else
-                isUsingControllerRight = false;
-
             attackTimerRightArm += Time.smoothDeltaTime;
-
             rightArmAnim.SetBool("startAttack", true);
         }
 
-        if (Input.GetButtonUp("Right Charge Attack") || (isUsingControllerRight && Input.GetAxisRaw("Controller Right Charge Attack") == 0 && attackTimerRightArm > 0)) // Right click || R2 (controller)
+        if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimerRightArm > 0)
         {
             if (attackTimerRightArm > minChargeAttackTime)
             {
@@ -238,10 +214,9 @@ public class PlayerAttack : MonoBehaviour
                 StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
             }
 
-            isUsingControllerRight = false;
             StartCoroutine(ResetChargeAttackTimerRightArm(rightChargeAttackTime));
         }
-        else if (Input.GetButton("Right Charge Attack") == false && Input.GetAxisRaw("Controller Right Charge Attack") == 0 && attackTimerRightArm == 0)
+        else if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false && attackTimerRightArm == 0)
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
             rightArmAttacking = false;
