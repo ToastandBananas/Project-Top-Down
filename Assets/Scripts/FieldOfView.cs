@@ -12,7 +12,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
-    Collider2D[] targetsInViewRadius;
+    public Collider2D[] targetsInViewRadius;
 
     [Header("Mesh Stuff:")]
     public float meshResolution;

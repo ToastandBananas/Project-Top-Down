@@ -117,7 +117,7 @@ public class NPCMovement : MonoBehaviour
             anim.SetBool("isMoving", false);
             legsAnim.SetBool("isMoving", false);
 
-            Debug.Log(name + " attacked you.");
+            // Debug.Log(name + " attacked you.");
         }
         else // Idle
         {
