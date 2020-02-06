@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SPECIAL_ATTACK { SHIELD_BASH }
+public enum SPECIAL_ATTACK { NONE, SHIELD_BASH }
 
 public class PlayerSpecialAttack : MonoBehaviour
 {

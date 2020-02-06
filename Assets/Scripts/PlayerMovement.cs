@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -28,16 +27,13 @@ public class PlayerMovement : MonoBehaviour
     Vector3 lastMoveDir;
     bool canDodge = true;
     bool isMoving;
-    bool isLockedOn;
     bool canSwitchLockOnTarget = true;
     float maxLockOnDist = 12f;
 
     LayerMask obstacleMask;
-    
-    public Transform closestEnemy;
-    public Transform lockOnTarget;
 
-    List<Transform> nearbyEnemies;
+    public bool isLockedOn;
+    public Transform lockOnTarget;
 
     void Start()
     {
@@ -51,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
-        nearbyEnemies = new List<Transform>();
 
         CalculateMoveSpeeds();
     }
@@ -101,23 +96,29 @@ public class PlayerMovement : MonoBehaviour
             move = Vector3.zero;
 
             if (movementInput.y > 0.3f)
-                move += new Vector3(0, movementInput.y, 0);
+                move += new Vector3(0, movementInput.y, 0); // Up
             else if (movementInput.y < -0.3f)
-                move += new Vector3(0, movementInput.y, 0);
+                move += new Vector3(0, movementInput.y, 0); // Down
 
-            if (movementInput.x > 0.3f)
+            if (movementInput.x > 0.3f) // Right
             {
                 move += new Vector3(movementInput.x, 0, 0);
-                legsAnim.SetBool("isMovingLeft", false);
-                legsAnim.SetBool("isMovingRight", true);
+                /*if (isLockedOn)
+                {
+                    legsAnim.SetBool("isMovingLeft", false);
+                    legsAnim.SetBool("isMovingRight", true);
+                }*/
             }
-            else if (movementInput.x < -0.3f)
+            else if (movementInput.x < -0.3f) // Left
             {
                 move += new Vector3(movementInput.x, 0, 0);
-                legsAnim.SetBool("isMovingLeft", true);
-                legsAnim.SetBool("isMovingRight", false);
+                /*if (isLockedOn)
+                {
+                    legsAnim.SetBool("isMovingLeft", true);
+                    legsAnim.SetBool("isMovingRight", false);
+                }*/
             }
-            else
+            else // Not moving left or right
             {
                 legsAnim.SetBool("isMovingLeft", false);
                 legsAnim.SetBool("isMovingRight", false);
@@ -152,12 +153,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (isLockedOn == false)
             {
-                closestEnemy = GetClosestEnemy();
+                fov.closestEnemy = fov.GetClosestEnemy();
 
-                if (closestEnemy != null)
+                if (fov.closestEnemy != null)
                 {
                     isLockedOn = true;
-                    lockOnTarget = closestEnemy;
+                    lockOnTarget = fov.closestEnemy;
                 }
             }
             else
@@ -166,16 +167,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value < -0.3f && canSwitchLockOnTarget)
         {
-            GetNearbyEnemies();
+            fov.GetNearbyEnemies();
 
-            if (nearbyEnemies.Count > 1)
+            if (fov.nearbyEnemies.Count > 1)
             {
-                int closestEnemyIndex = nearbyEnemies.IndexOf(lockOnTarget);
+                int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
 
-                if (nearbyEnemies[closestEnemyIndex] == nearbyEnemies[0])
-                    lockOnTarget = nearbyEnemies[nearbyEnemies.Count - 1];
+                if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[0])
+                    lockOnTarget = fov.nearbyEnemies[fov.nearbyEnemies.Count - 1];
                 else
-                    lockOnTarget = nearbyEnemies[closestEnemyIndex - 1];
+                    lockOnTarget = fov.nearbyEnemies[closestEnemyIndex - 1];
 
                 canSwitchLockOnTarget = false;
                 StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
@@ -183,16 +184,16 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value > 0.3f && canSwitchLockOnTarget)
         {
-            GetNearbyEnemies();
+            fov.GetNearbyEnemies();
 
-            if (nearbyEnemies.Count > 1)
+            if (fov.nearbyEnemies.Count > 1)
             {
-                int closestEnemyIndex = nearbyEnemies.IndexOf(lockOnTarget);
+                int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
 
-                if (nearbyEnemies[closestEnemyIndex] == nearbyEnemies[nearbyEnemies.Count - 1])
-                    lockOnTarget = nearbyEnemies[0];
+                if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[fov.nearbyEnemies.Count - 1])
+                    lockOnTarget = fov.nearbyEnemies[0];
                 else
-                    lockOnTarget = nearbyEnemies[closestEnemyIndex + 1];
+                    lockOnTarget = fov.nearbyEnemies[closestEnemyIndex + 1];
 
                 canSwitchLockOnTarget = false;
                 StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
@@ -207,49 +208,6 @@ public class PlayerMovement : MonoBehaviour
     {
         isLockedOn = false;
         lockOnTarget = null;
-    }
-
-    void GetNearbyEnemies()
-    {
-        nearbyEnemies.Clear();
-
-        if (fov.targetsInViewRadius.Length > 0)
-        {
-            float distToTarget;
-            foreach (Collider2D target in fov.targetsInViewRadius)
-            {
-                distToTarget = Vector2.Distance(transform.position, target.transform.position);
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position, distToTarget, obstacleMask);
-
-                if (hit == false)
-                    nearbyEnemies.Add(target.transform);
-            }
-        }
-    }
-
-    Transform GetClosestEnemy()
-    {
-        Transform possibleClosestEnemy = null;
-        float distToTarget;
-        closestEnemy = null;
-
-        GetNearbyEnemies();
-        foreach (Transform enemy in nearbyEnemies)
-        {
-            if (closestEnemy == null)
-                possibleClosestEnemy = enemy.transform;
-            else
-            {
-                distToTarget = Vector2.Distance(enemy.transform.position, transform.position);
-                if (distToTarget < Vector2.Distance(possibleClosestEnemy.position, transform.position))
-                    possibleClosestEnemy = enemy.transform;
-            }
-        }
-
-        if (possibleClosestEnemy != null)
-            return possibleClosestEnemy.transform;
-
-        return null;
     }
 
     void FaceLockOnTarget()

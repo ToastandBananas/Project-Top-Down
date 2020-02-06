@@ -13,6 +13,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask obstacleMask;
 
     public Collider2D[] targetsInViewRadius;
+    public Transform closestEnemy;
 
     [Header("Mesh Stuff:")]
     public float meshResolution;
@@ -23,6 +24,7 @@ public class FieldOfView : MonoBehaviour
 
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
+    public List<Transform> nearbyEnemies = new List<Transform>();
 
     void Start()
     {
@@ -64,6 +66,49 @@ public class FieldOfView : MonoBehaviour
                     visibleTargets.Add(target);
             }
         }
+    }
+
+    public void GetNearbyEnemies()
+    {
+        nearbyEnemies.Clear();
+
+        if (targetsInViewRadius.Length > 0)
+        {
+            float distToTarget;
+            foreach (Collider2D target in targetsInViewRadius)
+            {
+                distToTarget = Vector2.Distance(transform.position, target.transform.position);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position, distToTarget, obstacleMask);
+
+                if (hit == false)
+                    nearbyEnemies.Add(target.transform);
+            }
+        }
+    }
+
+    public Transform GetClosestEnemy()
+    {
+        Transform possibleClosestEnemy = null;
+        float distToTarget;
+        closestEnemy = null;
+
+        GetNearbyEnemies();
+        foreach (Transform enemy in nearbyEnemies)
+        {
+            if (closestEnemy == null)
+                possibleClosestEnemy = enemy.transform;
+            else
+            {
+                distToTarget = Vector2.Distance(enemy.transform.position, transform.position);
+                if (distToTarget < Vector2.Distance(possibleClosestEnemy.position, transform.position))
+                    possibleClosestEnemy = enemy.transform;
+            }
+        }
+
+        if (possibleClosestEnemy != null)
+            return possibleClosestEnemy.transform;
+
+        return null;
     }
 
     void DrawFieldOfView()

@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a51bf67f9a236694a9969b8222d80e00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisWeaponsSpecialAttacks: 00000000
-  specialAttackSlotQ: 0
+  thisWeaponsSpecialAttacks: 01000000
+  specialAttackSlotQ: 1
   specialAttackSlot1: 0
   specialAttackSlot2: 0
   specialAttackSlotE: 0

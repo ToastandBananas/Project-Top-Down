@@ -726,6 +726,7 @@ GameObject:
   - component: {fileID: 256753153932934012}
   - component: {fileID: 641563522233824849}
   - component: {fileID: 3763997127521640253}
+  - component: {fileID: 7665225410889906271}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -806,6 +807,8 @@ MonoBehaviour:
   runSpeed: 3
   dodgeDistance: 1
   dodgeCooldownTime: 1
+  isLockedOn: 0
+  lockOnTarget: {fileID: 0}
 --- !u!50 &256753153932934012
 Rigidbody2D:
   serializedVersion: 4
@@ -848,11 +851,14 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256
+  targetsInViewRadius: []
+  closestEnemy: {fileID: 0}
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDistThreshold: 0.5
   viewMeshFilter: {fileID: 8791679001258756540}
   visibleTargets: []
+  nearbyEnemies: []
 --- !u!114 &3763997127521640253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,6 +878,30 @@ MonoBehaviour:
   isBlocking: 0
   leftArmAttacking: 0
   rightArmAttacking: 0
+--- !u!114 &7665225410889906271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645066194768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3abba18b00ec13242939eb8da96eb482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  maxHealth: 50
+  health: 50
+  maxStamina: 50
+  stamina: 50
+  maxMana: 50
+  mana: 50
+  isPlayer: 1
+  isDead: 0
+  playerHealthStatBar: {fileID: 0}
+  playerManaStatBar: {fileID: 0}
+  playerStaminaStatBar: {fileID: 0}
 --- !u!1 &5363199645069364975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,7 +1051,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1230
+  m_InstanceId: -1212
 --- !u!1 &6471104657826024039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,11 +1302,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Clothing Texture
-      objectReference: {fileID: 0}
-    - target: {fileID: 9194404049553184386, guid: f86c3bbdf5aa51d4a92b733b4cfd361c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f86c3bbdf5aa51d4a92b733b4cfd361c, type: 3}
