@@ -721,12 +721,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5363199645066194799}
   - component: {fileID: 5363199645066194769}
+  - component: {fileID: 256753153932934012}
   - component: {fileID: 1273616031}
   - component: {fileID: 2354799989132348104}
-  - component: {fileID: 256753153932934012}
-  - component: {fileID: 641563522233824849}
-  - component: {fileID: 3763997127521640253}
   - component: {fileID: 7665225410889906271}
+  - component: {fileID: 3763997127521640253}
+  - component: {fileID: 4409863260335959007}
+  - component: {fileID: 641563522233824849}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -770,6 +771,27 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0022137344, y: -0.1482931}
   m_Size: {x: 1.0179194, y: 0.44688267}
   m_Direction: 1
+--- !u!50 &256753153932934012
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645066194768}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 5
+  m_AngularDrag: 5
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!95 &1273616031
 Animator:
   serializedVersion: 3
@@ -809,27 +831,69 @@ MonoBehaviour:
   dodgeCooldownTime: 1
   isLockedOn: 0
   lockOnTarget: {fileID: 0}
---- !u!50 &256753153932934012
-Rigidbody2D:
-  serializedVersion: 4
+--- !u!114 &7665225410889906271
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5363199645066194768}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 5
-  m_AngularDrag: 5
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3abba18b00ec13242939eb8da96eb482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  maxHealth: 50
+  health: 50
+  maxStamina: 50
+  stamina: 50
+  maxMana: 50
+  mana: 50
+  isPlayer: 1
+  isDead: 0
+  playerHealthStatBar: {fileID: 0}
+  playerManaStatBar: {fileID: 0}
+  playerStaminaStatBar: {fileID: 0}
+--- !u!114 &3763997127521640253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645066194768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7ea5af6080264691f86ee9338a32f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackTimerLeftArm: 0
+  attackTimerRightArm: 0
+  leftQuickAttackTime: 0
+  rightQuickAttackTime: 0
+  leftChargeAttackTime: 0
+  rightChargeAttackTime: 0
+  shieldBashTime: 0
+  minChargeAttackTime: 0.3
+  isBlocking: 0
+  leftArmAttacking: 0
+  rightArmAttacking: 0
+  leftQuickAttacking: 0
+  rightQuickAttacking: 0
+--- !u!114 &4409863260335959007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645066194768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a51bf67f9a236694a9969b8222d80e00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSpecialAttackSlot: 0
+  rightSpecialAttackSlot: 0
 --- !u!114 &641563522233824849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -859,49 +923,6 @@ MonoBehaviour:
   viewMeshFilter: {fileID: 8791679001258756540}
   visibleTargets: []
   nearbyEnemies: []
---- !u!114 &3763997127521640253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5363199645066194768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb7ea5af6080264691f86ee9338a32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackTimerLeftArm: 0
-  attackTimerRightArm: 0
-  shieldBashTime: 0
-  minChargeAttackTime: 0.3
-  isBlocking: 0
-  leftArmAttacking: 0
-  rightArmAttacking: 0
---- !u!114 &7665225410889906271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5363199645066194768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3abba18b00ec13242939eb8da96eb482, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 50
-  health: 50
-  maxStamina: 50
-  stamina: 50
-  maxMana: 50
-  mana: 50
-  isPlayer: 1
-  isDead: 0
-  playerHealthStatBar: {fileID: 0}
-  playerManaStatBar: {fileID: 0}
-  playerStaminaStatBar: {fileID: 0}
 --- !u!1 &5363199645069364975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,7 +1072,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1212
+  m_InstanceId: 27040
 --- !u!1 &6471104657826024039
 GameObject:
   m_ObjectHideFlags: 0

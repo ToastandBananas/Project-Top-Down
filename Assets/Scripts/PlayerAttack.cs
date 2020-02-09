@@ -15,22 +15,19 @@ public class PlayerAttack : MonoBehaviour
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
     
-    //[HideInInspector]
-    public float attackTimerLeftArm = 0;
-    //[HideInInspector]
-    public float attackTimerRightArm = 0;
+    [HideInInspector] public float attackTimerLeftArm = 0;
+    [HideInInspector] public float attackTimerRightArm = 0;
 
-    float leftQuickAttackTime, rightQuickAttackTime;
-    float leftChargeAttackTime, rightChargeAttackTime;
-
-    [HideInInspector]
-    public float shieldBashTime;
+    [HideInInspector] public float leftQuickAttackTime;
+    [HideInInspector] public float rightQuickAttackTime;
+    [HideInInspector] public float leftChargeAttackTime;
+    [HideInInspector] public float rightChargeAttackTime;
+    [HideInInspector] public float shieldBashTime;
 
     public float minChargeAttackTime = 0.3f;
     public bool isBlocking;
     public bool leftArmAttacking, rightArmAttacking;
-
-    bool leftQuickAttacking, rightQuickAttacking;
+    public bool leftQuickAttacking, rightQuickAttacking;
 
     void Awake()
     {
@@ -156,7 +153,8 @@ public class PlayerAttack : MonoBehaviour
         if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftArmAttacking == false)
         {
             attackTimerLeftArm += Time.smoothDeltaTime;
-            leftArmAnim.SetBool("startAttack", true);
+            if (attackTimerLeftArm >= minChargeAttackTime)
+                leftArmAnim.SetBool("startAttack", true);
         }
 
         if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimerLeftArm > 0)
@@ -194,7 +192,8 @@ public class PlayerAttack : MonoBehaviour
         if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightArmAttacking == false)
         {
             attackTimerRightArm += Time.smoothDeltaTime;
-            rightArmAnim.SetBool("startAttack", true);
+            if (attackTimerRightArm >= minChargeAttackTime)
+                rightArmAnim.SetBool("startAttack", true);
         }
 
         if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimerRightArm > 0)

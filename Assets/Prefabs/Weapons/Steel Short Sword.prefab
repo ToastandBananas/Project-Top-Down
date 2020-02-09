@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 184752757197993531}
   - component: {fileID: 8817556764781924269}
   - component: {fileID: 184752755676417393}
-  - component: {fileID: 8572688480544558537}
   m_Layer: 0
   m_Name: Steel Short Sword
   m_TagString: Untagged
@@ -98,10 +97,10 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0010414124, y: 0.11767897}
+  m_Offset: {x: 0.0010414124, y: 0.35858154}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.50000155, y: 0.17202824}
     oldSize: {x: 0.15625, y: 0.734375}
     newSize: {x: 0.15625, y: 0.734375}
     adaptiveTilingThreshold: 0.5
@@ -109,7 +108,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.062523305, y: 0.5031825}
+  m_Size: {x: 0.062523305, y: 0.5042187}
   m_EdgeRadius: 0
 --- !u!114 &184752755676417393
 MonoBehaviour:
@@ -123,28 +122,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0.045}
+  positionOffset: {x: 0, y: 0}
   generalClassification: 0
   weaponType: 1
+  thisWeaponsSpecialAttacks: 
   weaponName: 
   description: 
   damage: 0
---- !u!114 &8572688480544558537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184752757197993529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51bf67f9a236694a9969b8222d80e00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thisWeaponsSpecialAttacks: 
-  specialAttackSlotQ: 0
-  specialAttackSlot1: 0
-  specialAttackSlot2: 0
-  specialAttackSlotE: 0
-  specialAttackSlot3: 0
-  specialAttackSlot4: 0

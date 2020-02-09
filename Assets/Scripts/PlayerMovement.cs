@@ -280,7 +280,7 @@ public class PlayerMovement : MonoBehaviour
         Destroy(effect.gameObject);
     }
 
-    IEnumerator SmoothMovement(Vector3 targetPos)
+    public IEnumerator SmoothMovement(Vector3 targetPos)
     {
         while (Vector2.Distance(transform.position, targetPos) > 0.01f)
         {

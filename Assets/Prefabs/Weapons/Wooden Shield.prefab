@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1214168163440398642}
   - component: {fileID: 1214168163440398643}
   - component: {fileID: 1214168163440398640}
-  - component: {fileID: 5550677695184883468}
   m_Layer: 0
   m_Name: Wooden Shield
   m_TagString: Untagged
@@ -72,7 +71,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
   m_SortingLayer: 1
-  m_SortingOrder: -3
+  m_SortingOrder: 1
   m_Sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -95,21 +94,21 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.04812859, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.21875, y: 0.8125}
+    oldSize: {x: 0.125, y: 0.8125}
     newSize: {x: 0.21875, y: 0.8125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.12249282, y: 0.8125}
+  m_Size: {x: 0.125, y: 0.8125}
   m_EdgeRadius: 0
 --- !u!114 &1214168163440398640
 MonoBehaviour:
@@ -126,25 +125,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0}
   generalClassification: 2
   weaponType: 0
+  thisWeaponsSpecialAttacks: 01000000
   weaponName: 
   description: 
   damage: 0
---- !u!114 &5550677695184883468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1214168163440398638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51bf67f9a236694a9969b8222d80e00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thisWeaponsSpecialAttacks: 01000000
-  specialAttackSlotQ: 1
-  specialAttackSlot1: 0
-  specialAttackSlot2: 0
-  specialAttackSlotE: 0
-  specialAttackSlot3: 0
-  specialAttackSlot4: 0

@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 233bc7477966eec4c82606e75ec56266
+guid: 4cdcb7c918c152841a14dd49d383e94f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6717884257390833292
-    second: Shield_0
+      213: -1678802327825728582
+    second: UpperArm_0
   - first:
-      213: 115646720387773807
-    second: Shield_0
+      213: -7089411116562147454
+    second: UpperArm_0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -51,9 +51,9 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -104,22 +104,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shield_0
+      name: UpperArm_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 3
-        width: 4
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 7
+        y: 8
+        width: 18
+        height: 15
+      alignment: 9
+      pivot: {x: 0.22388156, y: 0.24512139}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f65f628541cda9100800000000000000
-      internalID: 115646720387773807
+      spriteID: 2879b9a962a5d9d90800000000000000
+      internalID: -7089411116562147454
       vertices: []
       indices: 
       edges: []

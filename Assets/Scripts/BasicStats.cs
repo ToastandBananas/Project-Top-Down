@@ -26,8 +26,11 @@ public class BasicStats : MonoBehaviour
         if (isPlayer)
             playerHealthStatBar.ChangeBar();
 
-        if (health < 0)
+        if (health <= 0)
+        {
             isDead = true;
+            Die();
+        }
     }
 
     public void Heal(float healAmount)
@@ -40,9 +43,15 @@ public class BasicStats : MonoBehaviour
             playerHealthStatBar.ChangeBar();
     }
 
+    public void Die()
+    {
+        // TODO: Death animation
+        Destroy(this.gameObject);
+    }
+
     public void UseMana(float manaAmount)
     {
-        if (mana - manaAmount > 0)
+        if (mana - manaAmount >= 0)
             mana -= manaAmount;
         else
             Debug.Log("Not enough mana...");
@@ -63,7 +72,7 @@ public class BasicStats : MonoBehaviour
 
     public void UseStamina(float staminaAmount)
     {
-        if (stamina - staminaAmount > 0)
+        if (stamina - staminaAmount >= 0)
             stamina -= staminaAmount;
         else
             Debug.Log("Not enough stamina...");

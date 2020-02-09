@@ -1,24 +1,28 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum SPECIAL_ATTACK { NONE, SHIELD_BASH }
 
 public class PlayerSpecialAttack : MonoBehaviour
 {
-    public SPECIAL_ATTACK[] thisWeaponsSpecialAttacks;
-    public SPECIAL_ATTACK specialAttackSlotQ, specialAttackSlot1, specialAttackSlot2;
-    public SPECIAL_ATTACK specialAttackSlotE, specialAttackSlot3, specialAttackSlot4;
-
+    public SPECIAL_ATTACK leftSpecialAttackSlot, rightSpecialAttackSlot;
+    // TODO: Potentially two special attack slots? ie: leftSpecialAttackSlot1 & 2 and righSpecialAttackSlot1 & 2 (using triangle and circle buttons?)
+    
+    PlayerMovement playerMovement;
     PlayerAttack playerAttack;
     Arms arms;
+    Transform headReset;
     
     Animator leftArmAnim, rightArmAnim;
+
+    bool canDoDamage = true;
     
     void Start()
     {
+        playerMovement = FindObjectOfType<PlayerMovement>();
         playerAttack = PlayerAttack.instance;
         arms = transform.root.Find("Arms").GetComponent<Arms>();
+        headReset = playerMovement.transform.Find("Head Reset");
         leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
         rightArmAnim = arms.transform.Find("Right Arm").GetComponent<Animator>();
 
@@ -39,7 +43,7 @@ public class PlayerSpecialAttack : MonoBehaviour
             && playerAttack.attackTimerLeftArm == 0 
             && (arms.leftWeaponEquipped || arms.leftShieldEquipped))
         { 
-            switch (specialAttackSlotQ)
+            switch (leftSpecialAttackSlot)
             {
                 case SPECIAL_ATTACK.SHIELD_BASH:
                     LeftShieldBash();
@@ -55,7 +59,7 @@ public class PlayerSpecialAttack : MonoBehaviour
             && playerAttack.attackTimerRightArm == 0 
             && (arms.rightWeaponEquipped || arms.rightShieldEquipped))
         {
-            switch (specialAttackSlotE)
+            switch (rightSpecialAttackSlot)
             {
                 case SPECIAL_ATTACK.SHIELD_BASH:
                     RightShieldBash();
@@ -69,6 +73,12 @@ public class PlayerSpecialAttack : MonoBehaviour
         if (playerAttack.isBlocking)
         {
             leftArmAnim.SetBool("doShieldBash", true);
+
+            //if (playerMovement.isLockedOn)
+                //StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (playerMovement.lockOnTarget.transform.position - playerMovement.transform.position).normalized * 1f));
+            //else
+            StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (headReset.position - playerMovement.transform.position).normalized * 1f));
+
             StartCoroutine(ResetShieldBash(playerAttack.shieldBashTime));
         }
     }
@@ -78,6 +88,12 @@ public class PlayerSpecialAttack : MonoBehaviour
         if (playerAttack.isBlocking)
         {
             rightArmAnim.SetBool("doShieldBash", true);
+
+            if (playerMovement.isLockedOn)
+                StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (playerMovement.lockOnTarget.transform.position - playerMovement.transform.position).normalized * 1f));
+            else
+                StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (headReset.position - playerMovement.transform.position).normalized * 1f));
+
             StartCoroutine(ResetShieldBash(playerAttack.shieldBashTime));
         }
     }
@@ -88,4 +104,6 @@ public class PlayerSpecialAttack : MonoBehaviour
         leftArmAnim.SetBool("doShieldBash", false);
         rightArmAnim.SetBool("doShieldBash", false);
     }
+
+    
 }
