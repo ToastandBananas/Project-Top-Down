@@ -127,5 +127,6 @@ MonoBehaviour:
   weaponType: 1
   thisWeaponsSpecialAttacks: 
   weaponName: 
-  description: 
-  damage: 0
+  description: Basic steel short sword.
+  damage: 5
+  knockbackPower: 1

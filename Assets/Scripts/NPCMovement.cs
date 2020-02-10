@@ -22,7 +22,7 @@ public class NPCMovement : MonoBehaviour
     AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
-    Animator anim, legsAnim;
+    Animator anim, legsAnim, leftArmAnim, rightArmAnim;
 
     float angle;
     Vector3 dir;
@@ -37,6 +37,8 @@ public class NPCMovement : MonoBehaviour
 
         anim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
+        leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
+        rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         patrolPoint = transform.Find("Patrol Point");
 
         fov = GetComponent<FieldOfView>();
@@ -102,27 +104,40 @@ public class NPCMovement : MonoBehaviour
 
         if (currentState == STATE.PURSUE)
         {
-            anim.SetBool("isMoving", true);
-            legsAnim.SetBool("isMoving", true);
+            SetIsMoving(true);
             AIPath.maxSpeed = runSpeed;
         }
         else if (currentState == STATE.PATROL)
         {
-            anim.SetBool("isMoving", true);
-            legsAnim.SetBool("isMoving", true);
+            SetIsMoving(true);
             AIPath.maxSpeed = walkSpeed;
         }
         else if (currentState == STATE.ATTACK)
         {
-            anim.SetBool("isMoving", false);
-            legsAnim.SetBool("isMoving", false);
+            SetIsMoving(false);
 
             // Debug.Log(name + " attacked you.");
         }
         else // Idle
         {
-            anim.SetBool("isMoving", false);
-            legsAnim.SetBool("isMoving", false);
+            SetIsMoving(false);
+        }
+    }
+
+    void SetIsMoving(bool isMoving)
+    {
+        anim.SetBool("isMoving", isMoving);
+        legsAnim.SetBool("isMoving", isMoving);
+        leftArmAnim.SetBool("isMoving", isMoving);
+        rightArmAnim.SetBool("isMoving", isMoving);
+    }
+
+    public IEnumerator SmoothMovement(Vector3 targetPos)
+    {
+        while (Vector2.Distance(transform.position, targetPos) > 0.01f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
+            yield return null; // Pause for one frame
         }
     }
 }

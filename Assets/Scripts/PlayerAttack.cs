@@ -10,8 +10,11 @@ public class PlayerAttack : MonoBehaviour
 
     QUICK_ATTACK_TURN currentQuickAttackTurn;
 
+    PlayerMovement playerMovement;
+    Transform headReset;
+    
     Arms arms;
-    Animator rightArmAnim, leftArmAnim;
+    Animator bodyAnim, rightArmAnim, leftArmAnim;
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
     
@@ -29,6 +32,8 @@ public class PlayerAttack : MonoBehaviour
     public bool leftArmAttacking, rightArmAttacking;
     public bool leftQuickAttacking, rightQuickAttacking;
 
+    LayerMask obstacleMask;
+
     void Awake()
     {
         if (instance == null)
@@ -39,9 +44,13 @@ public class PlayerAttack : MonoBehaviour
 
     void Start()
     {
+        playerMovement = GetComponent<PlayerMovement>();
+        headReset = transform.Find("Head Reset");
+        bodyAnim = GetComponent<Animator>();
         arms = transform.Find("Arms").GetComponent<Arms>();
         rightArmAnim = arms.transform.Find("Right Arm").GetComponent<Animator>();
         leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
+        obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         UpdateAnimClipTimes();
     }
@@ -164,6 +173,9 @@ public class PlayerAttack : MonoBehaviour
                 leftArmAttacking = true;
                 leftArmAnim.SetBool("startAttack", false);
                 leftArmAnim.SetBool("doAttack", true);
+                bodyAnim.SetBool("powerAttackLeft", true);
+
+                AttackDash(0.5f);
             }
             else
             {
@@ -184,6 +196,7 @@ public class PlayerAttack : MonoBehaviour
             leftArmAnim.SetBool("doAttack", false);
             leftQuickAttacking = false;
             leftArmAnim.SetBool("doQuickAttack", false);
+            bodyAnim.SetBool("powerAttackLeft", false);
         }
     }
 
@@ -203,6 +216,9 @@ public class PlayerAttack : MonoBehaviour
                 rightArmAttacking = true;
                 rightArmAnim.SetBool("startAttack", false);
                 rightArmAnim.SetBool("doAttack", true);
+                bodyAnim.SetBool("powerAttackRight", true);
+
+                AttackDash(0.5f);
             }
             else
             {
@@ -223,7 +239,17 @@ public class PlayerAttack : MonoBehaviour
             rightArmAnim.SetBool("doAttack", false);
             rightQuickAttacking = false;
             rightArmAnim.SetBool("doQuickAttack", false);
+            bodyAnim.SetBool("powerAttackRight", false);
         }
+    }
+
+    void AttackDash(float dashDistance)
+    {
+        Vector3 dir = (headReset.position - transform.position).normalized;
+        float raycastDistance = Vector3.Distance(transform.position, transform.position + dir * dashDistance);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, raycastDistance, obstacleMask);
+        if (hit == false)
+            StartCoroutine(playerMovement.SmoothMovement(transform.position + dir * dashDistance));
     }
 
     public void UpdateAnimClipTimes()
@@ -284,6 +310,7 @@ public class PlayerAttack : MonoBehaviour
         attackTimerLeftArm = 0;
         leftArmAttacking = false;
         leftArmAnim.SetBool("doAttack", false);
+        bodyAnim.SetBool("powerAttackLeft", false);
     }
 
     IEnumerator ResetChargeAttackTimerRightArm(float waitTime)
@@ -292,5 +319,6 @@ public class PlayerAttack : MonoBehaviour
         attackTimerRightArm = 0;
         rightArmAttacking = false;
         rightArmAnim.SetBool("doAttack", false);
+        bodyAnim.SetBool("powerAttackRight", false);
     }
 }
