@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 184752757197993528}
   - component: {fileID: 184752757197993531}
   - component: {fileID: 8817556764781924269}
+  - component: {fileID: 558677408}
+  - component: {fileID: 4730944932873394809}
   - component: {fileID: 184752755676417393}
   m_Layer: 0
   m_Name: Steel Short Sword
@@ -110,6 +112,43 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.062523305, y: 0.5042187}
   m_EdgeRadius: 0
+--- !u!50 &558677408
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184752757197993529}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 1
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &4730944932873394809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184752757197993529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd8f0a57a1259344a6eaf834cb59695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDropped: 0
+  itemName: 
+  description: 
+  value: 1
 --- !u!114 &184752755676417393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +165,5 @@ MonoBehaviour:
   generalClassification: 0
   weaponType: 1
   thisWeaponsSpecialAttacks: 
-  weaponName: 
-  description: Basic steel short sword.
   damage: 5
   knockbackPower: 1

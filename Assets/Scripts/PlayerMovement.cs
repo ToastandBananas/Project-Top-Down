@@ -53,15 +53,15 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Dodge();
-        LockOn();
+        Update_Dodge();
+        Update_LockOn();
     }
 
     void FixedUpdate()
     {
         movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
 
-        Movement();
+        Update_Movement();
 
         if (isLockedOn == false)
             FaceForward();
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
             ResetAnims();*/
     }
 
-    void Movement()
+    void Update_Movement()
     {
         if (playerAttack.isBlocking)
             moveSpeed = blockSpeed;
@@ -133,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
             ResetAnims();
     }
 
-    void Dodge()
+    void Update_Dodge()
     {
         if (canDodge && GameControls.gamePlayActions.playerDodge.WasPressed)
         {
@@ -147,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void LockOn()
+    void Update_LockOn()
     {
         if (GameControls.gamePlayActions.playerLockOn.WasPressed)
         {

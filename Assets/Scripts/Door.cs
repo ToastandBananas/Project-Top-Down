@@ -25,7 +25,7 @@ public class Door : MonoBehaviour
     {
         if (playerInRange)
         {
-            if (Input.GetButtonUp("Interact"))
+            if (GameControls.gamePlayActions.playerInteract.WasPressed)
             {
                 if (isOpen == false)
                     isOpen = true;
@@ -45,12 +45,12 @@ public class Door : MonoBehaviour
 
     void OpenDoor()
     {
-        if (isVerticalDoorway == false && transform.rotation.z != 90)
+        if (isVerticalDoorway == false && Mathf.Abs(transform.rotation.z) != 90)
         {
             newRotation = Quaternion.AngleAxis(90, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
         }
-        else if (isVerticalDoorway && transform.rotation.z != -180)
+        else if (isVerticalDoorway && Mathf.Abs(transform.rotation.z) != 180)
         {
             newRotation = Quaternion.AngleAxis(-180, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
@@ -64,7 +64,7 @@ public class Door : MonoBehaviour
             newRotation = Quaternion.AngleAxis(0, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
         }
-        else if (isVerticalDoorway && transform.rotation.z != -90)
+        else if (isVerticalDoorway && Mathf.Abs(transform.rotation.z) != 90)
         {
             newRotation = Quaternion.AngleAxis(-90, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);

@@ -14,8 +14,6 @@ public class Weapon : MonoBehaviour
     public SPECIAL_ATTACK[] thisWeaponsSpecialAttacks;
 
     [Header("Stats")]
-    public string weaponName;
-    public string description;
     public float damage = 1f;
     public float knockbackPower = 1f;
 
@@ -33,7 +31,6 @@ public class Weapon : MonoBehaviour
 
     void Start()
     {
-        weaponName = name;
         bloodSystem = BloodParticleSystemHandler.Instance;
         playerAttack = PlayerAttack.instance;
         playerMovement = playerAttack.GetComponent<PlayerMovement>();
@@ -99,7 +96,7 @@ public class Weapon : MonoBehaviour
             if (canDoDamage && collision.tag == "NPC")
             {
                 collision.GetComponent<BasicStats>().TakeDamage(damage);
-                Debug.Log(collision.GetComponent<BasicStats>().health);
+                Debug.Log("Health: " + collision.GetComponent<BasicStats>().health);
                 canDoDamage = false;
                 SpawnBlood(collision.transform);
 

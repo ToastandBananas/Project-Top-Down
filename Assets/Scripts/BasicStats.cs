@@ -14,6 +14,9 @@ public class BasicStats : MonoBehaviour
     public bool isPlayer;
     public bool isDead;
 
+    public Item leftWeapon;
+    public Item rightWeapon;
+
     [Header("Player Only")]
     public PlayerStatBar playerHealthStatBar;
     public PlayerStatBar playerManaStatBar;
@@ -45,8 +48,19 @@ public class BasicStats : MonoBehaviour
 
     public void Die()
     {
+        if (transform.Find("Arms").Find("Left Arm").GetChild(0).GetChild(0).childCount > 0)
+            leftWeapon = transform.Find("Arms").Find("Left Arm").GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Item>();
+        if (transform.Find("Arms").Find("Right Arm").GetChild(0).GetChild(0).childCount > 0)
+            rightWeapon = transform.Find("Arms").Find("Right Arm").GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Item>();
+
+        if (leftWeapon != null)
+            leftWeapon.DropItem();
+
+        if (rightWeapon != null)
+            rightWeapon.DropItem();
+
         // TODO: Death animation
-        Destroy(this.gameObject);
+        transform.position = new Vector2(10000, 10000);
     }
 
     public void UseMana(float manaAmount)
