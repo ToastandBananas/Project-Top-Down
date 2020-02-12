@@ -32,13 +32,12 @@ public class Item : MonoBehaviour
         AddForce();
     }
 
-    public void PickUpItem()
+    /*public void PickUpItem()
     {
         // TODO: Inventory system
         Debug.Log("Picked up item.");
-        rb.bodyType = RigidbodyType2D.Kinematic;
         Destroy(this.gameObject);
-    }
+    }*/
 
     void OnTriggerStay2D(Collider2D collision)
     {
@@ -46,7 +45,7 @@ public class Item : MonoBehaviour
         {
             if (collision.tag == "Player" && GameControls.gamePlayActions.playerInteract.WasPressed)
             {
-                PickUpItem();
+                //PickUpItem();
             }
         }
     }
