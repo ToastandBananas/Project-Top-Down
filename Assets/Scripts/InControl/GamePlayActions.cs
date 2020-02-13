@@ -2,6 +2,7 @@
 
 public class GamePlayActions : PlayerActionSet
 {
+    public PlayerAction playerInventory;
     public PlayerAction playerInteract;
     public PlayerAction playerDodge;
     public PlayerAction playerSprint;
@@ -15,6 +16,7 @@ public class GamePlayActions : PlayerActionSet
 
     public GamePlayActions()
     {
+        playerInventory = CreatePlayerAction("PlayerInventory");
         playerInteract = CreatePlayerAction("PlayerInteract");
         playerDodge = CreatePlayerAction("PlayerDodge");
         playerSprint = CreatePlayerAction("PlayerSprint");

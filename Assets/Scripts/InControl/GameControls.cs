@@ -13,6 +13,10 @@ public class GameControls : MonoBehaviour
 
     void BindDefaultControls()
     {
+        gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
+        gamePlayActions.playerInventory.AddDefaultBinding(Key.Escape);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Pause);
+
         gamePlayActions.playerInteract.AddDefaultBinding(Key.R);
         gamePlayActions.playerInteract.AddDefaultBinding(InputControlType.Action3);
 

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1b768773a80d24aab4348987115e24, type: 3}
+  m_Name: Steel Short Sword
+  m_EditorClassIdentifier: 
+  name: Steel Short Sword
+  icon: {fileID: 8789762969407134151, guid: 74e5f6c531df48e478a8fa07bd1ce084, type: 3}
+  description: Short sword made of steel.
+  value: 5
+  isDefaultItem: 0
+  generalClassification: 0
+  weaponType: 2
+  armorType: 0
+  thisWeaponsSpecialAttacks: 
+  weaponSlot: 1
+  equipmentSlot: 0
+  baseDamage: 1
+  damageModifier: 1
+  knockbackPower: 1
+  baseArmor: 1
+  armorModifier: 1

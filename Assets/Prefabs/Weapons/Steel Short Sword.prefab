@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 184752757197993531}
   - component: {fileID: 8817556764781924269}
   - component: {fileID: 558677408}
-  - component: {fileID: 4730944932873394809}
   - component: {fileID: 184752755676417393}
+  - component: {fileID: 3873751190061389563}
+  - component: {fileID: 973816257666725157}
   m_Layer: 0
   m_Name: Steel Short Sword
   m_TagString: Untagged
@@ -133,22 +134,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4730944932873394809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184752757197993529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecd8f0a57a1259344a6eaf834cb59695, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDropped: 0
-  itemName: 
-  description: 
-  value: 1
 --- !u!114 &184752755676417393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,8 +147,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionOffset: {x: 0, y: 0}
-  generalClassification: 0
-  weaponType: 1
-  thisWeaponsSpecialAttacks: 
-  damage: 5
-  knockbackPower: 1
+  equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
+--- !u!114 &3873751190061389563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184752757197993529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDropped: 0
+--- !u!114 &973816257666725157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184752757197993529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
+  interactionTransform: {fileID: 184752757197993528}
+  item: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}

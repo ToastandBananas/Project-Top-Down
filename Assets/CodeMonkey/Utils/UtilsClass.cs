@@ -72,19 +72,6 @@ namespace CodeMonkey.Utils {
             return gameObject;
         }
 
-        // Create a Sprite in the World with Button_Sprite, no parent
-        public static Button_Sprite CreateWorldSpriteButton(string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color) {
-            return CreateWorldSpriteButton(null, name, sprite, localPosition, localScale, sortingOrder, color);
-        }
-
-        // Create a Sprite in the World with Button_Sprite
-        public static Button_Sprite CreateWorldSpriteButton(Transform parent, string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color) {
-            GameObject gameObject = CreateWorldSprite(parent, name, sprite, localPosition, localScale, sortingOrder, color);
-            gameObject.AddComponent<BoxCollider2D>();
-            Button_Sprite buttonSprite = gameObject.AddComponent<Button_Sprite>();
-            return buttonSprite;
-        }
-
         // Creates a Text Mesh in the World and constantly updates it
         public static FunctionUpdater CreateWorldTextUpdater(Func<string> GetTextFunc, Vector3 localPosition, Transform parent = null) {
             TextMesh textMesh = CreateWorldText(GetTextFunc(), parent, localPosition);
