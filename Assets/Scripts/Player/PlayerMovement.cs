@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isLockedOn;
     public Transform lockOnTarget;
 
+    public int itemsToBePickedUpCount = 0;
+
     #region Singleton
     void Awake()
     {
@@ -294,6 +296,17 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         Destroy(effect.gameObject);
+    }
+
+    public void StartPickUpCooldown()
+    {
+        StartCoroutine(PickUpCooldown());
+    }
+
+    IEnumerator PickUpCooldown()
+    {
+        yield return new WaitForSeconds(0.1f);
+        itemsToBePickedUpCount = 0;
     }
 
     public IEnumerator SmoothMovement(Vector3 targetPos)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
@@ -10,41 +11,47 @@ public class Interactable : MonoBehaviour
 
     bool isFocus = false; // Is this interactable currently being focused?
     Transform player;
-
-    bool hasInteracted = false; // Have we already interacted with this object?
+    PlayerMovement playerMovement;
+    
+    //bool hasInteracted = false; // Have we already interacted with this object?
 
     public virtual void Interact()
     {
         // This method is meant to be overwritten
-        Debug.Log("Interacting with " + transform.name);
+        // Debug.Log("Interacting with " + transform.name);
     }
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        interactionTransform = transform;
+        playerMovement = PlayerMovement.instance;
+        player = playerMovement.gameObject.transform;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        if (hasInteracted == false && GameControls.gamePlayActions.playerInteract.WasPressed)
+        if (GameControls.gamePlayActions.playerInteract.WasPressed)
         {
             // If we're close enough
             float distance = Vector3.Distance(player.position, interactionTransform.position);
-            if (distance <= radius)
+            if (distance <= radius && playerMovement.itemsToBePickedUpCount == 0)
             {
+                playerMovement.itemsToBePickedUpCount++;
                 // Interact with the object
                 Interact();
-                hasInteracted = true;            }
+                //hasInteracted = true;
+
+                playerMovement.StartPickUpCooldown();
+            }
         }
     }
 
     // Called when the object starts being focused
-    public void OnFocused(Transform playerTransform)
+    /*public void OnFocused(Transform playerTransform)
     {
         isFocus = true;
         player = playerTransform;
-        hasInteracted = false;
+        //hasInteracted = false;
     }
 
     // Called when the object is no longer focused
@@ -52,8 +59,8 @@ public class Interactable : MonoBehaviour
     {
         isFocus = false;
         player = null;
-        hasInteracted = false;
-    }
+        //hasInteracted = false;
+    }*/
 
     // Draw our radius in the editor
     private void OnDrawGizmosSelected()

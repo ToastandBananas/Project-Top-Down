@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ItemPickup : Interactable
 {
@@ -29,5 +30,7 @@ public class ItemPickup : Interactable
 
         if (wasPickedUp)
             Destroy(gameObject);
+        else
+            Debug.Log("Not enough room in your inventory to pick up " + item.name + ".");
     }
 }

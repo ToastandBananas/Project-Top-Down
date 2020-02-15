@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public delegate void OnItemChanged();
-    public OnItemChanged onItemChangedCallback;
+    InventoryUI inventoryUI;
+
+    //public delegate void OnItemChanged();
+    //public OnItemChanged onItemChangedCallback;
 
     public int pocketsSlotCount = 10;
     public int bagSlotCount = 10;
-    public int horseSlotCount = 10;
+    public int horseBagSlotCount = 10;
 
-    public List<Item> pocketItems = new List<Item>();
-    public List<Item> bagItems    = new List<Item>();
-    public List<Item> horseItems  = new List<Item>();
+    public List<Item> pocketItems   = new List<Item>();
+    public List<Item> bagItems      = new List<Item>();
+    public List<Item> horseBagItems = new List<Item>();
 
     #region Singleton
     public static Inventory instance;
@@ -29,6 +31,11 @@ public class Inventory : MonoBehaviour
     }
     #endregion
 
+    void Start()
+    {
+        inventoryUI = InventoryUI.instance;
+    }
+
     public bool AddToPockets(Item item)
     {
         if (item.isDefaultItem == false)
@@ -41,20 +48,19 @@ public class Inventory : MonoBehaviour
             
             pocketItems.Add(item);
 
-            // Sort items alphabetically
-            pocketItems.Sort
-            (
-                delegate (Item i1, Item i2)
+            for (int i = 0; i < inventoryUI.pocketsSlots.Length; i++)
+            {
+                if (inventoryUI.pocketsSlots[i].iconImage == null)
                 {
-                    return i1.name.CompareTo(i2.name);
+                    inventoryUI.pocketsSlots[i].AddItem(item);
+                    return true;
                 }
-            );
-
-            if (onItemChangedCallback != null)
-                onItemChangedCallback.Invoke();
+            }
         }
 
-        return true;
+        // We should never get here...if we do there's an error in our code
+        Debug.LogWarning("Warning: Something is wrong with our AddToPockets code. We should either return true or false before this point.");
+        return false;
     }
 
     public bool AddToBag(Item item)
@@ -69,48 +75,46 @@ public class Inventory : MonoBehaviour
 
             bagItems.Add(item);
 
-            // Sort items alphabetically
-            bagItems.Sort
-            (
-                delegate (Item i1, Item i2)
+            for (int i = 0; i < inventoryUI.bagSlots.Length; i++)
+            {
+                if (inventoryUI.bagSlots[i].iconImage == null)
                 {
-                    return i1.name.CompareTo(i2.name);
+                    inventoryUI.bagSlots[i].AddItem(item);
+                    return true;
                 }
-            );
-
-            if (onItemChangedCallback != null)
-                onItemChangedCallback.Invoke();
+            }
         }
 
-        return true;
+        // We should never get here...if we do there's an error in our code
+        Debug.LogWarning("Warning: Something is wrong with our AddToBag code. We should either return true or false before this point.");
+        return false;
     }
 
     public bool AddToHorseBag(Item item)
     {
         if (item.isDefaultItem == false)
         {
-            if (horseItems.Count >= horseSlotCount)
+            if (horseBagItems.Count >= horseBagSlotCount)
             {
-                Debug.Log("Not enough room in horses bags.");
+                Debug.Log("Not enough room in horse bags.");
                 return false;
             }
 
-            horseItems.Add(item);
+            horseBagItems.Add(item);
 
-            // Sort items alphabetically
-            horseItems.Sort
-            (
-                delegate (Item i1, Item i2)
+            for (int i = 0; i < inventoryUI.horseBagSlots.Length; i++)
+            {
+                if (inventoryUI.horseBagSlots[i].iconImage == null)
                 {
-                    return i1.name.CompareTo(i2.name);
+                    inventoryUI.horseBagSlots[i].AddItem(item);
+                    return true;
                 }
-            );
-
-            if (onItemChangedCallback != null)
-                onItemChangedCallback.Invoke();
+            }
         }
 
-        return true;
+        // We should never get here...if we do there's an error in our code
+        Debug.LogWarning("Warning: Something is wrong with our AddToHorseBag code. We should either return true or false before this point.");
+        return false;
     }
 
     public void Remove(Item item)
@@ -119,10 +123,17 @@ public class Inventory : MonoBehaviour
             bagItems.Remove(item);
         else if (pocketItems.Contains(item))
             pocketItems.Remove(item);
-        else if (horseItems.Contains(item))
-            horseItems.Remove(item);
+        else if (horseBagItems.Contains(item))
+            horseBagItems.Remove(item);
+    }
 
-        if (onItemChangedCallback != null)
-            onItemChangedCallback.Invoke();
+    public void SortItemsAlphabetically(List<Item> itemsList, InventorySlot[] slotsArray)
+    {
+        itemsList.Sort(delegate (Item i1, Item i2) { return i1.name.CompareTo(i2.name); });
+        for (int i = 0; i < slotsArray.Length; i++)
+        {
+            if (i < itemsList.Count)
+                slotsArray[i].UpdateSlot(itemsList[i]);
+        }
     }
 }

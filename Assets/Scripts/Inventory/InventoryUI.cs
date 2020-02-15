@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI instance;
+
     public GameObject slotPrefab;
     public GameObject inventoryGO;
 
@@ -14,14 +16,27 @@ public class InventoryUI : MonoBehaviour
     public Transform bagTitle;
     public Transform horseBagTitle;
 
-    int maxInventoryWidth = 10;
+    int maxInventoryWidth = 8;
 
     Inventory inventory;
     PlayerMovement player;
 
-    InventorySlot[] pocketsSlots;
-    InventorySlot[] bagSlots;
-    InventorySlot[] horseBagSlots;
+    public InventorySlot[] pocketsSlots;
+    public InventorySlot[] bagSlots;
+    public InventorySlot[] horseBagSlots;
+
+    #region Singleton
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Debug.LogWarning("FIXME: More than one InventoryUI script is active.");
+            Destroy(gameObject);
+        }
+    }
+    #endregion
 
     void Start()
     {
@@ -30,7 +45,7 @@ public class InventoryUI : MonoBehaviour
 
         CreateSlots();
 
-        inventory.onItemChangedCallback += UpdateUI; // Call UpdateUI whenever the onItemChangedCallback delegate is called
+        // inventory.onItemChangedCallback += UpdateUI; // Call UpdateUI whenever the onItemChangedCallback delegate is called
 
         pocketsSlots = pocketsParent.GetComponentsInChildren<InventorySlot>();
         bagSlots = bagParent.GetComponentsInChildren<InventorySlot>();
@@ -53,86 +68,92 @@ public class InventoryUI : MonoBehaviour
         RepositionBagTitles();
     }
 
-    void UpdateUI()
+    /*void UpdateUI()
     {
         for (int i = 0; i < pocketsSlots.Length; i++)
         {
-            if (i < inventory.pocketItems.Count)
-                pocketsSlots[i].AddItem(inventory.pocketItems[i]);
-            else
-                pocketsSlots[i].ClearSlot();
+            //if (i < inventory.pocketItems.Count)
+               //pocketsSlots[i].AddItem(inventory.pocketItems[i]);
+            //else
+                //pocketsSlots[i].ClearSlot();
         }
 
         for (int i = 0; i < bagSlots.Length; i++)
         {
-            if (i < inventory.bagItems.Count)
-                bagSlots[i].AddItem(inventory.bagItems[i]);
-            else
-                bagSlots[i].ClearSlot();
+            //if (i < inventory.bagItems.Count)
+                //bagSlots[i].AddItem(inventory.bagItems[i]);
+            //else
+                //bagSlots[i].ClearSlot();
         }
 
         for (int i = 0; i < horseBagSlots.Length; i++)
         {
-            if (i < inventory.horseItems.Count)
-                horseBagSlots[i].AddItem(inventory.horseItems[i]);
-            else
-                horseBagSlots[i].ClearSlot();
+            //if (i < inventory.horseItems.Count)
+                //horseBagSlots[i].AddItem(inventory.horseItems[i]);
+            //else
+                //horseBagSlots[i].ClearSlot();
         }
-    }
+    }*/
 
     void CreateSlots()
     {
-        int currentXCoord = 0;
-        int currentYCoord = 0;
-        for (int i = 0; i < inventory.pocketsSlotCount; i++)
+        int currentXCoord = 1;
+        int currentYCoord = 1;
+        for (int i = 1; i < inventory.pocketsSlotCount + 1; i++)
         {
             GameObject slot = Instantiate(slotPrefab, pocketsParent);
             slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
-            if (currentXCoord == maxInventoryWidth)
+            if (currentXCoord == maxInventoryWidth + 1)
             {
-                currentXCoord = 0;
+                currentXCoord = 1;
                 currentYCoord++;
             }
+
+            slot.name = "Pocket Slot " + i;
         }
 
-        currentXCoord = 0;
-        currentYCoord = 0;
-        for (int i = 0; i < inventory.bagSlotCount; i++)
+        currentXCoord = 1;
+        currentYCoord = 1;
+        for (int i = 1; i < inventory.bagSlotCount + 1; i++)
         {
             GameObject slot = Instantiate(slotPrefab, bagParent);
             slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
-            if (currentXCoord == maxInventoryWidth)
+            if (currentXCoord == maxInventoryWidth + 1)
             {
-                currentXCoord = 0;
+                currentXCoord = 1;
                 currentYCoord++;
             }
+
+            slot.name = "Bag Slot " + i;
         }
 
-        currentXCoord = 0;
-        currentYCoord = 0;
-        for (int i = 0; i < inventory.horseSlotCount; i++)
+        currentXCoord = 1;
+        currentYCoord = 1;
+        for (int i = 1; i < inventory.horseBagSlotCount + 1; i++)
         {
             GameObject slot = Instantiate(slotPrefab, horseBagParent);
             slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
-            if (currentXCoord == maxInventoryWidth)
+            if (currentXCoord == maxInventoryWidth + 1)
             {
-                currentXCoord = 0;
+                currentXCoord = 1;
                 currentYCoord++;
             }
+
+            slot.name = "Horse Bag Slot " + i;
         }
     }
 
     void RepositionBagTitles()
     {
-        pocketsTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(23, pocketsParent.GetComponent<RectTransform>().anchoredPosition.y);
-        bagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(23, bagParent.GetComponent<RectTransform>().anchoredPosition.y);
-        horseBagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(23, horseBagParent.GetComponent<RectTransform>().anchoredPosition.y);
+        pocketsTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, pocketsParent.GetComponent<RectTransform>().anchoredPosition.y);
+        bagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, bagParent.GetComponent<RectTransform>().anchoredPosition.y);
+        horseBagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, horseBagParent.GetComponent<RectTransform>().anchoredPosition.y);
     }
 
     void ShowHorseSlots(bool showSlots)
