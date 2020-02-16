@@ -1,15 +1,27 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ItemPickup : Interactable
 {
     public Item item;
-
+    
     ItemDrop itemDropScript;
+    WeaponDamage weaponDamageScript;
+    BoxCollider2D boxCollider;
 
     private void Awake()
     {
         itemDropScript = GetComponent<ItemDrop>();
+        weaponDamageScript = GetComponent<WeaponDamage>();
+        boxCollider = GetComponent<BoxCollider2D>();
+        item = itemDropScript.item;
+
+        if (itemDropScript.isDropped == false)
+            enabled = false;
+        else
+        {
+            weaponDamageScript.enabled = false;
+            boxCollider.enabled = false;
+        }
     }
 
     public override void Interact()

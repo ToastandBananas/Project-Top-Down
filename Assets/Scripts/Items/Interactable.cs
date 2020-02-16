@@ -7,7 +7,7 @@ public class Interactable : MonoBehaviour
     // It is meant to act as a base class.
 
     public float radius = 1f; // How close we need to be to interact
-    public Transform interactionTransform; // The transform from where we interact
+    Transform interactionTransform; // The transform from where we interact
 
     bool isFocus = false; // Is this interactable currently being focused?
     Transform player;
@@ -37,6 +37,7 @@ public class Interactable : MonoBehaviour
             if (distance <= radius && playerMovement.itemsToBePickedUpCount == 0)
             {
                 playerMovement.itemsToBePickedUpCount++;
+
                 // Interact with the object
                 Interact();
                 //hasInteracted = true;

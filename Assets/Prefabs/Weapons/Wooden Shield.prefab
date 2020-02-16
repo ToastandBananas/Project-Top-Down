@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1214168163440398642}
   - component: {fileID: 1214168163440398643}
   - component: {fileID: 1214168163440398640}
+  - component: {fileID: -4825492704394803176}
+  - component: {fileID: -505975839810964597}
   m_Layer: 0
   m_Name: Wooden Shield
   m_TagString: Untagged
@@ -123,9 +125,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionOffset: {x: 0, y: 0}
-  generalClassification: 2
-  weaponType: 0
-  thisWeaponsSpecialAttacks: 01000000
-  weaponName: 
-  description: 
-  damage: 0
+  equipment: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+--- !u!114 &-4825492704394803176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214168163440398638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  isDropped: 0
+--- !u!114 &-505975839810964597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214168163440398638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
+  item: {fileID: 0}

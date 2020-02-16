@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff1b768773a80d24aab4348987115e24, type: 3}
-  m_Name: Silver Short Sword
+  m_Name: Wooden Shield
   m_EditorClassIdentifier: 
-  name: Silver Short Sword
-  icon: {fileID: 6805589676669568565, guid: 74e5f6c531df48e478a8fa07bd1ce084, type: 3}
-  description: Short sword made of silver.
-  value: 50
-  isDefaultItem: 0
-  generalClassification: 0
-  weaponType: 2
+  isPickupable: 1
+  name: Wooden Shield
+  sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266, type: 3}
+  description: 
+  value: 1
+  iconWidth: 2
+  iconHeight: 2
+  inventoryIcon: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266,
+    type: 3}
+  isStackable: 0
+  generalClassification: 2
+  weaponType: 1
   armorType: 0
   thisWeaponsSpecialAttacks: 
-  weaponSlot: 1
+  weaponSlot: 0
   equipmentSlot: 0
   baseDamage: 1
   damageModifier: 1

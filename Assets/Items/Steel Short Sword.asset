@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1b768773a80d24aab4348987115e24, type: 3}
   m_Name: Steel Short Sword
   m_EditorClassIdentifier: 
+  isPickupable: 1
   name: Steel Short Sword
-  icon: {fileID: 8789762969407134151, guid: 74e5f6c531df48e478a8fa07bd1ce084, type: 3}
+  sprite: {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
   description: Short sword made of steel.
   value: 5
-  isDefaultItem: 0
+  iconWidth: 1
+  iconHeight: 2
+  inventoryIcon: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
+  isStackable: 0
   generalClassification: 0
   weaponType: 2
   armorType: 0

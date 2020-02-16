@@ -4,44 +4,97 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour
 {
+    public bool isEmpty = true;
+
+    [Header("Slot Coordinate")]
     public Vector2 slotCoordinate = Vector2.zero;
+
+    [Header("Prefabs")]
     public GameObject iconPrefab;
 
-    public Image iconImage;
-    public Item item;
+    [Header("Slot Background")]
+    public Image slotBackgroundImage;
+    public Sprite emptySlotSprite;
+    public Sprite fullSlotSprite;
 
-    bool isMovingItem;
+    [Header("Slot Item")]
+    public SpriteRenderer iconSprite;
+    public Item item;
+    public InventorySlot parentSlot;
+    public InventorySlot[] childrenSlots = new InventorySlot[5]; // Item width * height - 1 will have a maximum of 5
+
+    [HideInInspector]
+    public Transform bagParent;
+    Inventory inv;
+    InventoryUI invUI;
+    Vector3 mousePos;
+
+    void Awake()
+    {
+        inv = Inventory.instance;
+        invUI = InventoryUI.instance;
+    }
+
+    void Update()
+    {
+        // If we have a selected item & we're moving the item from this slot & we have an icon sprite
+        if (invUI.currentlySelectedItem != null && invUI.movingFromSlot == this && iconSprite != null)
+        {
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            iconSprite.transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+        }
+    }
 
     public void AddItem(Item newItem)
     {
-        Instantiate(iconPrefab, transform.GetChild(0).transform);
-        iconImage = transform.GetChild(0).GetChild(0).GetComponent<Image>();
+        GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
+        iconSprite = newIcon.GetComponent<SpriteRenderer>();
+        newIcon.transform.position = transform.position;
 
         item = newItem;
         
-        iconImage.name = item.name;
-        iconImage.sprite = item.icon;
+        newIcon.name = item.name;
+        iconSprite.sprite = item.inventoryIcon;
+
+        slotBackgroundImage.sprite = fullSlotSprite;
+
+        isEmpty = false;
         
         //icon.enabled = true;
     }
 
+    /// <summary> Only use when intending to destory an icon object. </summary>
     public void ClearSlot()
     {
-        Destroy(iconImage.gameObject);
+        Destroy(iconSprite.gameObject);
 
-        iconImage = null;
+        iconSprite = null;
         item = null;
+
+        slotBackgroundImage.sprite = emptySlotSprite;
+
+        isEmpty = true;
 
         //icon.sprite = null;
         //icon.enabled = false;
+    }
+
+    /// <summary> Sets slot to empty and changes the slot's background sprite to the empty slot sprite. </summary>
+    public void SoftClearSlot(InventorySlot slotToClear)
+    {
+        slotToClear.isEmpty = true;
+        slotToClear.slotBackgroundImage.sprite = emptySlotSprite;
     }
 
     public void UpdateSlot(Item newItem)
     {
         item = newItem;
 
-        iconImage.name = item.name;
-        iconImage.sprite = item.icon;
+        iconSprite.name = item.name;
+        iconSprite.sprite = item.inventoryIcon;
+        iconSprite.transform.position = transform.position;
+
+        slotBackgroundImage.sprite = fullSlotSprite;
     }
 
     public void UseItem()
@@ -55,11 +108,100 @@ public class InventorySlot : MonoBehaviour
 
     public void MoveItem()
     {
-        isMovingItem = true;
-    }
+        if (isEmpty == false && invUI.currentlySelectedItem == null) // If there's an item in the slot and we haven't selected an item to move yet
+        {
+            // Determine the parent slot & item (in case we select the item from one of the children slots)
+            if (parentSlot == null)
+            {
+                invUI.currentlySelectedItem = item; // If parent slot is null, then this must be the parent slot
+                invUI.movingFromSlot = this;
+                SoftClearSlot(this);
+            }
+            else
+            {
+                invUI.currentlySelectedItem = parentSlot.item; // Otherwise we'll grab the parent slot & item of this child slot
+                invUI.movingFromSlot = parentSlot;
+                SoftClearSlot(parentSlot);
+            }
 
-    public void PlaceItemInSlot()
-    {
+            // Set isEmpty and slotBackgroundImage of our parent and children slots
+            if (parentSlot != null)
+            {
+                parentSlot.isEmpty = true;
+                parentSlot.slotBackgroundImage.sprite = emptySlotSprite;
+                foreach(InventorySlot childSlot in parentSlot.childrenSlots) // Set all children to empty
+                {
+                    if (childSlot != null) // Our child slot array won't always be full
+                        SoftClearSlot(childSlot);
+                }
+            }
+            else
+            {
+                foreach(InventorySlot childSlot in childrenSlots)
+                {
+                    if (childSlot != null)
+                        SoftClearSlot(childSlot);
+                }
+            }
+        }
+        else if (invUI.currentlySelectedItem != null) // If we've selected an item to move (currently will be following cursor if using mouse)
+        {
+            if (bagParent.name == "Pockets")
+            {
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.pocketsSlots, inv.pocketItems) == false)
+                {
+                    Debug.Log("Cannot place item here.");
+                }
+                else
+                {
+                    Debug.Log("Item successfully placed");
+                }
+            }
+            else if (bagParent.name == "Bag")
+            {
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.bagSlots, inv.bagItems) == false)
+                {
+                    Debug.Log("Cannot place item here.");
+                }
+                else
+                {
+                    Debug.Log("Item successfully placed");
+                }
+            }
+            else if (bagParent.name == "Horse Bags")
+            {
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.horseBagSlots, inv.horseBagItems) == false)
+                {
+                    Debug.Log("Cannot place item here.");
+                }
+                else
+                {
+                    Debug.Log("Item successfully placed");
+                }
+            }
 
+            /*if (invUI.movingFromSlot == this) // If we're placing the item back in its original slot
+            {
+                invUI.currentlySelectedItem = null;
+                invUI.movingFromSlot = null;
+                iconSprite.transform.position = transform.position;
+                slotBackgroundImage.sprite = fullSlotSprite;
+            }
+            else if (item != null) // If slot already has an item in it
+            {
+                // Set this item as our newly selected item
+                //invUI.movingFromSlot.UpdateSlot(item); // Update the slot we're moving the item from
+                //UpdateSlot(invUI.currentlySelectedItem); // Update slot we're trying to move the item to
+                
+            }
+            else // If slot is empty
+            {
+                AddItem(invUI.currentlySelectedItem); // Add item to the slot we want to move it to
+                invUI.movingFromSlot.ClearSlot(); // Clear the slot we're moving it from
+            }
+            
+            invUI.currentlySelectedItem = null;
+            invUI.movingFromSlot = null;*/
+        }
     }
 }

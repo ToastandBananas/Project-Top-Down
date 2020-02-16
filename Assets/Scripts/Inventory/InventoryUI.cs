@@ -25,6 +25,9 @@ public class InventoryUI : MonoBehaviour
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
 
+    public Item currentlySelectedItem;
+    public InventorySlot movingFromSlot;
+
     #region Singleton
     void Awake()
     {
@@ -58,14 +61,7 @@ public class InventoryUI : MonoBehaviour
     void Update()
     {
         if (GameControls.gamePlayActions.playerInventory.WasPressed)
-        {
             inventoryGO.SetActive(!inventoryGO.activeSelf);
-        }
-    }
-
-    void FixedUpdate()
-    {
-        RepositionBagTitles();
     }
 
     /*void UpdateUI()
@@ -111,6 +107,7 @@ public class InventoryUI : MonoBehaviour
                 currentYCoord++;
             }
 
+            slot.GetComponent<InventorySlot>().bagParent = pocketsParent;
             slot.name = "Pocket Slot " + i;
         }
 
@@ -128,6 +125,7 @@ public class InventoryUI : MonoBehaviour
                 currentYCoord++;
             }
 
+            slot.GetComponent<InventorySlot>().bagParent = bagParent;
             slot.name = "Bag Slot " + i;
         }
 
@@ -145,15 +143,9 @@ public class InventoryUI : MonoBehaviour
                 currentYCoord++;
             }
 
+            slot.GetComponent<InventorySlot>().bagParent = horseBagParent;
             slot.name = "Horse Bag Slot " + i;
         }
-    }
-
-    void RepositionBagTitles()
-    {
-        pocketsTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, pocketsParent.GetComponent<RectTransform>().anchoredPosition.y);
-        bagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, bagParent.GetComponent<RectTransform>().anchoredPosition.y);
-        horseBagTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, horseBagParent.GetComponent<RectTransform>().anchoredPosition.y);
     }
 
     void ShowHorseSlots(bool showSlots)

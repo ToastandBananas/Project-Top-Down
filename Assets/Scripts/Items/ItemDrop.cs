@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class ItemDrop : MonoBehaviour
 {
+    public Item item;
     public bool isDropped;
-
+    
     Rigidbody2D rb;
+    ItemPickup itemPickupScript;
+    WeaponDamage weaponDamageScript;
     Transform looseItemsContainer;
 
     LayerMask obstacleMask;
@@ -13,6 +16,8 @@ public class ItemDrop : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        itemPickupScript = GetComponent<ItemPickup>();
+        weaponDamageScript = GetComponent<WeaponDamage>();
         looseItemsContainer = GameObject.Find("Loose Items").transform;
         obstacleMask = LayerMask.GetMask("Walls", "Floors");
     }
@@ -21,16 +26,18 @@ public class ItemDrop : MonoBehaviour
     {
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);
+        itemPickupScript.enabled = true;
+        weaponDamageScript.enabled = false;
         AddForce();
     }
 
     // Call this when you want to apply force in a random direction
     void AddForce()
     {
-        StartCoroutine(FakeAddForceMotion());
+        StartCoroutine(FakeAddForceMotion(false));
     }
 
-    IEnumerator FakeAddForceMotion()
+    IEnumerator FakeAddForceMotion(bool tossInAir)
     {
         Vector3 originalScale = transform.localScale;
 
@@ -59,11 +66,14 @@ public class ItemDrop : MonoBehaviour
 
         while (forceAmount > i)
         {
-            // Simulate to look like the item was tossed into the air by increasing and then decreasing its scale
-            if (i <= forceAmount / 2)
-                transform.localScale *= 1.05f;
-            else if (transform.localScale.x > originalScale.x)
-                transform.localScale *= 0.95f;
+            if (tossInAir)
+            {
+                // Simulate to look like the item was tossed into the air by increasing and then decreasing its scale
+                if (i <= forceAmount / 2)
+                    transform.localScale *= 1.05f;
+                else if (transform.localScale.x > originalScale.x)
+                    transform.localScale *= 0.95f;
+            }
 
             // Move in a random direction towards a random distance
             rb.velocity = new Vector2((forceAmount / i) * randomForceModifier.x, (forceAmount / i) * randomForceModifier.y);
