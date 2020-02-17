@@ -21,6 +21,7 @@ public class InventoryUI : MonoBehaviour
     Inventory inventory;
     PlayerMovement player;
 
+    public InventorySlot tempSlot;
     public InventorySlot[] pocketsSlots;
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
@@ -146,6 +147,15 @@ public class InventoryUI : MonoBehaviour
             slot.GetComponent<InventorySlot>().bagParent = horseBagParent;
             slot.name = "Horse Bag Slot " + i;
         }
+
+        tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
+        tempSlot.name = "Temp Slot";
+    }
+
+    public void StopDraggingInvItem()
+    {
+        currentlySelectedItem = null;
+        movingFromSlot = null;
     }
 
     void ShowHorseSlots(bool showSlots)
