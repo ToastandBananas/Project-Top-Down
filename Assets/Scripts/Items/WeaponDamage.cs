@@ -88,7 +88,7 @@ public class WeaponDamage : MonoBehaviour
         {
             if (canDoDamage && collision.tag == "NPC")
             {
-                collision.GetComponent<BasicStats>().TakeDamage(equipment.baseDamage);
+                collision.GetComponent<BasicStats>().TakeDamage(equipment.minBaseDamage);
                 Debug.Log("Health: " + collision.GetComponent<BasicStats>().health);
                 canDoDamage = false;
                 SpawnBlood(collision.transform);
@@ -106,7 +106,7 @@ public class WeaponDamage : MonoBehaviour
         {
             if (canDoDamage && collision.tag == "NPC")
             {
-                collision.GetComponent<BasicStats>().TakeDamage(equipment.baseDamage);
+                collision.GetComponent<BasicStats>().TakeDamage(equipment.minBaseDamage);
                 Debug.Log(collision.GetComponent<BasicStats>().health);
                 canDoDamage = false;
                 SpawnBlood(collision.transform);

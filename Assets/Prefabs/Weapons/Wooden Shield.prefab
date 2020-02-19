@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1214168163440398641}
   - component: {fileID: 1214168163440398642}
   - component: {fileID: 1214168163440398643}
-  - component: {fileID: 1214168163440398640}
+  - component: {fileID: -1228814581759130278}
   - component: {fileID: -4825492704394803176}
   - component: {fileID: -505975839810964597}
   m_Layer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: -3
   m_Sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -112,7 +112,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.125, y: 0.8125}
   m_EdgeRadius: 0
---- !u!114 &1214168163440398640
+--- !u!114 &-1228814581759130278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,11 +121,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1214168163440398638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ee1636c6652598408082a544d184136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0}
-  equipment: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  item: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  rarity: 0
+  currentStackSize: 1
+  equipmentItem: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  defense: 1
+  durability: 100
 --- !u!114 &-4825492704394803176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
-  isDropped: 0
+  isDropped: 1
 --- !u!114 &-505975839810964597
 MonoBehaviour:
   m_ObjectHideFlags: 0

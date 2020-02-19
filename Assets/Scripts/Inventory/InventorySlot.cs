@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour
 {
@@ -20,11 +19,13 @@ public class InventorySlot : MonoBehaviour
     [Header("Slot Item")]
     public SpriteRenderer iconSprite;
     public Item item;
+    public ItemData itemData;
+    public Text stackSizeText;
     public InventorySlot parentSlot;
     public InventorySlot[] childrenSlots = new InventorySlot[5]; // Item width * height - 1 will have a maximum of 5
 
     [HideInInspector]
-    public Transform bagParent;
+    public Transform slotParent;
     Inventory inv;
     InventoryUI invUI;
     Vector3 mousePos;
@@ -33,6 +34,7 @@ public class InventorySlot : MonoBehaviour
     {
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
+        stackSizeText = GetComponentInChildren<Text>();
     }
 
     void Update()
@@ -49,6 +51,7 @@ public class InventorySlot : MonoBehaviour
     {
         GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
         iconSprite = newIcon.GetComponent<SpriteRenderer>();
+        itemData = iconSprite.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
 
         item = newItem;
@@ -151,19 +154,19 @@ public class InventorySlot : MonoBehaviour
                 }
             }
 
-            if (bagParent.name == "Pockets")
+            if (slotParent.name == "Pockets")
                 inv.pocketItems.Remove(invUI.currentlySelectedItem);
-            else if (bagParent.name == "Bag")
+            else if (slotParent.name == "Bag")
                 inv.bagItems.Remove(invUI.currentlySelectedItem);
-            else if (bagParent.name == "Horse Bags")
+            else if (slotParent.name == "Horse Bags")
                 inv.horseBagItems.Remove(invUI.currentlySelectedItem);
         }
         else if (invUI.currentlySelectedItem != null) // If we've selected an item to move (currently will be following cursor if using mouse)
         {
-            if (bagParent.name == "Pockets")
+            if (slotParent.name == "Pockets")
             {
                 inv.pocketItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.pocketsSlots, inv.pocketItems) == false)
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.pocketsSlots, inv.pocketItems, itemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }
@@ -172,10 +175,10 @@ public class InventorySlot : MonoBehaviour
                     Debug.Log("Item successfully placed");
                 }
             }
-            else if (bagParent.name == "Bag")
+            else if (slotParent.name == "Bag")
             {
                 inv.bagItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.bagSlots, inv.bagItems) == false)
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.bagSlots, inv.bagItems, itemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }
@@ -184,10 +187,10 @@ public class InventorySlot : MonoBehaviour
                     Debug.Log("Item successfully placed");
                 }
             }
-            else if (bagParent.name == "Horse Bags")
+            else if (slotParent.name == "Horse Bags")
             {
                 inv.horseBagItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.horseBagSlots, inv.horseBagItems) == false)
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.horseBagSlots, inv.horseBagItems, itemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }

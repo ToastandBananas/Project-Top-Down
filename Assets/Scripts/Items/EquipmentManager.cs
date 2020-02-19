@@ -42,7 +42,7 @@ public class EquipmentManager : MonoBehaviour
         currentEquipment = new Equipment[numEquipmentSlots];
     }
 
-    public void Equip(Equipment newItem)
+    public void Equip(Equipment newItem, ItemData itemData)
     {
         Equipment oldItem = null;
         int slotIndex = 0;
@@ -63,7 +63,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentWeapons[slotIndex] != null)
             {
                 oldItem = currentWeapons[slotIndex];
-                StartCoroutine(SwapEquipment(oldItem));
+                StartCoroutine(SwapEquipment(oldItem, itemData));
             }
 
             if (onWeaponChanged != null)
@@ -84,7 +84,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentEquipment[slotIndex] != null)
             {
                 oldItem = currentEquipment[slotIndex];
-                StartCoroutine(SwapEquipment(oldItem));
+                StartCoroutine(SwapEquipment(oldItem, itemData));
             }
 
             if (onEquipmentChanged != null)
@@ -99,7 +99,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentEquipment[slotIndex] != null)
             {
                 oldItem = currentEquipment[slotIndex];
-                StartCoroutine(SwapEquipment(oldItem));
+                StartCoroutine(SwapEquipment(oldItem, itemData));
             }
 
             if (onEquipmentChanged != null)
@@ -109,12 +109,12 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public void Unequip(int slotIndex, bool isWeapon)
+    public void Unequip(int slotIndex, bool isWeapon, ItemData itemData)
     {
         if (isWeapon == false && currentEquipment[slotIndex] != null)
         {
             Equipment oldItem = currentEquipment[slotIndex];
-            if (AddToInventory(oldItem))
+            if (AddToInventory(oldItem, itemData))
             {
                 currentEquipment[slotIndex] = null;
 
@@ -125,7 +125,7 @@ public class EquipmentManager : MonoBehaviour
         else if (isWeapon && currentWeapons[slotIndex] != null)
         {
             Equipment oldItem = currentWeapons[slotIndex];
-            if (AddToInventory(oldItem))
+            if (AddToInventory(oldItem, itemData))
             {
                 currentWeapons[slotIndex] = null;
 
@@ -135,7 +135,7 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public void UnequipAll()
+    /*public void UnequipAll()
     {
         for (int i = 0; i < currentEquipment.Length; i++)
         {
@@ -146,23 +146,23 @@ public class EquipmentManager : MonoBehaviour
         {
             Unequip(i, true);
         }
-    }
+    }*/
 
-    bool AddToInventory(Item itemToAdd)
+    bool AddToInventory(Item itemToAdd, ItemData itemData)
     {
-        if (inventory.AddToPockets(itemToAdd))
+        if (inventory.AddToPockets(itemToAdd, itemData))
             return true;
-        else if (inventory.AddToBag(itemToAdd))
+        else if (inventory.AddToBag(itemToAdd, itemData))
             return true;
-        else if (player.isMounted && inventory.AddToHorseBag(itemToAdd))
+        else if (player.isMounted && inventory.AddToHorseBag(itemToAdd, itemData))
             return true;
 
         return false;
     }
 
-    IEnumerator SwapEquipment(Item itemToAdd)
+    IEnumerator SwapEquipment(Item itemToAdd, ItemData itemData)
     {
         yield return new WaitForSeconds(0.1f);
-        AddToInventory(itemToAdd);
+        AddToInventory(itemToAdd, itemData);
     }
 }

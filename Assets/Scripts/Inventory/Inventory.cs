@@ -36,7 +36,7 @@ public class Inventory : MonoBehaviour
         invUI = InventoryUI.instance;
     }
 
-    public bool AddToPockets(Item itemToAdd)
+    public bool AddToPockets(Item itemToAdd, ItemData itemData)
     {
         if (itemToAdd.isPickupable)
         {
@@ -46,7 +46,7 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.pocketsSlots, pocketItems) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.pocketsSlots, pocketItems, itemData) == true)
                 return true;
         }
 
@@ -55,9 +55,9 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool AddToBag(Item itemToAdd)
+    public bool AddToBag(Item itemToAdd, ItemData itemData)
     {
-        if (itemToAdd.isPickupable == false)
+        if (itemToAdd.isPickupable)
         {
             if (bagItems.Count >= bagSlotCount)
             {
@@ -65,7 +65,7 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.bagSlots, bagItems) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.bagSlots, bagItems, itemData) == true)
                 return true;
         }
 
@@ -74,9 +74,9 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool AddToHorseBag(Item itemToAdd)
+    public bool AddToHorseBag(Item itemToAdd, ItemData itemData)
     {
-        if (itemToAdd.isPickupable == false)
+        if (itemToAdd.isPickupable)
         {
             if (horseBagItems.Count >= horseBagSlotCount)
             {
@@ -84,7 +84,7 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.horseBagSlots, horseBagItems) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.horseBagSlots, horseBagItems, itemData) == true)
                 return true;
         }
 
@@ -93,38 +93,34 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, InventorySlot[] invSlots, List<Item> itemsList)
+    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, InventorySlot[] invSlots, List<Item> itemsList, ItemData itemData)
     {
-        int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight) - 1;
+        int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight);
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
         int currentSlotsToFillIndex = 0;
 
         for (int i = 0; i < invSlots.Length; i++)
         {
-            if (invSlots[i].isEmpty)
+            if (invSlots[i].isEmpty) // This slot is empty, so no need to check it with our GetSlotByCoordinates function
             {
-                foreach (InventorySlot slot in invSlots)
+                for (int x = 0; x < itemToAdd.iconWidth; x++)
                 {
-                    if ((invSlots[i].slotCoordinate.x + itemToAdd.iconWidth - 1 == slot.slotCoordinate.x
-                        && invSlots[i].slotCoordinate.y + itemToAdd.iconHeight - 1 == slot.slotCoordinate.y) // Bottom right most slot
-                        ||
-                        (itemToAdd.iconWidth > 1 && invSlots[i].slotCoordinate.x + 1 == slot.slotCoordinate.x // One slot right
-                        && invSlots[i].slotCoordinate.y == slot.slotCoordinate.y)
-                        ||
-                        (itemToAdd.iconHeight > 1 && invSlots[i].slotCoordinate.y + 1 == slot.slotCoordinate.y // One slot down
-                        && invSlots[i].slotCoordinate.x == slot.slotCoordinate.x))
+                    for (int y = 0; y < itemToAdd.iconHeight; y++) // Find an appropriate spot in our inv for our item after picking it up
                     {
-                        if (slot.isEmpty)
+                        InventorySlot slotToCheck = GetSlotByCoordinates(new Vector2(invSlots[i].slotCoordinate.x + x, invSlots[i].slotCoordinate.y + y), invSlots);
+                        if (slotToCheck.isEmpty)
                         {
-                            slotsToFill[currentSlotsToFillIndex] = slot;
+                            slotsToFill[currentSlotsToFillIndex] = slotToCheck;
                             currentSlotsToFillIndex++;
+                            Debug.Log(currentSlotsToFillIndex);
                         }
                     }
                 }
 
-                if (slotsToFill.Length == totalSlotsToCheck) // We found a valid slot to put our item!
+                if (currentSlotsToFillIndex == totalSlotsToCheck) // We found a valid slot to put our item!
                 {
                     invSlots[i].AddItem(itemToAdd);
+                    invSlots[i].stackSizeText.text = itemData.currentStackSize.ToString();
                     for (int j = 0; j < slotsToFill.Length; j++)
                     {
                         if (slotsToFill[j] != null)
@@ -150,7 +146,7 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<Item> itemsList)
+    public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<Item> itemsList, ItemData itemData)
     {
         if (startSlot == invUI.movingFromSlot)
         {
@@ -257,7 +253,7 @@ public class Inventory : MonoBehaviour
                     childSlot.SoftFillSlot(childSlot);
             }
 
-            // We no longer have an item selected, so stop moving the item
+            // We no longer have an item selected, so set the appropriate variables to null
             invUI.StopDraggingInvItem();
         }
 
@@ -282,8 +278,6 @@ public class Inventory : MonoBehaviour
                             {
                                 invUI.movingFromSlot = slot.parentSlot; // Our new movingFromSlot will be the parent slot of the item we are replacing
                                 movingFromSlotSet = true;
-
-                                //ClearParentAndChildSlots(invUI.movingFromSlot);
                             }
                         }
 
@@ -294,9 +288,6 @@ public class Inventory : MonoBehaviour
                                 slot.AddItem(itemToAdd);
                                 invUI.movingFromSlot.SoftClearSlot(invUI.movingFromSlot); // Soft clear our new movingFromSlot so that it appears empty
                                 itemAdded = true;
-
-                                //ClearParentAndChildSlots(startSlot);
-                                //Debug.Log("Adding to slot...");
                             }
                         }
                     }
@@ -312,8 +303,7 @@ public class Inventory : MonoBehaviour
                             if (childSlot != null)
                                 childSlot.SoftClearSlot(childSlot);
                         }
-
-                        //ClearParentAndChildSlots(slot);
+                        
                         slot.ClearSlot();
 
                         if (movingFromSlotSet == false)
@@ -329,8 +319,7 @@ public class Inventory : MonoBehaviour
                     {
                         if (slot.item != null)
                             invUI.tempSlot.AddItem(slot.item);
-
-                        //ClearParentAndChildSlots(slot);
+                        
                         slot.ClearSlot();
                         if (movingFromSlotSet == false)
                         {

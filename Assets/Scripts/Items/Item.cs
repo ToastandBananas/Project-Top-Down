@@ -9,7 +9,9 @@ public class Item : ScriptableObject
     new public string name = "New Item";
     public Sprite sprite = null;
     public string description;
-    public int value = 1;
+    public float weight = 1f;
+    public int baseValue = 1;
+    public Rarity baseRarity = Rarity.COMMON;
 
     [Header("Inventory Icon Info")]
     public int iconWidth = 1;
@@ -18,7 +20,7 @@ public class Item : ScriptableObject
 
     [Header("Stackability")]
     public bool isStackable;
-    public int currentStackSize = 1;
+    public bool isArrow;
     public int maxStackSize = 1;
 
     public virtual void Use()

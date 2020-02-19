@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -8,10 +7,12 @@ public class InventoryUI : MonoBehaviour
     public GameObject slotPrefab;
     public GameObject inventoryGO;
 
+    [Header("Parents")]
     public Transform pocketsParent;
     public Transform bagParent;
     public Transform horseBagParent;
 
+    [Header("Titles")]
     public Transform pocketsTitle;
     public Transform bagTitle;
     public Transform horseBagTitle;
@@ -21,13 +22,14 @@ public class InventoryUI : MonoBehaviour
     Inventory inventory;
     PlayerMovement player;
 
+    [Header("Slots")]
     public InventorySlot tempSlot;
     public InventorySlot[] pocketsSlots;
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
 
-    public Item currentlySelectedItem;
-    public InventorySlot movingFromSlot;
+    [HideInInspector] public Item currentlySelectedItem;
+    [HideInInspector] public InventorySlot movingFromSlot;
 
     #region Singleton
     void Awake()
@@ -47,7 +49,13 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         player = PlayerMovement.instance;
 
-        CreateSlots();
+        CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots);
+        CreateSlots(inventory.bagSlotCount, bagParent, bagSlots);
+        CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots);
+
+        tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
+        tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
+        tempSlot.name = "Temp Slot";
 
         // inventory.onItemChangedCallback += UpdateUI; // Call UpdateUI whenever the onItemChangedCallback delegate is called
 
@@ -92,13 +100,16 @@ public class InventoryUI : MonoBehaviour
         }
     }*/
 
-    void CreateSlots()
+    void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots)
     {
+        //if (slots.Length > slotCount || slots.Length < slotCount)
+            //slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
+
         int currentXCoord = 1;
         int currentYCoord = 1;
-        for (int i = 1; i < inventory.pocketsSlotCount + 1; i++)
+        for (int i = 1; i < slotCount + 1; i++)
         {
-            GameObject slot = Instantiate(slotPrefab, pocketsParent);
+            GameObject slot = Instantiate(slotPrefab, slotsParent);
             slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
@@ -108,48 +119,16 @@ public class InventoryUI : MonoBehaviour
                 currentYCoord++;
             }
 
-            slot.GetComponent<InventorySlot>().bagParent = pocketsParent;
-            slot.name = "Pocket Slot " + i;
+            slot.GetComponent<InventorySlot>().slotParent = slotsParent;
+            if (slotsParent == pocketsParent)
+                slot.name = "Pocket Slot " + i;
+            else if (slotsParent == bagParent)
+                slot.name = "Bag Slot " + i;
+            else if (slotsParent == horseBagParent)
+                slot.name = "Horse Bag Slot " + i;
         }
 
-        currentXCoord = 1;
-        currentYCoord = 1;
-        for (int i = 1; i < inventory.bagSlotCount + 1; i++)
-        {
-            GameObject slot = Instantiate(slotPrefab, bagParent);
-            slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
-            currentXCoord++;
-
-            if (currentXCoord == maxInventoryWidth + 1)
-            {
-                currentXCoord = 1;
-                currentYCoord++;
-            }
-
-            slot.GetComponent<InventorySlot>().bagParent = bagParent;
-            slot.name = "Bag Slot " + i;
-        }
-
-        currentXCoord = 1;
-        currentYCoord = 1;
-        for (int i = 1; i < inventory.horseBagSlotCount + 1; i++)
-        {
-            GameObject slot = Instantiate(slotPrefab, horseBagParent);
-            slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
-            currentXCoord++;
-
-            if (currentXCoord == maxInventoryWidth + 1)
-            {
-                currentXCoord = 1;
-                currentYCoord++;
-            }
-
-            slot.GetComponent<InventorySlot>().bagParent = horseBagParent;
-            slot.name = "Horse Bag Slot " + i;
-        }
-
-        tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
-        tempSlot.name = "Temp Slot";
+        slots = slotsParent.GetComponentsInChildren<InventorySlot>(); // Add the new slots to our slots array
     }
 
     public void StopDraggingInvItem()

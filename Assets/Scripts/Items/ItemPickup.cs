@@ -3,6 +3,7 @@
 public class ItemPickup : Interactable
 {
     public Item item;
+    ItemData itemData;
     
     ItemDrop itemDropScript;
     WeaponDamage weaponDamageScript;
@@ -14,13 +15,16 @@ public class ItemPickup : Interactable
         weaponDamageScript = GetComponent<WeaponDamage>();
         boxCollider = GetComponent<BoxCollider2D>();
         item = itemDropScript.item;
+        itemData = GetComponent<ItemData>();
 
         if (itemDropScript.isDropped == false)
             enabled = false;
         else
         {
-            weaponDamageScript.enabled = false;
-            boxCollider.enabled = false;
+            if (weaponDamageScript != null)
+                weaponDamageScript.enabled = false;
+            if (boxCollider != null)
+                boxCollider.enabled = false;
         }
     }
 
@@ -36,9 +40,9 @@ public class ItemPickup : Interactable
     void PickUp()
     {
         Debug.Log("Picking up " + item.name);
-        bool wasPickedUp = Inventory.instance.AddToPockets(item);
+        bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData);
         if (wasPickedUp == false)
-            wasPickedUp = Inventory.instance.AddToBag(item);
+            wasPickedUp = Inventory.instance.AddToBag(item, itemData);
 
         if (wasPickedUp)
             Destroy(gameObject);

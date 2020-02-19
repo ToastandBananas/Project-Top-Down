@@ -21,20 +21,26 @@ public class Equipment : Item
     public EquipmentSlot equipmentSlot;
 
     [Header("Weapon Stats")]
-    public float baseDamage = 1f;
+    public float minBaseDamage = 1f;
+    public float maxBaseDamage = 1f;
     public float damageModifier = 1f;
     public float knockbackPower = 1f;
 
     [Header("Armor Stats")]
-    public float baseArmor = 1f;
+    public float minBaseArmor = 1f;
+    public float maxBaseArmor = 1f;
     public float armorModifier = 1f;
+
+    [Header("Other Stats")]
+    public float minBaseDurability = 10f;
+    public float maxBaseDurability = 20f;
 
     public override void Use()
     {
         base.Use();
 
         // Equip the item
-        EquipmentManager.instance.Equip(this);
+        EquipmentManager.instance.Equip(this, null);
 
         // Remove from the inventory
         RemoveFromInventory();
