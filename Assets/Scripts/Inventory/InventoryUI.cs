@@ -28,7 +28,9 @@ public class InventoryUI : MonoBehaviour
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
 
+    [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
+    [HideInInspector] public ItemData currentlySelectedItemData;
     [HideInInspector] public InventorySlot movingFromSlot;
 
     #region Singleton
@@ -134,6 +136,7 @@ public class InventoryUI : MonoBehaviour
     public void StopDraggingInvItem()
     {
         currentlySelectedItem = null;
+        currentlySelectedItemData = null;
         movingFromSlot = null;
     }
 

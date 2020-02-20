@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 558677408}
   - component: {fileID: 8817556764781924269}
   - component: {fileID: 184752755676417393}
-  - component: {fileID: 169586468660607953}
+  - component: {fileID: 8479428350304003610}
   - component: {fileID: 3873751190061389563}
   - component: {fileID: 973816257666725157}
   m_Layer: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   positionOffset: {x: 0, y: 0}
   equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
---- !u!114 &169586468660607953
+--- !u!114 &8479428350304003610
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,15 +157,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 184752757197993529}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3f4b3f0ef7285d49b9152f9e35887aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
+  item: {fileID: 0}
   rarity: 0
   currentStackSize: 1
-  equipmentItem: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
-  damage: 1
-  durability: 100
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!114 &3873751190061389563
 MonoBehaviour:
   m_ObjectHideFlags: 0

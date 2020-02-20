@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+public enum ItemType { General, Consumable, Weapon, Shield, Armor, Quiver, Ammunition }
+
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class Item : ScriptableObject
 {
@@ -11,7 +13,8 @@ public class Item : ScriptableObject
     public string description;
     public float weight = 1f;
     public int baseValue = 1;
-    public Rarity baseRarity = Rarity.COMMON;
+    public ItemType itemType = ItemType.General;
+    public Rarity baseRarity = Rarity.Common;
 
     [Header("Inventory Icon Info")]
     public int iconWidth = 1;
@@ -20,17 +23,16 @@ public class Item : ScriptableObject
 
     [Header("Stackability")]
     public bool isStackable;
-    public bool isArrow;
     public int maxStackSize = 1;
 
-    public virtual void Use()
+    public virtual void Use(ItemData itemData)
     {
-        // Use the item
+        // Use or equip the item
         Debug.Log("Using " + name);
     }
 
-    public void RemoveFromInventory()
+    public void RemoveFromInventory(ItemData itemData)
     {
-        Inventory.instance.Remove(this);
+        Inventory.instance.Remove(itemData);
     }
 }

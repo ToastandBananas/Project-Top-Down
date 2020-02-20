@@ -40,12 +40,12 @@ public class ItemPickup : Interactable
     void PickUp()
     {
         Debug.Log("Picking up " + item.name);
-        bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData);
+        bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData); // If this returns true, it will add the item to the appropriate bag
         if (wasPickedUp == false)
             wasPickedUp = Inventory.instance.AddToBag(item, itemData);
 
         if (wasPickedUp)
-            Destroy(gameObject);
+            Destroy(gameObject); // Then we'll destroy the actual gameobject, since it will only exist in our inventory system until we use/equip it
         else
             Debug.Log("Not enough room in your inventory to pick up " + item.name + ".");
     }

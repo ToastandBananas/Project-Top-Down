@@ -41,14 +41,14 @@ public class Arms : MonoBehaviour
 
         if (leftWeapon != null)
         {
-            if (leftWeapon.generalClassification == GeneralClassification.SHIELD)
+            if (leftWeapon.generalClassification == GeneralClassification.Shield)
             {
                 leftShieldEquipped = true;
                 leftWeaponEquipped = false;
                 leftArmAnim.SetBool("weaponEquipped", false);
                 leftArmAnim.SetBool("shieldEquipped", true);
             }
-            else if (leftWeapon.generalClassification == GeneralClassification.WEAPON_1H)
+            else if (leftWeapon.generalClassification == GeneralClassification.Weapon1H)
             {
                 leftShieldEquipped = false;
                 leftWeaponEquipped = true;
@@ -69,14 +69,14 @@ public class Arms : MonoBehaviour
     {
         if (rightWeapon != null)
         {
-            if (rightWeapon.generalClassification == GeneralClassification.SHIELD)
+            if (rightWeapon.generalClassification == GeneralClassification.Shield)
             {
                 rightShieldEquipped = true;
                 rightWeaponEquipped = false;
                 rightArmAnim.SetBool("weaponEquipped", false);
                 rightArmAnim.SetBool("shieldEquipped", true);
             }
-            else if (rightWeapon.generalClassification == GeneralClassification.WEAPON_1H)
+            else if (rightWeapon.generalClassification == GeneralClassification.Weapon1H)
             {
                 rightShieldEquipped = false;
                 rightWeaponEquipped = true;

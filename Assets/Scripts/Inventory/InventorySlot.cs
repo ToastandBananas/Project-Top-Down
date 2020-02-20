@@ -20,15 +20,17 @@ public class InventorySlot : MonoBehaviour
     public SpriteRenderer iconSprite;
     public Item item;
     public ItemData itemData;
-    public Text stackSizeText;
     public InventorySlot parentSlot;
-    public InventorySlot[] childrenSlots = new InventorySlot[5]; // Item width * height - 1 will have a maximum of 5
+    public InventorySlot[] childrenSlots = new InventorySlot[6];
 
-    [HideInInspector]
-    public Transform slotParent;
+    [HideInInspector] public Transform slotParent;
+    [HideInInspector] public Text stackSizeText;
     Inventory inv;
     InventoryUI invUI;
+    
     Vector3 mousePos;
+    float xPosOffset = 0;
+    float yPosOffset = 0;
 
     void Awake()
     {
@@ -42,8 +44,23 @@ public class InventorySlot : MonoBehaviour
         // If we have a selected item & we're moving the item from this slot & we have an icon sprite
         if (invUI.currentlySelectedItem != null && invUI.movingFromSlot == this && iconSprite != null)
         {
+            if (invUI.currentlySelectedItem.iconWidth == 1)
+                xPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconWidth == 2)
+                xPosOffset = 0.5f;
+            else
+                xPosOffset = 1;
+
+            if (invUI.currentlySelectedItem.iconHeight == 1)
+                yPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconHeight == 2)
+                yPosOffset = 0.5f;
+            else
+                yPosOffset = 1;
+
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            iconSprite.transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+            iconSprite.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
+            Cursor.visible = false;
         }
     }
 
@@ -87,6 +104,7 @@ public class InventorySlot : MonoBehaviour
     {
         slotToClear.isEmpty = true;
         slotToClear.slotBackgroundImage.sprite = emptySlotSprite;
+        slotToClear.stackSizeText.text = "";
     }
 
     public void SoftFillSlot(InventorySlot slotToFill)
@@ -111,7 +129,7 @@ public class InventorySlot : MonoBehaviour
     {
         if (item != null)
         {
-            item.Use();
+            item.Use(itemData);
             ClearSlot();
         }
     }
@@ -123,13 +141,17 @@ public class InventorySlot : MonoBehaviour
             // Determine the parent slot & item (in case we select the item from one of the children slots)
             if (parentSlot == null)
             {
+                stackSizeText.text = "";
                 invUI.currentlySelectedItem = item; // If parent slot is null, then this must be the parent slot
+                invUI.currentlySelectedItemData = itemData;
                 invUI.movingFromSlot = this;
                 SoftClearSlot(this);
             }
             else
             {
+                parentSlot.stackSizeText.text = "";
                 invUI.currentlySelectedItem = parentSlot.item; // Otherwise we'll grab the parent slot & item of this child slot
+                invUI.currentlySelectedItemData = parentSlot.itemData;
                 invUI.movingFromSlot = parentSlot;
                 SoftClearSlot(parentSlot);
             }
@@ -155,73 +177,53 @@ public class InventorySlot : MonoBehaviour
             }
 
             if (slotParent.name == "Pockets")
-                inv.pocketItems.Remove(invUI.currentlySelectedItem);
+                inv.pocketItems.Remove(invUI.currentlySelectedItemData);
             else if (slotParent.name == "Bag")
-                inv.bagItems.Remove(invUI.currentlySelectedItem);
+                inv.bagItems.Remove(invUI.currentlySelectedItemData);
             else if (slotParent.name == "Horse Bags")
-                inv.horseBagItems.Remove(invUI.currentlySelectedItem);
+                inv.horseBagItems.Remove(invUI.currentlySelectedItemData);
         }
         else if (invUI.currentlySelectedItem != null) // If we've selected an item to move (currently will be following cursor if using mouse)
         {
             if (slotParent.name == "Pockets")
             {
-                inv.pocketItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.pocketsSlots, inv.pocketItems, itemData) == false)
+                inv.pocketItems.Remove(invUI.currentlySelectedItemData);
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.pocketsSlots, inv.pocketItems, invUI.currentlySelectedItemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }
                 else
                 {
                     Debug.Log("Item successfully placed");
+                    Cursor.visible = true;
                 }
             }
             else if (slotParent.name == "Bag")
             {
-                inv.bagItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.bagSlots, inv.bagItems, itemData) == false)
+                inv.bagItems.Remove(invUI.currentlySelectedItemData);
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.bagSlots, inv.bagItems, invUI.currentlySelectedItemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }
                 else
                 {
                     Debug.Log("Item successfully placed");
+                    Cursor.visible = true;
                 }
             }
             else if (slotParent.name == "Horse Bags")
             {
-                inv.horseBagItems.Remove(invUI.currentlySelectedItem);
-                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.horseBagSlots, inv.horseBagItems, itemData) == false)
+                inv.horseBagItems.Remove(invUI.currentlySelectedItemData);
+                if (inv.DetermineIfValidInventoryPosition(invUI.currentlySelectedItem, this, invUI.horseBagSlots, inv.horseBagItems, invUI.currentlySelectedItemData) == false)
                 {
                     Debug.Log("Cannot place item here.");
                 }
                 else
                 {
                     Debug.Log("Item successfully placed");
+                    Cursor.visible = true;
                 }
             }
-
-            /*if (invUI.movingFromSlot == this) // If we're placing the item back in its original slot
-            {
-                invUI.currentlySelectedItem = null;
-                invUI.movingFromSlot = null;
-                iconSprite.transform.position = transform.position;
-                slotBackgroundImage.sprite = fullSlotSprite;
-            }
-            else if (item != null) // If slot already has an item in it
-            {
-                // Set this item as our newly selected item
-                //invUI.movingFromSlot.UpdateSlot(item); // Update the slot we're moving the item from
-                //UpdateSlot(invUI.currentlySelectedItem); // Update slot we're trying to move the item to
-                
-            }
-            else // If slot is empty
-            {
-                AddItem(invUI.currentlySelectedItem); // Add item to the slot we want to move it to
-                invUI.movingFromSlot.ClearSlot(); // Clear the slot we're moving it from
-            }
-            
-            invUI.currentlySelectedItem = null;
-            invUI.movingFromSlot = null;*/
         }
     }
 }

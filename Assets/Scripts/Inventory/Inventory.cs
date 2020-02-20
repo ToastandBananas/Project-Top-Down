@@ -12,9 +12,9 @@ public class Inventory : MonoBehaviour
     public int bagSlotCount = 10;
     public int horseBagSlotCount = 10;
 
-    public List<Item> pocketItems   = new List<Item>();
-    public List<Item> bagItems      = new List<Item>();
-    public List<Item> horseBagItems = new List<Item>();
+    public List<ItemData> pocketItems   = new List<ItemData>();
+    public List<ItemData> bagItems      = new List<ItemData>();
+    public List<ItemData> horseBagItems = new List<ItemData>();
 
     #region Singleton
     public static Inventory instance;
@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, InventorySlot[] invSlots, List<Item> itemsList, ItemData itemData)
+    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, InventorySlot[] invSlots, List<ItemData> itemsList, ItemData itemData)
     {
         int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight);
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
@@ -112,7 +112,6 @@ public class Inventory : MonoBehaviour
                         {
                             slotsToFill[currentSlotsToFillIndex] = slotToCheck;
                             currentSlotsToFillIndex++;
-                            Debug.Log(currentSlotsToFillIndex);
                         }
                     }
                 }
@@ -120,19 +119,28 @@ public class Inventory : MonoBehaviour
                 if (currentSlotsToFillIndex == totalSlotsToCheck) // We found a valid slot to put our item!
                 {
                     invSlots[i].AddItem(itemToAdd);
-                    invSlots[i].stackSizeText.text = itemData.currentStackSize.ToString();
+
+                    if (itemData.currentStackSize > 1)
+                        invSlots[i].stackSizeText.text = itemData.currentStackSize.ToString(); // Set our stack size text for the slot
+
+                    itemData.TransferData(itemData, invSlots[i].itemData); // Transfer our item data from the gameobject to the inventory object
+
                     for (int j = 0; j < slotsToFill.Length; j++)
                     {
                         if (slotsToFill[j] != null)
                         {
-                            invSlots[i].childrenSlots[j] = slotsToFill[j]; // Set the parent slot's children slots
+                            if (j > 0) // We don't want to set the parent slot as a child of itself
+                                invSlots[i].childrenSlots[j] = slotsToFill[j]; // Set the parent slot's children slots
+
                             slotsToFill[j].isEmpty = false;
                             slotsToFill[j].slotBackgroundImage.sprite = slotsToFill[j].fullSlotSprite;
-                            slotsToFill[j].parentSlot = invSlots[i]; // Set each child slot's parent slot
+                            
+                            if (invSlots[i] != slotsToFill[j])
+                                slotsToFill[j].parentSlot = invSlots[i]; // Set each child slot's parent slot
                         }
                     }
-
-                    itemsList.Add(itemToAdd);
+                    
+                    itemsList.Add(slotsToFill[0].itemData);
                     return true;
                 }
                 else // This slot won't work for our item, so reset our slotsToFill array & index and try again with the next slot
@@ -146,11 +154,10 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<Item> itemsList, ItemData itemData)
+    public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<ItemData> itemsList, ItemData itemData)
     {
-        if (startSlot == invUI.movingFromSlot)
+        if (startSlot == invUI.movingFromSlot) // If we're trying to place the item back in the same spot
         {
-            Debug.Log("Slot name: " + startSlot.name);
             startSlot.UpdateSlot(itemToAdd);
             foreach (InventorySlot slot in invUI.movingFromSlot.childrenSlots)
             {
@@ -158,8 +165,12 @@ public class Inventory : MonoBehaviour
                     slot.SoftFillSlot(slot);
             }
 
+            if (startSlot.itemData.currentStackSize > 1)
+                startSlot.stackSizeText.text = itemData.currentStackSize.ToString();
+
             invUI.StopDraggingInvItem();
             startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
+            itemsList.Add(itemData);
             return true;
         }
 
@@ -186,6 +197,7 @@ public class Inventory : MonoBehaviour
             }
         } 
 
+        // Determine if we're trying to replace any items...if we're trying to replace more than 1, return false
         InventorySlot[] parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item. So if there's ever 2 items in this array, we return false
         int itemsTryingToReplaceCount = 0; // Index of parentSlotsTryingToReplace array...will increase every time an item is pushed to the array
         foreach (InventorySlot slot in slotsToFill) // Determine how many (if any) items we're trying to place this item on top of
@@ -245,6 +257,12 @@ public class Inventory : MonoBehaviour
                 }
             }
 
+            if (itemData.currentStackSize > 1)
+                startSlot.stackSizeText.text = itemData.currentStackSize.ToString();
+            else
+                startSlot.stackSizeText.text = "";
+
+            itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing it
             invUI.movingFromSlot.ClearSlot();
 
             foreach (InventorySlot childSlot in startSlot.childrenSlots) // Soft fill our child slots just in case the moving from slot is now one of these children
@@ -262,7 +280,8 @@ public class Inventory : MonoBehaviour
             bool movingFromSlotSet = false;
             bool itemAdded = false;
 
-            invUI.currentlySelectedItem = parentSlotsTryingToReplace[0].item; // The item we are replacing is now our active item (will now be following the cursor)
+            itemsList.Remove(parentSlotsTryingToReplace[0].itemData);
+            
             invUI.movingFromSlot.ClearSlot();
 
             foreach (InventorySlot slot in slotsToFill) // For each slot we're trying to fill
@@ -273,7 +292,9 @@ public class Inventory : MonoBehaviour
                     {
                         if (childSlot != null)
                         {
-                            childSlot.SoftClearSlot(childSlot); // Soft clear this child slot so it appears empty
+                            if (childSlot != startSlot)
+                                childSlot.SoftClearSlot(childSlot); // Soft clear this child slot so it appears empty
+
                             if (movingFromSlotSet == false)
                             {
                                 invUI.movingFromSlot = slot.parentSlot; // Our new movingFromSlot will be the parent slot of the item we are replacing
@@ -286,17 +307,28 @@ public class Inventory : MonoBehaviour
                             if (itemAdded == false && childSlot != null && slot != childSlot.parentSlot)
                             {
                                 slot.AddItem(itemToAdd);
-                                invUI.movingFromSlot.SoftClearSlot(invUI.movingFromSlot); // Soft clear our new movingFromSlot so that it appears empty
+                                itemData.TransferData(itemData, startSlot.itemData);
+                                
+                                if (startSlot.itemData.currentStackSize > 1)
+                                    slot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
+                                else
+                                    startSlot.stackSizeText.text = "";
+
                                 itemAdded = true;
+                                invUI.movingFromSlot.SoftClearSlot(invUI.movingFromSlot); // Soft clear our new movingFromSlot so that it appears empty
                             }
                         }
                     }
+
+                    invUI.currentlySelectedItem = slot.parentSlot.item;
+                    invUI.currentlySelectedItemData = slot.parentSlot.itemData;
                 }
                 else if (slot.isEmpty == false) // If this is the parent slot of the item we're replacing
                 {
-                    if (slot == startSlot && itemAdded == false) // If our startSlot equals the parent slot of the item we're replacing
+                    if (slot == startSlot && itemAdded == false) // If our startSlot equals the parent slot of the item we're replacing (basically, if we clicked on a slot that is an item's parent slot)
                     {
                         invUI.tempSlot.AddItem(slot.item);
+                        itemData.TransferData(slot.itemData, invUI.tempSlot.itemData);
 
                         foreach (InventorySlot childSlot in slot.childrenSlots)
                         {
@@ -311,22 +343,44 @@ public class Inventory : MonoBehaviour
                             invUI.movingFromSlot = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
+
                         slot.AddItem(itemToAdd);
                         itemAdded = true;
+                        itemData.TransferData(invUI.currentlySelectedItemData, slot.itemData);
+
+                        if (slot.itemData.currentStackSize > 1)
+                            slot.stackSizeText.text = slot.itemData.currentStackSize.ToString();
+                        else
+                            slot.stackSizeText.text = "";
+
+                        invUI.currentlySelectedItem = invUI.tempSlot.item;
+                        invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
                         //Debug.Log("Updating slot...");
                     }
-                    else
+                    else // If our startSlot is not the parent slot of the item we're replacing, but the parent slot is still being overlapped by our new item
                     {
                         if (slot.item != null)
+                        {
                             invUI.tempSlot.AddItem(slot.item);
+                            itemData.TransferData(slot.itemData, invUI.tempSlot.itemData);
+                        }
                         
                         slot.ClearSlot();
+
                         if (movingFromSlotSet == false)
                         {
+                            itemData.TransferData(invUI.currentlySelectedItemData, startSlot.itemData);
+                            if (startSlot.itemData.currentStackSize > 1)
+                                startSlot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
+                            else
+                                startSlot.stackSizeText.text = "";
+
                             invUI.movingFromSlot = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
+                        
                         invUI.currentlySelectedItem = invUI.tempSlot.item;
+                        invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
                     }
                 }
                 else // If slot is empty
@@ -334,6 +388,10 @@ public class Inventory : MonoBehaviour
                     if (slot == startSlot && itemAdded == false)
                     {
                         slot.AddItem(itemToAdd);
+                        itemData.TransferData(itemData, startSlot.itemData);
+                        if (startSlot.itemData.currentStackSize > 1)
+                            startSlot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
+
                         itemAdded = true;
                         //Debug.Log("Adding item to empty slot...");
                     }
@@ -341,7 +399,7 @@ public class Inventory : MonoBehaviour
 
                 foreach (InventorySlot childSlot in invUI.movingFromSlot.childrenSlots)
                 {
-                    if (childSlot != null)
+                    if (childSlot != null && childSlot != startSlot)
                         childSlot.SoftClearSlot(childSlot);
                 }
 
@@ -352,6 +410,12 @@ public class Inventory : MonoBehaviour
             }
             
             SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
+
+            foreach (InventorySlot childSlot in startSlot.childrenSlots)
+            {
+                if (childSlot != null)
+                    childSlot.stackSizeText.text = "";
+            }
         }
 
         foreach(InventorySlot slot in invSlots)
@@ -379,7 +443,7 @@ public class Inventory : MonoBehaviour
         }
 
         startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
-        itemsList.Add(itemToAdd);
+        itemsList.Add(startSlot.itemData);
         return true;
     }
 
@@ -449,14 +513,14 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void Remove(Item item)
+    public void Remove(ItemData itemData)
     {
-        if (bagItems.Contains(item))
-            bagItems.Remove(item);
-        else if (pocketItems.Contains(item))
-            pocketItems.Remove(item);
-        else if (horseBagItems.Contains(item))
-            horseBagItems.Remove(item);
+        if (bagItems.Contains(itemData))
+            bagItems.Remove(itemData);
+        else if (pocketItems.Contains(itemData))
+            pocketItems.Remove(itemData);
+        else if (horseBagItems.Contains(itemData))
+            horseBagItems.Remove(itemData);
     }
 
     public void SortItemsAlphabetically(List<Item> itemsList, InventorySlot[] slotsArray)

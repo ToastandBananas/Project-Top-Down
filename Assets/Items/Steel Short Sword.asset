@@ -16,19 +16,27 @@ MonoBehaviour:
   name: Steel Short Sword
   sprite: {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
   description: Short sword made of steel.
-  value: 5
+  weight: 1
+  baseValue: 1
+  itemType: 2
+  baseRarity: 0
   iconWidth: 1
   iconHeight: 2
   inventoryIcon: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
   isStackable: 0
+  maxStackSize: 1
   generalClassification: 0
   weaponType: 2
   armorType: 0
   thisWeaponsSpecialAttacks: 
-  weaponSlot: 1
+  weaponSlot: 2
   equipmentSlot: 0
-  baseDamage: 1
+  minBaseDamage: 1
+  maxBaseDamage: 10
   damageModifier: 1
   knockbackPower: 1
-  baseArmor: 1
-  armorModifier: 1
+  minBaseArmor: 0
+  maxBaseArmor: 0
+  armorModifier: 0
+  minBaseDurability: 10
+  maxBaseDurability: 20

@@ -46,17 +46,16 @@ public class EquipmentManager : MonoBehaviour
     {
         Equipment oldItem = null;
         int slotIndex = 0;
-        if (newItem.weaponType != WeaponType.NOT_A_WEAPON)
+        if (newItem.weaponType != WeaponType.NotAWeapon)
         {
-            newItem.weaponSlot = WeaponSlot.PRIMARY_WEAPON_RIGHT;
-            if (currentWeapons[(int)WeaponSlot.PRIMARY_WEAPON_RIGHT] != null)
-                newItem.weaponSlot = WeaponSlot.PRIMARY_WEAPON_LEFT;
-            if (newItem.weaponSlot == WeaponSlot.PRIMARY_WEAPON_LEFT && currentWeapons[(int)WeaponSlot.PRIMARY_WEAPON_LEFT] != null)
-                newItem.weaponSlot = WeaponSlot.SECONDARY_WEAPON_RIGHT;
-            if (newItem.weaponSlot == WeaponSlot.SECONDARY_WEAPON_RIGHT && currentWeapons[(int)WeaponSlot.SECONDARY_WEAPON_RIGHT] != null)
-                newItem.weaponSlot = WeaponSlot.SECONDARY_WEAPON_LEFT;
-            if (newItem.weaponSlot == WeaponSlot.SECONDARY_WEAPON_LEFT && currentWeapons[(int)WeaponSlot.SECONDARY_WEAPON_LEFT] != null)
-                newItem.weaponSlot = WeaponSlot.PRIMARY_WEAPON_RIGHT;
+            if (newItem.weaponType == WeaponType.Bow || newItem.weaponType == WeaponType.Crossbow)
+                newItem.weaponSlot = WeaponSlot.Ranged;
+            else
+            {
+                newItem.weaponSlot = WeaponSlot.PrimaryWeaponRight;
+                if (currentWeapons[(int)WeaponSlot.PrimaryWeaponRight] != null)
+                    newItem.weaponSlot = WeaponSlot.PrimaryWeaponLeft;
+            }
 
             slotIndex = (int)newItem.weaponSlot;
 
@@ -71,13 +70,13 @@ public class EquipmentManager : MonoBehaviour
 
             currentWeapons[slotIndex] = newItem;
         }
-        else if (newItem.armorType == ArmorType.RING)
+        else if (newItem.armorType == ArmorType.Ring)
         {
-            newItem.equipmentSlot = EquipmentSlot.RING1;
-            if (currentEquipment[(int)EquipmentSlot.RING1] != null)
-                newItem.equipmentSlot = EquipmentSlot.RING2;
-            if (newItem.equipmentSlot == EquipmentSlot.RING2 && currentEquipment[(int)EquipmentSlot.RING2] != null)
-                newItem.equipmentSlot = EquipmentSlot.RING1;
+            newItem.equipmentSlot = EquipmentSlot.RingLeft;
+            if (currentEquipment[(int)EquipmentSlot.RingLeft] != null)
+                newItem.equipmentSlot = EquipmentSlot.RingRight;
+            if (newItem.equipmentSlot == EquipmentSlot.RingRight && currentEquipment[(int)EquipmentSlot.RingRight] != null)
+                newItem.equipmentSlot = EquipmentSlot.RingLeft;
 
             slotIndex = (int)newItem.equipmentSlot;
 

@@ -15,21 +15,29 @@ MonoBehaviour:
   isPickupable: 1
   name: Wooden Shield
   sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266, type: 3}
-  description: 
-  value: 1
+  description: Shield made of wood.
+  weight: 1
+  baseValue: 1
+  itemType: 3
+  baseRarity: 0
   iconWidth: 2
   iconHeight: 2
   inventoryIcon: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266,
     type: 3}
   isStackable: 0
-  generalClassification: 2
+  maxStackSize: 1
+  generalClassification: 3
   weaponType: 1
   armorType: 0
   thisWeaponsSpecialAttacks: 
   weaponSlot: 0
   equipmentSlot: 0
-  baseDamage: 1
+  minBaseDamage: 1
+  maxBaseDamage: 5
   damageModifier: 1
   knockbackPower: 1
-  baseArmor: 1
+  minBaseArmor: 1
+  maxBaseArmor: 5
   armorModifier: 1
+  minBaseDurability: 10
+  maxBaseDurability: 20

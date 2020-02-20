@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public enum WeaponSlot { PRIMARY_WEAPON_LEFT, PRIMARY_WEAPON_RIGHT, SECONDARY_WEAPON_LEFT, SECONDARY_WEAPON_RIGHT }
-public enum EquipmentSlot { HEAD, SHIRT, CUIRASS, GAUNTLETS, PANTS, GREAVES, SOCKS, BOOTS, RING1, RING2, AMULET }
+public enum WeaponSlot { None, PrimaryWeaponLeft, PrimaryWeaponRight, Ranged }
+public enum EquipmentSlot { None, Head, Shirt, Cuirass, Gauntlets, Pants, Greaves, Socks, Boots, RingLeft, RingRight, Amulet, Quiver, Ammunition }
 
-public enum GeneralClassification { WEAPON_1H, WEAPON_2H, SHIELD, ARMOR }
-public enum WeaponType { NOT_A_WEAPON, SHIELD, SWORD, MACE, AXE, SPEAR, STAFF, BOW, CROSSBOW }
-public enum ArmorType { NOT_ARMOR, HELMET, SHIRT, CUIRASS, GAUNTLETS, PANTS, GREAVES, SOCKS, BOOTS, RING, AMULET }
+public enum GeneralClassification { Weapon1H, Weapon2H, RangedWeapon, Shield, Armor, Quiver, Ammunition }
+public enum WeaponType { NotAWeapon, Shield, Sword, Mace, Axe, Spear, Staff, Bow, Crossbow }
+public enum ArmorType { NotArmor, Helmet, Shirt, Cuirass, Gauntlets, Pants, Greaves, Socks, Boots, Ring, Amulet }
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment")]
 public class Equipment : Item
@@ -35,14 +35,14 @@ public class Equipment : Item
     public float minBaseDurability = 10f;
     public float maxBaseDurability = 20f;
 
-    public override void Use()
+    public override void Use(ItemData itemData)
     {
-        base.Use();
+        base.Use(itemData);
 
         // Equip the item
         EquipmentManager.instance.Equip(this, null);
 
         // Remove from the inventory
-        RemoveFromInventory();
+        RemoveFromInventory(itemData);
     }
 }
