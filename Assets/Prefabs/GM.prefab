@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &68740533560211216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 68740533560211219}
+  - component: {fileID: 68740533560211218}
+  - component: {fileID: 68740533560211229}
+  - component: {fileID: 68740533560211228}
+  m_Layer: 0
+  m_Name: GM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &68740533560211219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &68740533560211218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2951d86273371f344b5726f815f45e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &68740533560211229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pocketsSlotCount: 30
+  bagSlotCount: 40
+  horseBagSlotCount: 10
+  pocketItems: []
+  bagItems: []
+  horseBagItems: []
+--- !u!114 &68740533560211228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9cb7d1e771859042bddcb9f71ad8655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabWeaponBase1H_L: {fileID: 2563409690062376088, guid: 065aabaf7ed7afd4aae59f766335d662,
+    type: 3}
+  prefabWeaponBase1H_R: {fileID: 2563409690062376088, guid: 7eced71f9bbff4049a15d06ee5ede77d,
+    type: 3}
+  prefabShieldBase_L: {fileID: 7546036934525236802, guid: bc9ffc458a42f5242b6a3cc7eb5a1509,
+    type: 3}
+  prefabShieldBase_R: {fileID: 1557083814658589624, guid: e4d366a5cc2097c46971834d9b3dc7eb,
+    type: 3}
+  prefabRangedWeaponBase: {fileID: 0}
+  currentWeapons: []
+  currentEquipment: []
+  leftWeaponParent: {fileID: 0}
+  rightWeaponParent: {fileID: 0}
+  leftWeapon: {fileID: 0}
+  rightWeapon: {fileID: 0}
+  rangedWeapon: {fileID: 0}
+  helmet: {fileID: 0}
+  cuirass: {fileID: 0}
+  shirt: {fileID: 0}
+  leftCuirassArm: {fileID: 0}
+  rightCuirassArm: {fileID: 0}
+  leftGauntlet: {fileID: 0}
+  rightGauntlet: {fileID: 0}
+  leftGreaves: {fileID: 0}
+  rightGreaves: {fileID: 0}
+  leftPants: {fileID: 0}
+  rightPants: {fileID: 0}
+  leftBoot: {fileID: 0}
+  rightBoot: {fileID: 0}
+  quiverSlot: {fileID: 0}

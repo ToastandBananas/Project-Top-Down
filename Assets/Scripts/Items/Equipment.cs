@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public enum WeaponSlot { None, PrimaryWeaponLeft, PrimaryWeaponRight, Ranged }
-public enum EquipmentSlot { None, Head, Shirt, Cuirass, Gauntlets, Pants, Greaves, Socks, Boots, RingLeft, RingRight, Amulet, Quiver, Ammunition }
+public enum WeaponSlot { None, WeaponLeft, WeaponRight, Ranged }
+public enum EquipmentSlot { None, Head, Shirt, Cuirass, Gauntlets, Pants, Greaves, Belt, Boots, LeftRing, RightRing, Amulet, Quiver, Ammunition }
 
 public enum GeneralClassification { Weapon1H, Weapon2H, RangedWeapon, Shield, Armor, Quiver, Ammunition }
 public enum WeaponType { NotAWeapon, Shield, Sword, Mace, Axe, Spear, Staff, Bow, Crossbow }
-public enum ArmorType { NotArmor, Helmet, Shirt, Cuirass, Gauntlets, Pants, Greaves, Socks, Boots, Ring, Amulet }
+public enum ArmorType { NotArmor, Helmet, Shirt, Cuirass, Gauntlets, Pants, Greaves, Belt, Boots, Ring, Amulet }
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment")]
 public class Equipment : Item
@@ -19,6 +19,11 @@ public class Equipment : Item
     [Header("Equip Slots")]
     public WeaponSlot weaponSlot;
     public EquipmentSlot equipmentSlot;
+
+    [Header("Sprite")]
+    public Sprite deathSprite;
+    public Sprite leftCuirassArmSprite;
+    public Sprite rightCuirassArmSpite;
 
     [Header("Weapon Stats")]
     public float minBaseDamage = 1f;

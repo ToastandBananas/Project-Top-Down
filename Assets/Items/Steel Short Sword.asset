@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPickupable: 1
   name: Steel Short Sword
+  prefab: {fileID: 184752757197993529, guid: 96e70a0bfe185a746a25b833e2072c5d, type: 3}
   sprite: {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
+  droppedSprite: {fileID: 0}
   description: Short sword made of steel.
   weight: 1
   baseValue: 1
@@ -31,6 +33,7 @@ MonoBehaviour:
   thisWeaponsSpecialAttacks: 
   weaponSlot: 2
   equipmentSlot: 0
+  deathSprite: {fileID: 0}
   minBaseDamage: 1
   maxBaseDamage: 10
   damageModifier: 1

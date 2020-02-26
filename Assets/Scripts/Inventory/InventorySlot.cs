@@ -16,12 +16,12 @@ public class InventorySlot : MonoBehaviour
     public Sprite emptySlotSprite;
     public Sprite fullSlotSprite;
 
-    [Header("Slot Item")]
+    [Header("Item Data")]
     public SpriteRenderer iconSprite;
     public Item item;
     public ItemData itemData;
     public InventorySlot parentSlot;
-    public InventorySlot[] childrenSlots = new InventorySlot[6];
+    public InventorySlot[] childrenSlots = new InventorySlot[7];
 
     [HideInInspector] public Transform slotParent;
     [HideInInspector] public Text stackSizeText;
@@ -41,27 +41,7 @@ public class InventorySlot : MonoBehaviour
 
     void Update()
     {
-        // If we have a selected item & we're moving the item from this slot & we have an icon sprite
-        if (invUI.currentlySelectedItem != null && invUI.movingFromSlot == this && iconSprite != null)
-        {
-            if (invUI.currentlySelectedItem.iconWidth == 1)
-                xPosOffset = 0;
-            else if (invUI.currentlySelectedItem.iconWidth == 2)
-                xPosOffset = 0.5f;
-            else
-                xPosOffset = 1;
-
-            if (invUI.currentlySelectedItem.iconHeight == 1)
-                yPosOffset = 0;
-            else if (invUI.currentlySelectedItem.iconHeight == 2)
-                yPosOffset = 0.5f;
-            else
-                yPosOffset = 1;
-
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            iconSprite.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
-            Cursor.visible = false;
-        }
+        FollowMouse();
     }
 
     public void AddItem(Item newItem)
@@ -70,9 +50,8 @@ public class InventorySlot : MonoBehaviour
         iconSprite = newIcon.GetComponent<SpriteRenderer>();
         itemData = iconSprite.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
-
-        item = newItem;
         
+        item = newItem;
         newIcon.name = item.name;
         iconSprite.sprite = item.inventoryIcon;
 
@@ -144,7 +123,7 @@ public class InventorySlot : MonoBehaviour
                 stackSizeText.text = "";
                 invUI.currentlySelectedItem = item; // If parent slot is null, then this must be the parent slot
                 invUI.currentlySelectedItemData = itemData;
-                invUI.movingFromSlot = this;
+                invUI.invSlotMovingFrom = this;
                 SoftClearSlot(this);
             }
             else
@@ -152,7 +131,7 @@ public class InventorySlot : MonoBehaviour
                 parentSlot.stackSizeText.text = "";
                 invUI.currentlySelectedItem = parentSlot.item; // Otherwise we'll grab the parent slot & item of this child slot
                 invUI.currentlySelectedItemData = parentSlot.itemData;
-                invUI.movingFromSlot = parentSlot;
+                invUI.invSlotMovingFrom = parentSlot;
                 SoftClearSlot(parentSlot);
             }
 
@@ -195,7 +174,6 @@ public class InventorySlot : MonoBehaviour
                 else
                 {
                     Debug.Log("Item successfully placed");
-                    Cursor.visible = true;
                 }
             }
             else if (slotParent.name == "Bag")
@@ -208,7 +186,6 @@ public class InventorySlot : MonoBehaviour
                 else
                 {
                     Debug.Log("Item successfully placed");
-                    Cursor.visible = true;
                 }
             }
             else if (slotParent.name == "Horse Bags")
@@ -221,9 +198,33 @@ public class InventorySlot : MonoBehaviour
                 else
                 {
                     Debug.Log("Item successfully placed");
-                    Cursor.visible = true;
                 }
             }
+        }
+    }
+
+    void FollowMouse()
+    {
+        // If we have a selected item & we're moving the item from this slot & we have an icon sprite
+        if (invUI.currentlySelectedItem != null && invUI.invSlotMovingFrom == this && iconSprite != null)
+        {
+            if (invUI.currentlySelectedItem.iconWidth == 1)
+                xPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconWidth == 2)
+                xPosOffset = 0.5f;
+            else
+                xPosOffset = 1;
+
+            if (invUI.currentlySelectedItem.iconHeight == 1)
+                yPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconHeight == 2)
+                yPosOffset = 0.5f;
+            else
+                yPosOffset = 1;
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            iconSprite.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
+            Cursor.visible = false;
         }
     }
 }

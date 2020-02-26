@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPickupable: 1
   name: Wooden Shield
+  prefab: {fileID: 1214168163440398638, guid: 17d3dbd301edef6478a6030678d6f94a, type: 3}
   sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266, type: 3}
+  droppedSprite: {fileID: 0}
   description: Shield made of wood.
   weight: 1
   baseValue: 1
@@ -30,8 +32,9 @@ MonoBehaviour:
   weaponType: 1
   armorType: 0
   thisWeaponsSpecialAttacks: 
-  weaponSlot: 0
+  weaponSlot: 2
   equipmentSlot: 0
+  deathSprite: {fileID: 0}
   minBaseDamage: 1
   maxBaseDamage: 5
   damageModifier: 1

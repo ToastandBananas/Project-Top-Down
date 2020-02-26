@@ -96,9 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 1c8eca662f77ee24496c3906bf37c516, type: 2}
+  item: {fileID: 0}
+  equipment: {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
+  itemName: Wooden Arrow(s)
   rarity: 0
-  currentStackSize: 1
+  currentStackSize: 5
+  maxDurability: 10
+  durability: 10
+  damage: 2
+  defense: 0
 --- !u!114 &7361386747976559446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,8 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 1c8eca662f77ee24496c3906bf37c516, type: 2}
-  isDropped: 1
+  item: {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
+  isDropped: 0
 --- !u!114 &2583632880563720389
 MonoBehaviour:
   m_ObjectHideFlags: 0

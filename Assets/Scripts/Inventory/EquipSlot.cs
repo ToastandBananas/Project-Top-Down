@@ -1,21 +1,257 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class EquipSlot : MonoBehaviour
 {
-    WeaponSlot thisWeaponSlot;
-    EquipmentSlot thisEquipSlot;
+    [Header("Slot")]
+    public WeaponSlot thisWeaponSlot;
+    public EquipmentSlot thisEquipmentSlot;
+    public bool isEmpty = true;
 
-    // Start is called before the first frame update
+    [Header("Icon")]
+    public GameObject iconPrefab;
+    public SpriteRenderer icon;
+
+    [Header("Slot Background")]
+    public Image slotBackgroundImage;
+    public Sprite emptySlotSprite;
+    public Sprite fullSlotSprite;
+
+    [Header("Item Data")]
+    public Equipment equipment;
+    public ItemData itemData;
+
+    InventoryUI invUI;
+    Inventory inv;
+    EquipmentManager equipManager;
+
+    Text quiverText;
+
+    Vector3 mousePos;
+    float xPosOffset = 0;
+    float yPosOffset = 0;
+
     void Start()
     {
-        
+        invUI = InventoryUI.instance;
+        inv = Inventory.instance;
+        equipManager = EquipmentManager.instance;
+
+        if (thisEquipmentSlot == EquipmentSlot.Quiver)
+            quiverText = GetComponentInChildren<Text>();
+
+        if (isEmpty == false)
+            slotBackgroundImage.sprite = emptySlotSprite;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        FollowMouse();
+    }
+
+    public void MoveEquipment()
+    {
+        if (isEmpty == false && invUI.currentlySelectedItemData == null) // If we don't have an item selected and this slot has an item in it (select item so we can move it)
+        {
+            // Set our currently selected item info
+            invUI.currentlySelectedItem = equipment;
+            invUI.currentlySelectedItemData = itemData;
+            invUI.equipSlotMovingFrom = this;
+
+            // Set this slot to appear empty
+            isEmpty = true;
+            slotBackgroundImage.sprite = emptySlotSprite;
+            if (thisEquipmentSlot == EquipmentSlot.Quiver)
+                quiverText.text = "";
+        }
+        else if (isEmpty && this == invUI.equipSlotMovingFrom) // If we're trying to place an item back into the same slot it came from (place selected item back in the slot)
+        {
+            invUI.StopDraggingInvItem();
+            icon.transform.localPosition = Vector3.zero;
+            isEmpty = false;
+            slotBackgroundImage.sprite = fullSlotSprite;
+            SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
+
+            equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+        }
+        else if (isEmpty && invUI.currentlySelectedItemData != null) // If we have an item selected already and this slot is empty (equip item)
+        {
+            if (invUI.currentlySelectedItemData.equipment != null) // If this item is of the equipment type (armor, weapons, etc.)
+            {
+                // If this item belongs in this slot
+                if (invUI.currentlySelectedItemData.equipment.equipmentSlot != EquipmentSlot.None && invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipmentSlot
+                    || invUI.currentlySelectedItemData.equipment.weaponSlot != WeaponSlot.None && invUI.currentlySelectedItemData.equipment.weaponSlot == thisWeaponSlot
+                    || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
+                        && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
+                {
+                    AddItem(invUI.currentlySelectedItemData.equipment); // Add the item and data to this slot
+                    SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
+
+                    if (invUI.invSlotMovingFrom != null) // Clear out the moving from slot if this item came from the inventory
+                    {
+                        inv.ClearParentAndChildSlots(invUI.invSlotMovingFrom);
+                        invUI.invSlotMovingFrom.ClearSlot();
+                    }
+                    else if (invUI.equipSlotMovingFrom != null)
+                        ClearSlot(invUI.equipSlotMovingFrom);
+
+                    equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+
+                    invUI.StopDraggingInvItem(); // Set the appropriate variables to null
+
+                    // TODO: Equip the item to our player
+                }
+                else // If we this item doesn't go here
+                {
+                    Debug.LogWarning(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
+                }
+            }
+            else // If this item is not of the equipment type
+            {
+                Debug.Log("Cannot equip this item.");
+            }
+        }
+        else if (isEmpty == false && invUI.invSlotMovingFrom == invUI.tempSlot) // If we're placing an item in the same slot it came from, but the slot already has an item in it (replace item)
+        {
+            itemData.SwapData(itemData, invUI.tempSlot.itemData); // Swap this slots info with the temp slots info
+
+            // Assign the appropriate items to both slots
+            equipment = itemData.equipment;
+            invUI.tempSlot.item = invUI.tempSlot.itemData.equipment;
+
+            // Assign the appropriate icon sprite to both slots
+            icon.sprite = equipment.inventoryIcon;
+            icon.name = itemData.name;
+            invUI.tempSlot.iconSprite.sprite = invUI.tempSlot.item.inventoryIcon;
+
+            SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
+
+            equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+
+            // Set our currently selected variables
+            invUI.currentlySelectedItem = invUI.tempSlot.item;
+            invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
+        }
+        // If this slot has an item in it and we have an item from the inventory or another equip slot selected already (replace item)
+        else if (isEmpty == false && (invUI.invSlotMovingFrom != null || invUI.equipSlotMovingFrom != null))
+        {
+            if (invUI.currentlySelectedItemData.equipment != null)
+            {
+                // If this item belongs in this slot
+                if (invUI.currentlySelectedItemData.equipment.equipmentSlot != EquipmentSlot.None && invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipmentSlot
+                    || invUI.currentlySelectedItemData.equipment.weaponSlot != WeaponSlot.None && invUI.currentlySelectedItemData.equipment.weaponSlot == thisWeaponSlot
+                    || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
+                        && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
+                {
+                    // Add the currently selected item and its data to a temp slot
+                    invUI.tempSlot.AddItem(equipment);
+                    itemData.TransferData(itemData, invUI.tempSlot.itemData);
+
+                    // Clear this slot out and add the currently selected item
+                    ClearSlot(this);
+                    AddItem(invUI.currentlySelectedItemData.equipment);
+                    SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
+
+                    // Clear out the moving from slot if the item came from the inventory
+                    if (invUI.invSlotMovingFrom != null)
+                    {
+                        inv.ClearParentAndChildSlots(invUI.invSlotMovingFrom);
+                        invUI.invSlotMovingFrom.ClearSlot();
+                    }
+                    else if (invUI.equipSlotMovingFrom != null && invUI.equipSlotMovingFrom != this)
+                        ClearSlot(invUI.equipSlotMovingFrom);
+
+                    // Set the appropriate currently selected item and moving from slot variables
+                    invUI.currentlySelectedItem = invUI.tempSlot.item;
+                    invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
+                    invUI.equipSlotMovingFrom = null;
+                    invUI.invSlotMovingFrom = invUI.tempSlot;
+
+                    // TODO: Equip the item to our player
+                }
+                else // If we this item doesn't go here
+                {
+                    Debug.LogWarning(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
+                }
+            }
+            else // If this item is not of the equipment type
+            {
+                Debug.Log("Cannot equip this item.");
+            }
+        }
+    }
+
+    public void ClearSlot(EquipSlot slotToClear)
+    {
+        if (slotToClear.icon != null)
+        {
+            slotToClear.isEmpty = true;
+            slotToClear.slotBackgroundImage.sprite = emptySlotSprite;
+            slotToClear.itemData = null;
+            slotToClear.equipment = null;
+            Destroy(slotToClear.icon.gameObject);
+        }
+    }
+
+    /// <summary>Set the slot to appear full and isEmpty to false (does not transfer any data).</summary>
+    void FillSlot(EquipSlot slotToFill)
+    {
+        slotToFill.isEmpty = false;
+        slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
+        slotToFill.icon.sprite = slotToFill.equipment.inventoryIcon;
+    }
+
+    public void AddItem(Equipment newItem)
+    {
+        GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
+        icon = newIcon.GetComponent<SpriteRenderer>();
+        itemData = icon.GetComponent<ItemData>();
+        newIcon.transform.position = transform.position;
+
+        isEmpty = false;
+        equipment = newItem;
+
+        icon.sprite = equipment.inventoryIcon;
+        slotBackgroundImage.sprite = fullSlotSprite;
+
+        itemData.TransferData(invUI.currentlySelectedItemData, itemData); // Transfer the item's data to this slot
+        FillSlot(this); // Give the slot the appropriate background/icon and set isEmpty to false
         
+        icon.name = itemData.itemName;
+    }
+
+    public void SetQuiverStackSizeText()
+    {
+        if (thisEquipmentSlot == EquipmentSlot.Quiver)
+        {
+            if (itemData.currentStackSize > 0)
+                quiverText.text = itemData.currentStackSize.ToString();
+            else
+                quiverText.text = "";
+        }
+    }
+
+    void FollowMouse()
+    {
+        if (invUI.currentlySelectedItemData != null && invUI.equipSlotMovingFrom == this)
+        {
+            if (invUI.currentlySelectedItem.iconWidth == 1)
+                xPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconWidth == 2)
+                xPosOffset = 0.5f;
+            else
+                xPosOffset = 1;
+
+            if (invUI.currentlySelectedItem.iconHeight == 1)
+                yPosOffset = 0;
+            else if (invUI.currentlySelectedItem.iconHeight == 2)
+                yPosOffset = 0.5f;
+            else
+                yPosOffset = 1;
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            icon.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
+            Cursor.visible = false;
+        }
     }
 }

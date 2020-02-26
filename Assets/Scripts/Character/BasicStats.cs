@@ -10,6 +10,7 @@ public class BasicStats : MonoBehaviour
     public float stamina = 50f;
     public float maxMana = 50f;
     public float mana = 50f;
+    public float defense = 0;
 
     public bool isPlayer;
     public bool isDead;

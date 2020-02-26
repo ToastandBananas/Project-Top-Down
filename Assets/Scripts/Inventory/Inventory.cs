@@ -4,6 +4,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     InventoryUI invUI;
+    PlayerMovement player;
 
     //public delegate void OnItemChanged();
     //public OnItemChanged onItemChangedCallback;
@@ -34,6 +35,7 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         invUI = InventoryUI.instance;
+        player = PlayerMovement.instance;
     }
 
     public bool AddToPockets(Item itemToAdd, ItemData itemData)
@@ -90,6 +92,18 @@ public class Inventory : MonoBehaviour
 
         // We should never get here...if we do there's an error in our code
         Debug.LogWarning("Warning: Something is wrong with our AddToHorseBag code. We should either return true or false before this point.");
+        return false;
+    }
+
+    public bool AddToInventory(Item itemToAdd, ItemData itemData)
+    {
+        if (AddToPockets(itemToAdd, itemData))
+            return true;
+        else if (AddToBag(itemToAdd, itemData))
+            return true;
+        else if (player.isMounted && AddToHorseBag(itemToAdd, itemData))
+            return true;
+
         return false;
     }
 
@@ -156,10 +170,10 @@ public class Inventory : MonoBehaviour
 
     public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<ItemData> itemsList, ItemData itemData)
     {
-        if (startSlot == invUI.movingFromSlot) // If we're trying to place the item back in the same spot
+        if (startSlot == invUI.invSlotMovingFrom) // If we're trying to place the item back in the same spot
         {
             startSlot.UpdateSlot(itemToAdd);
-            foreach (InventorySlot slot in invUI.movingFromSlot.childrenSlots)
+            foreach (InventorySlot slot in invUI.invSlotMovingFrom.childrenSlots)
             {
                 if (slot != null)
                     slot.SoftFillSlot(slot);
@@ -245,15 +259,18 @@ public class Inventory : MonoBehaviour
             startSlot.AddItem(itemToAdd); // Add the item to the slot we clicked on
 
             // Here we'll be determining the parent and child slots:
-            SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
+            //SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
             // Clear out the parent/children slots of the slot we're moving the item from
-            for (int i = 0; i < invUI.movingFromSlot.childrenSlots.Length; i++)
+            if (invUI.invSlotMovingFrom != null)
             {
-                if (invUI.movingFromSlot.childrenSlots[i] != null)
+                for (int i = 0; i < invUI.invSlotMovingFrom.childrenSlots.Length; i++)
                 {
-                    invUI.movingFromSlot.childrenSlots[i].parentSlot = null;
-                    invUI.movingFromSlot.childrenSlots[i] = null;
+                    if (invUI.invSlotMovingFrom.childrenSlots[i] != null)
+                    {
+                        invUI.invSlotMovingFrom.childrenSlots[i].parentSlot = null;
+                        invUI.invSlotMovingFrom.childrenSlots[i] = null;
+                    }
                 }
             }
 
@@ -263,7 +280,10 @@ public class Inventory : MonoBehaviour
                 startSlot.stackSizeText.text = "";
 
             itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing it
-            invUI.movingFromSlot.ClearSlot();
+            if (invUI.invSlotMovingFrom != null)
+                invUI.invSlotMovingFrom.ClearSlot();
+            else
+                invUI.equipSlotMovingFrom.ClearSlot(invUI.equipSlotMovingFrom);
 
             foreach (InventorySlot childSlot in startSlot.childrenSlots) // Soft fill our child slots just in case the moving from slot is now one of these children
             {
@@ -281,8 +301,11 @@ public class Inventory : MonoBehaviour
             bool itemAdded = false;
 
             itemsList.Remove(parentSlotsTryingToReplace[0].itemData);
-            
-            invUI.movingFromSlot.ClearSlot();
+
+            if (invUI.invSlotMovingFrom != null)
+                invUI.invSlotMovingFrom.ClearSlot();
+            else
+                invUI.equipSlotMovingFrom.ClearSlot(invUI.equipSlotMovingFrom);
 
             foreach (InventorySlot slot in slotsToFill) // For each slot we're trying to fill
             {
@@ -297,7 +320,7 @@ public class Inventory : MonoBehaviour
 
                             if (movingFromSlotSet == false)
                             {
-                                invUI.movingFromSlot = slot.parentSlot; // Our new movingFromSlot will be the parent slot of the item we are replacing
+                                invUI.invSlotMovingFrom = slot.parentSlot; // Our new movingFromSlot will be the parent slot of the item we are replacing
                                 movingFromSlotSet = true;
                             }
                         }
@@ -315,7 +338,9 @@ public class Inventory : MonoBehaviour
                                     startSlot.stackSizeText.text = "";
 
                                 itemAdded = true;
-                                invUI.movingFromSlot.SoftClearSlot(invUI.movingFromSlot); // Soft clear our new movingFromSlot so that it appears empty
+
+                                if (invUI.invSlotMovingFrom != null)
+                                    invUI.invSlotMovingFrom.SoftClearSlot(invUI.invSlotMovingFrom); // Soft clear our new movingFromSlot so that it appears empty
                             }
                         }
                     }
@@ -340,7 +365,7 @@ public class Inventory : MonoBehaviour
 
                         if (movingFromSlotSet == false)
                         {
-                            invUI.movingFromSlot = invUI.tempSlot;
+                            invUI.invSlotMovingFrom = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
 
@@ -375,7 +400,7 @@ public class Inventory : MonoBehaviour
                             else
                                 startSlot.stackSizeText.text = "";
 
-                            invUI.movingFromSlot = invUI.tempSlot;
+                            invUI.invSlotMovingFrom = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
                         
@@ -397,19 +422,25 @@ public class Inventory : MonoBehaviour
                     }
                 }
 
-                foreach (InventorySlot childSlot in invUI.movingFromSlot.childrenSlots)
+                if (invUI.invSlotMovingFrom != null)
                 {
-                    if (childSlot != null && childSlot != startSlot)
-                        childSlot.SoftClearSlot(childSlot);
+                    foreach (InventorySlot childSlot in invUI.invSlotMovingFrom.childrenSlots)
+                    {
+                        if (childSlot != null && childSlot != startSlot)
+                            childSlot.SoftClearSlot(childSlot);
+                    }
                 }
 
                 ClearParentAndChildSlots(slot);
-                ClearParentAndChildSlots(invUI.movingFromSlot);
+
+                if (invUI.invSlotMovingFrom != null)
+                    ClearParentAndChildSlots(invUI.invSlotMovingFrom);
 
                 slot.SoftFillSlot(slot);
             }
-            
-            SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
+
+            invUI.equipSlotMovingFrom = null;
+            //SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
             foreach (InventorySlot childSlot in startSlot.childrenSlots)
             {
@@ -418,7 +449,10 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        foreach(InventorySlot slot in invSlots)
+        // Here we'll be determining the parent and child slots:
+        SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
+
+        foreach (InventorySlot slot in invSlots)
         {
             bool shouldSoftClear = true;
             foreach (InventorySlot childSlot in slot.childrenSlots)

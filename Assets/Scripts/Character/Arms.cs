@@ -15,6 +15,7 @@ public class Arms : MonoBehaviour
 
     [Header("Both Arms")]
     public bool twoHanderEquipped;
+    public bool rangedWeaponEquipped;
 
     Transform leftArm, rightArm;
     Equipment leftWeapon, rightWeapon;
@@ -34,10 +35,10 @@ public class Arms : MonoBehaviour
 
     public void SetLeftAnims()
     {
-        if (leftArm.GetChild(0).GetChild(0).childCount > 0)
-            leftWeapon  = leftArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
-        if (rightArm.GetChild(0).GetChild(0).childCount > 0)
-            rightWeapon = rightArm.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+        if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
+            leftWeapon  = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+        if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
+            rightWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
 
         if (leftWeapon != null)
         {

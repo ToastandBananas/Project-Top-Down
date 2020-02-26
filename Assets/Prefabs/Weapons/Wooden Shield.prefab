@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
-  isDropped: 1
+  isDropped: 0
 --- !u!114 &-505975839810964597
 MonoBehaviour:
   m_ObjectHideFlags: 0

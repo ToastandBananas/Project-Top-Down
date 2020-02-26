@@ -6,6 +6,7 @@ public class InventoryUI : MonoBehaviour
 
     public GameObject slotPrefab;
     public GameObject inventoryGO;
+    public GameObject playerEquipmentMenuGO;
 
     [Header("Parents")]
     public Transform pocketsParent;
@@ -31,7 +32,8 @@ public class InventoryUI : MonoBehaviour
     [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
     [HideInInspector] public ItemData currentlySelectedItemData;
-    [HideInInspector] public InventorySlot movingFromSlot;
+    [HideInInspector] public InventorySlot invSlotMovingFrom;
+    [HideInInspector] public EquipSlot equipSlotMovingFrom;
 
     #region Singleton
     void Awake()
@@ -72,35 +74,11 @@ public class InventoryUI : MonoBehaviour
     void Update()
     {
         if (GameControls.gamePlayActions.playerInventory.WasPressed)
+        {
             inventoryGO.SetActive(!inventoryGO.activeSelf);
+            playerEquipmentMenuGO.SetActive(!playerEquipmentMenuGO.activeSelf);
+        }
     }
-
-    /*void UpdateUI()
-    {
-        for (int i = 0; i < pocketsSlots.Length; i++)
-        {
-            //if (i < inventory.pocketItems.Count)
-               //pocketsSlots[i].AddItem(inventory.pocketItems[i]);
-            //else
-                //pocketsSlots[i].ClearSlot();
-        }
-
-        for (int i = 0; i < bagSlots.Length; i++)
-        {
-            //if (i < inventory.bagItems.Count)
-                //bagSlots[i].AddItem(inventory.bagItems[i]);
-            //else
-                //bagSlots[i].ClearSlot();
-        }
-
-        for (int i = 0; i < horseBagSlots.Length; i++)
-        {
-            //if (i < inventory.horseItems.Count)
-                //horseBagSlots[i].AddItem(inventory.horseItems[i]);
-            //else
-                //horseBagSlots[i].ClearSlot();
-        }
-    }*/
 
     void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots)
     {
@@ -137,7 +115,9 @@ public class InventoryUI : MonoBehaviour
     {
         currentlySelectedItem = null;
         currentlySelectedItemData = null;
-        movingFromSlot = null;
+        invSlotMovingFrom = null;
+        equipSlotMovingFrom = null;
+        Cursor.visible = true;
     }
 
     void ShowHorseSlots(bool showSlots)

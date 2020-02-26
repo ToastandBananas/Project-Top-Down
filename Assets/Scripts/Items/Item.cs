@@ -9,7 +9,9 @@ public class Item : ScriptableObject
 
     [Header("Basic Info")]
     new public string name = "New Item";
+    public GameObject prefab;
     public Sprite sprite = null;
+    public Sprite droppedSprite = null;
     public string description;
     public float weight = 1f;
     public int baseValue = 1;
