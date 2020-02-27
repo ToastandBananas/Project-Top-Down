@@ -23,7 +23,7 @@ public class EquipSlot : MonoBehaviour
 
     InventoryUI invUI;
     Inventory inv;
-    EquipmentManager equipManager;
+    EquipmentManager equipmentManager;
 
     Text quiverText;
 
@@ -35,7 +35,7 @@ public class EquipSlot : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
-        equipManager = EquipmentManager.instance;
+        equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
 
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
             quiverText = GetComponentInChildren<Text>();
@@ -63,6 +63,8 @@ public class EquipSlot : MonoBehaviour
             slotBackgroundImage.sprite = emptySlotSprite;
             if (thisEquipmentSlot == EquipmentSlot.Quiver)
                 quiverText.text = "";
+
+            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item
         }
         else if (isEmpty && this == invUI.equipSlotMovingFrom) // If we're trying to place an item back into the same slot it came from (place selected item back in the slot)
         {
@@ -72,7 +74,7 @@ public class EquipSlot : MonoBehaviour
             slotBackgroundImage.sprite = fullSlotSprite;
             SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
-            equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+            equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
         }
         else if (isEmpty && invUI.currentlySelectedItemData != null) // If we have an item selected already and this slot is empty (equip item)
         {
@@ -95,8 +97,8 @@ public class EquipSlot : MonoBehaviour
                     else if (invUI.equipSlotMovingFrom != null)
                         ClearSlot(invUI.equipSlotMovingFrom);
 
-                    equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
-
+                    equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+                    
                     invUI.StopDraggingInvItem(); // Set the appropriate variables to null
 
                     // TODO: Equip the item to our player
@@ -113,6 +115,8 @@ public class EquipSlot : MonoBehaviour
         }
         else if (isEmpty == false && invUI.invSlotMovingFrom == invUI.tempSlot) // If we're placing an item in the same slot it came from, but the slot already has an item in it (replace item)
         {
+            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item before we do anything else
+
             itemData.SwapData(itemData, invUI.tempSlot.itemData); // Swap this slots info with the temp slots info
 
             // Assign the appropriate items to both slots
@@ -126,7 +130,7 @@ public class EquipSlot : MonoBehaviour
 
             SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
-            equipManager.EquipToSlot(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
+            equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
 
             // Set our currently selected variables
             invUI.currentlySelectedItem = invUI.tempSlot.item;
@@ -143,6 +147,8 @@ public class EquipSlot : MonoBehaviour
                     || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
                         && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
                 {
+                    equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item before we do anything else
+
                     // Add the currently selected item and its data to a temp slot
                     invUI.tempSlot.AddItem(equipment);
                     itemData.TransferData(itemData, invUI.tempSlot.itemData);
@@ -167,7 +173,7 @@ public class EquipSlot : MonoBehaviour
                     invUI.equipSlotMovingFrom = null;
                     invUI.invSlotMovingFrom = invUI.tempSlot;
 
-                    // TODO: Equip the item to our player
+                    equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
                 }
                 else // If we this item doesn't go here
                 {

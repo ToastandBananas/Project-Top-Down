@@ -27,7 +27,7 @@ public class Item : ScriptableObject
     public bool isStackable;
     public int maxStackSize = 1;
 
-    public virtual void Use(ItemData itemData)
+    public virtual void Use(ItemData itemData, EquipmentManager equipmentManager = null)
     {
         // Use or equip the item
         Debug.Log("Using " + name);

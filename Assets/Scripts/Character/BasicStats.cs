@@ -10,6 +10,8 @@ public class BasicStats : MonoBehaviour
     public float stamina = 50f;
     public float maxMana = 50f;
     public float mana = 50f;
+    public float maxEncumbrance = 100f;
+    public float encumbrance = 0;
     public float defense = 0;
 
     public bool isPlayer;
@@ -22,6 +24,13 @@ public class BasicStats : MonoBehaviour
     public PlayerStatBar playerHealthStatBar;
     public PlayerStatBar playerManaStatBar;
     public PlayerStatBar playerStaminaStatBar;
+
+    Arms arms;
+
+    void Start()
+    {
+        arms = GetComponentInChildren<Arms>();
+    }
 
     public void TakeDamage(float damageAmount)
     {
@@ -49,19 +58,19 @@ public class BasicStats : MonoBehaviour
 
     public void Die()
     {
-        if (transform.Find("Arms").Find("Left Arm").GetChild(0).GetChild(0).childCount > 0)
-            leftWeapon = transform.Find("Arms").Find("Left Arm").GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<ItemDrop>();
-        if (transform.Find("Arms").Find("Right Arm").GetChild(0).GetChild(0).childCount > 0)
-            rightWeapon = transform.Find("Arms").Find("Right Arm").GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+        if (arms.transform.Find("Left Arm").Find("Left Forearm").Find("Left Weapon").childCount > 0)
+            leftWeapon = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+        if (arms.transform.Find("Right Arm").Find("Right Forearm").Find("Right Weapon").childCount > 0)
+            rightWeapon = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
 
         if (leftWeapon != null)
-            leftWeapon.DropItem();
+            leftWeapon.DropItem(false);
 
         if (rightWeapon != null)
-            rightWeapon.DropItem();
+            rightWeapon.DropItem(false);
 
         // TODO: Death animation
-        transform.position = new Vector2(10000, 10000);
+        Destroy(gameObject);
     }
 
     public void UseMana(float manaAmount)

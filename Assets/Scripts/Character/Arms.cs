@@ -17,8 +17,8 @@ public class Arms : MonoBehaviour
     public bool twoHanderEquipped;
     public bool rangedWeaponEquipped;
 
-    Transform leftArm, rightArm;
-    Equipment leftWeapon, rightWeapon;
+    public Transform leftArm, rightArm;
+    public Equipment leftWeapon, rightWeapon;
     Animator leftArmAnim, rightArmAnim;
     
     void Start()
@@ -35,10 +35,11 @@ public class Arms : MonoBehaviour
 
     public void SetLeftAnims()
     {
+        Debug.Log("Setting anims");
+        leftWeapon = null;
+
         if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
-            leftWeapon  = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
-        if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
-            rightWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+            leftWeapon = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
 
         if (leftWeapon != null)
         {
@@ -55,6 +56,7 @@ public class Arms : MonoBehaviour
                 leftWeaponEquipped = true;
                 leftArmAnim.SetBool("weaponEquipped", true);
                 leftArmAnim.SetBool("shieldEquipped", false);
+                leftArmAnim.SetBool("isBlocking", false);
             }
         }
         else
@@ -63,11 +65,17 @@ public class Arms : MonoBehaviour
             leftWeaponEquipped = false;
             leftArmAnim.SetBool("weaponEquipped", false);
             leftArmAnim.SetBool("shieldEquipped", false);
+            leftArmAnim.SetBool("isBlocking", false);
         }
     }
 
     public void SetRightAnims()
     {
+        rightWeapon = null;
+
+        if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
+            rightWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+        
         if (rightWeapon != null)
         {
             if (rightWeapon.generalClassification == GeneralClassification.Shield)
@@ -83,6 +91,7 @@ public class Arms : MonoBehaviour
                 rightWeaponEquipped = true;
                 rightArmAnim.SetBool("weaponEquipped", true);
                 rightArmAnim.SetBool("shieldEquipped", false);
+                rightArmAnim.SetBool("isBlocking", false);
             }
         }
         else
@@ -91,6 +100,7 @@ public class Arms : MonoBehaviour
             rightWeaponEquipped = false;
             rightArmAnim.SetBool("weaponEquipped", false);
             rightArmAnim.SetBool("shieldEquipped", false);
+            rightArmAnim.SetBool("isBlocking", false);
         }
     }
 }

@@ -40,12 +40,12 @@ public class Equipment : Item
     public float minBaseDurability = 10f;
     public float maxBaseDurability = 20f;
 
-    public override void Use(ItemData itemData)
+    public override void Use(ItemData itemData, EquipmentManager equipmentManager)
     {
         base.Use(itemData);
 
         // Equip the item
-        EquipmentManager.instance.Equip(this, null);
+        equipmentManager.AutoEquip(this, itemData);
 
         // Remove from the inventory
         RemoveFromInventory(itemData);

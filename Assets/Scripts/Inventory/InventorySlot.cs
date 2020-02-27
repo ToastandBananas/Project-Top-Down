@@ -73,8 +73,19 @@ public class InventorySlot : MonoBehaviour
             item = null;
 
             slotBackgroundImage.sprite = emptySlotSprite;
+            stackSizeText.text = "";
 
             isEmpty = true;
+
+            for (int i = 0; i < childrenSlots.Length; i++)
+            {
+                if (childrenSlots[i] != null)
+                {
+                    childrenSlots[i].parentSlot = null;
+                    SoftClearSlot(childrenSlots[i]);
+                    childrenSlots[i] = null;
+                }
+            }
         }
     }
 
@@ -102,15 +113,6 @@ public class InventorySlot : MonoBehaviour
 
         isEmpty = false;
         slotBackgroundImage.sprite = fullSlotSprite;
-    }
-
-    public void UseItem()
-    {
-        if (item != null)
-        {
-            item.Use(itemData);
-            ClearSlot();
-        }
     }
 
     public void MoveItem()

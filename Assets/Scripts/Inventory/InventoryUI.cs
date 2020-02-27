@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -61,8 +62,6 @@ public class InventoryUI : MonoBehaviour
         tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
         tempSlot.name = "Temp Slot";
 
-        // inventory.onItemChangedCallback += UpdateUI; // Call UpdateUI whenever the onItemChangedCallback delegate is called
-
         pocketsSlots = pocketsParent.GetComponentsInChildren<InventorySlot>();
         bagSlots = bagParent.GetComponentsInChildren<InventorySlot>();
         horseBagSlots = horseBagParent.GetComponentsInChildren<InventorySlot>();
@@ -77,6 +76,16 @@ public class InventoryUI : MonoBehaviour
         {
             inventoryGO.SetActive(!inventoryGO.activeSelf);
             playerEquipmentMenuGO.SetActive(!playerEquipmentMenuGO.activeSelf);
+        }
+
+        if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
+        {
+            if (invSlotMovingFrom != null)
+                invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+            else if (equipSlotMovingFrom != null)
+                equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+            
+            StopDraggingInvItem();
         }
     }
 

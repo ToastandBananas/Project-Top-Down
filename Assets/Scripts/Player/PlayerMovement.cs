@@ -12,7 +12,10 @@ public class PlayerMovement : MonoBehaviour
     public float dodgeDistance = 1f;
     public float dodgeCooldownTime = 1f;
     float walkSpeed;
-    float blockSpeed;
+
+    public bool isMounted;
+    public bool isLockedOn;
+    public Transform lockOnTarget;
 
     Animator anim, legsAnim, rightArmAnim, leftArmAnim;
     Rigidbody2D rb;
@@ -34,11 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     LayerMask obstacleMask;
 
-    public bool isMounted;
-    public bool isLockedOn;
-    public Transform lockOnTarget;
-
-    public int itemsToBePickedUpCount = 0;
+    [HideInInspector] public int itemsToBePickedUpCount = 0;
 
     #region Singleton
     void Awake()
@@ -97,9 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update_Movement()
     {
-        if (playerAttack.isBlocking)
-            moveSpeed = blockSpeed;
-        else if (GameControls.gamePlayActions.playerSprint.IsPressed)
+        if (GameControls.gamePlayActions.playerSprint.IsPressed)
             moveSpeed = walkSpeed;
         else
             moveSpeed = runSpeed;
@@ -272,7 +269,6 @@ public class PlayerMovement : MonoBehaviour
     void CalculateMoveSpeeds()
     {
         walkSpeed = runSpeed / 2;
-        blockSpeed = (runSpeed / 3) * 2;
     }
 
     bool CanDodge(Vector3 dir, float distance)

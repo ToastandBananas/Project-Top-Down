@@ -7,6 +7,7 @@ public class ItemDrop : MonoBehaviour
     public bool isDropped;
     
     Rigidbody2D rb;
+    BoxCollider2D boxCollider;
     ItemPickup itemPickupScript;
     WeaponDamage weaponDamageScript;
     Transform looseItemsContainer;
@@ -16,25 +17,31 @@ public class ItemDrop : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
         itemPickupScript = GetComponent<ItemPickup>();
         weaponDamageScript = GetComponent<WeaponDamage>();
         looseItemsContainer = GameObject.Find("Loose Items").transform;
         obstacleMask = LayerMask.GetMask("Walls", "Floors");
     }
 
-    public void DropItem()
+    public void DropItem(bool tossInAir)
     {
+        if (boxCollider != null)
+            boxCollider.enabled = false;
+
+        if (weaponDamageScript != null)
+            weaponDamageScript.enabled = false;
+
+        itemPickupScript.enabled = true;
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);
-        itemPickupScript.enabled = true;
-        weaponDamageScript.enabled = false;
-        AddForce();
+        AddForce(tossInAir);
     }
 
     // Call this when you want to apply force in a random direction
-    void AddForce()
+    void AddForce(bool tossInAir)
     {
-        StartCoroutine(FakeAddForceMotion(false));
+        StartCoroutine(FakeAddForceMotion(tossInAir));
     }
 
     IEnumerator FakeAddForceMotion(bool tossInAir)
@@ -70,9 +77,9 @@ public class ItemDrop : MonoBehaviour
             {
                 // Simulate to look like the item was tossed into the air by increasing and then decreasing its scale
                 if (i <= forceAmount / 2)
-                    transform.localScale *= 1.05f;
+                    transform.localScale *= 1.02f;
                 else if (transform.localScale.x > originalScale.x)
-                    transform.localScale *= 0.95f;
+                    transform.localScale *= 0.98f;
             }
 
             // Move in a random direction towards a random distance
