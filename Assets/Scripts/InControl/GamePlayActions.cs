@@ -14,6 +14,10 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerLeftAttack, playerRightAttack;
     public PlayerAction playerLeftSpecialAttack, playerRightSpecialAttack;
 
+    // UI Actions
+    public PlayerAction menuSelect, menuContext;
+    public PlayerAction menuLeft, menuRight, menuUp, menuDown;
+
     public GamePlayActions()
     {
         playerInventory = CreatePlayerAction("PlayerInventory");
@@ -36,5 +40,13 @@ public class GamePlayActions : PlayerActionSet
         playerRightAttack = CreatePlayerAction("PlayerRightAttack");
         playerLeftSpecialAttack = CreatePlayerAction("PlayerLeftSpecialAttack");
         playerRightSpecialAttack = CreatePlayerAction("PlayerRightSpecialAttack");
+
+        // UI Actions
+        menuSelect = CreatePlayerAction("MenuSelect");
+        menuContext = CreatePlayerAction("MenuContext");
+        menuLeft = CreatePlayerAction("MenuLeft");
+        menuRight = CreatePlayerAction("MenuRight");
+        menuUp = CreatePlayerAction("MenuUp");
+        menuDown = CreatePlayerAction("MenuDown");
     }
 }

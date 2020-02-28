@@ -48,12 +48,12 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.pocketsSlots, pocketItems, itemData) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, itemData, invUI.pocketsSlots, pocketItems) == true)
                 return true;
         }
 
         // Return false if we can't find room for our item (it probably is too large)
-        Debug.Log("Not enough room in our pockets (or item is not pickupable.");
+        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -67,12 +67,12 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.bagSlots, bagItems, itemData) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, itemData, invUI.bagSlots, bagItems) == true)
                 return true;
         }
 
         // We should never get here...if we do there's an error in our code
-        Debug.LogWarning("Warning: Something is wrong with our AddToBag code. We should either return true or false before this point.");
+        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -86,12 +86,12 @@ public class Inventory : MonoBehaviour
                 return false;
             }
 
-            if (CalculateItemInvPositionFromPickup(itemToAdd, invUI.horseBagSlots, horseBagItems, itemData) == true)
+            if (CalculateItemInvPositionFromPickup(itemToAdd, itemData, invUI.horseBagSlots, horseBagItems) == true)
                 return true;
         }
 
         // We should never get here...if we do there's an error in our code
-        Debug.LogWarning("Warning: Something is wrong with our AddToHorseBag code. We should either return true or false before this point.");
+        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -107,7 +107,7 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, InventorySlot[] invSlots, List<ItemData> itemsList, ItemData itemData)
+    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, ItemData itemData, InventorySlot[] invSlots, List<ItemData> itemsList)
     {
         int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight);
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
@@ -122,7 +122,7 @@ public class Inventory : MonoBehaviour
                     for (int y = 0; y < itemToAdd.iconHeight; y++) // Find an appropriate spot in our inv for our item after picking it up
                     {
                         InventorySlot slotToCheck = GetSlotByCoordinates(new Vector2(invSlots[i].slotCoordinate.x + x, invSlots[i].slotCoordinate.y + y), invSlots);
-                        if (slotToCheck.isEmpty)
+                        if (slotToCheck != null && slotToCheck.isEmpty)
                         {
                             slotsToFill[currentSlotsToFillIndex] = slotToCheck;
                             currentSlotsToFillIndex++;

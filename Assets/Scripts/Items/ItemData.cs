@@ -24,6 +24,9 @@ public class ItemData : MonoBehaviour
 
     public void TransferData(ItemData dataGiver, ItemData dataReceiver)
     {
+        //Debug.Log(dataGiver.item);
+        //Debug.Log(dataGiver.equipment);
+
         // Item Class
         if (dataGiver.item != null)
             dataReceiver.item = dataGiver.item;

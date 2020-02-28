@@ -58,5 +58,24 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.playerRightSpecialAttack.AddDefaultBinding(Key.E);
         gamePlayActions.playerRightSpecialAttack.AddDefaultBinding(InputControlType.RightBumper);
+
+        // UI Actions
+        gamePlayActions.menuSelect.AddDefaultBinding(Mouse.LeftButton);
+        gamePlayActions.menuSelect.AddDefaultBinding(InputControlType.Action1);
+
+        gamePlayActions.menuContext.AddDefaultBinding(Mouse.RightButton);
+        gamePlayActions.menuContext.AddDefaultBinding(InputControlType.Action3);
+
+        gamePlayActions.menuUp.AddDefaultBinding(Key.UpArrow);
+        gamePlayActions.menuUp.AddDefaultBinding(InputControlType.DPadUp);
+
+        gamePlayActions.menuDown.AddDefaultBinding(Key.DownArrow);
+        gamePlayActions.menuDown.AddDefaultBinding(InputControlType.DPadDown);
+
+        gamePlayActions.menuLeft.AddDefaultBinding(Key.LeftArrow);
+        gamePlayActions.menuLeft.AddDefaultBinding(InputControlType.DPadLeft);
+
+        gamePlayActions.menuRight.AddDefaultBinding(Key.RightArrow);
+        gamePlayActions.menuRight.AddDefaultBinding(InputControlType.DPadRight);
     }
 }

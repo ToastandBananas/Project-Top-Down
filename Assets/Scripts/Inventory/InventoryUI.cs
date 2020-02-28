@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class InventoryUI : MonoBehaviour
     public GameObject slotPrefab;
     public GameObject inventoryGO;
     public GameObject playerEquipmentMenuGO;
+    public GameObject floatingTextPrefab;
 
     [Header("Parents")]
     public Transform pocketsParent;
@@ -18,11 +21,6 @@ public class InventoryUI : MonoBehaviour
     public Transform pocketsTitle;
     public Transform bagTitle;
     public Transform horseBagTitle;
-
-    int maxInventoryWidth = 8;
-
-    Inventory inventory;
-    PlayerMovement player;
 
     [Header("Slots")]
     public InventorySlot tempSlot;
@@ -35,6 +33,11 @@ public class InventoryUI : MonoBehaviour
     [HideInInspector] public ItemData currentlySelectedItemData;
     [HideInInspector] public InventorySlot invSlotMovingFrom;
     [HideInInspector] public EquipSlot equipSlotMovingFrom;
+
+    int maxInventoryWidth = 8;
+
+    Inventory inventory;
+    PlayerMovement player;
 
     #region Singleton
     void Awake()
@@ -81,9 +84,15 @@ public class InventoryUI : MonoBehaviour
         if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
         {
             if (invSlotMovingFrom != null)
+            {
                 invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+                invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+            }
             else if (equipSlotMovingFrom != null)
+            {
                 equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+                equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+            }
             
             StopDraggingInvItem();
         }

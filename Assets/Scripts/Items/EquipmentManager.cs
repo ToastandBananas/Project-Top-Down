@@ -41,6 +41,7 @@ public class EquipmentManager : MonoBehaviour
     public EquipSlot quiverSlot;
 
     Inventory inv;
+    InventoryUI invUI;
     Arms arms;
     BasicStats basicStats;
 
@@ -50,6 +51,7 @@ public class EquipmentManager : MonoBehaviour
     void Start()
     {
         inv = Inventory.instance;
+        invUI = InventoryUI.instance;
         arms = transform.Find("Arms").GetComponent<Arms>();
         basicStats = GetComponent<BasicStats>();
 
@@ -86,7 +88,7 @@ public class EquipmentManager : MonoBehaviour
         EquipToCharacter(newItem, itemData, weaponSlot, equipmentSlot); // Physically equip the weapon/equipment on the character
     }
 
-    public void AutoEquip(Equipment newItem, ItemData itemData)
+    public void AutoEquip(Equipment newItem, ItemData itemData, InventorySlot invSlot)
     {
         Equipment oldItem = null;
 
@@ -135,6 +137,40 @@ public class EquipmentManager : MonoBehaviour
                 oldItem = currentEquipment[slotIndex];
 
             currentEquipment[slotIndex] = newItem;
+        }
+
+        foreach (EquipSlot equipSlot in FindObjectsOfType<EquipSlot>())
+        {
+            if (equipSlot.thisWeaponSlot == newItem.weaponSlot && equipSlot.thisEquipmentSlot == newItem.equipmentSlot)
+            {
+                invSlot.ClearSlot(); // Clear out the new item from the inventory
+                
+                if (equipSlot.isEmpty == false)
+                {
+                    if (inv.AddToInventory(equipSlot.equipment, equipSlot.itemData) == false) // If there's no room in our inventory
+                    {
+                        invUI.tempSlot.AddItem(equipSlot.equipment);
+                        itemData.TransferData(equipSlot.itemData, invUI.tempSlot.itemData);
+
+                        invUI.currentlySelectedItem = invUI.tempSlot.item;
+                        invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
+                        invUI.invSlotMovingFrom = invUI.tempSlot;
+                    }
+
+                    // Remove old item
+                    Unequip(equipSlot.equipment, equipSlot.itemData, equipSlot.thisWeaponSlot, equipSlot.thisEquipmentSlot, false);
+                    equipSlot.ClearSlot(equipSlot);
+                }
+
+                // Add new item
+                EquipItem(newItem, itemData, newItem.weaponSlot, newItem.equipmentSlot);
+                equipSlot.AddItem(newItem, itemData);
+
+                GameObject floatingText = Instantiate(invUI.floatingTextPrefab, GameObject.Find("Canvas").transform);
+                floatingText.GetComponent<TextFade>().DisplayUseItemFloatingText(equipSlot.equipment, PlayerMovement.instance.transform, true);
+
+                break;
+            }
         }
     }
 
@@ -199,6 +235,9 @@ public class EquipmentManager : MonoBehaviour
             }
 
             AdjustStats(itemData, basicStats);
+
+            GameObject floatingText = Instantiate(invUI.floatingTextPrefab, GameObject.Find("Canvas").transform);
+            floatingText.GetComponent<TextFade>().DisplayUseItemFloatingText(newItem, PlayerMovement.instance.transform, true);
         }
         else
             Debug.LogError("Either a valid weaponSlot or equipmentSlot needs passed into this function to work.");
@@ -226,7 +265,7 @@ public class EquipmentManager : MonoBehaviour
         else if (newItem.generalClassification == GeneralClassification.RangedWeapon)
             arms.rangedWeaponEquipped = true;
 
-        StartCoroutine(SetArmAnims());
+        StartCoroutine(arms.SetArmAnims());
     }
 
     void EquipArmor(Equipment newItem, ItemData itemData, SpriteRenderer armorSpriteRenderer)
@@ -245,95 +284,108 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public void Unequip(Equipment item, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
+    public bool Unequip(Equipment item, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot, bool addToInventory)
     {
-        if (weaponSlot != WeaponSlot.None) // If the item is a weapon
+        bool roomInInventory = true;
+        if (addToInventory)
+            roomInInventory = inv.AddToInventory(item, itemData);
+
+        if (roomInInventory)
         {
-            slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
-
-            currentWeapons[slotIndex] = null; // Assign the weapon to our currentWeapons array
-
-            switch (weaponSlot) // Determine which slot to change
+            if (weaponSlot != WeaponSlot.None) // If the item is a weapon
             {
-                case WeaponSlot.WeaponLeft:
-                    if (leftWeaponParent.childCount > 0)
-                        Destroy(leftWeaponParent.GetChild(0).gameObject);
-                    break;
-                case WeaponSlot.WeaponRight:
-                    if (rightWeaponParent.childCount > 0)
-                        Destroy(rightWeaponParent.GetChild(0).gameObject);
-                    break;
-                case WeaponSlot.Ranged:
+                slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
+
+                currentWeapons[slotIndex] = null; // Assign the weapon to our currentWeapons array
+
+                switch (weaponSlot) // Determine which slot to change
+                {
+                    case WeaponSlot.WeaponLeft:
                         if (leftWeaponParent.childCount > 0)
-                    Destroy(leftWeaponParent.GetChild(0).gameObject);
-                    break;
+                            Destroy(leftWeaponParent.GetChild(0).gameObject);
+                        break;
+                    case WeaponSlot.WeaponRight:
+                        if (rightWeaponParent.childCount > 0)
+                            Destroy(rightWeaponParent.GetChild(0).gameObject);
+                        break;
+                    case WeaponSlot.Ranged:
+                        if (leftWeaponParent.childCount > 0)
+                            Destroy(leftWeaponParent.GetChild(0).gameObject);
+                        break;
+                }
+
+                if (weaponSlot == WeaponSlot.WeaponLeft && item.generalClassification == GeneralClassification.Weapon1H)
+                    arms.leftWeaponEquipped = false;
+                else if (weaponSlot == WeaponSlot.WeaponLeft && item.generalClassification == GeneralClassification.Shield)
+                    arms.leftShieldEquipped = false;
+                else if (weaponSlot == WeaponSlot.WeaponRight && item.generalClassification == GeneralClassification.Weapon1H)
+                    arms.rightWeaponEquipped = false;
+                else if (weaponSlot == WeaponSlot.WeaponRight && item.generalClassification == GeneralClassification.Shield)
+                    arms.rightShieldEquipped = false;
+                else if (item.generalClassification == GeneralClassification.Weapon2H)
+                    arms.twoHanderEquipped = false;
+                else if (item.generalClassification == GeneralClassification.RangedWeapon)
+                    arms.rangedWeaponEquipped = false;
+
+                StartCoroutine(arms.SetArmAnims());
             }
-
-            RemoveStats(itemData, basicStats);
-
-            if (weaponSlot == WeaponSlot.WeaponLeft && item.generalClassification == GeneralClassification.Weapon1H)
-                arms.leftWeaponEquipped = false;
-            else if (weaponSlot == WeaponSlot.WeaponLeft && item.generalClassification == GeneralClassification.Shield)
-                arms.leftShieldEquipped = false;
-            else if (weaponSlot == WeaponSlot.WeaponRight && item.generalClassification == GeneralClassification.Weapon1H)
-                arms.rightWeaponEquipped = false;
-            else if (weaponSlot == WeaponSlot.WeaponRight && item.generalClassification == GeneralClassification.Shield)
-                arms.rightShieldEquipped = false;
-            else if (item.generalClassification == GeneralClassification.Weapon2H)
-                arms.twoHanderEquipped = false;
-            else if (item.generalClassification == GeneralClassification.RangedWeapon)
-                arms.rangedWeaponEquipped = false;
-
-            StartCoroutine(SetArmAnims());
-        }
-        else if (equipmentSlot != EquipmentSlot.None) // If the item is a piece of equipment
-        {
-            slotIndex = (int)equipmentSlot; // Grab the index number of this equipmentSlot
-
-            currentEquipment[slotIndex] = null; // Assign the equipment to our currentEquipment array
-
-            switch (equipmentSlot) // Determine which slot to change
+            else if (equipmentSlot != EquipmentSlot.None) // If the item is a piece of equipment
             {
-                case EquipmentSlot.Head:
-                    helmet.sprite = null;
-                    break;
-                case EquipmentSlot.Shirt:
-                    shirt.sprite = null;
-                    break;
-                case EquipmentSlot.Cuirass:
-                    cuirass.sprite = null;
-                    break;
-                case EquipmentSlot.Gauntlets:
-                    leftGauntlet.sprite = null;
-                    rightGauntlet.sprite = null;
-                    break;
-                case EquipmentSlot.Pants:
-                    leftPants.sprite = null;
-                    rightPants.sprite = null;
-                    break;
-                case EquipmentSlot.Greaves:
-                    leftGreaves.sprite = null;
-                    rightGreaves.sprite = null;
-                    break;
-                case EquipmentSlot.Boots:
-                    leftBoot.sprite = null;
-                    rightBoot.sprite = null;
-                    break;
-                case EquipmentSlot.Quiver:
-                    // TODO: Make visible quiver on character? // quiver.sprite = null;
-                    quiverSlot.GetComponentInChildren<Text>().text = "";
-                    break;
-                case EquipmentSlot.Belt:
-                    break;
-                case EquipmentSlot.RightRing:
-                    break;
-                case EquipmentSlot.LeftRing:
-                    break;
-                case EquipmentSlot.Amulet:
-                    break;
+                slotIndex = (int)equipmentSlot; // Grab the index number of this equipmentSlot
+
+                currentEquipment[slotIndex] = null; // Assign the equipment to our currentEquipment array
+
+                switch (equipmentSlot) // Determine which slot to change
+                {
+                    case EquipmentSlot.Head:
+                        helmet.sprite = null;
+                        break;
+                    case EquipmentSlot.Shirt:
+                        shirt.sprite = null;
+                        break;
+                    case EquipmentSlot.Cuirass:
+                        cuirass.sprite = null;
+                        break;
+                    case EquipmentSlot.Gauntlets:
+                        leftGauntlet.sprite = null;
+                        rightGauntlet.sprite = null;
+                        break;
+                    case EquipmentSlot.Pants:
+                        leftPants.sprite = null;
+                        rightPants.sprite = null;
+                        break;
+                    case EquipmentSlot.Greaves:
+                        leftGreaves.sprite = null;
+                        rightGreaves.sprite = null;
+                        break;
+                    case EquipmentSlot.Boots:
+                        leftBoot.sprite = null;
+                        rightBoot.sprite = null;
+                        break;
+                    case EquipmentSlot.Quiver:
+                        // TODO: Make visible quiver on character? // quiver.sprite = null;
+                        quiverSlot.GetComponentInChildren<Text>().text = "";
+                        break;
+                    case EquipmentSlot.Belt:
+                        break;
+                    case EquipmentSlot.RightRing:
+                        break;
+                    case EquipmentSlot.LeftRing:
+                        break;
+                    case EquipmentSlot.Amulet:
+                        break;
+                }
             }
+            else
+                Debug.LogWarning("No equipSlot or invSlot set...Fix this!");
 
             RemoveStats(itemData, basicStats);
+            return true;
+        }
+        else
+        {
+            Debug.Log("No room in inventory");
+            return false;
         }
     }
 
@@ -347,12 +399,5 @@ public class EquipmentManager : MonoBehaviour
     {
         stats.defense -= itemData.defense;
         stats.encumbrance -= itemData.equipment.weight;
-    }
-
-    IEnumerator SetArmAnims()
-    {
-        yield return new WaitForSeconds(0.1f);
-        arms.SetLeftAnims();
-        arms.SetRightAnims();
     }
 }

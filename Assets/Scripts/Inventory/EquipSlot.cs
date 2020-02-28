@@ -64,7 +64,7 @@ public class EquipSlot : MonoBehaviour
             if (thisEquipmentSlot == EquipmentSlot.Quiver)
                 quiverText.text = "";
 
-            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item
+            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item
         }
         else if (isEmpty && this == invUI.equipSlotMovingFrom) // If we're trying to place an item back into the same slot it came from (place selected item back in the slot)
         {
@@ -86,7 +86,7 @@ public class EquipSlot : MonoBehaviour
                     || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
                         && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
                 {
-                    AddItem(invUI.currentlySelectedItemData.equipment); // Add the item and data to this slot
+                    AddItem(invUI.currentlySelectedItemData.equipment, invUI.currentlySelectedItemData); // Add the item and data to this slot
                     SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
                     if (invUI.invSlotMovingFrom != null) // Clear out the moving from slot if this item came from the inventory
@@ -115,7 +115,7 @@ public class EquipSlot : MonoBehaviour
         }
         else if (isEmpty == false && invUI.invSlotMovingFrom == invUI.tempSlot) // If we're placing an item in the same slot it came from, but the slot already has an item in it (replace item)
         {
-            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item before we do anything else
+            equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item before we do anything else
 
             itemData.SwapData(itemData, invUI.tempSlot.itemData); // Swap this slots info with the temp slots info
 
@@ -147,15 +147,15 @@ public class EquipSlot : MonoBehaviour
                     || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
                         && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
                 {
-                    equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Unequip the item before we do anything else
+                    equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item before we do anything else
 
                     // Add the currently selected item and its data to a temp slot
                     invUI.tempSlot.AddItem(equipment);
-                    itemData.TransferData(itemData, invUI.tempSlot.itemData);
+                    //itemData.TransferData(itemData, invUI.tempSlot.itemData);
 
                     // Clear this slot out and add the currently selected item
                     ClearSlot(this);
-                    AddItem(invUI.currentlySelectedItemData.equipment);
+                    AddItem(invUI.currentlySelectedItemData.equipment, invUI.currentlySelectedItemData);
                     SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
                     // Clear out the moving from slot if the item came from the inventory
@@ -200,14 +200,14 @@ public class EquipSlot : MonoBehaviour
     }
 
     /// <summary>Set the slot to appear full and isEmpty to false (does not transfer any data).</summary>
-    void FillSlot(EquipSlot slotToFill)
+    public void FillSlot(EquipSlot slotToFill)
     {
         slotToFill.isEmpty = false;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
         slotToFill.icon.sprite = slotToFill.equipment.inventoryIcon;
     }
 
-    public void AddItem(Equipment newItem)
+    public void AddItem(Equipment newItem, ItemData itemDataToTransferDataFrom)
     {
         GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
         icon = newIcon.GetComponent<SpriteRenderer>();
@@ -220,7 +220,7 @@ public class EquipSlot : MonoBehaviour
         icon.sprite = equipment.inventoryIcon;
         slotBackgroundImage.sprite = fullSlotSprite;
 
-        itemData.TransferData(invUI.currentlySelectedItemData, itemData); // Transfer the item's data to this slot
+        itemData.TransferData(itemDataToTransferDataFrom, itemData); // Transfer the item's data to this slot
         FillSlot(this); // Give the slot the appropriate background/icon and set isEmpty to false
         
         icon.name = itemData.itemName;

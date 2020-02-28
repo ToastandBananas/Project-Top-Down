@@ -27,10 +27,14 @@ public class Item : ScriptableObject
     public bool isStackable;
     public int maxStackSize = 1;
 
-    public virtual void Use(ItemData itemData, EquipmentManager equipmentManager = null)
+    [Header("Use Item Text")]
+    public string onUseItemText;
+    public string onFailedToUseItemText = "I can't do that";
+
+    public virtual void Use(ItemData itemData, EquipmentManager equipmentManager = null, InventorySlot invSlot = null)
     {
         // Use or equip the item
-        Debug.Log("Using " + name);
+        // Debug.Log("Using " + name);
     }
 
     public void RemoveFromInventory(ItemData itemData)

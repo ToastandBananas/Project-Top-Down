@@ -28,13 +28,17 @@ MonoBehaviour:
     type: 3}
   isStackable: 0
   maxStackSize: 1
+  onUseItemText: Shield equipped
+  onFailedToUseItemText: I can't do that
   generalClassification: 3
   weaponType: 1
   armorType: 0
   thisWeaponsSpecialAttacks: 
-  weaponSlot: 2
+  weaponSlot: 1
   equipmentSlot: 0
   deathSprite: {fileID: 0}
+  leftCuirassArmSprite: {fileID: 0}
+  rightCuirassArmSpite: {fileID: 0}
   minBaseDamage: 1
   maxBaseDamage: 5
   damageModifier: 1

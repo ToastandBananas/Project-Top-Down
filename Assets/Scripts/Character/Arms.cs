@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// This class basically just detects what type of weapon(s) we have equipped and sets bools needed for idle and walk anims for both arms.
@@ -35,7 +36,6 @@ public class Arms : MonoBehaviour
 
     public void SetLeftAnims()
     {
-        Debug.Log("Setting anims");
         leftWeapon = null;
 
         if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
@@ -102,5 +102,12 @@ public class Arms : MonoBehaviour
             rightArmAnim.SetBool("shieldEquipped", false);
             rightArmAnim.SetBool("isBlocking", false);
         }
+    }
+
+    public IEnumerator SetArmAnims()
+    {
+        yield return new WaitForSeconds(0.1f);
+        SetLeftAnims();
+        SetRightAnims();
     }
 }
