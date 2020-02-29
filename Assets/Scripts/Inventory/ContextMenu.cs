@@ -49,8 +49,8 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
                 contextMenu.transform.position = canvas.transform.TransformPoint(pos) + (Vector3.down / 2) + Vector3.right;
 
-                CreateDropItemButton();
                 CreateUseItemButton();
+                CreateDropItemButton();
             }
         }
 

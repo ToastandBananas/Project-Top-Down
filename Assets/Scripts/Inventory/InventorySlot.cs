@@ -229,4 +229,15 @@ public class InventorySlot : MonoBehaviour
             Cursor.visible = false;
         }
     }
+
+    public InventorySlot GetParentSlot(InventorySlot slot)
+    {
+        InventorySlot parentSlot;
+        if (slot.parentSlot == null) // If this is the parent slot
+            parentSlot = slot;
+        else
+            parentSlot = slot.parentSlot; // If this is a child slot
+        
+        return parentSlot;
+    }
 }

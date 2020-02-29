@@ -12,6 +12,7 @@ public class ItemData : MonoBehaviour
     [Header("General Data")]
     public string itemName;
     public Rarity rarity;
+    public int value;
     public int currentStackSize = 1;
     public float maxDurability;
     public float durability;

@@ -27,12 +27,22 @@ public class InventoryUI : MonoBehaviour
     public InventorySlot[] pocketsSlots;
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
+    public EquipSlot[] weaponSlots = new EquipSlot[3];
+    public EquipSlot leftWeaponSlot = null;
+    public EquipSlot rightWeaponSlot = null;
+    public EquipSlot rangedWeaponSlot = null;
+    public EquipSlot[] equipSlots;
 
     [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
     [HideInInspector] public ItemData currentlySelectedItemData;
     [HideInInspector] public InventorySlot invSlotMovingFrom;
     [HideInInspector] public EquipSlot equipSlotMovingFrom;
+
+    [Header("Tooltips")]
+    public Tooltip invTooltip;
+    public Tooltip equipTooltip1;
+    public Tooltip equipTooltip2;
 
     int maxInventoryWidth = 8;
 
@@ -68,6 +78,19 @@ public class InventoryUI : MonoBehaviour
         pocketsSlots = pocketsParent.GetComponentsInChildren<InventorySlot>();
         bagSlots = bagParent.GetComponentsInChildren<InventorySlot>();
         horseBagSlots = horseBagParent.GetComponentsInChildren<InventorySlot>();
+
+        weaponSlots = GameObject.Find("Weapons").GetComponentsInChildren<EquipSlot>();
+        foreach (EquipSlot equipSlot in weaponSlots)
+        {
+            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponLeft)
+                leftWeaponSlot = equipSlot;
+            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponRight)
+                rightWeaponSlot = equipSlot;
+            if (equipSlot.thisWeaponSlot == WeaponSlot.Ranged)
+                rangedWeaponSlot = equipSlot;
+        }
+
+        equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
 
         if (player.isMounted == false)
             ShowHorseSlots(false);

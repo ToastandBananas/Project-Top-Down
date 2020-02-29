@@ -151,7 +151,7 @@ public class EquipSlot : MonoBehaviour
 
                     // Add the currently selected item and its data to a temp slot
                     invUI.tempSlot.AddItem(equipment);
-                    //itemData.TransferData(itemData, invUI.tempSlot.itemData);
+                    itemData.TransferData(itemData, invUI.tempSlot.itemData);
 
                     // Clear this slot out and add the currently selected item
                     ClearSlot(this);
