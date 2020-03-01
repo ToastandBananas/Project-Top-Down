@@ -1,24 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-// using CodeMonkey.Utils;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public TextFade[] floatingTexts;
+    public int floatingTextIndex = 0;
+
+    #region Singleton
+    public static GameManager instance;
+
     void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Debug.LogWarning("FIXME: More than one instance of Inventory found!");
+            Destroy(this);
+        }
+
         DontDestroyOnLoad(this);
     }
+    #endregion
 
     void Start()
     {
-        /*FunctionPeriodic.Create(() =>
-        {
-            if (health > 0)
-            {
-                health -= 1f;
-                playerHealthBar.SetSize(health / maxHealth);
-            }
-        }, 0.3f);*/
+        floatingTexts = GameObject.Find("Floating Texts").GetComponentsInChildren<TextFade>();
     }
 }

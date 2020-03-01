@@ -7,7 +7,6 @@ public class Tooltip : MonoBehaviour
     Text tooltipText;
     InventorySlot tooltipSlot;
     RectTransform rectTransform;
-    HorizontalLayoutGroup horizontalLayoutGroup;
 
     Vector3 offset;
 
@@ -16,65 +15,80 @@ public class Tooltip : MonoBehaviour
     {
         tooltipText = GetComponentInChildren<Text>();
         rectTransform = GetComponentInParent<RectTransform>();
-        horizontalLayoutGroup = GetComponentInParent<HorizontalLayoutGroup>();
     }
 
     public void ShowItemTooltip(InventorySlot invSlot, EquipSlot equipSlot)
     {
-        if (invSlot != null && invSlot.isEmpty == false)
+        if (invSlot != null && invSlot.isEmpty == false) // For inventorySlots
         {
-            tooltipSlot = invSlot.GetParentSlot(invSlot); // Get the slot we'll be gathering data from and displaying
+            // Get the slot we'll be gathering data from and displaying
+            tooltipSlot = invSlot.GetParentSlot(invSlot);
             
+            // Item name
             tooltipText.text += "<b><size=24>" + tooltipSlot.itemData.itemName + "</size></b>\n";
 
+            // Stack size add on for ammunition description
             if (tooltipSlot.item.itemType == ItemType.Ammunition)
                     tooltipText.text += tooltipSlot.itemData.currentStackSize.ToString() + " ";
+
+            // Description
             tooltipText.text += tooltipSlot.item.description + "\n";
 
+            // Weapon specific info
             if (tooltipSlot.item.itemType == ItemType.Weapon)
             {
                 tooltipText.text += "Damage: " + tooltipSlot.itemData.damage.ToString() + "\n";
             }
+            // Armor specific info
             else if (tooltipSlot.item.itemType == ItemType.Armor || tooltipSlot.item.itemType == ItemType.Shield)
             {
                 tooltipText.text += "Defense: " + tooltipSlot.itemData.defense.ToString() + "\n";
             }
 
+            // Weapon/Equipment specific info
             if (tooltipSlot.item.itemType == ItemType.Armor || tooltipSlot.item.itemType == ItemType.Weapon || tooltipSlot.item.itemType == ItemType.Shield)
             {
                 tooltipText.text += "Durability: " + tooltipSlot.itemData.durability.ToString() + "/" + tooltipSlot.itemData.maxDurability.ToString() + "\n";
             }
 
-            tooltipText.text += "Value: " + tooltipSlot.itemData.value.ToString();
+            // Value
+            tooltipText.text += "Estimated Value: " + tooltipSlot.itemData.value.ToString();
 
-            CalculateOffset(tooltipSlot.item);
-            transform.position = tooltipSlot.transform.position + offset;
+            CalculateOffset(tooltipSlot.item, false); // Get our tooltip's position offset
+            transform.position = tooltipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset
         }
-        else if (equipSlot != null && equipSlot.isEmpty == false)
+        else if (equipSlot != null && equipSlot.isEmpty == false) // For equipSlots
         {
+            // Item name
             tooltipText.text += "<b><size=24>" + equipSlot.itemData.itemName + "</size></b>\n";
+
+            // Description
             tooltipText.text += equipSlot.equipment.description + "\n";
 
+            // Weapon specific info
             if (equipSlot.equipment.itemType == ItemType.Weapon)
             {
                 tooltipText.text += "Damage: " + equipSlot.itemData.damage.ToString() + "\n";
             }
+            // Armor specific info
             else if (equipSlot.equipment.itemType == ItemType.Armor || equipSlot.equipment.itemType == ItemType.Shield)
             {
                 tooltipText.text += "Defense: " + equipSlot.itemData.defense.ToString() + "\n";
             }
 
+            // Weapon/Equipment specific info
             if (equipSlot.equipment.itemType == ItemType.Armor || equipSlot.equipment.itemType == ItemType.Weapon || equipSlot.equipment.itemType == ItemType.Shield)
             {
                 tooltipText.text += "Durability: " + equipSlot.itemData.durability.ToString() + "/" + equipSlot.itemData.maxDurability.ToString() + "\n";
             }
 
-            tooltipText.text += "Value: " + equipSlot.itemData.value.ToString();
+            // Value
+            tooltipText.text += "Estimated Value: " + equipSlot.itemData.value.ToString();
 
-            CalculateOffset(equipSlot.equipment);
-            transform.position = equipSlot.transform.position + offset;
+            CalculateOffset(equipSlot.equipment, true); // Get our tooltip's position offset
+            transform.position = equipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset
         }
-
+        
         RecalculateTooltipSize();
     }
 
@@ -84,14 +98,21 @@ public class Tooltip : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void CalculateOffset(Item item)
+    void CalculateOffset(Item item, bool isEquipSlot)
     {
-        if (item.iconWidth == 1)
-            offset = (Vector3.up * 0.55f) + (Vector3.right * 0.55f);
-        else if (item.iconWidth == 2)
-            offset = (Vector3.up * 0.55f) + (Vector3.right * 1.65f);
-        else if (item.iconWidth == 3)
-            offset = (Vector3.up * 0.55f) + (Vector3.right * 2.75f);
+        if (isEquipSlot == false)
+        {
+            // For invSlots
+            if (item.iconWidth == 1)
+                offset = (Vector3.up * 0.55f) + (Vector3.right * 0.55f);
+            else if (item.iconWidth == 2)
+                offset = (Vector3.up * 0.55f) + (Vector3.right * 1.65f);
+            else if (item.iconWidth == 3)
+                offset = (Vector3.up * 0.55f) + (Vector3.right * 2.75f);
+        }
+        else 
+            // For equipSlots
+            offset = (Vector3.up * 0.75f) + (Vector3.right * 0.75f);
     }
 
     void RecalculateTooltipSize()

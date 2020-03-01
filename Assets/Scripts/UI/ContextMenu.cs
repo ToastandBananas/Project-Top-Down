@@ -129,7 +129,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             parentSlot = thisInvSlot.parentSlot;
         else
             parentSlot = thisInvSlot;
-
+        
         parentSlot.item.Use(parentSlot.itemData, equipmentManager, parentSlot);
 
         DisableContextMenu();

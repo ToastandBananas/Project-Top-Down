@@ -6,9 +6,6 @@ public class Inventory : MonoBehaviour
     InventoryUI invUI;
     PlayerMovement player;
 
-    //public delegate void OnItemChanged();
-    //public OnItemChanged onItemChangedCallback;
-
     public int pocketsSlotCount = 10;
     public int bagSlotCount = 10;
     public int horseBagSlotCount = 10;
@@ -16,6 +13,9 @@ public class Inventory : MonoBehaviour
     public List<ItemData> pocketItems   = new List<ItemData>();
     public List<ItemData> bagItems      = new List<ItemData>();
     public List<ItemData> horseBagItems = new List<ItemData>();
+
+    InventorySlot[] parentSlotsTryingToReplace;
+    int itemsTryingToReplaceCount;
 
     #region Singleton
     public static Inventory instance;
@@ -190,68 +190,11 @@ public class Inventory : MonoBehaviour
 
         int totalSlotsToCheck = itemToAdd.iconWidth * itemToAdd.iconHeight;
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
-        int currentSlotsToFillIndex = 0;
 
-        for (int x = 0; x < itemToAdd.iconWidth; x++)
-        {
-            for (int y = 0; y < itemToAdd.iconHeight; y++)
-            {
-                // Get each slot within our items bounds (width * height) and add it to our slotsToFill array if it's a valid slot
-                InventorySlot slotToCheck = GetSlotByCoordinates(new Vector2(startSlot.slotCoordinate.x + x, startSlot.slotCoordinate.y + y), invSlots);
-                if (slotToCheck == null) // If the slot doesn't exist (happens when trying to place a large item at the very bottom or far right side of the inventory)
-                {
-                    Debug.Log("You're trying to place item in an invalid position.");
-                    return false;
-                }
-                else
-                {
-                    slotsToFill[currentSlotsToFillIndex] = slotToCheck; // Add the slot to our slotsToFill array and increase the array's index
-                    currentSlotsToFillIndex++;
-                }
-            }
-        } 
+        itemsTryingToReplaceCount = GetOverlappingItemCount(itemToAdd, startSlot, slotsToFill, invSlots);
 
-        // Determine if we're trying to replace any items...if we're trying to replace more than 1, return false
-        InventorySlot[] parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item. So if there's ever 2 items in this array, we return false
-        int itemsTryingToReplaceCount = 0; // Index of parentSlotsTryingToReplace array...will increase every time an item is pushed to the array
-        foreach (InventorySlot slot in slotsToFill) // Determine how many (if any) items we're trying to place this item on top of
-        {
-            // Debug.Log(slot.slotCoordinate);
-            if (itemsTryingToReplaceCount <= 1) // If we're trying to replace one item or less
-            {
-                if (slot.isEmpty == false) // If there's something already in this slot
-                {
-                    if (slot.parentSlot != null) // If this is a child slot
-                    {
-                        if (itemsTryingToReplaceCount > 0 && slot.parentSlot != parentSlotsTryingToReplace[0]) // If we already found one item and the parent slot of this slot isn't the same
-                        {
-                            parentSlotsTryingToReplace[1] = slot.parentSlot; // Add the item's slot to our array and increase the array's index
-                            itemsTryingToReplaceCount++;
-                        }
-                        else if (itemsTryingToReplaceCount == 0) // If we haven't found an item yet
-                        {
-                            parentSlotsTryingToReplace[0] = slot.parentSlot; // Add the item's slot to our array and increase the array's index
-                            itemsTryingToReplaceCount++;
-                        }
-                    }
-                    else // If this is a parent slot
-                    {
-                        if (itemsTryingToReplaceCount > 0 && slot != parentSlotsTryingToReplace[0]) // If we already found one item and this slot isn't the same as that item's slot
-                        {
-                            parentSlotsTryingToReplace[1] = slot; // Add the item's slot to our array and increase the array's index
-                            itemsTryingToReplaceCount++;
-                        }
-                        else if (itemsTryingToReplaceCount == 0) // If we haven't found an item yet
-                        {
-                            parentSlotsTryingToReplace[0] = slot; // Add the item's slot to our array and increase the array's index
-                            itemsTryingToReplaceCount++;
-                        }
-                    }
-                }
-            }
-            else
-                return false; // If we're trying to replace more than one item, then this position is invalid
-        }
+        if (itemsTryingToReplaceCount == 2)
+            return false;
 
         if (itemsTryingToReplaceCount == 0) // If we're not going to replace any items
         {
@@ -545,6 +488,75 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
+    }
+
+    public int GetOverlappingItemCount(Item itemToAdd, InventorySlot startSlot, InventorySlot[] slotsToFill, InventorySlot[] invSlots)
+    {
+        int currentSlotsToFillIndex = 0;
+
+        for (int x = 0; x < itemToAdd.iconWidth; x++)
+        {
+            for (int y = 0; y < itemToAdd.iconHeight; y++)
+            {
+                // Get each slot within our items bounds (width * height) and add it to our slotsToFill array if it's a valid slot
+                InventorySlot slotToCheck = GetSlotByCoordinates(new Vector2(startSlot.slotCoordinate.x + x, startSlot.slotCoordinate.y + y), invSlots);
+                if (slotToCheck == null) // If the slot doesn't exist (happens when trying to place a large item at the very bottom or far right side of the inventory)
+                {
+                    Debug.Log("You're trying to place item in an invalid position.");
+                    return 2;
+                }
+                else
+                {
+                    slotsToFill[currentSlotsToFillIndex] = slotToCheck; // Add the slot to our slotsToFill array and increase the array's index
+                    currentSlotsToFillIndex++;
+                }
+            }
+        }
+
+        // Determine if we're trying to replace any items...if we're trying to replace more than 1, return false
+        int itemsTryingToReplaceCount = 0; // Index of parentSlotsTryingToReplace array...will increase every time an item is pushed to the array
+        parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item. So if there's ever 2 items in this array, we return false
+
+        foreach (InventorySlot slot in slotsToFill) // Determine how many (if any) items we're trying to place this item on top of
+        {
+            // Debug.Log(slot.slotCoordinate);
+            if (itemsTryingToReplaceCount <= 1) // If we're trying to replace one item or less
+            {
+                if (slot.isEmpty == false) // If there's something already in this slot
+                {
+                    if (slot.parentSlot != null) // If this is a child slot
+                    {
+                        if (itemsTryingToReplaceCount > 0 && slot.parentSlot != parentSlotsTryingToReplace[0]) // If we already found one item and the parent slot of this slot isn't the same
+                        {
+                            parentSlotsTryingToReplace[1] = slot.parentSlot; // Add the item's slot to our array and increase the array's index
+                            itemsTryingToReplaceCount++;
+                        }
+                        else if (itemsTryingToReplaceCount == 0) // If we haven't found an item yet
+                        {
+                            parentSlotsTryingToReplace[0] = slot.parentSlot; // Add the item's slot to our array and increase the array's index
+                            itemsTryingToReplaceCount++;
+                        }
+                    }
+                    else // If this is a parent slot
+                    {
+                        if (itemsTryingToReplaceCount > 0 && slot != parentSlotsTryingToReplace[0]) // If we already found one item and this slot isn't the same as that item's slot
+                        {
+                            parentSlotsTryingToReplace[1] = slot; // Add the item's slot to our array and increase the array's index
+                            itemsTryingToReplaceCount++;
+                        }
+                        else if (itemsTryingToReplaceCount == 0) // If we haven't found an item yet
+                        {
+                            parentSlotsTryingToReplace[0] = slot; // Add the item's slot to our array and increase the array's index
+                            itemsTryingToReplaceCount++;
+                        }
+                    }
+                }
+            }
+            else
+                return itemsTryingToReplaceCount; // If we're trying to replace more than one item, then this position is invalid
+        }
+        
+        return itemsTryingToReplaceCount;
     }
 
     public void Remove(ItemData itemData)

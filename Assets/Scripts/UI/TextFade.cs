@@ -14,6 +14,13 @@ public class TextFade : MonoBehaviour
 
     int activeTexts = 0;
 
+    GameManager GM;
+
+    void Start()
+    {
+        GM = GameManager.instance;
+    }
+
     public void DisplayUseItemFloatingText(Item item, Transform target, bool usedSuccessfully)
     {
         if (usedSuccessfully)
@@ -23,6 +30,8 @@ public class TextFade : MonoBehaviour
 
         transform.position = target.position + (Vector3.up * 0.75f);
 
+        SetFloatingTextIndex();
+
         StartCoroutine(MoveAndFade());
     }
 
@@ -31,7 +40,16 @@ public class TextFade : MonoBehaviour
         textComponent.text = textToDisplay;
         transform.position = target.position + (Vector3.up * 0.75f);
 
+        SetFloatingTextIndex();
+
         StartCoroutine(SlowFade());
+    }
+
+    void SetFloatingTextIndex()
+    {
+        GM.floatingTextIndex++;
+        if (GM.floatingTextIndex >= 5)
+            GM.floatingTextIndex = 0;
     }
 
     public IEnumerator SlowFade()
@@ -44,7 +62,7 @@ public class TextFade : MonoBehaviour
             textComponent.color -= new Color(0, 0, 0, fadeOutSpeed / 2);
 
             if (timer >= fadeTime)
-                Destroy(this);
+                break;
             else
                 timer += Time.deltaTime;
 
@@ -63,7 +81,7 @@ public class TextFade : MonoBehaviour
             textComponent.color -= new Color(0, 0, 0, fadeOutSpeed);
 
             if (timer >= fadeTime)
-                Destroy(this);
+                break;
             else
                 timer += Time.deltaTime;
 

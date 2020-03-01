@@ -16,6 +16,7 @@ public class EquipSlot : MonoBehaviour
     public Image slotBackgroundImage;
     public Sprite emptySlotSprite;
     public Sprite fullSlotSprite;
+    public Text slotText;
 
     [Header("Item Data")]
     public Equipment equipment;
@@ -36,6 +37,7 @@ public class EquipSlot : MonoBehaviour
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
         equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
+        slotText = transform.Find("Text").GetComponent<Text>();
 
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
             quiverText = GetComponentInChildren<Text>();
@@ -195,16 +197,18 @@ public class EquipSlot : MonoBehaviour
             slotToClear.slotBackgroundImage.sprite = emptySlotSprite;
             slotToClear.itemData = null;
             slotToClear.equipment = null;
+            slotToClear.slotText.enabled = true;
             Destroy(slotToClear.icon.gameObject);
         }
     }
 
     /// <summary>Set the slot to appear full and isEmpty to false (does not transfer any data).</summary>
-    public void FillSlot(EquipSlot slotToFill)
+    public void SoftFillSlot(EquipSlot slotToFill)
     {
         slotToFill.isEmpty = false;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
         slotToFill.icon.sprite = slotToFill.equipment.inventoryIcon;
+        slotText.enabled = false;
     }
 
     public void AddItem(Equipment newItem, ItemData itemDataToTransferDataFrom)
@@ -221,7 +225,7 @@ public class EquipSlot : MonoBehaviour
         slotBackgroundImage.sprite = fullSlotSprite;
 
         itemData.TransferData(itemDataToTransferDataFrom, itemData); // Transfer the item's data to this slot
-        FillSlot(this); // Give the slot the appropriate background/icon and set isEmpty to false
+        SoftFillSlot(this); // Give the slot the appropriate background/icon and set isEmpty to false
         
         icon.name = itemData.itemName;
     }

@@ -40,6 +40,7 @@ public class EquipmentManager : MonoBehaviour
     [Header("Quiver")]
     public EquipSlot quiverSlot;
 
+    GameManager GM;
     Inventory inv;
     InventoryUI invUI;
     Arms arms;
@@ -50,6 +51,7 @@ public class EquipmentManager : MonoBehaviour
 
     void Start()
     {
+        GM = GameManager.instance;
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
         arms = transform.Find("Arms").GetComponent<Arms>();
@@ -90,20 +92,22 @@ public class EquipmentManager : MonoBehaviour
 
     public void AutoEquip(Equipment newItem, ItemData itemData, InventorySlot invSlot)
     {
-        Equipment oldItem = null;
-
+        oldItem = null;
         int slotIndex = 0;
-        if (newItem.weaponType != WeaponType.NotAWeapon)
+
+        if (newItem.weaponType != WeaponType.NotAWeapon) // If this is a weapon
         {
             if (newItem.weaponSlot != WeaponSlot.None)
             {
+                // If this is a ranged weapon
                 if (newItem.weaponType == WeaponType.Bow || newItem.weaponType == WeaponType.Crossbow)
                     newItem.weaponSlot = WeaponSlot.Ranged;
-                else
+                else // If this is a melee weapon
                 {
-                    newItem.weaponSlot = WeaponSlot.WeaponRight;
-                    if (currentWeapons[(int)WeaponSlot.WeaponRight] != null)
-                        newItem.weaponSlot = WeaponSlot.WeaponLeft;
+                    // See if one of the weapon slots is empty and assign it, or if they're both full, equip to the right arm
+                    newItem.weaponSlot = WeaponSlot.WeaponLeft;
+                    if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
+                        newItem.weaponSlot = WeaponSlot.WeaponRight;
                 }
             }
 
@@ -111,7 +115,7 @@ public class EquipmentManager : MonoBehaviour
 
             if (currentWeapons[slotIndex] != null)
                 oldItem = currentWeapons[slotIndex];
-
+            
             currentWeapons[slotIndex] = newItem;
         }
         else if (newItem.armorType == ArmorType.Ring)
@@ -147,7 +151,8 @@ public class EquipmentManager : MonoBehaviour
                 
                 if (equipSlot.isEmpty == false)
                 {
-                    if (inv.AddToInventory(equipSlot.equipment, equipSlot.itemData) == false) // If there's no room in our inventory
+                    // If there's no room in our inventory, send it to the temp slot so we can manually place or drop the item
+                    if (inv.AddToInventory(equipSlot.equipment, equipSlot.itemData) == false)
                     {
                         invUI.tempSlot.AddItem(equipSlot.equipment);
                         itemData.TransferData(equipSlot.itemData, invUI.tempSlot.itemData);
@@ -166,9 +171,8 @@ public class EquipmentManager : MonoBehaviour
                 EquipItem(newItem, itemData, newItem.weaponSlot, newItem.equipmentSlot);
                 equipSlot.AddItem(newItem, itemData);
 
-                GameObject floatingText = Instantiate(invUI.floatingTextPrefab, GameObject.Find("Canvas").transform);
-                floatingText.GetComponent<TextFade>().DisplayUseItemFloatingText(equipSlot.equipment, PlayerMovement.instance.transform, true);
-
+                // Display floating text
+                GM.floatingTexts[GM.floatingTextIndex].DisplayUseItemFloatingText(equipSlot.equipment, PlayerMovement.instance.transform, true);
                 break;
             }
         }
@@ -181,13 +185,13 @@ public class EquipmentManager : MonoBehaviour
             switch (weaponSlot) // Determine which slot to change
             {
                 case WeaponSlot.WeaponLeft:
-                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
+                    EquipWeaponSprite(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
                     break;
                 case WeaponSlot.WeaponRight:
-                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
+                    EquipWeaponSprite(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
                     break;
                 case WeaponSlot.Ranged:
-                    EquipWeapon(newItem, itemData, prefabRangedWeaponBase, leftWeaponParent);
+                    EquipWeaponSprite(newItem, itemData, prefabRangedWeaponBase, leftWeaponParent);
                     break;
             }
         }
@@ -196,29 +200,29 @@ public class EquipmentManager : MonoBehaviour
             switch (equipmentSlot) // Determine which slot to change
             {
                 case EquipmentSlot.Head:
-                    EquipArmor(newItem, itemData, helmet);
+                    EquipArmorSprite(newItem, itemData, helmet);
                     break;
                 case EquipmentSlot.Shirt:
-                    EquipArmor(newItem, itemData, shirt);
+                    EquipArmorSprite(newItem, itemData, shirt);
                     break;
                 case EquipmentSlot.Cuirass:
-                    EquipArmor(newItem, itemData, cuirass);
+                    EquipArmorSprite(newItem, itemData, cuirass);
                     break;
                 case EquipmentSlot.Gauntlets:
-                    EquipArmor(newItem, itemData, leftGauntlet);
-                    EquipArmor(newItem, itemData, rightGauntlet);
+                    EquipArmorSprite(newItem, itemData, leftGauntlet);
+                    EquipArmorSprite(newItem, itemData, rightGauntlet);
                     break;
                 case EquipmentSlot.Pants:
-                    EquipArmor(newItem, itemData, leftPants);
-                    EquipArmor(newItem, itemData, rightPants);
+                    EquipArmorSprite(newItem, itemData, leftPants);
+                    EquipArmorSprite(newItem, itemData, rightPants);
                     break;
                 case EquipmentSlot.Greaves:
-                    EquipArmor(newItem, itemData, leftGreaves);
-                    EquipArmor(newItem, itemData, rightGreaves);
+                    EquipArmorSprite(newItem, itemData, leftGreaves);
+                    EquipArmorSprite(newItem, itemData, rightGreaves);
                     break;
                 case EquipmentSlot.Boots:
-                    EquipArmor(newItem, itemData, leftBoot);
-                    EquipArmor(newItem, itemData, rightBoot);
+                    EquipArmorSprite(newItem, itemData, leftBoot);
+                    EquipArmorSprite(newItem, itemData, rightBoot);
                     break;
                 case EquipmentSlot.Quiver:
                     quiverSlot.SetQuiverStackSizeText();
@@ -235,15 +239,14 @@ public class EquipmentManager : MonoBehaviour
             }
 
             AdjustStats(itemData, basicStats);
-
-            GameObject floatingText = Instantiate(invUI.floatingTextPrefab, GameObject.Find("Canvas").transform);
-            floatingText.GetComponent<TextFade>().DisplayUseItemFloatingText(newItem, PlayerMovement.instance.transform, true);
+            
+            GM.floatingTexts[GM.floatingTextIndex].DisplayUseItemFloatingText(newItem, PlayerMovement.instance.transform, true);
         }
         else
             Debug.LogError("Either a valid weaponSlot or equipmentSlot needs passed into this function to work.");
     }
 
-    void EquipWeapon(Equipment newItem, ItemData itemData, GameObject weaponBasePrefab, Transform weaponParent)
+    void EquipWeaponSprite(Equipment newItem, ItemData itemData, GameObject weaponBasePrefab, Transform weaponParent)
     {
         GameObject weaponBase = Instantiate(weaponBasePrefab, weaponParent);
         GameObject weapon = Instantiate(newItem.prefab, weaponBase.transform);
@@ -268,7 +271,7 @@ public class EquipmentManager : MonoBehaviour
         StartCoroutine(arms.SetArmAnims());
     }
 
-    void EquipArmor(Equipment newItem, ItemData itemData, SpriteRenderer armorSpriteRenderer)
+    void EquipArmorSprite(Equipment newItem, ItemData itemData, SpriteRenderer armorSpriteRenderer)
     {
         armorSpriteRenderer.sprite = newItem.sprite;
 
@@ -295,8 +298,8 @@ public class EquipmentManager : MonoBehaviour
             if (weaponSlot != WeaponSlot.None) // If the item is a weapon
             {
                 slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
-
-                currentWeapons[slotIndex] = null; // Assign the weapon to our currentWeapons array
+                
+                currentWeapons[slotIndex] = null; // Unassign the weapon from our currentWeapons array
 
                 switch (weaponSlot) // Determine which slot to change
                 {
@@ -332,7 +335,7 @@ public class EquipmentManager : MonoBehaviour
             else if (equipmentSlot != EquipmentSlot.None) // If the item is a piece of equipment
             {
                 slotIndex = (int)equipmentSlot; // Grab the index number of this equipmentSlot
-
+                
                 currentEquipment[slotIndex] = null; // Assign the equipment to our currentEquipment array
 
                 switch (equipmentSlot) // Determine which slot to change

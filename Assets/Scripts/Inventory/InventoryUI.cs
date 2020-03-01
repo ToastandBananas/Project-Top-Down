@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -16,17 +14,21 @@ public class InventoryUI : MonoBehaviour
     public Transform pocketsParent;
     public Transform bagParent;
     public Transform horseBagParent;
+    public Transform containerParent;
 
     [Header("Titles")]
     public Transform pocketsTitle;
     public Transform bagTitle;
     public Transform horseBagTitle;
 
-    [Header("Slots")]
+    [Header("Inventory Slots")]
     public InventorySlot tempSlot;
     public InventorySlot[] pocketsSlots;
     public InventorySlot[] bagSlots;
     public InventorySlot[] horseBagSlots;
+    public InventorySlot[] containerSlots;
+
+    [Header("Equip Slots")]
     public EquipSlot[] weaponSlots = new EquipSlot[3];
     public EquipSlot leftWeaponSlot = null;
     public EquipSlot rightWeaponSlot = null;
@@ -49,9 +51,9 @@ public class InventoryUI : MonoBehaviour
     Inventory inventory;
     PlayerMovement player;
 
-    #region Singleton
     void Awake()
     {
+        #region Singleton
         if (instance == null)
             instance = this;
         else
@@ -59,11 +61,8 @@ public class InventoryUI : MonoBehaviour
             Debug.LogWarning("FIXME: More than one InventoryUI script is active.");
             Destroy(gameObject);
         }
-    }
-    #endregion
+        #endregion
 
-    void Start()
-    {
         inventory = Inventory.instance;
         player = PlayerMovement.instance;
 
@@ -93,7 +92,7 @@ public class InventoryUI : MonoBehaviour
         equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
 
         if (player.isMounted == false)
-            ShowHorseSlots(false);
+            ToggleHorseSlots(false);
     }
     
     void Update()
@@ -121,10 +120,10 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots)
+    public void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots)
     {
-        //if (slots.Length > slotCount || slots.Length < slotCount)
-            //slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
+        if (slots.Length != slotCount)
+            slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
 
         int currentXCoord = 1;
         int currentYCoord = 1;
@@ -148,8 +147,6 @@ public class InventoryUI : MonoBehaviour
             else if (slotsParent == horseBagParent)
                 slot.name = "Horse Bag Slot " + i;
         }
-
-        slots = slotsParent.GetComponentsInChildren<InventorySlot>(); // Add the new slots to our slots array
     }
 
     public void StopDraggingInvItem()
@@ -161,7 +158,7 @@ public class InventoryUI : MonoBehaviour
         Cursor.visible = true;
     }
 
-    void ShowHorseSlots(bool showSlots)
+    public void ToggleHorseSlots(bool showSlots)
     {
         horseBagParent.gameObject.SetActive(showSlots);
         horseBagTitle.gameObject.SetActive(showSlots);

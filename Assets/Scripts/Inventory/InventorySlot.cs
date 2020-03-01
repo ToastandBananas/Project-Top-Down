@@ -23,7 +23,7 @@ public class InventorySlot : MonoBehaviour
     public InventorySlot parentSlot;
     public InventorySlot[] childrenSlots = new InventorySlot[7];
 
-    [HideInInspector] public Transform slotParent;
+    public Transform slotParent;
     [HideInInspector] public Text stackSizeText;
     Inventory inv;
     InventoryUI invUI;
@@ -37,6 +37,9 @@ public class InventorySlot : MonoBehaviour
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
         stackSizeText = GetComponentInChildren<Text>();
+
+        if (name == "Temp Slot")
+            slotParent = transform;
     }
 
     void Update()
@@ -175,7 +178,7 @@ public class InventorySlot : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Item successfully placed");
+                    //Debug.Log("Item successfully placed");
                 }
             }
             else if (slotParent.name == "Bag")
@@ -187,7 +190,7 @@ public class InventorySlot : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Item successfully placed");
+                    //Debug.Log("Item successfully placed");
                 }
             }
             else if (slotParent.name == "Horse Bags")
@@ -199,7 +202,7 @@ public class InventorySlot : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Item successfully placed");
+                    //Debug.Log("Item successfully placed");
                 }
             }
         }

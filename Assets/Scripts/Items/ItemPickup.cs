@@ -39,7 +39,7 @@ public class ItemPickup : Interactable
 
     void PickUp()
     {
-        Debug.Log("Picking up " + item.name);
+        // Debug.Log("Picking up " + item.name);
         bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData); // If this returns true, it will add the item to the appropriate bag
         if (wasPickedUp == false)
             wasPickedUp = Inventory.instance.AddToBag(item, itemData);

@@ -20,9 +20,9 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (thisInvSlot != null && thisInvSlot.isEmpty == false)
+        if (thisInvSlot != null && thisInvSlot.isEmpty == false && invUI.currentlySelectedItem == null) // If this is an invSlot
         {
-            // Get the tooltip for the slot we're hovering over
+            // Get the tooltip for the slot we're hovering over, regardless of its ItemType
             GetInvSlotTooltip();
 
             // Show tooltip(s) for weapons/equipment of the same type that are already equipped (for comparison)
@@ -33,7 +33,7 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             else if (thisInvParentSlot.item.itemType == ItemType.Armor)
                 GetEquippedArmorTooltips();
         }
-        else if (thisEquipSlot != null && thisEquipSlot.isEmpty == false)
+        else if (thisEquipSlot != null && thisEquipSlot.isEmpty == false && invUI.currentlySelectedItem == null) // If this is an equipSlot
         {
             // Get the tooltip for the equipped item we're hovering over
             GetEquipSlotTooltips();
@@ -147,9 +147,11 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     void GetEquipSlotTooltips()
     {
+        // Display the tooltip for the equipment we're hovering over
         invUI.equipTooltip1.gameObject.SetActive(true);
         invUI.equipTooltip1.ShowItemTooltip(null, thisEquipSlot);
 
+        // Then, if it's a weapon or ring, display the other weapon or ring slot's tooltip
         if (thisEquipSlot.equipment.armorType == ArmorType.Ring) // If this is a ring slot
         {
             tooltipCount = 0; // Reset our tooltipCount
@@ -166,8 +168,8 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                         if (equipSlot.thisEquipmentSlot == EquipmentSlot.LeftRing && equipSlot.isEmpty == false) // If this is the left ring slot
                         {
                             // Display the equipped left ring's data
-                            invUI.equipTooltip1.gameObject.SetActive(true);
-                            invUI.equipTooltip1.ShowItemTooltip(null, equipSlot);
+                            invUI.equipTooltip2.gameObject.SetActive(true);
+                            invUI.equipTooltip2.ShowItemTooltip(null, equipSlot);
                             tooltipCount++;
                         }
                         else if (equipSlot.thisEquipmentSlot == EquipmentSlot.RightRing && equipSlot.isEmpty == false) // If this is the right ring slot
@@ -197,8 +199,8 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                         if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponLeft && equipSlot.isEmpty == false) // If this is the left ring slot
                         {
                             // Display the equipped left ring's data
-                            invUI.equipTooltip1.gameObject.SetActive(true);
-                            invUI.equipTooltip1.ShowItemTooltip(null, equipSlot);
+                            invUI.equipTooltip2.gameObject.SetActive(true);
+                            invUI.equipTooltip2.ShowItemTooltip(null, equipSlot);
                             tooltipCount++;
                         }
                         else if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponRight && equipSlot.isEmpty == false) // If this is the right ring slot
@@ -211,11 +213,6 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                     }
                 }
             }
-        }
-        else // If this is any slot other than a ring or left/right weapon slot
-        {
-            invUI.equipTooltip1.gameObject.SetActive(true);
-            invUI.equipTooltip1.ShowItemTooltip(null, thisEquipSlot);
         }
     }
 }
