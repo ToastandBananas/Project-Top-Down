@@ -30,6 +30,8 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 invSlots = invUI.bagSlots;
             else if (thisInvSlot.slotParent.name == "Horse Bag")
                 invSlots = invUI.horseBagSlots;
+            else if (thisInvSlot.slotParent.name == "Container")
+                invSlots = invUI.containerSlots;
         }
     }
 
@@ -58,7 +60,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             TurnSlotWhite(null, thisEquipSlot);
     }
 
-    void HighlightInvSlots()
+    public void HighlightInvSlots()
     {
         canPlaceItemHere = true; // Reset the bool
         int totalSlotsToCheck = invUI.currentlySelectedItem.iconWidth * invUI.currentlySelectedItem.iconHeight;
@@ -84,7 +86,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         }
     }
 
-    void HighlightEquipSlots()
+    public void HighlightEquipSlots()
     {
         // If this item goes in this slot
         if (invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipSlot.thisEquipmentSlot

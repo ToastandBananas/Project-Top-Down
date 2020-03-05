@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
     public TextFade[] floatingTexts;
     public int floatingTextIndex = 0;
 
+    InventoryUI invUI;
+
     #region Singleton
     public static GameManager instance;
 
@@ -25,5 +27,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         floatingTexts = GameObject.Find("Floating Texts").GetComponentsInChildren<TextFade>();
+        invUI = InventoryUI.instance;
+
+        if (invUI.inventoryGO.activeSelf == true)
+            invUI.ToggleInventory();
+
+        if (invUI.playerEquipmentMenuGO.activeSelf == true)
+            invUI.ToggleEquipmentMenu();
+
+        //if (invUI.containerMenuGO.activeSelf == true)
+            //invUI.ToggleContainerMenu();
     }
 }

@@ -31,7 +31,7 @@ public class ItemDrop : MonoBehaviour
 
         if (weaponDamageScript != null)
             weaponDamageScript.enabled = false;
-
+        
         itemPickupScript.enabled = true;
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);

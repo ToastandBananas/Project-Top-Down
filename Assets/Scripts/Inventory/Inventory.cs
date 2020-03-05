@@ -133,7 +133,7 @@ public class Inventory : MonoBehaviour
                 if (currentSlotsToFillIndex == totalSlotsToCheck) // We found a valid slot to put our item!
                 {
                     invSlots[i].AddItem(itemToAdd);
-
+                    
                     if (itemData.currentStackSize > 1)
                         invSlots[i].stackSizeText.text = itemData.currentStackSize.ToString(); // Set our stack size text for the slot
 
@@ -153,8 +153,20 @@ public class Inventory : MonoBehaviour
                                 slotsToFill[j].parentSlot = invSlots[i]; // Set each child slot's parent slot
                         }
                     }
-                    
-                    itemsList.Add(slotsToFill[0].itemData);
+
+                    if (itemsList != null)
+                    {
+                        if (itemsList == pocketItems || itemsList == bagItems || itemsList == horseBagItems)
+                            itemsList.Add(slotsToFill[0].itemData);
+                        else // if container list
+                        {
+                            itemsList.Add(itemData);
+                            slotsToFill[0].itemData = itemData;
+                        }
+                    }
+                    else
+                        slotsToFill[0].itemData = itemData;
+
                     return true;
                 }
                 else // This slot won't work for our item, so reset our slotsToFill array & index and try again with the next slot
@@ -168,7 +180,7 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool DetermineIfValidInventoryPosition(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots, List<ItemData> itemsList, ItemData itemData)
+    public bool DetermineIfValidInventoryPosition(Item itemToAdd, ItemData itemData, InventorySlot startSlot, InventorySlot[] invSlots, List<ItemData> itemsList)
     {
         if (startSlot == invUI.invSlotMovingFrom) // If we're trying to place the item back in the same spot
         {
@@ -184,7 +196,18 @@ public class Inventory : MonoBehaviour
 
             invUI.StopDraggingInvItem();
             startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
-            itemsList.Add(itemData);
+
+            // Add ItemDatas/GameObjects to the appropriate lists
+            if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
+                itemsList.Add(itemData);
+            else if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
+            {
+                GameObject obj = itemData.item.prefab;
+                itemData.TransferData(itemData, obj.GetComponent<ItemData>());
+                invUI.currentlyActiveContainer.containerObjects.Add(obj);
+                itemsList.Add(obj.GetComponent<ItemData>());
+            }
+
             return true;
         }
 
@@ -200,9 +223,6 @@ public class Inventory : MonoBehaviour
         {
             ClearParentAndChildSlots(startSlot);
             startSlot.AddItem(itemToAdd); // Add the item to the slot we clicked on
-
-            // Here we'll be determining the parent and child slots:
-            //SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
             // Clear out the parent/children slots of the slot we're moving the item from
             if (invUI.invSlotMovingFrom != null)
@@ -222,7 +242,7 @@ public class Inventory : MonoBehaviour
             else
                 startSlot.stackSizeText.text = "";
 
-            itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing it
+            itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing ititemslist.remove
             if (invUI.invSlotMovingFrom != null)
                 invUI.invSlotMovingFrom.ClearSlot();
             else
@@ -244,6 +264,17 @@ public class Inventory : MonoBehaviour
             bool itemAdded = false;
 
             itemsList.Remove(parentSlotsTryingToReplace[0].itemData);
+            if (itemsList == invUI.currentlyActiveContainer.containerItems)
+            {
+                foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+                {
+                    if (obj.GetComponent<ItemData>() == parentSlotsTryingToReplace[0].itemData)
+                    {
+                        invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                        break;
+                    }
+                }
+            }
 
             if (invUI.invSlotMovingFrom != null)
                 invUI.invSlotMovingFrom.ClearSlot();
@@ -383,7 +414,6 @@ public class Inventory : MonoBehaviour
             }
 
             invUI.equipSlotMovingFrom = null;
-            //SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
             foreach (InventorySlot childSlot in startSlot.childrenSlots)
             {
@@ -395,6 +425,7 @@ public class Inventory : MonoBehaviour
         // Here we'll be determining the parent and child slots:
         SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
+        // Soft clear the necessary slots
         foreach (InventorySlot slot in invSlots)
         {
             bool shouldSoftClear = true;
@@ -414,13 +445,25 @@ public class Inventory : MonoBehaviour
                 slot.SoftClearSlot(slot);
         }
 
+        // Soft fill the necessary slots
         foreach (InventorySlot slot in slotsToFill)
         {
             slot.SoftFillSlot(slot);
         }
 
         startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
-        itemsList.Add(startSlot.itemData);
+
+        if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
+            itemsList.Add(startSlot.itemData);
+        else if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
+        {
+            GameObject obj = itemData.item.prefab;
+            itemData.TransferData(itemData, obj.GetComponent<ItemData>());
+            invUI.currentlyActiveContainer.containerObjects.Add(obj);
+            itemsList.Add(obj.GetComponent<ItemData>());
+            startSlot.itemData = obj.GetComponent<ItemData>();
+        }
+
         return true;
     }
 
@@ -559,7 +602,7 @@ public class Inventory : MonoBehaviour
         return itemsTryingToReplaceCount;
     }
 
-    public void Remove(ItemData itemData)
+    public void RemoveItem(ItemData itemData)
     {
         if (bagItems.Contains(itemData))
             bagItems.Remove(itemData);
@@ -567,6 +610,18 @@ public class Inventory : MonoBehaviour
             pocketItems.Remove(itemData);
         else if (horseBagItems.Contains(itemData))
             horseBagItems.Remove(itemData);
+        else if (invUI.currentlyActiveContainer != null && invUI.currentlyActiveContainer.containerItems.Contains(itemData))
+        {
+            invUI.currentlyActiveContainer.containerItems.Remove(itemData);
+            foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+            {
+                if (obj.GetComponent<ItemData>() == itemData)
+                {
+                    invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                    break;
+                }
+            }
+        }
     }
 
     public void SortItemsAlphabetically(List<Item> itemsList, InventorySlot[] slotsArray)

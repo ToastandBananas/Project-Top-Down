@@ -25,6 +25,7 @@ public class EquipSlot : MonoBehaviour
     InventoryUI invUI;
     Inventory inv;
     EquipmentManager equipmentManager;
+    HoverHighlight hoverHighlightScript;
 
     Text quiverText;
 
@@ -36,6 +37,7 @@ public class EquipSlot : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
+        hoverHighlightScript = GetComponent<HoverHighlight>();
         equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
         slotText = transform.Find("Text").GetComponent<Text>();
 
@@ -67,6 +69,8 @@ public class EquipSlot : MonoBehaviour
                 quiverText.text = "";
 
             equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item
+
+            hoverHighlightScript.HighlightEquipSlots();
         }
         else if (isEmpty && this == invUI.equipSlotMovingFrom) // If we're trying to place an item back into the same slot it came from (place selected item back in the slot)
         {
@@ -74,6 +78,7 @@ public class EquipSlot : MonoBehaviour
             icon.transform.localPosition = Vector3.zero;
             isEmpty = false;
             slotBackgroundImage.sprite = fullSlotSprite;
+            slotBackgroundImage.color = Color.white;
             SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
             equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
@@ -102,8 +107,6 @@ public class EquipSlot : MonoBehaviour
                     equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
                     
                     invUI.StopDraggingInvItem(); // Set the appropriate variables to null
-
-                    // TODO: Equip the item to our player
                 }
                 else // If we this item doesn't go here
                 {
@@ -127,6 +130,7 @@ public class EquipSlot : MonoBehaviour
 
             // Assign the appropriate icon sprite to both slots
             icon.sprite = equipment.inventoryIcon;
+            slotBackgroundImage.color = Color.white;
             icon.name = itemData.name;
             invUI.tempSlot.iconSprite.sprite = invUI.tempSlot.item.inventoryIcon;
 
@@ -206,6 +210,7 @@ public class EquipSlot : MonoBehaviour
     public void SoftFillSlot(EquipSlot slotToFill)
     {
         slotToFill.isEmpty = false;
+        slotToFill.slotBackgroundImage.color = Color.white;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
         slotToFill.icon.sprite = slotToFill.equipment.inventoryIcon;
         slotText.enabled = false;

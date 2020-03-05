@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5474431354769912416
+--- !u!1 &2821440556542958408
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5474431354769912447}
-  - component: {fileID: 5474431354769912444}
-  - component: {fileID: 6007463617900547621}
-  - component: {fileID: -9058958525889427172}
-  - component: {fileID: 7361386747976559446}
-  - component: {fileID: 2583632880563720389}
+  - component: {fileID: 2821440556542958414}
+  - component: {fileID: 2821440556542958415}
+  - component: {fileID: 2821440556542958412}
+  - component: {fileID: 2821440556542958413}
+  - component: {fileID: 2821440556542958419}
   m_Layer: 0
-  m_Name: Arrow(s)
+  m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5474431354769912447
+--- !u!4 &2821440556542958414
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
+  m_GameObject: {fileID: 2821440556542958408}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.141, y: -5.193, z: 25.786646}
+  m_LocalPosition: {x: -3.91, y: 4.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5474431354769912444
+--- !u!212 &2821440556542958415
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
+  m_GameObject: {fileID: 2821440556542958408}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -74,85 +73,76 @@ SpriteRenderer:
   m_SortingLayerID: 326582721
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7ae0bd6a5de590945a47f6810084074e, type: 3}
+  m_Sprite: {fileID: -5281422124547630143, guid: 116fbded4ec452f46a925eb44c9b918d,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.21875, y: 0.8125}
+  m_Size: {x: 1.25, y: 1.015625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &6007463617900547621
-Rigidbody2D:
-  serializedVersion: 4
+--- !u!61 &2821440556542958412
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 1
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GameObject: {fileID: 2821440556542958408}
+  m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &-9058958525889427172
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0055063963, y: 0.06607723}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.25, y: 1.015625}
+    newSize: {x: 1.25, y: 1.015625}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.1145484, y: 0.81720066}
+  m_EdgeRadius: 0
+--- !u!58 &2821440556542958413
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2821440556542958408}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.15
+--- !u!114 &2821440556542958419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
+  m_GameObject: {fileID: 2821440556542958408}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Script: {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
-  equipment: {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
-  itemName: Wooden Arrow(s)
-  rarity: 0
-  value: 0
-  currentStackSize: 5
-  maxDurability: 10
-  durability: 10
-  damage: 2
-  defense: 0
---- !u!114 &7361386747976559446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
-  isDropped: 0
---- !u!114 &2583632880563720389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474431354769912416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1
-  item: {fileID: 0}
+  containerName: Container
+  containerObjects: []
+  containerItems: []
+  containerPrefab: {fileID: 5048457317364676785, guid: 40075b03449360b44816f5ed887d1922,
+    type: 3}
+  slotsParent: {fileID: 0}
+  slotCount: 30

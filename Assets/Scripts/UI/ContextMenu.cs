@@ -11,6 +11,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
     Canvas canvas;
     PlayerMovement player;
     EquipmentManager equipmentManager;
+    Inventory inv;
     InventoryUI invUI;
     InventorySlot thisInvSlot;
     EquipSlot thisEquipSlot;
@@ -21,6 +22,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         canvas = GetComponentInParent<Canvas>();
         player = PlayerMovement.instance;
         equipmentManager = player.GetComponent<EquipmentManager>();
+        inv = Inventory.instance;
         invUI = InventoryUI.instance;
         thisInvSlot = GetComponentInParent<InventorySlot>();
         thisEquipSlot = GetComponentInParent<EquipSlot>();
@@ -147,11 +149,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
     {
         if (thisInvSlot != null) // If we clicked on an inventory slot
         {
-            InventorySlot parentSlot;
-            if (thisInvSlot.parentSlot != null)
-                parentSlot = thisInvSlot.parentSlot;
-            else
-                parentSlot = thisInvSlot;
+            InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 
             GameObject itemToDrop = Instantiate(parentSlot.item.prefab, player.transform.position, Quaternion.identity);
             parentSlot.itemData.TransferData(parentSlot.itemData, itemToDrop.GetComponent<ItemData>());
@@ -159,6 +157,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
 
             StartCoroutine(DelayDrop(itemToDrop));
 
+            inv.RemoveItem(parentSlot.itemData); // Remove the item from the items list
             parentSlot.ClearSlot();
         }
         else if (thisEquipSlot != null) // If we clicked on an equipment slot
@@ -166,11 +165,10 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             GameObject itemToDrop = Instantiate(thisEquipSlot.equipment.prefab, player.transform.position, Quaternion.identity);
             thisEquipSlot.itemData.TransferData(thisEquipSlot.itemData, itemToDrop.GetComponent<ItemData>());
             itemToDrop.name = thisEquipSlot.itemData.itemName;
-
+            
             StartCoroutine(DelayDrop(itemToDrop));
 
             equipmentManager.Unequip(thisEquipSlot.equipment, thisEquipSlot.itemData, thisEquipSlot.thisWeaponSlot, thisEquipSlot.thisEquipmentSlot, false);
-
             thisEquipSlot.ClearSlot(thisEquipSlot);
         }
         else

@@ -29,10 +29,9 @@ public class ItemData : MonoBehaviour
         //Debug.Log(dataGiver.equipment);
 
         // Item Class
-        if (dataGiver.item != null)
-            dataReceiver.item = dataGiver.item;
-        else
-            dataReceiver.equipment = dataGiver.equipment;
+        dataReceiver.item = dataGiver.item;
+        dataReceiver.equipment = dataGiver.equipment;
+        //dataReceiver.consumable = dataGiver.consumable;
 
         // General Data
         dataReceiver.itemName = dataGiver.itemName;

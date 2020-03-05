@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class InventoryUI : MonoBehaviour
@@ -8,6 +9,7 @@ public class InventoryUI : MonoBehaviour
     public GameObject slotPrefab;
     public GameObject inventoryGO;
     public GameObject playerEquipmentMenuGO;
+    public GameObject containerMenuGO;
     public GameObject floatingTextPrefab;
 
     [Header("Parents")]
@@ -37,9 +39,10 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
-    [HideInInspector] public ItemData currentlySelectedItemData;
+    public ItemData currentlySelectedItemData;
     [HideInInspector] public InventorySlot invSlotMovingFrom;
     [HideInInspector] public EquipSlot equipSlotMovingFrom;
+    [HideInInspector] public Container currentlyActiveContainer;
 
     [Header("Tooltips")]
     public Tooltip invTooltip;
@@ -47,6 +50,7 @@ public class InventoryUI : MonoBehaviour
     public Tooltip equipTooltip2;
 
     int maxInventoryWidth = 8;
+    int maxContainerWidth = 6;
 
     Inventory inventory;
     PlayerMovement player;
@@ -66,9 +70,9 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         player = PlayerMovement.instance;
 
-        CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots);
-        CreateSlots(inventory.bagSlotCount, bagParent, bagSlots);
-        CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots);
+        CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
+        CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
+        CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
 
         tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
         tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
@@ -92,18 +96,34 @@ public class InventoryUI : MonoBehaviour
         equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
 
         if (player.isMounted == false)
-            ToggleHorseSlots(false);
+            ShowHorseSlots(false);
     }
     
     void Update()
     {
         if (GameControls.gamePlayActions.playerInventory.WasPressed)
         {
-            inventoryGO.SetActive(!inventoryGO.activeSelf);
-            playerEquipmentMenuGO.SetActive(!playerEquipmentMenuGO.activeSelf);
+            if (currentlySelectedItem != null)
+            {
+                if (invSlotMovingFrom != null)
+                {
+                    invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+                    invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+                }
+                else if (equipSlotMovingFrom != null)
+                {
+                    equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
+                    equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+                }
+
+                StopDraggingInvItem();
+            }
+
+            StartCoroutine(ToggleMenus());
         }
 
-        if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
+        // If we have a selected item and we click outside of a menu, drop the item
+        if (GameControls.gamePlayActions.menuSelect.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
         {
             if (invSlotMovingFrom != null)
             {
@@ -120,7 +140,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots)
+    public void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots, bool isContainer)
     {
         if (slots.Length != slotCount)
             slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
@@ -133,7 +153,7 @@ public class InventoryUI : MonoBehaviour
             slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
-            if (currentXCoord == maxInventoryWidth + 1)
+            if ((isContainer == false && currentXCoord == maxInventoryWidth + 1) || (isContainer && currentXCoord == maxContainerWidth + 1))
             {
                 currentXCoord = 1;
                 currentYCoord++;
@@ -146,6 +166,8 @@ public class InventoryUI : MonoBehaviour
                 slot.name = "Bag Slot " + i;
             else if (slotsParent == horseBagParent)
                 slot.name = "Horse Bag Slot " + i;
+            else if (slotsParent == containerParent)
+                slot.name = "Container Slot " + i;
         }
     }
 
@@ -158,9 +180,63 @@ public class InventoryUI : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void ToggleHorseSlots(bool showSlots)
+    public void ShowHorseSlots(bool showSlots)
     {
         horseBagParent.gameObject.SetActive(showSlots);
         horseBagTitle.gameObject.SetActive(showSlots);
+    }
+
+    public void ToggleInventory()
+    {
+        inventoryGO.SetActive(!inventoryGO.activeSelf);
+    }
+
+    public void ToggleEquipmentMenu()
+    {
+        playerEquipmentMenuGO.SetActive(!playerEquipmentMenuGO.activeSelf);
+    }
+
+    public void ToggleContainerMenu()
+    {
+        containerMenuGO.SetActive(!containerMenuGO.activeSelf);
+    }
+
+    public void TurnOffHighlighting()
+    {
+        foreach(InventorySlot slot in pocketsSlots)
+        {
+            slot.slotBackgroundImage.color = Color.white;
+            if (slot.isEmpty == false)
+                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+        }
+        foreach (InventorySlot slot in bagSlots)
+        {
+            slot.slotBackgroundImage.color = Color.white;
+            if (slot.isEmpty == false)
+                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+        }
+        foreach (InventorySlot slot in horseBagSlots)
+        {
+            slot.slotBackgroundImage.color = Color.white;
+            if (slot.isEmpty == false)
+                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+        }
+        foreach (InventorySlot slot in containerSlots)
+        {
+            slot.slotBackgroundImage.color = Color.white;
+            if (slot.isEmpty == false)
+                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+        }
+    }
+
+    IEnumerator ToggleMenus()
+    {
+        yield return new WaitForSeconds(0.15f);
+        if (inventoryGO.activeSelf == true)
+            TurnOffHighlighting();
+        ToggleInventory();
+        ToggleEquipmentMenu();
+        if (containerMenuGO.activeSelf == true)
+            ToggleContainerMenu();
     }
 }

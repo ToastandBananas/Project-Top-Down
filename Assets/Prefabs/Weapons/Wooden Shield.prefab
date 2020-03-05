@@ -161,10 +161,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  equipment: {fileID: 0}
-  itemName: 
+  item: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  equipment: {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+  itemName: Wooden Shield
   rarity: 0
+  value: 0
   currentStackSize: 1
   maxDurability: 0
   durability: 0

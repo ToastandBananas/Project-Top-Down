@@ -39,6 +39,6 @@ public class Item : ScriptableObject
 
     public void RemoveFromInventory(ItemData itemData)
     {
-        Inventory.instance.Remove(itemData);
+        Inventory.instance.RemoveItem(itemData);
     }
 }

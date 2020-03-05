@@ -47,22 +47,6 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    // Called when the object starts being focused
-    /*public void OnFocused(Transform playerTransform)
-    {
-        isFocus = true;
-        player = playerTransform;
-        //hasInteracted = false;
-    }
-
-    // Called when the object is no longer focused
-    public void OnUnfocused()
-    {
-        isFocus = false;
-        player = null;
-        //hasInteracted = false;
-    }*/
-
     // Draw our radius in the editor
     private void OnDrawGizmosSelected()
     {
