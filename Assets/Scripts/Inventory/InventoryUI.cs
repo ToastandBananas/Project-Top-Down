@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -28,10 +29,10 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Inventory Slots")]
     public InventorySlot tempSlot;
-    public InventorySlot[] pocketsSlots;
-    public InventorySlot[] bagSlots;
-    public InventorySlot[] horseBagSlots;
-    public InventorySlot[] containerSlots;
+    public List<InventorySlot> pocketsSlots = new List<InventorySlot>();
+    public List<InventorySlot> bagSlots = new List<InventorySlot>();
+    public List<InventorySlot> horseBagSlots = new List<InventorySlot>();
+    public List<InventorySlot> containerSlots = new List<InventorySlot>();
 
     [Header("Equip Slots")]
     public EquipSlot[] weaponSlots = new EquipSlot[3];
@@ -81,9 +82,18 @@ public class InventoryUI : MonoBehaviour
         tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
         tempSlot.name = "Temp Slot";
 
-        pocketsSlots = pocketsParent.GetComponentsInChildren<InventorySlot>();
-        bagSlots = bagParent.GetComponentsInChildren<InventorySlot>();
-        horseBagSlots = horseBagParent.GetComponentsInChildren<InventorySlot>();
+        foreach(InventorySlot slot in pocketsParent.GetComponentsInChildren<InventorySlot>())
+        {
+            pocketsSlots.Add(slot);
+        }
+        foreach (InventorySlot slot in bagParent.GetComponentsInChildren<InventorySlot>())
+        {
+            bagSlots.Add(slot);
+        }
+        foreach (InventorySlot slot in horseBagParent.GetComponentsInChildren<InventorySlot>())
+        {
+            horseBagSlots.Add(slot);
+        }
 
         weaponSlots = GameObject.Find("Weapons").GetComponentsInChildren<EquipSlot>();
         foreach (EquipSlot equipSlot in weaponSlots)
@@ -143,10 +153,10 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void CreateSlots(int slotCount, Transform slotsParent, InventorySlot[] slots, bool isContainer)
+    public void CreateSlots(int slotCount, Transform slotsParent, List<InventorySlot> slots, bool isContainer)
     {
-        if (slots.Length != slotCount)
-            slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
+        //if (slots.Length != slotCount)
+            //slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
 
         int currentXCoord = 1;
         int currentYCoord = 1;
@@ -257,9 +267,9 @@ public class InventoryUI : MonoBehaviour
         if (itemsParent == containerItemsParent)
         {
             heightAddOn += 50; // For the title
-            if ((containerSlots.Length % maxContainerWidth) > 0)
+            if ((containerSlots.Count % maxContainerWidth) > 0)
                 heightAddOn += 75;
-            heightAddOn += ((containerSlots.Length / maxContainerWidth) * 75);
+            heightAddOn += ((containerSlots.Count / maxContainerWidth) * 75);
             itemsParent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemsParent.GetComponent<RectTransform>().sizeDelta.x, heightAddOn);
         }
         else // if itemsParent == invItemsParent
@@ -267,23 +277,23 @@ public class InventoryUI : MonoBehaviour
             if (pocketsParent.gameObject.activeSelf == true)
             {
                 heightAddOn += 50; // For the title
-                if ((pocketsSlots.Length % maxInventoryWidth) > 0)
+                if ((pocketsSlots.Count % maxInventoryWidth) > 0)
                     heightAddOn += 75;
-                heightAddOn += ((pocketsSlots.Length / maxInventoryWidth) * 75);
+                heightAddOn += ((pocketsSlots.Count / maxInventoryWidth) * 75);
             }
             if (bagParent.gameObject.activeSelf == true)
             {
                 heightAddOn += 50; // For the title
-                if ((bagSlots.Length % maxInventoryWidth) > 0)
+                if ((bagSlots.Count % maxInventoryWidth) > 0)
                     heightAddOn += 75;
-                heightAddOn += ((bagSlots.Length / maxInventoryWidth) * 75);
+                heightAddOn += ((bagSlots.Count / maxInventoryWidth) * 75);
             }
             if (horseBagParent.gameObject.activeSelf == true)
             {
                 heightAddOn += 50; // For the title
-                if ((horseBagSlots.Length % maxInventoryWidth) > 0)
+                if ((horseBagSlots.Count % maxInventoryWidth) > 0)
                     heightAddOn += 75;
-                heightAddOn += ((horseBagSlots.Length / maxInventoryWidth) * 75);
+                heightAddOn += ((horseBagSlots.Count / maxInventoryWidth) * 75);
             }
 
             itemsParent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemsParent.GetComponent<RectTransform>().sizeDelta.x, heightAddOn);

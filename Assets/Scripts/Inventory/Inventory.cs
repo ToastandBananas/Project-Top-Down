@@ -107,13 +107,13 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, ItemData itemData, InventorySlot[] invSlots, List<ItemData> itemsList)
+    public bool CalculateItemInvPositionFromPickup(Item itemToAdd, ItemData itemData, List<InventorySlot> invSlots, List<ItemData> itemsList)
     {
         int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight);
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
         int currentSlotsToFillIndex = 0;
 
-        for (int i = 0; i < invSlots.Length; i++)
+        for (int i = 0; i < invSlots.Count; i++)
         {
             if (invSlots[i].isEmpty) // This slot is empty, so no need to check it with our GetSlotByCoordinates function
             {
@@ -180,7 +180,7 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public bool DetermineIfValidInventoryPosition(Item itemToAdd, ItemData itemData, InventorySlot startSlot, InventorySlot[] invSlots, List<ItemData> itemsList)
+    public bool DetermineIfValidInventoryPosition(Item itemToAdd, ItemData itemData, InventorySlot startSlot, List<InventorySlot> invSlots, List<ItemData> itemsList)
     {
         if (startSlot == invUI.invSlotMovingFrom) // If we're trying to place the item back in the same spot
         {
@@ -470,7 +470,7 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public InventorySlot GetSlotByCoordinates(Vector2 coordinate, InventorySlot[] slots)
+    public InventorySlot GetSlotByCoordinates(Vector2 coordinate, List<InventorySlot> slots)
     {
         foreach (InventorySlot slot in slots)
         {
@@ -495,7 +495,7 @@ public class Inventory : MonoBehaviour
         slot.parentSlot = null;
     }
 
-    public void SetParentAndChildSlots(Item itemToAdd, InventorySlot startSlot, InventorySlot[] invSlots)
+    public void SetParentAndChildSlots(Item itemToAdd, InventorySlot startSlot, List<InventorySlot> invSlots)
     {
         InventorySlot[] inventorySlots = new InventorySlot[itemToAdd.iconWidth * itemToAdd.iconHeight]; // Each slot that will be filled
         InventorySlot[] childSlots = new InventorySlot[(itemToAdd.iconWidth * itemToAdd.iconHeight) - 1]; // Children of the parent slot
@@ -536,7 +536,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public int GetOverlappingItemCount(Item itemToAdd, InventorySlot startSlot, InventorySlot[] slotsToFill, InventorySlot[] invSlots)
+    public int GetOverlappingItemCount(Item itemToAdd, InventorySlot startSlot, InventorySlot[] slotsToFill, List<InventorySlot> invSlots)
     {
         int currentSlotsToFillIndex = 0;
         bool invalidPosition = false;

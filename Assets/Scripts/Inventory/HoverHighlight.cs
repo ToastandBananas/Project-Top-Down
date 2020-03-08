@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -9,7 +10,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     InventoryUI invUI;
     Inventory inv;
-    InventorySlot[] invSlots;
+    List<InventorySlot> invSlots = new List<InventorySlot>();
 
     bool canPlaceItemHere;
     int itemsOverlappingCount;

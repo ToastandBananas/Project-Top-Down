@@ -42,20 +42,16 @@ public class Container : MonoBehaviour
                 if (invUI.currentlyActiveContainer == null || invUI.currentlyActiveContainer != this)
                 {
                     // Create the container's slots if need be
-                    if (slotCount != invUI.containerSlots.Length)
+                    if (slotCount != invUI.containerSlots.Count)
                     {
-                        // Destroy each container slot so we can start from scratch
-                        foreach (InventorySlot slot in invUI.containerSlots)
+                        invUI.containerSlots.Clear();
+
+                        foreach(InventorySlot slot in invUI.containerMenuGO.GetComponentsInChildren<InventorySlot>())
                         {
-                            if (slot != null)
-                                Destroy(slot.gameObject);
+                            Destroy(slot.gameObject);
                         }
 
-                        // Instantiate each slot
-                        invUI.containerSlots = new InventorySlot[slotCount];
-                        invUI.CreateSlots(slotCount, invUI.containerParent, invUI.containerSlots, true);
-                        invUI.containerSlots = invUI.containerParent.GetComponentsInChildren<InventorySlot>();
-
+                        StartCoroutine(CreateSlots());
                         // Delay adding the items so that each slot has time to run its Awake()
                         StartCoroutine(DelayAddContainerItems());
                     }
@@ -92,9 +88,17 @@ public class Container : MonoBehaviour
         }
     }
 
+    IEnumerator CreateSlots()
+    {
+        yield return new WaitForSeconds(0.025f);
+        invUI.CreateSlots(slotCount, invUI.containerParent, invUI.containerSlots, true);
+        foreach (InventorySlot slot in invUI.containerParent.GetComponentsInChildren<InventorySlot>())
+            invUI.containerSlots.Add(slot);
+    }
+
     IEnumerator DelayAddContainerItems()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         AddContainerItems();
     }
 

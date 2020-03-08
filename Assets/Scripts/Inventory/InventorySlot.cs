@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
@@ -289,7 +290,7 @@ public class InventorySlot : MonoBehaviour
 
     public InventorySlot GetBottomRightChildSlot(Item item, InventorySlot slot)
     {
-        InventorySlot[] invSlots = null;
+        List<InventorySlot> invSlots = new List<InventorySlot>();
         if (slotParent == invUI.containerParent)
             invSlots = invUI.containerSlots;
         else if (slotParent == invUI.pocketsParent)
