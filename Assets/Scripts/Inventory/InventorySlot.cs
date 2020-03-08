@@ -17,7 +17,7 @@ public class InventorySlot : MonoBehaviour
     public Sprite fullSlotSprite;
 
     [Header("Item Data")]
-    public SpriteRenderer iconSprite;
+    public Image iconSprite;
     public Item item;
     public ItemData itemData;
     public InventorySlot parentSlot;
@@ -28,6 +28,7 @@ public class InventorySlot : MonoBehaviour
     Inventory inv;
     InventoryUI invUI;
     HoverHighlight hoverHighlightScript;
+    Transform menusParent;
     
     Vector3 mousePos;
     float xPosOffset = 0;
@@ -39,6 +40,7 @@ public class InventorySlot : MonoBehaviour
         invUI = InventoryUI.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
         stackSizeText = GetComponentInChildren<Text>();
+        menusParent = GameObject.Find("Menus").transform;
 
         if (name == "Temp Slot")
             slotParent = transform;
@@ -51,14 +53,25 @@ public class InventorySlot : MonoBehaviour
 
     public void AddItem(Item newItem)
     {
-        GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
-        iconSprite = newIcon.GetComponent<SpriteRenderer>();
+        GameObject newIcon;
+
+        if (newItem.iconWidth == 1 && newItem.iconHeight == 1)
+            newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
+        else
+        {
+            InventorySlot slot = GetBottomRightChildSlot(newItem, this);
+            newIcon = Instantiate(iconPrefab, slot.transform, true);
+        }
+        
+        iconSprite = newIcon.GetComponent<Image>();
         itemData = iconSprite.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
-        
+        newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
+
         item = newItem;
         newIcon.name = item.name;
         iconSprite.sprite = item.inventoryIcon;
+        iconSprite.preserveAspect = true;
 
         slotBackgroundImage.sprite = fullSlotSprite;
 
@@ -127,9 +140,11 @@ public class InventorySlot : MonoBehaviour
     {
         if (isEmpty == false && invUI.currentlySelectedItem == null) // If there's an item in the slot and we haven't selected an item to move yet
         {
+            
             // Determine the parent slot & item (in case we select the item from one of the children slots)
             if (parentSlot == null)
             {
+                iconSprite.transform.SetParent(menusParent);
                 stackSizeText.text = "";
                 invUI.currentlySelectedItem = item; // If parent slot is null, then this must be the parent slot
                 invUI.currentlySelectedItemData = itemData;
@@ -138,6 +153,7 @@ public class InventorySlot : MonoBehaviour
             }
             else
             {
+                parentSlot.iconSprite.transform.SetParent(menusParent);
                 parentSlot.stackSizeText.text = "";
                 invUI.currentlySelectedItem = parentSlot.item; // Otherwise we'll grab the parent slot & item of this child slot
                 invUI.currentlySelectedItemData = parentSlot.itemData;
@@ -269,5 +285,20 @@ public class InventorySlot : MonoBehaviour
             parentSlot = slot.parentSlot; // If this is a child slot
         
         return parentSlot;
+    }
+
+    public InventorySlot GetBottomRightChildSlot(Item item, InventorySlot slot)
+    {
+        InventorySlot[] invSlots = null;
+        if (slotParent == invUI.containerParent)
+            invSlots = invUI.containerSlots;
+        else if (slotParent == invUI.pocketsParent)
+            invSlots = invUI.pocketsSlots;
+        else if (slotParent == invUI.bagParent)
+            invSlots = invUI.bagSlots;
+        else if (slotParent == invUI.horseBagParent)
+            invSlots = invUI.horseBagSlots;
+
+        return inv.GetSlotByCoordinates(new Vector2(slotCoordinate.x + item.iconWidth - 1, slotCoordinate.y + item.iconHeight - 1), invSlots);
     }
 }

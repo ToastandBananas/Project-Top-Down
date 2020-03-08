@@ -23,11 +23,19 @@ public class ItemData : MonoBehaviour
     [Header("Armor Data")]
     public float defense;
 
+    void Start()
+    {
+        if (item == null)
+        {
+            if (equipment != null)
+                item = equipment;
+            //if (consumable != null)
+                //item = consumable;
+        }
+    }
+
     public void TransferData(ItemData dataGiver, ItemData dataReceiver)
     {
-        //Debug.Log(dataGiver.item);
-        //Debug.Log(dataGiver.equipment);
-
         // Item Class
         dataReceiver.item = dataGiver.item;
         dataReceiver.equipment = dataGiver.equipment;

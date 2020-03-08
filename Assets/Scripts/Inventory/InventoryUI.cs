@@ -13,6 +13,8 @@ public class InventoryUI : MonoBehaviour
     public GameObject floatingTextPrefab;
 
     [Header("Parents")]
+    public Transform invItemsParent;
+    public Transform containerItemsParent;
     public Transform pocketsParent;
     public Transform bagParent;
     public Transform horseBagParent;
@@ -98,7 +100,7 @@ public class InventoryUI : MonoBehaviour
         if (player.isMounted == false)
             ShowHorseSlots(false);
     }
-    
+
     void Update()
     {
         if (GameControls.gamePlayActions.playerInventory.WasPressed)
@@ -169,6 +171,11 @@ public class InventoryUI : MonoBehaviour
             else if (slotsParent == containerParent)
                 slot.name = "Container Slot " + i;
         }
+
+        if (isContainer)
+            StartCoroutine(CalculateItemsParentHeight(containerItemsParent));
+        else
+            StartCoroutine(CalculateItemsParentHeight(invItemsParent));
     }
 
     public void StopDraggingInvItem()
@@ -238,5 +245,47 @@ public class InventoryUI : MonoBehaviour
         ToggleEquipmentMenu();
         if (containerMenuGO.activeSelf == true)
             ToggleContainerMenu();
+    }
+
+    IEnumerator CalculateItemsParentHeight(Transform itemsParent)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        int heightAddOn = 0;
+
+        if (itemsParent == containerItemsParent)
+        {
+            heightAddOn += 50; // For the title
+            if ((containerSlots.Length % maxContainerWidth) > 0)
+                heightAddOn += 75;
+            heightAddOn += ((containerSlots.Length / maxContainerWidth) * 75);
+            itemsParent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemsParent.GetComponent<RectTransform>().sizeDelta.x, heightAddOn);
+        }
+        else // if itemsParent == invItemsParent
+        {
+            if (pocketsParent.gameObject.activeSelf == true)
+            {
+                heightAddOn += 50; // For the title
+                if ((pocketsSlots.Length % maxInventoryWidth) > 0)
+                    heightAddOn += 75;
+                heightAddOn += ((pocketsSlots.Length / maxInventoryWidth) * 75);
+            }
+            if (bagParent.gameObject.activeSelf == true)
+            {
+                heightAddOn += 50; // For the title
+                if ((bagSlots.Length % maxInventoryWidth) > 0)
+                    heightAddOn += 75;
+                heightAddOn += ((bagSlots.Length / maxInventoryWidth) * 75);
+            }
+            if (horseBagParent.gameObject.activeSelf == true)
+            {
+                heightAddOn += 50; // For the title
+                if ((horseBagSlots.Length % maxInventoryWidth) > 0)
+                    heightAddOn += 75;
+                heightAddOn += ((horseBagSlots.Length / maxInventoryWidth) * 75);
+            }
+
+            itemsParent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemsParent.GetComponent<RectTransform>().sizeDelta.x, heightAddOn);
+        }
     }
 }

@@ -10,7 +10,7 @@ public class EquipSlot : MonoBehaviour
 
     [Header("Icon")]
     public GameObject iconPrefab;
-    public SpriteRenderer icon;
+    public Image icon;
 
     [Header("Slot Background")]
     public Image slotBackgroundImage;
@@ -219,7 +219,7 @@ public class EquipSlot : MonoBehaviour
     public void AddItem(Equipment newItem, ItemData itemDataToTransferDataFrom)
     {
         GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
-        icon = newIcon.GetComponent<SpriteRenderer>();
+        icon = newIcon.GetComponent<Image>();
         itemData = icon.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
 

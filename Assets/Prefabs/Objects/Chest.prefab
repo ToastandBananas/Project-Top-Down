@@ -145,4 +145,4 @@ MonoBehaviour:
   containerPrefab: {fileID: 5048457317364676785, guid: 40075b03449360b44816f5ed887d1922,
     type: 3}
   slotsParent: {fileID: 0}
-  slotCount: 30
+  slotCount: 120

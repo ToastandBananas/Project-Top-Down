@@ -51,6 +51,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
                 contextMenu.transform.position = canvas.transform.TransformPoint(pos) + (Vector3.down / 2) + Vector3.right;
 
+                CreateTakeItemButton();
                 CreateUseItemButton();
                 CreateDropItemButton();
             }
@@ -65,9 +66,25 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
 
     public void DisableContextMenu()
     {
-        for (int i = 0; i < contextMenu.transform.childCount; i++)
+        if (contextMenu != null)
         {
-            Destroy(contextMenu.transform.GetChild(i).gameObject);
+            for (int i = 0; i < contextMenu.transform.childCount; i++)
+            {
+                Destroy(contextMenu.transform.GetChild(i).gameObject);
+            }
+        }
+    }
+
+    void CreateTakeItemButton()
+    {
+        if (thisInvSlot != null && thisInvSlot.slotParent == invUI.containerParent)
+        {
+            GameObject menuButton = Instantiate(contextMenuButtonPrefab, contextMenu.transform);
+
+            menuButton.name = "Take";
+            menuButton.GetComponentInChildren<Text>().text = "Take Item";
+
+            menuButton.GetComponent<Button>().onClick.AddListener(TakeItem);
         }
     }
 
@@ -77,11 +94,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
 
         if (thisInvSlot != null)
         {
-            InventorySlot parentSlot;
-            if (thisInvSlot.parentSlot != null)
-                parentSlot = thisInvSlot.parentSlot;
-            else
-                parentSlot = thisInvSlot;
+            InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 
             if (parentSlot.item.itemType == ItemType.General)
             {
@@ -124,13 +137,31 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         menuButton.GetComponent<Button>().onClick.AddListener(DropItem);
     }
 
+    void TakeItem()
+    {
+        InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
+
+        inv.AddToInventory(parentSlot.item, parentSlot.itemData);
+
+        invUI.currentlyActiveContainer.containerItems.Remove(parentSlot.itemData);
+        
+        foreach(GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+        {
+            if (obj.GetComponent<ItemData>() == parentSlot.itemData)
+            {
+                invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                break;
+            }
+        }
+
+        parentSlot.ClearSlot();
+
+        DisableContextMenu();
+    }
+    
     void UseItem()
     {
-        InventorySlot parentSlot;
-        if (thisInvSlot.parentSlot != null)
-            parentSlot = thisInvSlot.parentSlot;
-        else
-            parentSlot = thisInvSlot;
+        InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
         
         parentSlot.item.Use(parentSlot.itemData, equipmentManager, parentSlot);
 

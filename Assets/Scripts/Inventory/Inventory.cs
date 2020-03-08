@@ -195,6 +195,7 @@ public class Inventory : MonoBehaviour
                 startSlot.stackSizeText.text = itemData.currentStackSize.ToString();
 
             invUI.StopDraggingInvItem();
+            startSlot.iconSprite.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
             startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
 
             // Add ItemDatas/GameObjects to the appropriate lists
@@ -451,6 +452,7 @@ public class Inventory : MonoBehaviour
             slot.SoftFillSlot(slot);
         }
 
+        startSlot.iconSprite.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
         startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
 
         if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
@@ -536,6 +538,7 @@ public class Inventory : MonoBehaviour
     public int GetOverlappingItemCount(Item itemToAdd, InventorySlot startSlot, InventorySlot[] slotsToFill, InventorySlot[] invSlots)
     {
         int currentSlotsToFillIndex = 0;
+        bool invalidPosition = false;
 
         for (int x = 0; x < itemToAdd.iconWidth; x++)
         {
@@ -546,7 +549,7 @@ public class Inventory : MonoBehaviour
                 if (slotToCheck == null) // If the slot doesn't exist (happens when trying to place a large item at the very bottom or far right side of the inventory)
                 {
                     Debug.Log("You're trying to place item in an invalid position.");
-                    return 2;
+                    invalidPosition = true;
                 }
                 else
                 {
@@ -556,9 +559,11 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        // Determine if we're trying to replace any items...if we're trying to replace more than 1, return false
+        if (invalidPosition)
+            return 2;
+
         int itemsTryingToReplaceCount = 0; // Index of parentSlotsTryingToReplace array...will increase every time an item is pushed to the array
-        parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item. So if there's ever 2 items in this array, we return false
+        parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item
 
         foreach (InventorySlot slot in slotsToFill) // Determine how many (if any) items we're trying to place this item on top of
         {
@@ -639,13 +644,13 @@ public class Inventory : MonoBehaviour
         float addWidth = 0;
         float addHeight = 0;
         if (item.iconWidth == 2)
-            addWidth = 37.5f;
+            addWidth = -37.5f;
         else if (item.iconWidth == 3)
-            addWidth = 75f;
+            addWidth = -75f;
         if (item.iconHeight == 2)
-            addHeight = -37.5f;
+            addHeight = 37.5f;
         else if (item.iconHeight == 3)
-            addHeight = -75f;
+            addHeight = 75f;
 
         return new Vector3(addWidth, addHeight, 0);
     }

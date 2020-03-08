@@ -45,7 +45,7 @@ public class Container : MonoBehaviour
                     if (slotCount != invUI.containerSlots.Length)
                     {
                         // Destroy each container slot so we can start from scratch
-                        foreach(InventorySlot slot in invUI.containerSlots)
+                        foreach (InventorySlot slot in invUI.containerSlots)
                         {
                             if (slot != null)
                                 Destroy(slot.gameObject);
@@ -69,7 +69,7 @@ public class Container : MonoBehaviour
                 OpenMenus();
             }
             else // If the container menu is already open
-                CloseMenus();
+                StartCoroutine(CloseMenus());
         }
     }
 
@@ -119,7 +119,16 @@ public class Container : MonoBehaviour
 
     IEnumerator CloseMenus()
     {
+        invUI.pocketsSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
+        if (invUI.equipTooltip1.gameObject.activeSelf == true)
+            invUI.equipTooltip1.ClearTooltip();
+        if (invUI.equipTooltip2.gameObject.activeSelf == true)
+            invUI.equipTooltip2.ClearTooltip();
+        if (invUI.invTooltip.gameObject.activeSelf == true)
+            invUI.invTooltip.ClearTooltip();
+
         yield return new WaitForSeconds(0.15f);
+
         invUI.TurnOffHighlighting();
         if (invUI.containerMenuGO.activeSelf == true)
             invUI.ToggleContainerMenu();
