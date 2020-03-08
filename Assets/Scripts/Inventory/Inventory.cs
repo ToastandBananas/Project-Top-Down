@@ -53,7 +53,6 @@ public class Inventory : MonoBehaviour
         }
 
         // Return false if we can't find room for our item (it probably is too large)
-        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -72,7 +71,6 @@ public class Inventory : MonoBehaviour
         }
 
         // We should never get here...if we do there's an error in our code
-        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -91,7 +89,6 @@ public class Inventory : MonoBehaviour
         }
 
         // We should never get here...if we do there's an error in our code
-        Debug.Log("Item is not pickupable.");
         return false;
     }
 
@@ -182,7 +179,8 @@ public class Inventory : MonoBehaviour
 
     public bool DetermineIfValidInventoryPosition(Item itemToAdd, ItemData itemData, InventorySlot startSlot, List<InventorySlot> invSlots, List<ItemData> itemsList)
     {
-        if (startSlot == invUI.invSlotMovingFrom) // If we're trying to place the item back in the same spot
+        // If we're trying to place the item back in the same spot and we previously weren't replacing an item
+        if (startSlot == invUI.invSlotMovingFrom && itemsTryingToReplaceCount == 0)
         {
             startSlot.UpdateSlot(itemToAdd);
             foreach (InventorySlot slot in invUI.invSlotMovingFrom.childrenSlots)
@@ -625,6 +623,48 @@ public class Inventory : MonoBehaviour
                 {
                     invUI.currentlyActiveContainer.containerObjects.Remove(obj);
                     break;
+                }
+            }
+        }
+    }
+
+    public void TakeAll()
+    {
+        ItemData[] itemsTaken = new ItemData[invUI.currentlyActiveContainer.containerObjects.Count];
+        for (int i = 0; i < invUI.currentlyActiveContainer.containerObjects.Count; i++)
+        {
+            ItemData objItemData = invUI.currentlyActiveContainer.containerObjects[i].GetComponent<ItemData>();
+            if (AddToInventory(objItemData.item, objItemData) == false)
+            {
+                Debug.Log("Not enough room in your inventory for all of the items in the container.");
+                break;
+            }
+            else
+                itemsTaken[i] = objItemData;
+        }
+
+        foreach(ItemData itemData in itemsTaken)
+        {
+            if (itemData != null)
+            {
+                foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+                {
+                    ItemData objItemData = obj.GetComponent<ItemData>();
+                    foreach (InventorySlot invSlot in invUI.containerSlots)
+                    {
+                        if (invSlot.itemData == objItemData)
+                        {
+                            invSlot.ClearSlot();
+                            break;
+                        }
+                    }
+
+                    if (objItemData == itemData)
+                    {
+                        invUI.currentlyActiveContainer.containerItems.Remove(objItemData);
+                        invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                        break;
+                    }
                 }
             }
         }

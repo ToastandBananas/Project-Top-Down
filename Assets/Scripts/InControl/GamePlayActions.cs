@@ -17,6 +17,7 @@ public class GamePlayActions : PlayerActionSet
     // UI Actions
     public PlayerAction menuSelect, menuContext;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
+    public PlayerAction menuRotateIcon;
 
     public GamePlayActions()
     {
@@ -48,5 +49,6 @@ public class GamePlayActions : PlayerActionSet
         menuRight = CreatePlayerAction("MenuRight");
         menuUp = CreatePlayerAction("MenuUp");
         menuDown = CreatePlayerAction("MenuDown");
+        menuRotateIcon = CreatePlayerAction("MenuRotateIcon");
     }
 }

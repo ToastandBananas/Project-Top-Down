@@ -77,5 +77,10 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.menuRight.AddDefaultBinding(Key.RightArrow);
         gamePlayActions.menuRight.AddDefaultBinding(InputControlType.DPadRight);
+
+        gamePlayActions.menuRotateIcon.AddDefaultBinding(Key.Q);
+        gamePlayActions.menuRotateIcon.AddDefaultBinding(Key.E);
+        gamePlayActions.menuRotateIcon.AddDefaultBinding(InputControlType.LeftBumper);
+        gamePlayActions.menuRotateIcon.AddDefaultBinding(InputControlType.RightBumper);
     }
 }
