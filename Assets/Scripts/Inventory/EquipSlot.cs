@@ -10,7 +10,7 @@ public class EquipSlot : MonoBehaviour
 
     [Header("Icon")]
     public GameObject iconPrefab;
-    public Image icon;
+    public Image iconImage;
 
     [Header("Slot Background")]
     public Image slotBackgroundImage;
@@ -57,6 +57,8 @@ public class EquipSlot : MonoBehaviour
     {
         if (isEmpty == false && invUI.currentlySelectedItemData == null) // If we don't have an item selected and this slot has an item in it (select item so we can move it)
         {
+            iconImage.transform.SetParent(invUI.menusParent);
+
             // Set our currently selected item info
             invUI.currentlySelectedItem = equipment;
             invUI.currentlySelectedItemData = itemData;
@@ -75,7 +77,8 @@ public class EquipSlot : MonoBehaviour
         else if (isEmpty && this == invUI.equipSlotMovingFrom) // If we're trying to place an item back into the same slot it came from (place selected item back in the slot)
         {
             invUI.StopDraggingInvItem();
-            icon.transform.localPosition = Vector3.zero;
+            iconImage.transform.SetParent(transform.GetChild(0).transform);
+            iconImage.transform.localPosition = Vector3.zero;
             isEmpty = false;
             slotBackgroundImage.sprite = fullSlotSprite;
             slotBackgroundImage.color = Color.white;
@@ -129,10 +132,10 @@ public class EquipSlot : MonoBehaviour
             invUI.tempSlot.item = invUI.tempSlot.itemData.equipment;
 
             // Assign the appropriate icon sprite to both slots
-            icon.sprite = equipment.inventoryIcon;
+            iconImage.sprite = equipment.inventoryIcon;
             slotBackgroundImage.color = Color.white;
-            icon.name = itemData.name;
-            invUI.tempSlot.iconSprite.sprite = invUI.tempSlot.item.inventoryIcon;
+            iconImage.name = itemData.name;
+            invUI.tempSlot.iconImage.sprite = invUI.tempSlot.item.inventoryIcon;
 
             SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
@@ -195,14 +198,14 @@ public class EquipSlot : MonoBehaviour
 
     public void ClearSlot(EquipSlot slotToClear)
     {
-        if (slotToClear.icon != null)
+        if (slotToClear.iconImage != null)
         {
             slotToClear.isEmpty = true;
             slotToClear.slotBackgroundImage.sprite = emptySlotSprite;
             slotToClear.itemData = null;
             slotToClear.equipment = null;
             slotToClear.slotText.enabled = true;
-            Destroy(slotToClear.icon.gameObject);
+            Destroy(slotToClear.iconImage.gameObject);
         }
     }
 
@@ -212,27 +215,29 @@ public class EquipSlot : MonoBehaviour
         slotToFill.isEmpty = false;
         slotToFill.slotBackgroundImage.color = Color.white;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
-        slotToFill.icon.sprite = slotToFill.equipment.inventoryIcon;
+        slotToFill.iconImage.sprite = slotToFill.equipment.inventoryIcon;
         slotText.enabled = false;
     }
 
     public void AddItem(Equipment newItem, ItemData itemDataToTransferDataFrom)
     {
         GameObject newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
-        icon = newIcon.GetComponent<Image>();
-        itemData = icon.GetComponent<ItemData>();
+        iconImage = newIcon.GetComponent<Image>();
+        itemData = iconImage.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
+        newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
 
         isEmpty = false;
         equipment = newItem;
-
-        icon.sprite = equipment.inventoryIcon;
+        
+        iconImage.preserveAspect = true;
+        iconImage.sprite = equipment.inventoryIcon;
         slotBackgroundImage.sprite = fullSlotSprite;
 
         itemData.TransferData(itemDataToTransferDataFrom, itemData); // Transfer the item's data to this slot
         SoftFillSlot(this); // Give the slot the appropriate background/icon and set isEmpty to false
         
-        icon.name = itemData.itemName;
+        iconImage.name = itemData.itemName;
     }
 
     public void SetQuiverStackSizeText()
@@ -265,7 +270,7 @@ public class EquipSlot : MonoBehaviour
                 yPosOffset = 1;
 
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            icon.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
+            iconImage.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
             Cursor.visible = false;
         }
     }

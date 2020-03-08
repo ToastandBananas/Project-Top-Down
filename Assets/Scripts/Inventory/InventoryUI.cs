@@ -7,6 +7,7 @@ public class InventoryUI : MonoBehaviour
     public static InventoryUI instance;
 
     public GameObject slotPrefab;
+    public Transform menusParent;
     public GameObject inventoryGO;
     public GameObject playerEquipmentMenuGO;
     public GameObject containerMenuGO;

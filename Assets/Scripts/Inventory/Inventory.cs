@@ -195,8 +195,8 @@ public class Inventory : MonoBehaviour
                 startSlot.stackSizeText.text = itemData.currentStackSize.ToString();
 
             invUI.StopDraggingInvItem();
-            startSlot.iconSprite.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-            startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
+            startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
+            startSlot.iconImage.transform.localPosition = GetItemInvPosition(startSlot.item);
 
             // Add ItemDatas/GameObjects to the appropriate lists
             if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
@@ -265,7 +265,7 @@ public class Inventory : MonoBehaviour
             bool itemAdded = false;
 
             itemsList.Remove(parentSlotsTryingToReplace[0].itemData);
-            if (itemsList == invUI.currentlyActiveContainer.containerItems)
+            if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
             {
                 foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
                 {
@@ -296,6 +296,7 @@ public class Inventory : MonoBehaviour
                             if (movingFromSlotSet == false)
                             {
                                 invUI.invSlotMovingFrom = slot.parentSlot; // Our new movingFromSlot will be the parent slot of the item we are replacing
+                                slot.parentSlot.iconImage.transform.SetParent(invUI.menusParent);
                                 movingFromSlotSet = true;
                             }
                         }
@@ -423,7 +424,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        // Here we'll be determining the parent and child slots:
+        // Determine the parent and child slots
         SetParentAndChildSlots(itemToAdd, startSlot, invSlots);
 
         // Soft clear the necessary slots
@@ -452,8 +453,8 @@ public class Inventory : MonoBehaviour
             slot.SoftFillSlot(slot);
         }
 
-        startSlot.iconSprite.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-        startSlot.iconSprite.transform.localPosition = GetItemInvPosition(startSlot.item);
+        startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
+        startSlot.iconImage.transform.localPosition = GetItemInvPosition(startSlot.item);
 
         if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
             itemsList.Add(startSlot.itemData);

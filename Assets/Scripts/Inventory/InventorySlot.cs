@@ -17,7 +17,7 @@ public class InventorySlot : MonoBehaviour
     public Sprite fullSlotSprite;
 
     [Header("Item Data")]
-    public Image iconSprite;
+    public Image iconImage;
     public Item item;
     public ItemData itemData;
     public InventorySlot parentSlot;
@@ -28,7 +28,6 @@ public class InventorySlot : MonoBehaviour
     Inventory inv;
     InventoryUI invUI;
     HoverHighlight hoverHighlightScript;
-    Transform menusParent;
     
     Vector3 mousePos;
     float xPosOffset = 0;
@@ -40,7 +39,6 @@ public class InventorySlot : MonoBehaviour
         invUI = InventoryUI.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
         stackSizeText = GetComponentInChildren<Text>();
-        menusParent = GameObject.Find("Menus").transform;
 
         if (name == "Temp Slot")
             slotParent = transform;
@@ -55,39 +53,39 @@ public class InventorySlot : MonoBehaviour
     {
         GameObject newIcon;
 
-        if (newItem.iconWidth == 1 && newItem.iconHeight == 1)
+        if ((newItem.iconWidth == 1 && newItem.iconHeight == 1) || this.name == "Temp Slot")
             newIcon = Instantiate(iconPrefab, transform.GetChild(0).transform, true);
         else
         {
-            InventorySlot slot = GetBottomRightChildSlot(newItem, this);
-            newIcon = Instantiate(iconPrefab, slot.transform, true);
+            InventorySlot iconParentSlot = GetBottomRightChildSlot(newItem, this);
+            newIcon = Instantiate(iconPrefab, iconParentSlot.transform, true);
         }
         
-        iconSprite = newIcon.GetComponent<Image>();
-        itemData = iconSprite.GetComponent<ItemData>();
+        iconImage = newIcon.GetComponent<Image>();
+        itemData = iconImage.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
         newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
 
         item = newItem;
         newIcon.name = item.name;
-        iconSprite.sprite = item.inventoryIcon;
-        iconSprite.preserveAspect = true;
+        iconImage.sprite = item.inventoryIcon;
+        iconImage.preserveAspect = true;
 
         slotBackgroundImage.sprite = fullSlotSprite;
 
         isEmpty = false;
         
-        iconSprite.transform.localPosition = inv.GetItemInvPosition(newItem);
+        iconImage.transform.localPosition = inv.GetItemInvPosition(newItem);
     }
 
     /// <summary> Only use when intending to destroy an icon object. </summary>
     public void ClearSlot()
     {
-        if (iconSprite != null)
+        if (iconImage != null)
         {
-            Destroy(iconSprite.gameObject);
+            Destroy(iconImage.gameObject);
 
-            iconSprite = null;
+            iconImage = null;
             item = null;
             itemData = null;
 
@@ -127,9 +125,9 @@ public class InventorySlot : MonoBehaviour
     {
         item = newItem;
 
-        iconSprite.name = item.name;
-        iconSprite.sprite = item.inventoryIcon;
-        iconSprite.transform.position = transform.position;
+        iconImage.name = item.name;
+        iconImage.sprite = item.inventoryIcon;
+        iconImage.transform.position = transform.position;
 
         isEmpty = false;
         slotBackgroundImage.sprite = fullSlotSprite;
@@ -140,11 +138,13 @@ public class InventorySlot : MonoBehaviour
     {
         if (isEmpty == false && invUI.currentlySelectedItem == null) // If there's an item in the slot and we haven't selected an item to move yet
         {
-            
+            // Here we'll be picking up the item (it will follow the mouse) and slots under it will highlight
+            // red or green depending on whether or not you can place the item in the slots below the icon
+
             // Determine the parent slot & item (in case we select the item from one of the children slots)
             if (parentSlot == null)
             {
-                iconSprite.transform.SetParent(menusParent);
+                iconImage.transform.SetParent(invUI.menusParent);
                 stackSizeText.text = "";
                 invUI.currentlySelectedItem = item; // If parent slot is null, then this must be the parent slot
                 invUI.currentlySelectedItemData = itemData;
@@ -153,7 +153,7 @@ public class InventorySlot : MonoBehaviour
             }
             else
             {
-                parentSlot.iconSprite.transform.SetParent(menusParent);
+                parentSlot.iconImage.transform.SetParent(invUI.menusParent);
                 parentSlot.stackSizeText.text = "";
                 invUI.currentlySelectedItem = parentSlot.item; // Otherwise we'll grab the parent slot & item of this child slot
                 invUI.currentlySelectedItemData = parentSlot.itemData;
@@ -254,7 +254,7 @@ public class InventorySlot : MonoBehaviour
     void FollowMouse()
     {
         // If we have a selected item & we're moving the item from this slot & we have an icon sprite
-        if (invUI.currentlySelectedItem != null && invUI.invSlotMovingFrom == this && iconSprite != null)
+        if (invUI.currentlySelectedItem != null && invUI.invSlotMovingFrom == this && iconImage != null)
         {
             if (invUI.currentlySelectedItem.iconWidth == 1)
                 xPosOffset = 0;
@@ -271,7 +271,7 @@ public class InventorySlot : MonoBehaviour
                 yPosOffset = 1;
 
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            iconSprite.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
+            iconImage.transform.position = new Vector3(mousePos.x + xPosOffset, mousePos.y - yPosOffset, 0);
             Cursor.visible = false;
         }
     }
@@ -298,7 +298,7 @@ public class InventorySlot : MonoBehaviour
             invSlots = invUI.bagSlots;
         else if (slotParent == invUI.horseBagParent)
             invSlots = invUI.horseBagSlots;
-
+        
         return inv.GetSlotByCoordinates(new Vector2(slotCoordinate.x + item.iconWidth - 1, slotCoordinate.y + item.iconHeight - 1), invSlots);
     }
 }
