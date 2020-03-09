@@ -523,8 +523,6 @@ public class Inventory : MonoBehaviour
         {
             foreach (InventorySlot slot in inventorySlots)
             {
-                //if (slot.childrenSlots.Length == 0)
-                    //slot.childrenSlots = new InventorySlot[5];
                 if (slot == startSlot) // If this is the startSlot, then this is the parent slot
                 {
                     slot.childrenSlots[i] = childSlots[i]; // Add the current child (from the for loop) to our parent slot's childrenSlots array
@@ -547,7 +545,7 @@ public class Inventory : MonoBehaviour
                 InventorySlot slotToCheck = GetSlotByCoordinates(new Vector2(startSlot.slotCoordinate.x + x, startSlot.slotCoordinate.y + y), invSlots);
                 if (slotToCheck == null) // If the slot doesn't exist (happens when trying to place a large item at the very bottom or far right side of the inventory)
                 {
-                    Debug.Log("You're trying to place item in an invalid position.");
+                    // Debug.Log("You're trying to place item in an invalid position.");
                     invalidPosition = true;
                 }
                 else

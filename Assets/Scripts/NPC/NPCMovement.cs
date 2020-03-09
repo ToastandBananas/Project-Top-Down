@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum STATE { IDLE, PATROL, PURSUE, ATTACK };
@@ -12,7 +11,7 @@ public class NPCMovement : MonoBehaviour
 
     public Transform targetPos;
     public Transform attackTarget;
-    public Transform patrolPoint;
+    [HideInInspector] public Transform patrolPoint;
 
     public float walkSpeed = 2f;
     public float runSpeed = 3f;
@@ -23,10 +22,6 @@ public class NPCMovement : MonoBehaviour
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
     Animator anim, legsAnim, leftArmAnim, rightArmAnim;
-
-    float angle;
-    Vector3 dir;
-    Vector3 move;
 
     Transform closestTarget;
     float closestTargetDist;

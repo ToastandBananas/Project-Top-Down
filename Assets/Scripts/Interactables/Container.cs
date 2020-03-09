@@ -11,7 +11,7 @@ public class Container : MonoBehaviour
     public List<ItemData> containerItems = new List<ItemData>();
 
     [Header("Slots")]
-    public GameObject containerPrefab;
+    //public GameObject containerPrefab;
     public Transform slotsParent;
     public int slotCount = 30;
 

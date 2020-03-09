@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemDrop : MonoBehaviour
 {
-    public Item item;
+    [HideInInspector]public Item item;
     public bool isDropped;
     
     Rigidbody2D rb;
@@ -16,6 +16,7 @@ public class ItemDrop : MonoBehaviour
 
     void Start()
     {
+        item = GetComponent<ItemData>().item;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         itemPickupScript = GetComponent<ItemPickup>();

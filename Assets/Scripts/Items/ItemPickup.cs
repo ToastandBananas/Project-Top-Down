@@ -2,7 +2,7 @@
 
 public class ItemPickup : Interactable
 {
-    public Item item;
+    [HideInInspector] public Item item;
     ItemData itemData;
     
     ItemDrop itemDropScript;

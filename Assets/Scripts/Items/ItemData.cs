@@ -23,7 +23,7 @@ public class ItemData : MonoBehaviour
     [Header("Armor Data")]
     public float defense;
 
-    void Start()
+    void Awake()
     {
         if (item == null)
         {

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class WeaponDamage : MonoBehaviour
 {
+    [HideInInspector] public Equipment equipment;
+
     public Vector2 positionOffset;
 
     bool canDoDamage = true;
@@ -17,8 +19,6 @@ public class WeaponDamage : MonoBehaviour
 
     LayerMask obstacleMask;
 
-    public Equipment equipment;
-
     void Start()
     {
         bloodSystem = BloodParticleSystemHandler.Instance;
@@ -29,6 +29,7 @@ public class WeaponDamage : MonoBehaviour
         weaponOwner = transform.parent.parent.parent.parent.parent.parent;
         weaponOwnwerHeadReset = weaponOwner.Find("Head Reset");
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        equipment = GetComponent<ItemData>().equipment;
 
         transform.position += new Vector3(positionOffset.x, positionOffset.y, 0);
 

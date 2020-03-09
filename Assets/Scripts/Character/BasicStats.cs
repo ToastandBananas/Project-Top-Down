@@ -17,8 +17,8 @@ public class BasicStats : MonoBehaviour
     public bool isPlayer;
     public bool isDead;
 
-    public ItemDrop leftWeapon;
-    public ItemDrop rightWeapon;
+    public ItemDrop leftWeaponItemDrop;
+    public ItemDrop rightWeaponItemDrop;
 
     [Header("Player Only")]
     public PlayerStatBar playerHealthStatBar;
@@ -58,16 +58,16 @@ public class BasicStats : MonoBehaviour
 
     public void Die()
     {
-        if (arms.transform.Find("Left Arm").Find("Left Forearm").Find("Left Weapon").childCount > 0)
-            leftWeapon = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
-        if (arms.transform.Find("Right Arm").Find("Right Forearm").Find("Right Weapon").childCount > 0)
-            rightWeapon = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+        if (arms.leftWeaponEquipped || arms.leftShieldEquipped)
+            leftWeaponItemDrop = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+        if (arms.rightWeaponEquipped || arms.rightShieldEquipped)
+            rightWeaponItemDrop = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
 
-        if (leftWeapon != null)
-            leftWeapon.DropItem(false);
+        if (leftWeaponItemDrop != null)
+            leftWeaponItemDrop.DropItem(false);
 
-        if (rightWeapon != null)
-            rightWeapon.DropItem(false);
+        if (rightWeaponItemDrop != null)
+            rightWeaponItemDrop.DropItem(false);
 
         // TODO: Death animation
         Destroy(gameObject);
