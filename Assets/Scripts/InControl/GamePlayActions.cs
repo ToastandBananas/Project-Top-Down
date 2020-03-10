@@ -15,9 +15,8 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerLeftSpecialAttack, playerRightSpecialAttack;
 
     // UI Actions
-    public PlayerAction menuSelect, menuContext;
+    public PlayerAction menuPause, menuSelect, menuContext;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
-    public PlayerAction menuRotateIcon;
 
     public GamePlayActions()
     {
@@ -43,12 +42,12 @@ public class GamePlayActions : PlayerActionSet
         playerRightSpecialAttack = CreatePlayerAction("PlayerRightSpecialAttack");
 
         // UI Actions
+        menuPause = CreatePlayerAction("MenuPause");
         menuSelect = CreatePlayerAction("MenuSelect");
         menuContext = CreatePlayerAction("MenuContext");
         menuLeft = CreatePlayerAction("MenuLeft");
         menuRight = CreatePlayerAction("MenuRight");
         menuUp = CreatePlayerAction("MenuUp");
         menuDown = CreatePlayerAction("MenuDown");
-        menuRotateIcon = CreatePlayerAction("MenuRotateIcon");
     }
 }

@@ -2,8 +2,10 @@
 
 public class GameManager : MonoBehaviour
 {
-    public TextFade[] floatingTexts;
-    public int floatingTextIndex = 0;
+    [HideInInspector] public TextFade[] floatingTexts;
+    [HideInInspector] public int floatingTextIndex = 0;
+
+    public GameObject pauseMenu;
 
     InventoryUI invUI;
 
@@ -37,5 +39,29 @@ public class GameManager : MonoBehaviour
 
         //if (invUI.containerMenuGO.activeSelf == true)
             //invUI.ToggleContainerMenu();
+    }
+
+    void Update()
+    {
+        if (GameControls.gamePlayActions.menuPause.WasPressed)
+        {
+            TurnOffMenus();
+            TogglePauseMenu();
+        }
+    }
+
+    public void TogglePauseMenu()
+    {
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+    }
+
+    public void TurnOffMenus()
+    {
+        if (invUI.containerMenuGO.activeSelf == true)
+            invUI.ToggleContainerMenu();
+        if (invUI.inventoryGO.activeSelf == true)
+            invUI.ToggleInventory();
+        if (invUI.playerEquipmentMenuGO.activeSelf == true)
+            invUI.ToggleEquipmentMenu();
     }
 }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8479428350304003610}
   - component: {fileID: 3873751190061389563}
   - component: {fileID: 973816257666725157}
+  - component: {fileID: -7411159533056705336}
   m_Layer: 0
   m_Name: Short Sword
   m_TagString: Untagged
@@ -146,8 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0}
   equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
+  positionOffset: {x: 0, y: 0}
 --- !u!114 &8479428350304003610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +170,7 @@ MonoBehaviour:
   maxDurability: 10
   durability: 10
   damage: 2
-  defense: 0
+  defense: 100
 --- !u!114 &3873751190061389563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,3 +199,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 1
   item: {fileID: 0}
+--- !u!114 &-7411159533056705336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184752757197993529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 6063030748766659074
+  localRefs:
+    _Keys:
+    - {fileID: 184752757197993529}
+    - {fileID: 184752757197993528}
+    - {fileID: 184752757197993531}
+    - {fileID: 558677408}
+    - {fileID: 8817556764781924269}
+    - {fileID: 184752755676417393}
+    - {fileID: 8479428350304003610}
+    - {fileID: 3873751190061389563}
+    - {fileID: 973816257666725157}
+    - {fileID: -7411159533056705336}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
+    - {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: 2d5b509c426720379188454fa7d9a16112a28679b3f72127fd6fb86ebb78b17d362730427c0a483243ccdca0a487ff2aa935f38b99ddbf35c6d7654ddf710d192937e77f56a01a1b1447437f2c3d34766f8e16f06c3d17131a9a845b5b04ad2d413d372391807f071bd8a0e1203f61775d1022aea5e35365b0059943e34040190b8e3f968aa8f80f

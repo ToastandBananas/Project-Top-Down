@@ -10,7 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
+  - component: {fileID: 3661388085602504287}
   - component: {fileID: 68740533560211229}
+  - component: {fileID: 6229458841444040047}
+  - component: {fileID: 3723423186980164384}
   m_Layer: 0
   m_Name: GM
   m_TagString: Untagged
@@ -45,6 +48,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingTexts: []
+  floatingTextIndex: 0
+  pauseMenu: {fileID: 0}
+--- !u!114 &3661388085602504287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c009db833256048bdbcb2afb8f57ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
 --- !u!114 &68740533560211229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,9 +75,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 12
-  bagSlotCount: 2
+  pocketsSlotCount: 24
+  bagSlotCount: 30
   horseBagSlotCount: 10
   pocketItems: []
   bagItems: []
   horseBagItems: []
+--- !u!114 &6229458841444040047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveChildren: 1
+--- !u!114 &3723423186980164384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 5854139735487570553
+  localRefs:
+    _Keys: []
+    _Values: 

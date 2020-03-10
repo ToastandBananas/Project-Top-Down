@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -9058958525889427172}
   - component: {fileID: 7361386747976559446}
   - component: {fileID: 2583632880563720389}
+  - component: {fileID: -3928315260947125818}
   m_Layer: 0
   m_Name: Arrow(s)
   m_TagString: Untagged
@@ -127,7 +128,7 @@ MonoBehaviour:
   maxDurability: 10
   durability: 10
   damage: 2
-  defense: 0
+  defense: 100
 --- !u!114 &7361386747976559446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,3 +157,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 1
   item: {fileID: 0}
+--- !u!114 &-3928315260947125818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 912911050827709390
+  localRefs:
+    _Keys:
+    - {fileID: 5474431354769912416}
+    - {fileID: 5474431354769912447}
+    - {fileID: 5474431354769912444}
+    - {fileID: 6007463617900547621}
+    - {fileID: -9058958525889427172}
+    - {fileID: 7361386747976559446}
+    - {fileID: 2583632880563720389}
+    - {fileID: -3928315260947125818}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 21300000, guid: 7ae0bd6a5de590945a47f6810084074e, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: a56efdc9569776245b7b0b6327f64343, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: e56cb4b82e71177afae4a7a0dd3ba57aa1b4dcf4f6310134556c7542f9834e3ed4c6fdb967537b76242f0c9db880795f4638e96466bd024c9680f26519a68b759769cc173eeb120a3053cfc725637c2ae7d4fdc19aead816c4b024e660165d35467dcbdeb26e6259da216b4673358d06

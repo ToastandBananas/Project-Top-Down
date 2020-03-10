@@ -1434,6 +1434,7 @@ GameObject:
   - component: {fileID: 4490644663598777806}
   - component: {fileID: 4490644663598777793}
   - component: {fileID: 4490644663598777792}
+  - component: {fileID: -3790021085728747732}
   m_Layer: 10
   m_Name: NPC
   m_TagString: NPC
@@ -1541,8 +1542,8 @@ MonoBehaviour:
   defense: 0
   isPlayer: 0
   isDead: 0
-  leftWeapon: {fileID: 0}
-  rightWeapon: {fileID: 0}
+  leftWeaponItemDrop: {fileID: 0}
+  rightWeaponItemDrop: {fileID: 0}
   playerHealthStatBar: {fileID: 0}
   playerManaStatBar: {fileID: 0}
   playerStaminaStatBar: {fileID: 0}
@@ -1715,6 +1716,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   target: {fileID: 0}
+--- !u!114 &-3790021085728747732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490644663598777794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 512245652394359712
+  localRefs:
+    _Keys: []
+    _Values: 
 --- !u!1 &4490644663598838315
 GameObject:
   m_ObjectHideFlags: 0

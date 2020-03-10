@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using ES3Internal;
+using UnityEngine.UI;
 
 namespace ES3Types
 {
@@ -94,12 +95,12 @@ namespace ES3Types
 
 		private static Component GetOrAddComponent(GameObject go, Type type)
 		{
-			if(type == typeof(Transform))
+			if(type == typeof(Transform) || type == typeof(RectTransform) || type == typeof(Text))//|| type == typeof(SpriteRenderer))
 				return go.GetComponent(type);
-			// Manage types which can only have a single Component attached.
-
-			else if (type == typeof(MeshFilter) || type == typeof(MeshRenderer))
-				return GetOrCreateComponentIfNotExists (go, type);
+            // Manage types which can only have a single Component attached.
+            
+            else if (type == typeof(MeshFilter) || type == typeof(MeshRenderer))
+                return GetOrCreateComponentIfNotExists(go, type);
 			return go.AddComponent(type);
 		}
 

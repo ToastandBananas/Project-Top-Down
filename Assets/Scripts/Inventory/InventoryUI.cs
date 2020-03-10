@@ -58,6 +58,7 @@ public class InventoryUI : MonoBehaviour
 
     Inventory inventory;
     PlayerMovement player;
+    GameManager gm;
 
     void Awake()
     {
@@ -67,17 +68,16 @@ public class InventoryUI : MonoBehaviour
         else
         {
             Debug.LogWarning("FIXME: More than one InventoryUI script is active.");
-            Destroy(gameObject);
+            Destroy(this);
         }
         #endregion
 
         inventory = Inventory.instance;
-        player = PlayerMovement.instance;
 
         CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
         CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
         CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
-
+        
         tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
         tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
         tempSlot.name = "Temp Slot";
@@ -107,7 +107,12 @@ public class InventoryUI : MonoBehaviour
         }
 
         equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
+    }
 
+    void Start()
+    {
+        gm = GameManager.instance;
+        player = PlayerMovement.instance;
         if (player.isMounted == false)
             ShowHorseSlots(false);
     }
@@ -131,6 +136,9 @@ public class InventoryUI : MonoBehaviour
 
                 StopDraggingInvItem();
             }
+
+            if (gm.pauseMenu.activeSelf == true)
+                gm.TogglePauseMenu();
 
             StartCoroutine(ToggleMenus());
         }

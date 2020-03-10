@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5851638940386840422}
   - component: {fileID: 5851638940386840418}
   - component: {fileID: 5851638940386840419}
+  - component: {fileID: -5781935362417890595}
   m_Layer: 13
   m_Name: Door_Horizontal
   m_TagString: Untagged
@@ -205,3 +206,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a0a57c59c2b5f4ab80c078c46d202a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5781935362417890595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5851638940386840443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 5570351435363837414
+  localRefs:
+    _Keys: []
+    _Values: 

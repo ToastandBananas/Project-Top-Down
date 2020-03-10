@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2821440556542958412}
   - component: {fileID: 2821440556542958413}
   - component: {fileID: 2821440556542958419}
+  - component: {fileID: 4014021300959433072}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -142,7 +143,21 @@ MonoBehaviour:
   containerName: Container
   containerObjects: []
   containerItems: []
-  containerPrefab: {fileID: 5048457317364676785, guid: 40075b03449360b44816f5ed887d1922,
-    type: 3}
   slotsParent: {fileID: 0}
   slotCount: 120
+--- !u!114 &4014021300959433072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2821440556542958408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 4293341955939914540
+  localRefs:
+    _Keys: []
+    _Values: 

@@ -34,6 +34,7 @@ public class InventorySlot : MonoBehaviour
     float xPosOffset = 0;
     float yPosOffset = 0;
 
+
     void Awake()
     {
         inv = Inventory.instance;
@@ -299,7 +300,7 @@ public class InventorySlot : MonoBehaviour
             invSlots = invUI.bagSlots;
         else if (slotParent == invUI.horseBagParent)
             invSlots = invUI.horseBagSlots;
-        
+
         return inv.GetSlotByCoordinates(new Vector2(slotCoordinate.x + item.iconWidth - 1, slotCoordinate.y + item.iconHeight - 1), invSlots);
     }
 }

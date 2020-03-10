@@ -14,8 +14,7 @@ public class GameControls : MonoBehaviour
     void BindDefaultControls()
     {
         gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
-        gamePlayActions.playerInventory.AddDefaultBinding(Key.Escape);
-        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Pause);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action4);
 
         gamePlayActions.playerInteract.AddDefaultBinding(Key.R);
         gamePlayActions.playerInteract.AddDefaultBinding(InputControlType.Action3);
@@ -60,6 +59,9 @@ public class GameControls : MonoBehaviour
         gamePlayActions.playerRightSpecialAttack.AddDefaultBinding(InputControlType.RightBumper);
 
         // UI Actions
+        gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
+        gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);
+
         gamePlayActions.menuSelect.AddDefaultBinding(Mouse.LeftButton);
         gamePlayActions.menuSelect.AddDefaultBinding(InputControlType.Action1);
 
@@ -77,10 +79,5 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.menuRight.AddDefaultBinding(Key.RightArrow);
         gamePlayActions.menuRight.AddDefaultBinding(InputControlType.DPadRight);
-
-        gamePlayActions.menuRotateIcon.AddDefaultBinding(Key.Q);
-        gamePlayActions.menuRotateIcon.AddDefaultBinding(Key.E);
-        gamePlayActions.menuRotateIcon.AddDefaultBinding(InputControlType.LeftBumper);
-        gamePlayActions.menuRotateIcon.AddDefaultBinding(InputControlType.RightBumper);
     }
 }
