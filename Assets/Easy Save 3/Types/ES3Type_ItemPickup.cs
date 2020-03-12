@@ -4,35 +4,31 @@ using UnityEngine;
 namespace ES3Types
 {
 	[UnityEngine.Scripting.Preserve]
-	[ES3PropertiesAttribute("isDropped", "enabled")]
-	public class ES3Type_ItemDrop : ES3ComponentType
+	[ES3PropertiesAttribute("enabled")]
+	public class ES3Type_ItemPickup : ES3ComponentType
 	{
 		public static ES3Type Instance = null;
 
-		public ES3Type_ItemDrop() : base(typeof(ItemDrop))
+		public ES3Type_ItemPickup() : base(typeof(ItemPickup))
 		{
 			Instance = this;
 		}
 
 		protected override void WriteComponent(object obj, ES3Writer writer)
 		{
-			var instance = (ItemDrop)obj;
+			var instance = (ItemPickup)obj;
 			
-			writer.WriteProperty("isDropped", instance.isDropped, ES3Type_bool.Instance);
 			writer.WriteProperty("enabled", instance.enabled, ES3Type_bool.Instance);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
 		{
-			var instance = (ItemDrop)obj;
+			var instance = (ItemPickup)obj;
 			foreach(string propertyName in reader.Properties)
 			{
 				switch(propertyName)
 				{
 					
-					case "isDropped":
-						instance.isDropped = reader.Read<System.Boolean>(ES3Type_bool.Instance);
-						break;
 					case "enabled":
 						instance.enabled = reader.Read<System.Boolean>(ES3Type_bool.Instance);
 						break;
@@ -44,11 +40,11 @@ namespace ES3Types
 		}
 	}
 
-	public class ES3Type_ItemDropArray : ES3ArrayType
+	public class ES3Type_ItemPickupArray : ES3ArrayType
 	{
 		public static ES3Type Instance;
 
-		public ES3Type_ItemDropArray() : base(typeof(ItemDrop[]), ES3Type_ItemDrop.Instance)
+		public ES3Type_ItemPickupArray() : base(typeof(ItemPickup[]), ES3Type_ItemPickup.Instance)
 		{
 			Instance = this;
 		}

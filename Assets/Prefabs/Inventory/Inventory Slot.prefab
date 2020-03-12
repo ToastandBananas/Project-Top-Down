@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 600804387262474614}
   - component: {fileID: 4812167744579274656}
   - component: {fileID: 3432114564799745315}
+  - component: {fileID: -5980425565403589924}
   m_Layer: 5
   m_Name: Inventory Slot
   m_TagString: Untagged
@@ -141,6 +142,19 @@ MonoBehaviour:
     - {fileID: 1882451954139832282}
     - {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
     _Values: 77336cdf2ae185124b54e33136469d1578c43f6103c9d72cee353dd2a87d6239b35e360dfc135e76bc2e89df630ce948fe6adca449ce20515b40cd5f1f58bb32f2a97fd81090187423b61c3152b7901eb30b2ac15f410f1b3fe4693ce0be9614eabcedb98d10386d5268c700eb51a35b515154ecd1052c33ba9a992b26db931eb4cee4f15bb6543b439713c709100613bef213709656bd1c90b900f2770c46762b56b3e3934d006602e6d096e70bc236a2acea18ee03b40973fe9e5e4a9e3c4fde899cb35c238071f2ad6daf8527356483c9af35ded2782f
+--- !u!114 &-5980425565403589924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043610098529938542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveChildren: 1
 --- !u!1 &2043610099251720924
 GameObject:
   m_ObjectHideFlags: 0

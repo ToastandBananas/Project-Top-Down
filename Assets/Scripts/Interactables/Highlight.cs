@@ -13,11 +13,11 @@ public class Highlight : MonoBehaviour
         highlightMaterial = Resources.Load<Material>("Materials/Sprite-Default");
     }
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         if (sr.material != originalMaterial)
             sr.material = originalMaterial;
-    }
+    }*/
 
     private void OnTriggerStay2D(Collider2D collision)
     {

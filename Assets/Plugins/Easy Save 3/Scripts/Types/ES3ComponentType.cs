@@ -95,7 +95,7 @@ namespace ES3Types
 
 		private static Component GetOrAddComponent(GameObject go, Type type)
 		{
-			if(type == typeof(Transform) || type == typeof(RectTransform) || type == typeof(Text))//|| type == typeof(SpriteRenderer))
+			if(type == typeof(Transform))// || type == typeof(RectTransform) || type == typeof(Text))//|| type == typeof(SpriteRenderer))
 				return go.GetComponent(type);
             // Manage types which can only have a single Component attached.
             

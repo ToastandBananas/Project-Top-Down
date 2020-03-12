@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -4825492704394803176}
   - component: {fileID: -505975839810964597}
   - component: {fileID: 8282957160912538562}
+  - component: {fileID: 1027100065519748423}
   m_Layer: 0
   m_Name: Wooden Shield
   m_TagString: Untagged
@@ -214,5 +215,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId: 2752818525978172941
   localRefs:
-    _Keys: []
-    _Values: 
+    _Keys:
+    - {fileID: 1214168163440398638}
+    - {fileID: 1214168163440398641}
+    - {fileID: 1214168163440398642}
+    - {fileID: 5760429489055533382}
+    - {fileID: 1214168163440398643}
+    - {fileID: 8846160344134555801}
+    - {fileID: 6321791871791027229}
+    - {fileID: -4825492704394803176}
+    - {fileID: -505975839810964597}
+    - {fileID: 8282957160912538562}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266, type: 3}
+    - {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: 6e7cd6ef2cbb5176a215e52b60bf6800f59089914e652e4e94db220695fc99539f77bd5fcf6fc55db4ba0786c72b01137562d3dd645dfb2c55db7cf821a8f461ae39cad87dc7d07b34d3baf6934aea40dd36913329bbef41846ff50b0d33c45c529728729ed6693cccb1edc7e80d40603a42e314e93fc769290b540dd2c56e01f1a2b8d58da22005
+--- !u!114 &1027100065519748423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214168163440398638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveChildren: 0

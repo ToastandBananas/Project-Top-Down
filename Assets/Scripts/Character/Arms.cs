@@ -24,14 +24,7 @@ public class Arms : MonoBehaviour
     
     void Start()
     {
-        leftArm = transform.Find("Left Arm");
-        rightArm = transform.Find("Right Arm");
-
-        leftArmAnim = leftArm.GetComponent<Animator>();
-        rightArmAnim = rightArm.GetComponent<Animator>();
-
-        SetLeftAnims();
-        SetRightAnims();
+        StartCoroutine(SetArmAnims(0.05f));
     }
 
     public void SetLeftAnims()
@@ -104,9 +97,16 @@ public class Arms : MonoBehaviour
         }
     }
 
-    public IEnumerator SetArmAnims()
+    public IEnumerator SetArmAnims(float waitTime = 0.1f)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(waitTime);
+
+        leftArm = transform.Find("Left Arm");
+        rightArm = transform.Find("Right Arm");
+
+        leftArmAnim = leftArm.GetComponent<Animator>();
+        rightArmAnim = rightArm.GetComponent<Animator>();
+
         SetLeftAnims();
         SetRightAnims();
     }

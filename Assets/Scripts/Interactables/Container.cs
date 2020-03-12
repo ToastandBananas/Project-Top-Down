@@ -64,7 +64,7 @@ public class Container : MonoBehaviour
 
                 OpenMenus();
             }
-            else // If the container menu is already open
+            else // If the container menu is already open, close it
                 StartCoroutine(CloseMenus());
         }
     }
@@ -123,7 +123,8 @@ public class Container : MonoBehaviour
 
     IEnumerator CloseMenus()
     {
-        invUI.pocketsSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
+        if (invUI.pocketsParent.childCount > 0)
+            invUI.pocketsSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
         if (invUI.equipTooltip1.gameObject.activeSelf == true)
             invUI.equipTooltip1.ClearTooltip();
         if (invUI.equipTooltip2.gameObject.activeSelf == true)

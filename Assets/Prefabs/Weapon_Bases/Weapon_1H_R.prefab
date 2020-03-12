@@ -45,5 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId: 7997763114520599443
   localRefs:
-    _Keys: []
-    _Values: 
+    _Keys:
+    - {fileID: 2563409690062376088}
+    - {fileID: 2563409690062376089}
+    - {fileID: -571662066118560730}
+    _Values: 5a37a51d40fba1201776166b8ac6066946431b28f7134966

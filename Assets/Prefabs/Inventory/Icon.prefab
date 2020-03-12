@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1164993668906188261}
   - component: {fileID: 1972497532052551499}
   - component: {fileID: -2922770759378173950}
-  - component: {fileID: -8274215681541695550}
+  - component: {fileID: -7795890660405599321}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -119,11 +119,11 @@ MonoBehaviour:
     - {fileID: 1164993668906188261}
     - {fileID: 1972497532052551499}
     - {fileID: -2922770759378173950}
-    - {fileID: -8274215681541695550}
+    - {fileID: 0}
     - {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
     - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
-    _Values: 7525963e63fa4043c5c3bccd9d08c532fbf53b3cf8ba001fb04707bfc9b3ff716ff3e08613cf732bfae45d80678fcf503b4bad343c826e452676efab02ff0c78c42e5eaa283e1e2b
---- !u!114 &-8274215681541695550
+    _Values: 7525963e63fa4043c5c3bccd9d08c532fbf53b3cf8ba001fb04707bfc9b3ff716ff3e08613cf732bfae45d80678fcf50fe31142a7ff55e282676efab02ff0c78c42e5eaa283e1e2b
+--- !u!114 &-7795890660405599321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,4 +135,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveChildren: 1
+  saveChildren: 0

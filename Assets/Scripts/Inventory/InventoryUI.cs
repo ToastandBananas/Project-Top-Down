@@ -77,23 +77,10 @@ public class InventoryUI : MonoBehaviour
         CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
         CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
         CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
-        
-        tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
-        tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
-        tempSlot.name = "Temp Slot";
 
-        foreach(InventorySlot slot in pocketsParent.GetComponentsInChildren<InventorySlot>())
-        {
-            pocketsSlots.Add(slot);
-        }
-        foreach (InventorySlot slot in bagParent.GetComponentsInChildren<InventorySlot>())
-        {
-            bagSlots.Add(slot);
-        }
-        foreach (InventorySlot slot in horseBagParent.GetComponentsInChildren<InventorySlot>())
-        {
-            horseBagSlots.Add(slot);
-        }
+        CreateTempSlot();
+
+        SetInventorySlotLists();
 
         weaponSlots = GameObject.Find("Weapons").GetComponentsInChildren<EquipSlot>();
         foreach (EquipSlot equipSlot in weaponSlots)
@@ -195,6 +182,29 @@ public class InventoryUI : MonoBehaviour
             StartCoroutine(CalculateItemsParentHeight(containerItemsParent));
         else
             StartCoroutine(CalculateItemsParentHeight(invItemsParent));
+    }
+
+    void CreateTempSlot()
+    {
+        tempSlot = Instantiate(slotPrefab, transform).GetComponent<InventorySlot>();
+        tempSlot.transform.localPosition += new Vector3(10000f, 10000f, 0);
+        tempSlot.name = "Temp Slot";
+    }
+
+    public void SetInventorySlotLists()
+    {
+        foreach (InventorySlot slot in pocketsParent.GetComponentsInChildren<InventorySlot>())
+        {
+            pocketsSlots.Add(slot);
+        }
+        foreach (InventorySlot slot in bagParent.GetComponentsInChildren<InventorySlot>())
+        {
+            bagSlots.Add(slot);
+        }
+        foreach (InventorySlot slot in horseBagParent.GetComponentsInChildren<InventorySlot>())
+        {
+            horseBagSlots.Add(slot);
+        }
     }
 
     public void StopDraggingInvItem()

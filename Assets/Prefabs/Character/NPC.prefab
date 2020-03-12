@@ -1414,7 +1414,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1456
+  m_InstanceId: 28000
 --- !u!1 &4490644663598777794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,7 +1434,8 @@ GameObject:
   - component: {fileID: 4490644663598777806}
   - component: {fileID: 4490644663598777793}
   - component: {fileID: 4490644663598777792}
-  - component: {fileID: -3790021085728747732}
+  - component: {fileID: -6356565834560533217}
+  - component: {fileID: -9210249940141838640}
   m_Layer: 10
   m_Name: NPC
   m_TagString: NPC
@@ -1716,7 +1717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   target: {fileID: 0}
---- !u!114 &-3790021085728747732
+--- !u!114 &-6356565834560533217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1728,10 +1729,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 512245652394359712
+  prefabId: 5370869207844029838
   localRefs:
     _Keys: []
     _Values: 
+--- !u!114 &-9210249940141838640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490644663598777794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveChildren: 1
 --- !u!1 &4490644663598838315
 GameObject:
   m_ObjectHideFlags: 0
