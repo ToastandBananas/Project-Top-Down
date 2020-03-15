@@ -184,4 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveChildren: 0
+  saveChildren: 1

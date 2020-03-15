@@ -25,11 +25,16 @@ public class Container : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
-
-        // Randomize item data for the chest's contents
-        foreach(GameObject obj in containerObjects)
+        
+        for (int i = 0; i < containerObjects.Count; i++)
         {
-            obj.GetComponent<ItemData>().defense = 100f;
+            GameObject newObj = new GameObject();
+            newObj.transform.SetParent(transform);
+            newObj.AddComponent<ItemData>();
+            ItemData itemData = newObj.GetComponent<ItemData>();
+            itemData.TransferData(containerObjects[i].GetComponent<ItemData>(), itemData);
+            newObj.name = itemData.itemName;
+            containerObjects[i] = newObj;
         }
     }
 
@@ -77,14 +82,25 @@ public class Container : MonoBehaviour
             containerItems.Clear();
 
         // Place each item in the slot
-        foreach (GameObject obj in containerObjects)
+        for (int i = 0; i < containerObjects.Count; i++)
         {
             // Set the item data for use in the CalculateItemInvPositionFromPickup function below
-            ItemData itemData = obj.GetComponent<ItemData>();
+            ItemData itemData = containerObjects[i].GetComponent<ItemData>();
             itemToAdd = itemData.item;
 
             // Add each object to the container's slots
             inv.CalculateItemInvPositionFromPickup(itemToAdd, itemData, invUI.containerSlots, containerItems);
+        }
+
+        for (int i = containerObjects.Count - 1; i > 0; i--)
+        {
+            ItemData itemData = containerObjects[i].GetComponent<ItemData>();
+            if (itemData.currentStackSize <= 0)
+            {
+                invUI.currentlyActiveContainer.containerObjects.Remove(itemData.gameObject);
+                invUI.currentlyActiveContainer.containerItems.Remove(itemData);
+                Destroy(itemData.gameObject);
+            }
         }
     }
 

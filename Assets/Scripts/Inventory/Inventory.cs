@@ -109,6 +109,31 @@ public class Inventory : MonoBehaviour
         int totalSlotsToCheck = (itemToAdd.iconWidth * itemToAdd.iconHeight);
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
         int currentSlotsToFillIndex = 0;
+        
+        if (itemToAdd.itemType == ItemType.Ammunition)
+        {
+            for (int i = 0; i < invSlots.Count; i++)
+            {
+                if (invSlots[i].isEmpty == false)
+                {
+                    InventorySlot parentSlot = invSlots[i].GetParentSlot(invSlots[i]);
+                    if (parentSlot.item.name == itemToAdd.name && parentSlot.itemData.damage == itemData.damage && parentSlot.itemData.value == itemData.value)
+                    {
+                        for (int j = 0; j < itemData.currentStackSize; j++)
+                        {
+                            if (parentSlot.itemData.currentStackSize < parentSlot.item.maxStackSize)
+                            {
+                                parentSlot.itemData.currentStackSize++;
+                                parentSlot.stackSizeText.text = parentSlot.itemData.currentStackSize.ToString();
+                                itemData.currentStackSize--;
+                            }
+                            else
+                                break;
+                        }
+                    }
+                }
+            }
+        }
 
         for (int i = 0; i < invSlots.Count; i++)
         {
@@ -130,11 +155,11 @@ public class Inventory : MonoBehaviour
                 if (currentSlotsToFillIndex == totalSlotsToCheck) // We found a valid slot to put our item!
                 {
                     invSlots[i].AddItem(itemToAdd);
-                    
-                    if (itemData.currentStackSize > 1)
-                        invSlots[i].stackSizeText.text = itemData.currentStackSize.ToString(); // Set our stack size text for the slot
 
                     itemData.TransferData(itemData, invSlots[i].itemData); // Transfer our item data from the gameobject to the inventory object
+
+                    if (itemData.currentStackSize > 1)
+                        invSlots[i].stackSizeText.text = invSlots[i].itemData.currentStackSize.ToString(); // Set our stack size text for the slot
 
                     for (int j = 0; j < slotsToFill.Length; j++)
                     {
@@ -154,7 +179,10 @@ public class Inventory : MonoBehaviour
                     if (itemsList != null)
                     {
                         if (itemsList == pocketItems || itemsList == bagItems || itemsList == horseBagItems)
+                        {
+                            itemData.currentStackSize = 0;
                             itemsList.Add(slotsToFill[0].itemData);
+                        }
                         else // if container list
                         {
                             itemsList.Add(itemData);
@@ -163,6 +191,10 @@ public class Inventory : MonoBehaviour
                     }
                     else
                         slotsToFill[0].itemData = itemData;
+
+                    // Get rid of the item if it has a stack size of 0 (after a stackable item such as arrows distributes itself throughout the inventory)
+                    if (slotsToFill[0].itemData.currentStackSize <= 0)
+                        slotsToFill[0].ClearSlot();
 
                     return true;
                 }
@@ -201,10 +233,8 @@ public class Inventory : MonoBehaviour
                 itemsList.Add(itemData);
             else if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
             {
-                GameObject obj = itemData.item.prefab;
-                itemData.TransferData(itemData, obj.GetComponent<ItemData>());
-                invUI.currentlyActiveContainer.containerObjects.Add(obj);
-                itemsList.Add(obj.GetComponent<ItemData>());
+                itemsList.Add(itemData);
+                invUI.currentlyActiveContainer.containerObjects.Add(itemData.gameObject);
             }
 
             return true;
@@ -253,10 +283,13 @@ public class Inventory : MonoBehaviour
                     childSlot.SoftFillSlot(childSlot);
             }
 
+            if (invUI.currentlyActiveContainer != null && itemData.transform.parent.GetComponent<Container>() != null)
+                Destroy(itemData.gameObject);
+
             // We no longer have an item selected, so set the appropriate variables to null
             invUI.StopDraggingInvItem();
         }
-
+        
         if (itemsTryingToReplaceCount == 1) // If we are swapping with an item
         {
             bool movingFromSlotSet = false;
@@ -326,6 +359,46 @@ public class Inventory : MonoBehaviour
                 {
                     if (slot == startSlot && itemAdded == false) // If our startSlot equals the parent slot of the item we're replacing (basically, if we clicked on a slot that is an item's parent slot)
                     {
+                        // If this is ammunition of the same type, damage and value
+                        if (invUI.currentlySelectedItem.itemType == ItemType.Ammunition && slot.item.itemType == ItemType.Ammunition
+                            && invUI.currentlySelectedItemData.itemName == slot.itemData.itemName && invUI.currentlySelectedItemData.damage == slot.itemData.damage
+                            && invUI.currentlySelectedItemData.value == slot.itemData.value)
+                        {
+                            int currentStackSize = invUI.currentlySelectedItemData.currentStackSize;
+                            for (int i = 0; i < currentStackSize; i++)
+                            {
+                                if (slot.itemData.currentStackSize < slot.item.maxStackSize)
+                                {
+                                    slot.itemData.currentStackSize++;
+                                    slot.stackSizeText.text = slot.itemData.currentStackSize.ToString();
+                                    invUI.currentlySelectedItemData.currentStackSize--;
+
+                                    // If we transferred over all of our currently selected ammo
+                                    if (invUI.currentlySelectedItemData.currentStackSize <= 0)
+                                    {
+                                        if (invUI.invSlotMovingFrom != null && invUI.invSlotMovingFrom.slotParent == invUI.containerParent)
+                                        {
+                                            invUI.invSlotMovingFrom.ClearSlot();
+                                            Destroy(invUI.currentlySelectedItemData.gameObject);
+                                        }
+
+                                        invUI.StopDraggingInvItem();
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    // Swap stack sizes
+                                    int intA = invUI.currentlySelectedItemData.currentStackSize;
+                                    int intB = slot.itemData.currentStackSize;
+                                    invUI.currentlySelectedItemData.currentStackSize = intB;
+                                    slot.itemData.currentStackSize = intA;
+                                    Destroy(slot.itemData.gameObject);
+                                    break;
+                                }
+                            }
+                        }
+
                         invUI.tempSlot.AddItem(slot.item);
                         itemData.TransferData(slot.itemData, invUI.tempSlot.itemData);
 
@@ -420,6 +493,9 @@ public class Inventory : MonoBehaviour
                 if (childSlot != null)
                     childSlot.stackSizeText.text = "";
             }
+
+            if (invUI.currentlyActiveContainer != null && itemData.transform.parent.GetComponent<Container>() != null)
+                Destroy(itemData.gameObject);
         }
 
         // Determine the parent and child slots
@@ -458,11 +534,20 @@ public class Inventory : MonoBehaviour
             itemsList.Add(startSlot.itemData);
         else if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
         {
-            GameObject obj = itemData.item.prefab;
-            itemData.TransferData(itemData, obj.GetComponent<ItemData>());
-            invUI.currentlyActiveContainer.containerObjects.Add(obj);
-            itemsList.Add(obj.GetComponent<ItemData>());
-            startSlot.itemData = obj.GetComponent<ItemData>();
+            // Create a gameobject with ItemData
+            GameObject newObj = new GameObject();
+            newObj.transform.SetParent(invUI.currentlyActiveContainer.transform);
+            newObj.AddComponent<ItemData>();
+
+            // Transfer data over to the new ItemData
+            ItemData data = newObj.GetComponent<ItemData>();
+            data.TransferData(itemData, data);
+            newObj.name = data.itemName;
+
+            // Add this object and it's ItemData to the appropriate container lists
+            invUI.currentlyActiveContainer.containerObjects.Add(newObj);
+            itemsList.Add(newObj.GetComponent<ItemData>());
+            startSlot.itemData = newObj.GetComponent<ItemData>();
         }
 
         return true;

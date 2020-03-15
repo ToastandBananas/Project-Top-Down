@@ -1434,8 +1434,8 @@ GameObject:
   - component: {fileID: 4490644663598777806}
   - component: {fileID: 4490644663598777793}
   - component: {fileID: 4490644663598777792}
-  - component: {fileID: -6356565834560533217}
-  - component: {fileID: -9210249940141838640}
+  - component: {fileID: 870014767876573731}
+  - component: {fileID: 7945119611021997752}
   m_Layer: 10
   m_Name: NPC
   m_TagString: NPC
@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   target: {fileID: 0}
---- !u!114 &-6356565834560533217
+--- !u!114 &870014767876573731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1729,11 +1729,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 5370869207844029838
+  prefabId: 6071908836296360592
   localRefs:
     _Keys: []
     _Values: 
---- !u!114 &-9210249940141838640
+--- !u!114 &7945119611021997752
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -141,20 +141,32 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
     {
         InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 
-        inv.AddToInventory(parentSlot.item, parentSlot.itemData);
+        if (inv.AddToInventory(parentSlot.item, parentSlot.itemData) == false)
+                Debug.Log("Not enough room in inventory.");
 
-        invUI.currentlyActiveContainer.containerItems.Remove(parentSlot.itemData);
-        
-        foreach(GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+        if (parentSlot.itemData.currentStackSize <= 0)
         {
-            if (obj.GetComponent<ItemData>() == parentSlot.itemData)
-            {
-                invUI.currentlyActiveContainer.containerObjects.Remove(obj);
-                break;
-            }
-        }
+            invUI.currentlyActiveContainer.containerItems.Remove(parentSlot.itemData);
 
-        parentSlot.ClearSlot();
+            foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+            {
+                if (obj.GetComponent<ItemData>() == parentSlot.itemData)
+                {
+                    invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                    Destroy(obj);
+                    break;
+                }
+            }
+
+            parentSlot.ClearSlot();
+        }
+        else
+        {
+            if (parentSlot.itemData.currentStackSize > 1)
+                parentSlot.stackSizeText.text = parentSlot.itemData.currentStackSize.ToString();
+            else
+                parentSlot.stackSizeText.text = "";
+        }
 
         DisableContextMenu();
     }

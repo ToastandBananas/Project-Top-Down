@@ -63,7 +63,7 @@ public class SaveLoad : MonoBehaviour
         gm.TogglePauseMenu();
 
         // Destroy all inventory slots before loading in the ones from the save file...
-        // (We do this because since we Instantiate the slots when starting up the game, the load funtion won't recognize the current inv slots in our scene).
+        // (We do this because since we Instantiate the slots when starting up the game, the load funtion won't recognize the current inv slots in our scene when starting a new game instance).
         // Destroy Pocket Slots
         invUI.pocketsSlots.Clear();
         for (int i = 0; i < inv.pocketsSlotCount; i++)
@@ -100,13 +100,13 @@ public class SaveLoad : MonoBehaviour
         if (invUI.tempSlot != null)
             Destroy(invUI.tempSlot.gameObject);
 
-        // Destroy current Loose Items in the scene, since some of our starting scene loose items may not be in the scene anymore (or might just be in the players inventory)
+        // Destroy current Loose Items in the scene, just in case there's more loose items in the scene than when we saved
         for (int i = 0; i < looseItemsParent.transform.childCount; i++)
         {
             Destroy(looseItemsParent.transform.GetChild(i).gameObject);
         }
         
-        // Destroy current NPCs in the scene so we can load them from the save file
+        // Destroy current NPCs in the scene, just in case there's more NPC's in the scene than when we saved
         for (int i = 0; i < NPCsParent.transform.childCount; i++)
         {
             Destroy(NPCsParent.transform.GetChild(i).gameObject);
@@ -127,7 +127,7 @@ public class SaveLoad : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         autoSaveManager.Load();
 
-        for (int i = 0; i < NPCsParent.transform.childCount; i++)
+        /*for (int i = 0; i < NPCsParent.transform.childCount; i++)
         {
             if (NPCsParent.transform.GetChild(i).childCount > 6)
             {
@@ -137,7 +137,7 @@ public class SaveLoad : MonoBehaviour
                         Destroy(NPCsParent.transform.GetChild(i).GetChild(j + 6).gameObject);
                 }
             }
-        }
+        }*/
     }
 
     IEnumerator SetSlots()

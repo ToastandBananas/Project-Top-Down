@@ -9,14 +9,17 @@ public class ItemPickup : Interactable
     WeaponDamage weaponDamageScript;
     BoxCollider2D boxCollider;
 
-    private void Awake()
+    void Awake()
     {
         itemDropScript = GetComponent<ItemDrop>();
         weaponDamageScript = GetComponent<WeaponDamage>();
         boxCollider = GetComponent<BoxCollider2D>();
         item = itemDropScript.item;
         itemData = GetComponent<ItemData>();
+    }
 
+    void Start()
+    {
         if (itemDropScript.isDropped == false)
             enabled = false;
         else
@@ -44,7 +47,7 @@ public class ItemPickup : Interactable
         if (wasPickedUp == false)
             wasPickedUp = Inventory.instance.AddToBag(item, itemData);
 
-        if (wasPickedUp)
+        if (wasPickedUp || itemData.currentStackSize <= 0)
             Destroy(gameObject); // Then we'll destroy the actual gameobject, since it will only exist in our inventory system until we use/equip it
         else
             Debug.Log("Not enough room in your inventory to pick up " + item.name + ".");

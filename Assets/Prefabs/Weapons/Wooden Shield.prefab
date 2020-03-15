@@ -84,7 +84,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.21875, y: 0.8125}
+  m_Size: {x: 0.125, y: 0.8125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -129,7 +129,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.125, y: 0.8125}
-    newSize: {x: 0.21875, y: 0.8125}
+    newSize: {x: 0.125, y: 0.8125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -226,6 +226,7 @@ MonoBehaviour:
     - {fileID: -4825492704394803176}
     - {fileID: -505975839810964597}
     - {fileID: 8282957160912538562}
+    - {fileID: 1027100065519748423}
     - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266, type: 3}
     - {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
@@ -233,7 +234,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: c2b82e419670b444eac66e64b74c8fb8, type: 2}
     - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
     - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
-    _Values: 6e7cd6ef2cbb5176a215e52b60bf6800f59089914e652e4e94db220695fc99539f77bd5fcf6fc55db4ba0786c72b01137562d3dd645dfb2c55db7cf821a8f461ae39cad87dc7d07b34d3baf6934aea40dd36913329bbef41846ff50b0d33c45c529728729ed6693cccb1edc7e80d40603a42e314e93fc769290b540dd2c56e01f1a2b8d58da22005
+    _Values: 6e7cd6ef2cbb5176a215e52b60bf6800f59089914e652e4e94db220695fc99539f77bd5fcf6fc55db4ba0786c72b01137562d3dd645dfb2c55db7cf821a8f461ae39cad87dc7d07b34d3baf6934aea40cdd98f83df861028dd36913329bbef41846ff50b0d33c45c529728729ed6693cccb1edc7e80d40603a42e314e93fc769290b540dd2c56e01f1a2b8d58da22005
 --- !u!114 &1027100065519748423
 MonoBehaviour:
   m_ObjectHideFlags: 0

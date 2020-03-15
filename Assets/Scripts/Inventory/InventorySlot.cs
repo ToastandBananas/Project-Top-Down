@@ -152,6 +152,12 @@ public class InventorySlot : MonoBehaviour
                 invUI.currentlySelectedItemData = itemData;
                 invUI.invSlotMovingFrom = this;
                 SoftClearSlot(this);
+
+                foreach (InventorySlot childSlot in childrenSlots)
+                {
+                    if (childSlot != null)
+                        SoftClearSlot(childSlot);
+                }
             }
             else
             {
@@ -161,24 +167,10 @@ public class InventorySlot : MonoBehaviour
                 invUI.currentlySelectedItemData = parentSlot.itemData;
                 invUI.invSlotMovingFrom = parentSlot;
                 SoftClearSlot(parentSlot);
-            }
 
-            // Set isEmpty and slotBackgroundImage of our parent and children slots
-            if (parentSlot != null)
-            {
-                parentSlot.isEmpty = true;
-                parentSlot.slotBackgroundImage.sprite = emptySlotSprite;
-                foreach(InventorySlot childSlot in parentSlot.childrenSlots) // Set all children to empty
+                foreach (InventorySlot childSlot in parentSlot.childrenSlots) // Set all children to empty
                 {
                     if (childSlot != null) // Our child slot array won't always be full
-                        SoftClearSlot(childSlot);
-                }
-            }
-            else
-            {
-                foreach(InventorySlot childSlot in childrenSlots)
-                {
-                    if (childSlot != null)
                         SoftClearSlot(childSlot);
                 }
             }

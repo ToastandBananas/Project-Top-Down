@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class Interactable : MonoBehaviour
         // Debug.Log("Interacting with " + transform.name);
     }
 
-    void Start()
+    void Awake()
     {
         interactionTransform = transform;
         playerMovement = PlayerMovement.instance;
@@ -32,6 +31,13 @@ public class Interactable : MonoBehaviour
     {
         if (GameControls.gamePlayActions.playerInteract.WasPressed)
         {
+            if (player == null)
+            {
+                interactionTransform = transform;
+                playerMovement = PlayerMovement.instance;
+                player = playerMovement.gameObject.transform;
+            }
+
             // If we're close enough
             float distance = Vector3.Distance(player.position, interactionTransform.position);
             if (distance <= radius && playerMovement.itemsToBePickedUpCount == 0)

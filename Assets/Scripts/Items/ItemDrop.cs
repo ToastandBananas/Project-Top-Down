@@ -14,6 +14,12 @@ public class ItemDrop : MonoBehaviour
 
     LayerMask obstacleMask;
 
+    void Awake()
+    {
+        if (transform.parent != null && transform.parent.name == "Loose Items")
+            isDropped = true;
+    }
+
     void Start()
     {
         item = GetComponent<ItemData>().item;
