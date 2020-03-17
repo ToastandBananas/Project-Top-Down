@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 404170035247258339}
   - component: {fileID: 8375587196981127673}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6664537475600334805}
   - component: {fileID: 2584015654573991843}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Greaves Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8421293176900777024}
   - component: {fileID: 4074523064383387348}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Greaves Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5863433328746540668}
   - component: {fileID: 9154697544202421658}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6685826956907130062}
   - component: {fileID: 9109114270668296748}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,7 +362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8413298087363372266}
   - component: {fileID: 3174377627540344627}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Cuirass Arm Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1873644853627072465}
   - component: {fileID: 3013770618474161821}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -526,7 +526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8353283682905794369}
   - component: {fileID: 8375587197326091755}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Forearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -609,7 +609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2056580781584936048}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -641,7 +641,7 @@ GameObject:
   - component: {fileID: 8773181553663718792}
   - component: {fileID: 1026329605875622702}
   - component: {fileID: 3761484715827804483}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: View Visualisation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -719,7 +719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5670274570224066017}
   - component: {fileID: 2061956438329851402}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Cuirass Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -799,7 +799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7155715373278232042}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -832,7 +832,7 @@ GameObject:
   m_Component:
   - component: {fileID: 670783237429463496}
   - component: {fileID: 6298208495499097479}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Gauntlets Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -913,7 +913,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2002872323710877146}
   - component: {fileID: 3264005889691231006}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Helmet Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -994,7 +994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4490644662189381522}
   - component: {fileID: 4490644662189381523}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1077,7 +1077,7 @@ GameObject:
   - component: {fileID: 4490644662585460308}
   - component: {fileID: 4490644662585460309}
   - component: {fileID: 8375587198701085382}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1181,7 +1181,7 @@ GameObject:
   - component: {fileID: 4490644662637069097}
   - component: {fileID: 4490644662637069098}
   - component: {fileID: 8064551561763066788}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1414,7 +1414,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 28000
+  m_InstanceId: 18698
 --- !u!1 &4490644663598777794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,7 +1436,7 @@ GameObject:
   - component: {fileID: 4490644663598777792}
   - component: {fileID: 870014767876573731}
   - component: {fileID: 7945119611021997752}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: NPC
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -1531,16 +1531,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abba18b00ec13242939eb8da96eb482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 1
-  health: 1
-  maxStamina: 0
-  stamina: 50
-  maxMana: 0
+  level: 10
+  maxHealth: 20
+  health: 20
+  maxStamina: 100
+  stamina: 100
+  maxMana: 50
   mana: 50
-  maxEncumbrance: 100
-  encumbrance: 0
-  defense: 0
+  maxEncumbrance: 200
+  encumbrance: 50
+  defense: 20
   isPlayer: 0
   isDead: 0
   leftWeaponItemDrop: {fileID: 0}
@@ -1756,7 +1756,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4490644663598838308}
   - component: {fileID: 4490644663598838309}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1839,7 +1839,7 @@ GameObject:
   - component: {fileID: 4490644663610915089}
   - component: {fileID: 4490644663610915090}
   - component: {fileID: 8375587197795844188}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1941,7 +1941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3540555526807377083}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1974,7 +1974,7 @@ GameObject:
   m_Component:
   - component: {fileID: 244870005035646194}
   - component: {fileID: 8394120398919121057}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Pants Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2055,7 +2055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3378741443797710548}
   - component: {fileID: 423451097965017971}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Cuirass Arm Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2135,7 +2135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6518131208290340681}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2168,7 +2168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7238601430493104825}
   - component: {fileID: 1276029647599828910}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Pants Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2249,7 +2249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1980673814112115774}
   - component: {fileID: 4324371676315616884}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Boot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2330,7 +2330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2761533767404575572}
   - component: {fileID: 8375587196826989439}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Forearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2414,7 +2414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5506944815303744865}
   - component: {fileID: 6259443352850664655}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Right Gauntlets Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2494,7 +2494,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5648107955365151489}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Head Reset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2524,7 +2524,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8375587197147642019}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2555,7 +2555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 790884949997532201}
   - component: {fileID: 7499791545202353032}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Left Boot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2636,7 +2636,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8952784933808062320}
   - component: {fileID: 979430624132897503}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Shirt Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

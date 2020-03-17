@@ -7,11 +7,17 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI instance;
 
-    public GameObject slotPrefab;
+    [Header("Transform References")]
     public Transform menusParent;
-    public GameObject inventoryGO;
-    public GameObject playerEquipmentMenuGO;
-    public GameObject containerMenuGO;
+
+    [Header("GameObject References")]
+    public GameObject inventoryMenu;
+    public GameObject playerEquipmentMenu;
+    public GameObject containerMenu;
+    public QuantityMenu quantityMenu;
+
+    [Header("Prefabs")]
+    public GameObject slotPrefab;
     public GameObject floatingTextPrefab;
 
     [Header("Parents")]
@@ -33,6 +39,10 @@ public class InventoryUI : MonoBehaviour
     public List<InventorySlot> bagSlots = new List<InventorySlot>();
     public List<InventorySlot> horseBagSlots = new List<InventorySlot>();
     public List<InventorySlot> containerSlots = new List<InventorySlot>();
+    [HideInInspector] public int maxInventoryWidth = 8;
+    [HideInInspector] public int maxContainerWidth = 6;
+    [HideInInspector] public int overallInventoryHeight = 0;
+    [HideInInspector] public int maxOverallInventoryHeight = 12;
 
     [Header("Equip Slots")]
     public EquipSlot[] weaponSlots = new EquipSlot[3];
@@ -43,7 +53,7 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
-    public ItemData currentlySelectedItemData;
+    [HideInInspector] public ItemData currentlySelectedItemData;
     [HideInInspector] public InventorySlot invSlotMovingFrom;
     [HideInInspector] public EquipSlot equipSlotMovingFrom;
     [HideInInspector] public Container currentlyActiveContainer;
@@ -52,9 +62,6 @@ public class InventoryUI : MonoBehaviour
     public Tooltip invTooltip;
     public Tooltip equipTooltip1;
     public Tooltip equipTooltip2;
-
-    int maxInventoryWidth = 8;
-    int maxContainerWidth = 6;
 
     Inventory inventory;
     PlayerMovement player;
@@ -106,6 +113,7 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        // If the inventory button/key is pressed
         if (GameControls.gamePlayActions.playerInventory.WasPressed)
         {
             if (currentlySelectedItem != null)
@@ -150,11 +158,10 @@ public class InventoryUI : MonoBehaviour
 
     public void CreateSlots(int slotCount, Transform slotsParent, List<InventorySlot> slots, bool isContainer)
     {
-        //if (slots.Length != slotCount)
-            //slots = new InventorySlot[slotCount]; // Reset our slots array to the appropriate size
-
         int currentXCoord = 1;
         int currentYCoord = 1;
+        overallInventoryHeight++;
+
         for (int i = 1; i < slotCount + 1; i++)
         {
             GameObject slot = Instantiate(slotPrefab, slotsParent);
@@ -165,6 +172,7 @@ public class InventoryUI : MonoBehaviour
             {
                 currentXCoord = 1;
                 currentYCoord++;
+                overallInventoryHeight++;
             }
 
             slot.GetComponent<InventorySlot>().slotParent = slotsParent;
@@ -224,17 +232,17 @@ public class InventoryUI : MonoBehaviour
 
     public void ToggleInventory()
     {
-        inventoryGO.SetActive(!inventoryGO.activeSelf);
+        inventoryMenu.SetActive(!inventoryMenu.activeSelf);
     }
 
     public void ToggleEquipmentMenu()
     {
-        playerEquipmentMenuGO.SetActive(!playerEquipmentMenuGO.activeSelf);
+        playerEquipmentMenu.SetActive(!playerEquipmentMenu.activeSelf);
     }
 
     public void ToggleContainerMenu()
     {
-        containerMenuGO.SetActive(!containerMenuGO.activeSelf);
+        containerMenu.SetActive(!containerMenu.activeSelf);
     }
 
     public void TurnOffHighlighting()
@@ -268,12 +276,14 @@ public class InventoryUI : MonoBehaviour
     IEnumerator ToggleMenus()
     {
         yield return new WaitForSeconds(0.15f);
-        if (inventoryGO.activeSelf == true)
+        if (inventoryMenu.activeSelf == true)
             TurnOffHighlighting();
         ToggleInventory();
         ToggleEquipmentMenu();
-        if (containerMenuGO.activeSelf == true)
+        if (containerMenu.activeSelf == true)
             ToggleContainerMenu();
+        if (quantityMenu.gameObject.activeSelf == true)
+            quantityMenu.CloseQuantityMenu();
     }
 
     IEnumerator CalculateItemsParentHeight(Transform itemsParent)

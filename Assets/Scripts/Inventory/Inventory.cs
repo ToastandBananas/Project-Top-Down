@@ -114,12 +114,15 @@ public class Inventory : MonoBehaviour
         {
             for (int i = 0; i < invSlots.Count; i++)
             {
+                if (itemData.currentStackSize <= 0)
+                    break;
+
                 if (invSlots[i].isEmpty == false)
                 {
                     InventorySlot parentSlot = invSlots[i].GetParentSlot(invSlots[i]);
                     if (parentSlot.item.name == itemToAdd.name && parentSlot.itemData.damage == itemData.damage && parentSlot.itemData.value == itemData.value)
                     {
-                        for (int j = 0; j < itemData.currentStackSize; j++)
+                        for (int j = 0; j < itemData.currentStackSize + 1; j++)
                         {
                             if (parentSlot.itemData.currentStackSize < parentSlot.item.maxStackSize)
                             {

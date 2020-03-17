@@ -7,6 +7,8 @@ public class Tooltip : MonoBehaviour
     Text tooltipText;
     InventorySlot tooltipSlot;
     RectTransform rectTransform;
+    Canvas canvas;
+    InventoryUI invUI;
 
     Vector3 offset;
 
@@ -15,6 +17,8 @@ public class Tooltip : MonoBehaviour
     {
         tooltipText = GetComponentInChildren<Text>();
         rectTransform = GetComponentInParent<RectTransform>();
+        canvas = GameObject.Find("Tooltip Canvas").GetComponent<Canvas>();
+        invUI = InventoryUI.instance;
     }
 
     public void ShowItemTooltip(InventorySlot invSlot, EquipSlot equipSlot)
@@ -54,7 +58,7 @@ public class Tooltip : MonoBehaviour
             // Value
             tooltipText.text += "Estimated Value: " + tooltipSlot.itemData.value.ToString();
 
-            CalculateOffset(tooltipSlot.item, false); // Get our tooltip's position offset
+            CalculateOffset(tooltipSlot.item, equipSlot); // Get our tooltip's position offset
             transform.position = tooltipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset
         }
         else if (equipSlot != null && equipSlot.isEmpty == false) // For equipSlots
@@ -85,7 +89,7 @@ public class Tooltip : MonoBehaviour
             // Value
             tooltipText.text += "Estimated Value: " + equipSlot.itemData.value.ToString();
 
-            CalculateOffset(equipSlot.equipment, true); // Get our tooltip's position offset
+            CalculateOffset(equipSlot.equipment, equipSlot); // Get our tooltip's position offset
             transform.position = equipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset
         }
         
@@ -98,21 +102,37 @@ public class Tooltip : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void CalculateOffset(Item item, bool isEquipSlot)
+    void CalculateOffset(Item item, EquipSlot equipSlot)
     {
-        if (isEquipSlot == false)
+        if (equipSlot == null)
         {
             // For invSlots
             if (item.iconWidth == 1)
-                offset = (Vector3.up * 0.55f) + (Vector3.right * 0.55f);
+                offset = new Vector3(0.55f, 0.55f);
             else if (item.iconWidth == 2)
-                offset = (Vector3.up * 0.55f) + (Vector3.right * 1.65f);
+                offset = new Vector3(1.65f, 0.55f);
             else if (item.iconWidth == 3)
-                offset = (Vector3.up * 0.55f) + (Vector3.right * 2.75f);
+                offset = new Vector3(2.75f, 0.55f);
+
+            // If the tooltip is going to be too far to the right
+            if (tooltipSlot.slotParent != invUI.containerParent && tooltipSlot.slotCoordinate.x > 3)
+                offset += new Vector3(-5.15f, 0);
+
+            // Get our mouse position
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+
+            // If the tooltip is going to be too close to the bottom
+            if (pos.y < -260.0f)
+                offset += new Vector3(0, 2f);
         }
-        else 
+        else
+        {
             // For equipSlots
-            offset = (Vector3.up * 0.75f) + (Vector3.right * 0.75f);
+            offset = new Vector3(0.75f, 0.75f);
+
+            if (equipSlot.thisEquipmentSlot == EquipmentSlot.Boots || equipSlot.thisEquipmentSlot == EquipmentSlot.Quiver)
+                offset += new Vector3(0, 2f);
+        }
     }
 
     void RecalculateTooltipSize()

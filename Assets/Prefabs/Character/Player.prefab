@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 577232990510110178}
   - component: {fileID: 8767297743416750157}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Shirt Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4205812763118659987}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Head Reset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -752,7 +752,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4980563717705088553}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -864,7 +864,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4218971818058725235}
   - component: {fileID: 7539476965437084824}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Cuirass Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2039,7 +2039,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 145460
+  m_InstanceId: 19268
 --- !u!1 &5638075717431976091
 GameObject:
   m_ObjectHideFlags: 0

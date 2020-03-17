@@ -110,7 +110,7 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     void GetEquippedArmorTooltips()
     {
-        Equipment invSlotEquipment = thisInvSlot.item as Equipment; // Cast the item in the inv slot as Equipment so we can access its data
+        Equipment invSlotEquipment = thisInvSlot.GetParentSlot(thisInvSlot).item as Equipment; // Cast the item in the inv slot as Equipment so we can access its data
         tooltipCount = 0; // Reset the tooltipCount
 
         foreach (EquipSlot equipSlot in invUI.equipSlots)

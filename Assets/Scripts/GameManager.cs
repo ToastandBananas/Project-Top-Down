@@ -31,10 +31,10 @@ public class GameManager : MonoBehaviour
         floatingTexts = GameObject.Find("Floating Texts").GetComponentsInChildren<TextFade>();
         invUI = InventoryUI.instance;
 
-        if (invUI.inventoryGO.activeSelf == true)
+        if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();
 
-        if (invUI.playerEquipmentMenuGO.activeSelf == true)
+        if (invUI.playerEquipmentMenu.activeSelf == true)
             invUI.ToggleEquipmentMenu();
 
         //if (invUI.containerMenuGO.activeSelf == true)
@@ -57,11 +57,11 @@ public class GameManager : MonoBehaviour
 
     public void TurnOffMenus()
     {
-        if (invUI.containerMenuGO.activeSelf == true)
+        if (invUI.containerMenu.activeSelf == true)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryGO.activeSelf == true)
+        if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenuGO.activeSelf == true)
+        if (invUI.playerEquipmentMenu.activeSelf == true)
             invUI.ToggleEquipmentMenu();
     }
 }

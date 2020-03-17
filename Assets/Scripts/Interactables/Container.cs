@@ -42,7 +42,7 @@ public class Container : MonoBehaviour
     {
         if (inContainerRange && GameControls.gamePlayActions.playerInteract.WasPressed)
         {
-            if (invUI.containerMenuGO.activeSelf == false) // If the container menu is not open
+            if (invUI.containerMenu.activeSelf == false) // If the container menu is not open
             {
                 if (invUI.currentlyActiveContainer == null || invUI.currentlyActiveContainer != this)
                 {
@@ -51,7 +51,7 @@ public class Container : MonoBehaviour
                     {
                         invUI.containerSlots.Clear();
 
-                        foreach(InventorySlot slot in invUI.containerMenuGO.GetComponentsInChildren<InventorySlot>())
+                        foreach(InventorySlot slot in invUI.containerMenu.GetComponentsInChildren<InventorySlot>())
                         {
                             Destroy(slot.gameObject);
                         }
@@ -129,11 +129,11 @@ public class Container : MonoBehaviour
 
     void OpenMenus()
     {
-        if (invUI.containerMenuGO.activeSelf == false)
+        if (invUI.containerMenu.activeSelf == false)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryGO.activeSelf == false)
+        if (invUI.inventoryMenu.activeSelf == false)
             invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenuGO.activeSelf == false)
+        if (invUI.playerEquipmentMenu.activeSelf == false)
             invUI.ToggleEquipmentMenu();
     }
 
@@ -151,11 +151,11 @@ public class Container : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
 
         invUI.TurnOffHighlighting();
-        if (invUI.containerMenuGO.activeSelf == true)
+        if (invUI.containerMenu.activeSelf == true)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryGO.activeSelf == true)
+        if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenuGO.activeSelf == true)
+        if (invUI.playerEquipmentMenu.activeSelf == true)
             invUI.ToggleEquipmentMenu();
     }
 

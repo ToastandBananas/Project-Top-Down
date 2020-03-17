@@ -96,6 +96,20 @@ public class SaveLoad : MonoBehaviour
             invUI.currentlyActiveContainer = null;
         }
 
+        // Clear out the weapon slots
+        foreach(EquipSlot slot in invUI.weaponSlots)
+        {
+            if (slot.isEmpty == false)
+                slot.ClearSlot(slot);
+        }
+
+        // Clear out the equipment slots
+        foreach (EquipSlot slot in invUI.equipSlots)
+        {
+            if (slot.isEmpty == false)
+                slot.ClearSlot(slot);
+        }
+
         // Destroy Temp Slot
         if (invUI.tempSlot != null)
             Destroy(invUI.tempSlot.gameObject);

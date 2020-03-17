@@ -76,9 +76,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
-
-        Update_Movement();
+        if (canDodge)
+            Update_Movement();
 
         if (isLockedOn == false)
             FaceForward();
@@ -87,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
 
         /*if (Vector2.Distance(transform.position, cam.ScreenToWorldPoint(Input.mousePosition)) > 0.25f)
         {
-            Movement();
+            Update_Movement();
             LookAtMouse();
         }
         else
@@ -96,6 +95,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update_Movement()
     {
+        movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
+
         if (GameControls.gamePlayActions.playerSprint.IsPressed)
             moveSpeed = walkSpeed;
         else
@@ -180,38 +181,41 @@ public class PlayerMovement : MonoBehaviour
                 UnLockOn();
         }
 
-        if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value < -0.3f && canSwitchLockOnTarget)
+        if (isLockedOn)
         {
-            fov.GetNearbyEnemies();
-
-            if (fov.nearbyEnemies.Count > 1)
+            if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value < -0.3f && canSwitchLockOnTarget)
             {
-                int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
+                fov.GetNearbyEnemies();
 
-                if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[0])
-                    lockOnTarget = fov.nearbyEnemies[fov.nearbyEnemies.Count - 1];
-                else
-                    lockOnTarget = fov.nearbyEnemies[closestEnemyIndex - 1];
+                if (fov.nearbyEnemies.Count > 1)
+                {
+                    int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
 
-                canSwitchLockOnTarget = false;
-                StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
+                    if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[0])
+                        lockOnTarget = fov.nearbyEnemies[fov.nearbyEnemies.Count - 1];
+                    else
+                        lockOnTarget = fov.nearbyEnemies[closestEnemyIndex - 1];
+
+                    canSwitchLockOnTarget = false;
+                    StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
+                }
             }
-        }
-        else if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value > 0.3f && canSwitchLockOnTarget)
-        {
-            fov.GetNearbyEnemies();
-
-            if (fov.nearbyEnemies.Count > 1)
+            else if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value > 0.3f && canSwitchLockOnTarget)
             {
-                int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
+                fov.GetNearbyEnemies();
 
-                if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[fov.nearbyEnemies.Count - 1])
-                    lockOnTarget = fov.nearbyEnemies[0];
-                else
-                    lockOnTarget = fov.nearbyEnemies[closestEnemyIndex + 1];
+                if (fov.nearbyEnemies.Count > 1)
+                {
+                    int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
 
-                canSwitchLockOnTarget = false;
-                StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
+                    if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[fov.nearbyEnemies.Count - 1])
+                        lockOnTarget = fov.nearbyEnemies[0];
+                    else
+                        lockOnTarget = fov.nearbyEnemies[closestEnemyIndex + 1];
+
+                    canSwitchLockOnTarget = false;
+                    StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
+                }
             }
         }
 

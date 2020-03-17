@@ -14,7 +14,9 @@ public class Item : ScriptableObject
     public Sprite droppedSprite = null;
     public string description;
     public float weight = 1f;
-    public int baseValue = 1;
+    public int minBaseValue = 1;
+    public int maxBaseValue = 10;
+    public int staticValue = 1;
     public ItemType itemType = ItemType.General;
     public Rarity baseRarity = Rarity.Common;
 

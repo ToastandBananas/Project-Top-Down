@@ -49,10 +49,19 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             {
                 // Set our context menu's position
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-                contextMenu.transform.position = canvas.transform.TransformPoint(pos) + (Vector3.down / 2) + Vector3.right;
+                contextMenu.transform.position = canvas.transform.TransformPoint(pos) + new Vector3(1, -0.5f, 0);
+
+                // If this slot is on the far right of the inventory menu
+                if (thisInvSlot.slotCoordinate.x == invUI.maxInventoryWidth)
+                    contextMenu.transform.position += new Vector3(-2, 0, 0);
+
+                // If this slot is on the very bottom of the screen
+                if (pos.y < -420f)
+                    contextMenu.transform.position += new Vector3(0, 1.5f, 0);
 
                 CreateTakeItemButton();
                 CreateUseItemButton();
+                CreateSplitStackButton();
                 CreateDropItemButton();
             }
         }
@@ -85,6 +94,37 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             menuButton.GetComponentInChildren<Text>().text = "Take Item";
 
             menuButton.GetComponent<Button>().onClick.AddListener(TakeItem);
+        }
+    }
+
+    void CreateSplitStackButton()
+    {
+        if (thisInvSlot != null)
+        {
+            InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
+
+            if (parentSlot.item.isStackable && parentSlot.itemData.currentStackSize > 1)
+            {
+                GameObject menuButton = Instantiate(contextMenuButtonPrefab, contextMenu.transform);
+
+                menuButton.name = "Split Stack";
+                menuButton.GetComponentInChildren<Text>().text = "Split Stack";
+
+                menuButton.GetComponent<Button>().onClick.AddListener(SplitStack);
+            }
+
+            invUI.quantityMenu.transform.position = parentSlot.transform.position + new Vector3(0, -2.25f, 0);
+
+            // If the slot is on the far right of the inventory menu
+            if (parentSlot.slotParent != invUI.containerParent && parentSlot.slotCoordinate.x == invUI.maxInventoryWidth)
+                invUI.quantityMenu.transform.position += new Vector3(-1.25f, 0, 0);
+
+            // Get our mouse's screen position
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+
+            // If the slot is on the very bottom of the screen
+            if (pos.y < -290.0f)
+                invUI.quantityMenu.transform.position += new Vector3(0, 4f, 0);
         }
     }
 
@@ -170,7 +210,19 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
 
         DisableContextMenu();
     }
-    
+
+    void SplitStack()
+    {
+        InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
+
+        // Bring up a +/- menu ui to increase/decrease the amount to split (should never be able to take enough to deplete the stack)
+        invUI.quantityMenu.gameObject.SetActive(true);
+        invUI.quantityMenu.currentParentSlot = parentSlot;
+        invUI.quantityMenu.currentItemData = parentSlot.itemData;
+
+        DisableContextMenu();
+    }
+
     void UseItem()
     {
         InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);

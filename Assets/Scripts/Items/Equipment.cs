@@ -22,7 +22,7 @@ public class Equipment : Item
 
     [Header("Sprite")]
     public Sprite deathSprite;
-    public Sprite leftCuirassArmSprite;
+    public Sprite leftCuirassArmSprite; // For cuirass only
     public Sprite rightCuirassArmSpite;
 
     [Header("Weapon Stats")]
@@ -32,8 +32,8 @@ public class Equipment : Item
     public float knockbackPower = 1f;
 
     [Header("Armor Stats")]
-    public float minBaseArmor = 1f;
-    public float maxBaseArmor = 1f;
+    public float minBaseDefense = 1f;
+    public float maxBaseDefense = 1f;
     public float armorModifier = 1f;
 
     [Header("Other Stats")]

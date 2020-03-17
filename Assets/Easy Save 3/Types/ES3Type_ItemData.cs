@@ -57,16 +57,16 @@ namespace ES3Types
 						instance.currentStackSize = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
 					case "maxDurability":
-						instance.maxDurability = reader.Read<System.Single>(ES3Type_float.Instance);
+						instance.maxDurability = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
 					case "durability":
 						instance.durability = reader.Read<System.Single>(ES3Type_float.Instance);
 						break;
 					case "damage":
-						instance.damage = reader.Read<System.Single>(ES3Type_float.Instance);
+						instance.damage = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
 					case "defense":
-						instance.defense = reader.Read<System.Single>(ES3Type_float.Instance);
+						instance.defense = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
 					default:
 						reader.Skip();
