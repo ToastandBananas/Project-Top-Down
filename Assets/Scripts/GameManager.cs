@@ -19,10 +19,8 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("FIXME: More than one instance of Inventory found!");
-            Destroy(this);
+            Destroy(gameObject);
         }
-
-        DontDestroyOnLoad(this);
     }
     #endregion
 

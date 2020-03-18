@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3661388085602504287}
   - component: {fileID: 68740533560211229}
   - component: {fileID: 3723423186980164384}
-  - component: {fileID: 68740534902715370}
   m_Layer: 0
   m_Name: GM
   m_TagString: Untagged
@@ -62,8 +61,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4c009db833256048bdbcb2afb8f57ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLoading: 0
   weaponsParent: {fileID: 0}
   equipmentParent: {fileID: 0}
+  charactersSaveFileName: Player
 --- !u!114 &68740533560211229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,8 +77,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 24
-  bagSlotCount: 30
+  pocketsSlotCount: 70
+  bagSlotCount: 70
   horseBagSlotCount: 10
   pocketItems: []
   bagItems: []
@@ -103,20 +104,8 @@ MonoBehaviour:
     - {fileID: 3661388085602504287}
     - {fileID: 68740533560211229}
     - {fileID: 3723423186980164384}
+    - {fileID: 0}
     - {fileID: 11500000, guid: 2951d86273371f344b5726f815f45e95, type: 3}
     - {fileID: 11500000, guid: f4c009db833256048bdbcb2afb8f57ce, type: 3}
     - {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
-    _Values: 7efbedd51c9e3a05a5df6efafdc05b0fe0742d099cf5d62027472eb6bccd8854b5c27a77b7d810659b2468475a90256d5959e2592097227725ccfc63ccf1c228a8e64f3fc42c3807
---- !u!114 &68740534902715370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68740533560211216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
+    _Values: 7efbedd51c9e3a05a5df6efafdc05b0fe0742d099cf5d62027472eb6bccd8854b5c27a77b7d810659b2468475a90256dffbde175c6454b695959e2592097227725ccfc63ccf1c228a8e64f3fc42c3807

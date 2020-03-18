@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SaveLoad : MonoBehaviour
 {
+    public bool isLoading;
+
     public GameObject weaponsParent;
     public GameObject equipmentParent;
 
@@ -12,13 +15,16 @@ public class SaveLoad : MonoBehaviour
     GameManager gm;
     Inventory inv;
     InventoryUI invUI;
-    GameObject player;
+    EquipmentManager playerEquipmentManager;
     GameObject NPCsParent;
     GameObject looseItemsParent;
     GameObject containersParent;
     GameObject doorsParent;
 
-    //string defaultSaveFileName = "PlayerSave.es3";
+    public string charactersSaveFileName = "Player.es3";
+    string autoSaveFileName;
+
+    string autosaveSceneName;
 
     #region Singleton
     public static SaveLoad instance;
@@ -33,56 +39,114 @@ public class SaveLoad : MonoBehaviour
 
     void Start()
     {
+        autoSaveFileName = "AutoSave_" + charactersSaveFileName;
+
         autoSaveManager = FindObjectOfType<ES3AutoSaveMgr>();
         gm = GameManager.instance;
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
-        player = GameObject.FindGameObjectWithTag("Player");
+        playerEquipmentManager = GameObject.Find("Player").GetComponent<EquipmentManager>();
         NPCsParent = GameObject.Find("NPCs");
         looseItemsParent = GameObject.Find("Loose Items");
         containersParent = GameObject.Find("Containers");
         doorsParent = GameObject.Find("Doors");
     }
 
+    public void SaveAndQuit()
+    {
+        autoSaveManager.Save(autoSaveFileName);
+
+        StartCoroutine(Quit());
+    }
+
+    public void AutoSave()
+    {
+        autosaveSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log("Autosaving Game - Scene Name: " + autosaveSceneName);
+
+        ES3.Save<string>("autosaveSceneName", autosaveSceneName, "AutoSaveSceneName.es3");
+
+        autoSaveManager.Save(autoSaveFileName);
+    }
+
+    #region Modified Save() backup (a function in the autoSaveManager script)
+    /*public void Save(string filePath = null)
+	{
+		if(autoSaves == null || autoSaves.Count == 0)
+			return;
+
+		var gameObjects = new GameObject[autoSaves.Count];
+		for (int i = 0; i < autoSaves.Count; i++) 
+			gameObjects [i] = autoSaves [i].gameObject;
+
+        if (filePath == null || filePath == "")
+		    ES3.Save<GameObject[]>(key, gameObjects, settings);
+        else
+            ES3.Save<GameObject[]>(key, gameObjects, filePath, settings);
+    }*/
+    #endregion
+
     public void Save()
     {
-        Debug.Log("Saving Game");
-
         // Turn the Pause Menu off
         gm.TogglePauseMenu();
 
+        autosaveSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log("Saving Game - Scene Name: " + autosaveSceneName);
+
+        ES3.Save<string>("autosaveSceneName", autosaveSceneName, "AutoSaveSceneName.es3");
+
         // Save all objects with the autosave component on them (also, if they involve prefabs, they need to be enabled for Easy Save)
-        autoSaveManager.Save();
+        //autoSaveManager.Save(filePath);
+        autoSaveManager.Save(autoSaveFileName);
     }
 
     public void Load()
     {
         Debug.Log("Loading Game");
 
+        isLoading = true;
+
         // Turn the Pause Menu off
         gm.TogglePauseMenu();
 
+        autosaveSceneName = ES3.Load<string>("autosaveSceneName", "AutoSaveSceneName.es3");
+
+        if (autosaveSceneName != SceneManager.GetActiveScene().name)
+            SceneManager.LoadScene(autosaveSceneName);
+
         // Destroy all inventory slots before loading in the ones from the save file...
-        // (We do this because since we Instantiate the slots when starting up the game, the load funtion won't recognize the current inv slots in our scene when starting a new game instance).
+        // (We do this because since we Instantiate the slots when starting up the game, the load function won't 
+        //      recognize the current inv slots in our scene when starting a new game instance).
+
         // Destroy Pocket Slots
-        invUI.pocketsSlots.Clear();
-        for (int i = 0; i < inv.pocketsSlotCount; i++)
+        if (invUI.pocketsParent.childCount > 0)
         {
-            Destroy(invUI.pocketsParent.GetChild(i).gameObject);
+            invUI.pocketsSlots.Clear();
+            for (int i = 0; i < inv.pocketsSlotCount; i++)
+            {
+                Destroy(invUI.pocketsParent.GetChild(i).gameObject);
+            }
         }
 
         // Destroy Bag Slots
-        invUI.bagSlots.Clear();
-        for (int i = 0; i < inv.bagSlotCount; i++)
+        if (invUI.bagParent.childCount > 0)
         {
-            Destroy(invUI.bagParent.GetChild(i).gameObject);
+            invUI.bagSlots.Clear();
+            for (int i = 0; i < inv.bagSlotCount; i++)
+            {
+                Destroy(invUI.bagParent.GetChild(i).gameObject);
+            }
         }
 
-        invUI.horseBagSlots.Clear();
         // Destroy Horse Bag Slots
-        for (int i = 0; i < inv.horseBagSlotCount; i++)
+        if (invUI.horseBagParent.childCount > 0)
         {
-            Destroy(invUI.horseBagParent.GetChild(i).gameObject);
+            invUI.horseBagSlots.Clear();
+            for (int i = 0; i < inv.horseBagSlotCount; i++)
+            {
+                Destroy(invUI.horseBagParent.GetChild(i).gameObject);
+            }
         }
 
         // Destroy Container Slots
@@ -109,6 +173,12 @@ public class SaveLoad : MonoBehaviour
             if (slot.isEmpty == false)
                 slot.ClearSlot(slot);
         }
+
+        // Destroy any weapons equipped in the player's arms
+        if (playerEquipmentManager.leftWeaponParent.childCount > 0)
+            Destroy(playerEquipmentManager.leftWeaponParent.GetChild(0).gameObject);
+        if (playerEquipmentManager.rightWeaponParent.childCount > 0)
+            Destroy(playerEquipmentManager.rightWeaponParent.GetChild(0).gameObject);
 
         // Destroy Temp Slot
         if (invUI.tempSlot != null)
@@ -139,7 +209,8 @@ public class SaveLoad : MonoBehaviour
     IEnumerator LoadGame()
     {
         yield return new WaitForSeconds(0.1f);
-        autoSaveManager.Load();
+        autoSaveManager.Load(autoSaveFileName);
+        isLoading = false;
 
         /*for (int i = 0; i < NPCsParent.transform.childCount; i++)
         {
@@ -156,7 +227,7 @@ public class SaveLoad : MonoBehaviour
 
     IEnumerator SetSlots()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
 
         invUI.SetInventorySlotLists();
         invUI.tempSlot = GameObject.Find("Temp Slot").GetComponent<InventorySlot>();
@@ -223,10 +294,16 @@ public class SaveLoad : MonoBehaviour
 
     IEnumerator SetArmAnims()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         foreach (Arms arm in FindObjectsOfType<Arms>())
         {
             StartCoroutine(arm.SetArmAnims(0));
         }
+    }
+
+    IEnumerator Quit()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Application.Quit();
     }
 }

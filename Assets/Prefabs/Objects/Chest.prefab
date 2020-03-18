@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   containerName: Container
+  shouldRandomizeItems: 1
   containerObjects: []
   containerItems: []
   slotsParent: {fileID: 0}
@@ -168,10 +169,11 @@ MonoBehaviour:
     - {fileID: 2821440556542958413}
     - {fileID: 2821440556542958419}
     - {fileID: 4014021300959433072}
+    - {fileID: 2352943764263382968}
     - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - {fileID: -5281422124547630143, guid: 116fbded4ec452f46a925eb44c9b918d, type: 3}
     - {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
-    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907af6e7a72b0d9ec27e6fda52d26b2d3472e2fa7f00ebb4a428fd9d100714c763738b466b5d9f3db0c
+    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907af6e7a72b0d9ec27e6fda52d26b2d347d6e7cc359968694a2e2fa7f00ebb4a428fd9d100714c763738b466b5d9f3db0c
 --- !u!114 &2352943764263382968
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ public class ES3AutoSaveMgr : MonoBehaviour, ISerializationCallbackReceiver
 
 	public List<ES3AutoSave> autoSaves = null;
 
-	public void Save()
+	public void Save(string filePath = null)
 	{
 		if(autoSaves == null || autoSaves.Count == 0)
 			return;
@@ -35,13 +35,19 @@ public class ES3AutoSaveMgr : MonoBehaviour, ISerializationCallbackReceiver
 		for (int i = 0; i < autoSaves.Count; i++) 
 			gameObjects [i] = autoSaves [i].gameObject;
 
-		ES3.Save<GameObject[]>(key, gameObjects, settings);
-	}
+        if (filePath == null || filePath == "")
+		    ES3.Save<GameObject[]>(key, gameObjects, settings);
+        else
+            ES3.Save<GameObject[]>(key, gameObjects, filePath, settings);
+    }
 
-	public void Load()
+	public void Load(string filePath = null)
 	{
-		ES3.Load<GameObject[]>(key, new GameObject[0], settings);
-	}
+        if (filePath == null || filePath == "")
+		    ES3.Load<GameObject[]>(key, new GameObject[0], settings);
+        else
+            ES3.Load<GameObject[]>(key, filePath, new GameObject[0], settings);
+    }
 
 	void Start()
 	{

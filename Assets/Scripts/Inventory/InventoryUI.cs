@@ -81,26 +81,18 @@ public class InventoryUI : MonoBehaviour
 
         inventory = Inventory.instance;
 
-        CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
-        CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
-        CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
-
-        CreateTempSlot();
-
-        SetInventorySlotLists();
-
-        weaponSlots = GameObject.Find("Weapons").GetComponentsInChildren<EquipSlot>();
-        foreach (EquipSlot equipSlot in weaponSlots)
+        if (GameManager.instance != null && GameManager.instance.GetComponent<SaveLoad>().isLoading == false)
         {
-            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponLeft)
-                leftWeaponSlot = equipSlot;
-            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponRight)
-                rightWeaponSlot = equipSlot;
-            if (equipSlot.thisWeaponSlot == WeaponSlot.Ranged)
-                rangedWeaponSlot = equipSlot;
+            CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
+            CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
+            CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
+
+            CreateTempSlot();
+
+            SetInventorySlotLists();
         }
 
-        equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
+        SetEquipmentSlotLists();
     }
 
     void Start()
@@ -213,6 +205,22 @@ public class InventoryUI : MonoBehaviour
         {
             horseBagSlots.Add(slot);
         }
+    }
+
+    void SetEquipmentSlotLists()
+    {
+        weaponSlots = GameObject.Find("Weapons").GetComponentsInChildren<EquipSlot>();
+        foreach (EquipSlot equipSlot in weaponSlots)
+        {
+            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponLeft)
+                leftWeaponSlot = equipSlot;
+            if (equipSlot.thisWeaponSlot == WeaponSlot.WeaponRight)
+                rightWeaponSlot = equipSlot;
+            if (equipSlot.thisWeaponSlot == WeaponSlot.Ranged)
+                rangedWeaponSlot = equipSlot;
+        }
+
+        equipSlots = GameObject.Find("Equipment").GetComponentsInChildren<EquipSlot>();
     }
 
     public void StopDraggingInvItem()

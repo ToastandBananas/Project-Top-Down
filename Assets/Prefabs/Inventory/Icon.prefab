@@ -80,10 +80,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
   itemName: 
-  rarity: 0
   value: 0
   currentStackSize: 1
   maxDurability: 0
@@ -119,10 +119,11 @@ MonoBehaviour:
     - {fileID: 1164993668906188261}
     - {fileID: 1972497532052551499}
     - {fileID: -2922770759378173950}
-    - {fileID: 0}
+    - {fileID: -7795890660405599321}
     - {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+    - {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
     - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
-    _Values: 7525963e63fa4043c5c3bccd9d08c532fbf53b3cf8ba001fb04707bfc9b3ff716ff3e08613cf732bfae45d80678fcf50fe31142a7ff55e282676efab02ff0c78c42e5eaa283e1e2b
+    _Values: 7525963e63fa4043c5c3bccd9d08c532fbf53b3cf8ba001fb04707bfc9b3ff716ff3e08613cf732bfae45d80678fcf505c484cba87fbb87f2676efab02ff0c7882e6eeea7635e326c42e5eaa283e1e2b
 --- !u!114 &-7795890660405599321
 MonoBehaviour:
   m_ObjectHideFlags: 0

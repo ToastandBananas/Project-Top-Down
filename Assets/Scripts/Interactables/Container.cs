@@ -22,7 +22,7 @@ public class Container : MonoBehaviour
     Item itemToAdd;
     bool inContainerRange;
 
-    void Awake()
+    void Start()
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
