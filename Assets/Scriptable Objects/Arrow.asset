@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Arrow
   m_EditorClassIdentifier: 
   isPickupable: 1
-  name: Wooden Arrow(s)
   prefab: {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227, type: 3}
   sprite: {fileID: 21300000, guid: 7ae0bd6a5de590945a47f6810084074e, type: 3}
   droppedSprite: {fileID: 0}
+  name: Wooden Arrow(s)
   description: wooden arrow(s).
   weight: 0.2
-  minBaseValue: 1
-  maxBaseValue: 1
-  staticValue: 1
   itemType: 6
   baseRarity: 0
+  minBaseValue: 1
+  maxBaseValue: 5
+  staticValue: 1
   iconWidth: 1
   iconHeight: 2
   inventoryIcon: {fileID: 21300000, guid: 157ab6a67e67951478aa068912743c53, type: 3}
@@ -47,5 +47,5 @@ MonoBehaviour:
   minBaseDefense: 0
   maxBaseDefense: 0
   armorModifier: 0
-  minBaseDurability: 10
-  maxBaseDurability: 20
+  minBaseDurability: 0
+  maxBaseDurability: 0

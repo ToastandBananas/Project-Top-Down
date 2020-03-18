@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ES3Types
 {
 	[UnityEngine.Scripting.Preserve]
-	[ES3PropertiesAttribute("item", "equipment", "itemName", "rarity", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense")]
+	[ES3PropertiesAttribute("hasBeenRandomized", "item", "equipment", "itemName", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense")]
 	public class ES3Type_ItemData : ES3ComponentType
 	{
 		public static ES3Type Instance = null;
@@ -18,16 +18,16 @@ namespace ES3Types
 		{
 			var instance = (ItemData)obj;
 			
+			writer.WriteProperty("hasBeenRandomized", instance.hasBeenRandomized, ES3Type_bool.Instance);
 			writer.WritePropertyByRef("item", instance.item);
 			writer.WritePropertyByRef("equipment", instance.equipment);
 			writer.WriteProperty("itemName", instance.itemName, ES3Type_string.Instance);
-			writer.WriteProperty("rarity", instance.rarity);
 			writer.WriteProperty("value", instance.value, ES3Type_int.Instance);
 			writer.WriteProperty("currentStackSize", instance.currentStackSize, ES3Type_int.Instance);
-			writer.WriteProperty("maxDurability", instance.maxDurability, ES3Type_float.Instance);
+			writer.WriteProperty("maxDurability", instance.maxDurability, ES3Type_int.Instance);
 			writer.WriteProperty("durability", instance.durability, ES3Type_float.Instance);
-			writer.WriteProperty("damage", instance.damage, ES3Type_float.Instance);
-			writer.WriteProperty("defense", instance.defense, ES3Type_float.Instance);
+			writer.WriteProperty("damage", instance.damage, ES3Type_int.Instance);
+			writer.WriteProperty("defense", instance.defense, ES3Type_int.Instance);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
@@ -38,6 +38,9 @@ namespace ES3Types
 				switch(propertyName)
 				{
 					
+					case "hasBeenRandomized":
+						instance.hasBeenRandomized = reader.Read<System.Boolean>(ES3Type_bool.Instance);
+						break;
 					case "item":
 						instance.item = reader.Read<Item>();
 						break;
@@ -46,9 +49,6 @@ namespace ES3Types
 						break;
 					case "itemName":
 						instance.itemName = reader.Read<System.String>(ES3Type_string.Instance);
-						break;
-					case "rarity":
-						instance.rarity = reader.Read<Rarity>();
 						break;
 					case "value":
 						instance.value = reader.Read<System.Int32>(ES3Type_int.Instance);

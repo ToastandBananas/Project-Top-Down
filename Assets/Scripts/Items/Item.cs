@@ -6,24 +6,33 @@ public enum ItemType { General, Consumable, Weapon, Shield, Armor, Quiver, Ammun
 public class Item : ScriptableObject
 {
     public bool isPickupable = true;
+    public GameObject prefab;
+
+    [Header("In Game Sprites")]
+    public Sprite sprite;
+    [Tooltip("Only used when the default sprite will differ from the dropped sprite.")]
+    public Sprite droppedSprite;
 
     [Header("Basic Info")]
     new public string name = "New Item";
-    public GameObject prefab;
-    public Sprite sprite = null;
-    public Sprite droppedSprite = null;
     public string description;
     public float weight = 1f;
+
+    [Header("Enums")]
+    public ItemType itemType = ItemType.General;
+    [Tooltip("Determines spawn rate.")]
+    public Rarity baseRarity = Rarity.Common;
+
+    [Header("Value")]
     public int minBaseValue = 1;
     public int maxBaseValue = 10;
+    [Tooltip("Only used when the value will not be calculated.")]
     public int staticValue = 1;
-    public ItemType itemType = ItemType.General;
-    public Rarity baseRarity = Rarity.Common;
 
     [Header("Inventory Icon Info")]
     public int iconWidth = 1;
     public int iconHeight = 1;
-    public Sprite inventoryIcon = null;
+    public Sprite inventoryIcon;
 
     [Header("Stackability")]
     public bool isStackable;

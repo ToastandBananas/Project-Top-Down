@@ -2,7 +2,7 @@
 
 public enum Rarity { Common, Uncommon, Rare, Epic, Legendary, Unique }
 
-/// <summary> This class will read data from the Item scriptable object and potentially randomize some of the stats and then store the new data here. </summary>
+/// <summary> This class will read data from its Item scriptable object, potentially randomize some of the stats and then store the new data here. </summary>
 public class ItemData : MonoBehaviour
 {
     public bool hasBeenRandomized = false;
@@ -16,16 +16,13 @@ public class ItemData : MonoBehaviour
     public int value;
     public int currentStackSize = 1;
     public int maxDurability;
-    public float durability;
+    public float durability = 0;
 
     [Header("Weapon Data")]
     public int damage;
 
     [Header("Armor Data")]
     public int defense;
-
-    // Used in calculating the item's value
-    float percentPointValue;
 
     void Awake()
     {
@@ -36,38 +33,12 @@ public class ItemData : MonoBehaviour
             //if (consumable != null)
                 //item = consumable;
         }
-        
-        if (item != null)
-            RandomizeData();
     }
 
-    public void RandomizeData()
+    void Start()
     {
-        // Item class data
-        itemName = item.name;
-        
-        // Equipment class data
-        if (equipment != null)
-        {
-            maxDurability = Mathf.RoundToInt(Random.Range(equipment.minBaseDurability, equipment.maxBaseDurability));
-            durability = maxDurability;
-
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
-                damage =  Mathf.RoundToInt(Random.Range(equipment.minBaseDamage, equipment.maxBaseDamage));
-
-            if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
-                defense = Mathf.RoundToInt(Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense));
-        }
-
-        // Consumable class data
-        /*if (consumable != null)
-        {
-
-        }*/
-
-        value = CalculateItemValue();
-
-        hasBeenRandomized = true;
+        if (hasBeenRandomized)
+            value = CalculateItemValue();
     }
 
     public void TransferData(ItemData dataGiver, ItemData dataReceiver)
@@ -79,12 +50,13 @@ public class ItemData : MonoBehaviour
 
         // General Data
         dataReceiver.itemName = dataGiver.itemName;
+        dataReceiver.value = dataGiver.value;
         dataReceiver.currentStackSize = dataGiver.currentStackSize;
         dataReceiver.maxDurability = dataGiver.maxDurability;
         dataReceiver.durability = dataGiver.durability;
 
         // Consumable Data
-
+        // dataReceiver.freshness = dataGiver.freshness;
 
         // Weapon Data
         dataReceiver.damage = dataGiver.damage;
@@ -105,61 +77,133 @@ public class ItemData : MonoBehaviour
         TransferData(tempData2, dataSet1); // Transfer data to dataSet1 from tempData2
     }
 
+    public void RandomizeData()
+    {
+        // Item class data
+        itemName = item.name;
+
+        // Equipment class data
+        if (equipment != null)
+        {
+            if (equipment.maxBaseDurability > 0)
+                maxDurability = Random.Range(equipment.minBaseDurability, equipment.maxBaseDurability);
+
+            durability = maxDurability;
+
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+                damage = Random.Range(equipment.minBaseDamage, equipment.maxBaseDamage);
+
+            if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
+                defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense);
+        }
+
+        // Consumable class data
+        /*else if (consumable != null)
+        {
+
+        }*/
+
+        value = CalculateItemValue();
+
+        hasBeenRandomized = true;
+    }
+
     int CalculateItemValue()
     {
         int itemValue = 0;
 
         if (equipment != null)//|| consumable != null)
-            itemValue = Mathf.RoundToInt((item.maxBaseValue = item.minBaseValue) * GetPercentPointValue());
+            itemValue = Mathf.RoundToInt(item.minBaseValue + ((item.maxBaseValue - item.minBaseValue) * CalculatePercentPointValue()));
         else
             itemValue = item.staticValue;
-
+        
         return itemValue;
     }
 
     float GetTotalPointValue()
     {
         // Add up all the possible points that can be added to our stats when randomized (damage, defense, etc)
-        float totalPointValue = 0;
+        float totalPointsPossible = 0;
 
         if (equipment != null)
         {
-            totalPointValue += (equipment.maxBaseDurability - equipment.minBaseDurability);
+            if (equipment.maxBaseDurability > 0)
+                totalPointsPossible += (equipment.maxBaseDurability - equipment.minBaseDurability);
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
-                totalPointValue += (equipment.maxBaseDamage - equipment.minBaseDamage);
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+                totalPointsPossible += (equipment.maxBaseDamage - equipment.minBaseDamage) * 2;
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
-                totalPointValue += (equipment.maxBaseDefense - equipment.minBaseDefense);
+                totalPointsPossible += (equipment.maxBaseDefense - equipment.minBaseDefense) * 2;
         }
         /*else if (consumable != null)
         {
 
         }*/
-
-        return totalPointValue;
+        
+        return totalPointsPossible;
     }
 
-    float GetPercentPointValue()
+    float CalculatePercentPointValue()
     {
+        // Calculate the percentage of points that were added to the item's stats when randomized (compared to the total possible points)
         float pointIncrease = 0; // Amount the stats have been increased by in relation to its base stat values, in total
         float percent = 0; // Percent of possible stat increase this item has
-        percentPointValue = 0;
+
+        ClampMaxValues();
 
         if (equipment != null)
         {
-            pointIncrease += (durability - equipment.minBaseDurability);
+            if (equipment.maxBaseDurability > 0)
+                pointIncrease += (maxDurability - equipment.minBaseDurability);
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
-                pointIncrease += (damage - equipment.minBaseDamage);
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+                pointIncrease += (damage - equipment.minBaseDamage) * 2;
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
-                pointIncrease += (defense - equipment.minBaseDefense);
+                pointIncrease += (defense - equipment.minBaseDefense) * 2;
         }
 
         percent = pointIncrease / GetTotalPointValue();
-        Debug.Log(percent);
 
         return percent;
+    }
+
+    void ClampMaxValues()
+    {
+        // This function just makes sure that our stats aren't too high or too low
+        if (equipment != null)
+        {
+            if (maxDurability > equipment.maxBaseDurability)
+            {
+                maxDurability = equipment.maxBaseDurability;
+                durability = maxDurability;
+            }
+            else if (maxDurability < equipment.minBaseDurability)
+            {
+                maxDurability = equipment.minBaseDurability;
+                durability = maxDurability;
+            }
+
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+            {
+                if (damage > equipment.maxBaseDamage)
+                    damage = equipment.maxBaseDamage;
+                else if (damage < equipment.minBaseDamage)
+                    damage = equipment.minBaseDamage;
+            }
+
+            if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
+            {
+                if (defense > equipment.maxBaseDefense)
+                    defense = equipment.maxBaseDefense;
+                else if (defense < equipment.minBaseDefense)
+                    defense = equipment.minBaseDefense;
+            }
+        }
+        /*else if (consumable != null)
+        {
+
+        }*/
     }
 }

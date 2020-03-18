@@ -11,8 +11,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     InventoryUI invUI;
     Inventory inv;
     List<InventorySlot> invSlots = new List<InventorySlot>();
-
-    bool canPlaceItemHere;
+    
     int itemsOverlappingCount;
 
     void Start()
@@ -63,7 +62,6 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void HighlightInvSlots()
     {
-        canPlaceItemHere = true; // Reset the bool
         int totalSlotsToCheck = invUI.currentlySelectedItem.iconWidth * invUI.currentlySelectedItem.iconHeight;
         slotsToFill = new InventorySlot[totalSlotsToCheck];
 

@@ -18,7 +18,7 @@ public class SaveLoad : MonoBehaviour
     GameObject containersParent;
     GameObject doorsParent;
 
-    string defaultSaveFileName = "PlayerSave.es3";
+    //string defaultSaveFileName = "PlayerSave.es3";
 
     #region Singleton
     public static SaveLoad instance;

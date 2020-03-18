@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Steel Short Sword
   m_EditorClassIdentifier: 
   isPickupable: 1
-  name: Steel Short Sword
   prefab: {fileID: 184752757197993529, guid: 96e70a0bfe185a746a25b833e2072c5d, type: 3}
   sprite: {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
   droppedSprite: {fileID: 0}
+  name: Steel Short Sword
   description: Short sword made of steel.
   weight: 1
-  minBaseValue: 10
-  maxBaseValue: 10
-  staticValue: 10
   itemType: 2
   baseRarity: 0
+  minBaseValue: 10
+  maxBaseValue: 50
+  staticValue: 10
   iconWidth: 1
   iconHeight: 2
   inventoryIcon: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
@@ -44,8 +44,8 @@ MonoBehaviour:
   maxBaseDamage: 10
   damageModifier: 1
   knockbackPower: 1
-  minBaseDefense: 1
-  maxBaseDefense: 1
+  minBaseDefense: 0
+  maxBaseDefense: 0
   armorModifier: 0
   minBaseDurability: 10
   maxBaseDurability: 20

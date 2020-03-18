@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 public class Tooltip : MonoBehaviour
@@ -56,7 +55,7 @@ public class Tooltip : MonoBehaviour
             }
 
             // Value
-            tooltipText.text += "Estimated Value: " + tooltipSlot.itemData.value.ToString();
+            tooltipText.text += "Value: " + tooltipSlot.itemData.value.ToString();
 
             CalculateOffset(tooltipSlot.item, equipSlot); // Get our tooltip's position offset
             transform.position = tooltipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset
@@ -87,7 +86,7 @@ public class Tooltip : MonoBehaviour
             }
 
             // Value
-            tooltipText.text += "Estimated Value: " + equipSlot.itemData.value.ToString();
+            tooltipText.text += "Value: " + equipSlot.itemData.value.ToString();
 
             CalculateOffset(equipSlot.equipment, equipSlot); // Get our tooltip's position offset
             transform.position = equipSlot.transform.position + offset; // Reposition the tooltip to the item's slot + the offset

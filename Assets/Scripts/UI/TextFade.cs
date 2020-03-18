@@ -12,8 +12,6 @@ public class TextFade : MonoBehaviour
     float moveSpeed = 0.8f;
     float fadeTime = 2f;
 
-    int activeTexts = 0;
-
     GameManager GM;
 
     void Start()

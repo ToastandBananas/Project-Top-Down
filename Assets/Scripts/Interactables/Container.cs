@@ -5,6 +5,7 @@ using UnityEngine;
 public class Container : MonoBehaviour
 {
     public string containerName = "Container";
+    public bool shouldRandomizeItems = true;
 
     [Header("Contents")]
     public List<GameObject> containerObjects = new List<GameObject>();
@@ -21,21 +22,29 @@ public class Container : MonoBehaviour
     Item itemToAdd;
     bool inContainerRange;
 
-    void Start()
+    void Awake()
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
         
         for (int i = 0; i < containerObjects.Count; i++)
         {
-            GameObject newObj = new GameObject();
-            newObj.transform.SetParent(transform);
-            newObj.AddComponent<ItemData>();
-            ItemData itemData = newObj.GetComponent<ItemData>();
-            itemData.TransferData(containerObjects[i].GetComponent<ItemData>(), itemData);
-            newObj.name = itemData.itemName;
-            containerObjects[i] = newObj;
+            GameObject hierarchyObj = new GameObject();
+            hierarchyObj.transform.SetParent(transform);
+            hierarchyObj.AddComponent<ItemData>();
+
+            ItemData hierarchyObjItemData = hierarchyObj.GetComponent<ItemData>();
+            ItemData containerObjItemData = containerObjects[i].GetComponent<ItemData>();
+            if (shouldRandomizeItems)
+                containerObjItemData.RandomizeData();
+
+            hierarchyObjItemData.TransferData(containerObjItemData, hierarchyObjItemData);
+
+            hierarchyObj.name = hierarchyObjItemData.itemName;
+            containerObjects[i] = hierarchyObj;
         }
+
+        shouldRandomizeItems = false;
     }
 
     void Update()
@@ -140,7 +149,7 @@ public class Container : MonoBehaviour
     IEnumerator CloseMenus()
     {
         if (invUI.pocketsParent.childCount > 0)
-            invUI.pocketsSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
+            invUI.weaponSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
         if (invUI.equipTooltip1.gameObject.activeSelf == true)
             invUI.equipTooltip1.ClearTooltip();
         if (invUI.equipTooltip2.gameObject.activeSelf == true)

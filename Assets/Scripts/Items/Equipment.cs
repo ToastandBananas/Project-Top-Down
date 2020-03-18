@@ -26,19 +26,19 @@ public class Equipment : Item
     public Sprite rightCuirassArmSpite;
 
     [Header("Weapon Stats")]
-    public float minBaseDamage = 1f;
-    public float maxBaseDamage = 1f;
+    public int minBaseDamage = 1;
+    public int maxBaseDamage = 1;
     public float damageModifier = 1f;
     public float knockbackPower = 1f;
 
     [Header("Armor Stats")]
-    public float minBaseDefense = 1f;
-    public float maxBaseDefense = 1f;
+    public int minBaseDefense = 1;
+    public int maxBaseDefense = 1;
     public float armorModifier = 1f;
 
     [Header("Other Stats")]
-    public float minBaseDurability = 10f;
-    public float maxBaseDurability = 20f;
+    public int minBaseDurability = 10;
+    public int maxBaseDurability = 20;
 
     public override void Use(ItemData itemData, EquipmentManager equipmentManager, InventorySlot invSlot)
     {

@@ -15,7 +15,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     
     Animator leftArmAnim, rightArmAnim;
 
-    bool canDoDamage = true;
+    //bool canDoDamage = true;
     
     void Start()
     {

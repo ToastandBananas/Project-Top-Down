@@ -7,8 +7,7 @@ public class Interactable : MonoBehaviour
 
     public float radius = 1f; // How close we need to be to interact
     Transform interactionTransform; // The transform from where we interact
-
-    bool isFocus = false; // Is this interactable currently being focused?
+    
     Transform player;
     PlayerMovement playerMovement;
     
