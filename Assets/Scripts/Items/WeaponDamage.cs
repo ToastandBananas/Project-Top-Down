@@ -4,6 +4,7 @@ using UnityEngine;
 public class WeaponDamage : MonoBehaviour
 {
     [HideInInspector] public Equipment equipment;
+    [HideInInspector] public ItemData itemData;
 
     public Vector2 positionOffset;
 
@@ -29,7 +30,8 @@ public class WeaponDamage : MonoBehaviour
         weaponOwner = transform.parent.parent.parent.parent.parent.parent;
         weaponOwnwerHeadReset = weaponOwner.Find("Head Reset");
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
-        equipment = GetComponent<ItemData>().equipment;
+        itemData = GetComponent<ItemData>();
+        equipment = itemData.equipment;
 
         transform.position += new Vector3(positionOffset.x, positionOffset.y, 0);
 
@@ -65,16 +67,16 @@ public class WeaponDamage : MonoBehaviour
         }
     }
 
-    void SpawnBlood(Transform victim)
+    void SpawnBlood(Transform victim, float percentDamage)
     {
         Vector3 dir = (victim.position - weaponOwner.position).normalized;
         float raycastDistance = Vector3.Distance(victim.position, victim.position + dir * 3f);
         RaycastHit2D hit = Physics2D.Raycast(victim.position, dir, raycastDistance, obstacleMask);
 
         if (hit == false)
-            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, false);
+            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, false);
         else
-            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, true);
+            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, true);
     }
 
     IEnumerator DamageCooldown(float waitTime)
@@ -89,9 +91,12 @@ public class WeaponDamage : MonoBehaviour
         {
             if (canDoDamage && collision.tag == "NPC")
             {
-                collision.GetComponent<BasicStats>().TakeDamage(equipment.minBaseDamage);
+                BasicStats NPCStats = collision.GetComponent<BasicStats>();
+                NPCStats.TakeDamage(itemData.damage);
                 canDoDamage = false;
-                SpawnBlood(collision.transform);
+
+                float percentDamage = itemData.damage / NPCStats.maxHealth;
+                SpawnBlood(collision.transform, percentDamage);
 
                 if (playerAttack.leftArmAttacking)
                 {
@@ -106,9 +111,12 @@ public class WeaponDamage : MonoBehaviour
         {
             if (canDoDamage && collision.tag == "NPC")
             {
-                collision.GetComponent<BasicStats>().TakeDamage(equipment.minBaseDamage);
+                BasicStats NPCStats = collision.GetComponent<BasicStats>();
+                NPCStats.TakeDamage(itemData.damage);
                 canDoDamage = false;
-                SpawnBlood(collision.transform);
+
+                float percentDamage = itemData.damage / NPCStats.maxHealth;
+                SpawnBlood(collision.transform, percentDamage);
 
                 if (playerAttack.rightArmAttacking)
                 {

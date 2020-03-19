@@ -38,13 +38,13 @@ public class BloodParticleSystemHandler : MonoBehaviour {
         }
     }
 
-    public void SpawnBlood(Vector3 position, Vector3 direction, bool spawnBloodUnderneath) {
-        float bloodParticleCount = Random.Range(2, 6);
+    public void SpawnBlood(Vector3 position, Vector3 direction, float percentDamage, bool spawnBloodUnderneath)
+    {
+        float bloodParticleCount = percentDamage * 10;//Random.Range(2, 6);
         for (int i = 0; i < bloodParticleCount; i++) {
             singleList.Add(new Single(position, UtilsClass.ApplyRotationToVector(direction, Random.Range(-15f, 15f)), spawnBloodUnderneath, meshParticleSystem));
         }
     }
-
 
     /*
      * Represents a single Dirt Particle

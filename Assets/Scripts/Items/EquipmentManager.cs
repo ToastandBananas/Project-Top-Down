@@ -250,6 +250,9 @@ public class EquipmentManager : MonoBehaviour
     {
         GameObject weaponBase = Instantiate(weaponBasePrefab, weaponParent);
         GameObject weapon = Instantiate(newItem.prefab, weaponBase.transform);
+
+        itemData.TransferData(itemData, weapon.GetComponent<ItemData>());
+
         weapon.name = itemData.itemName;
         weapon.GetComponent<SpriteRenderer>().sprite = newItem.sprite;
         weapon.GetComponent<BoxCollider2D>().enabled = true;

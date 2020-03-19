@@ -16,6 +16,7 @@ public class SaveLoad : MonoBehaviour
     Inventory inv;
     InventoryUI invUI;
     EquipmentManager playerEquipmentManager;
+    MeshParticleSystem meshParticleSystem;
     GameObject NPCsParent;
     GameObject looseItemsParent;
     GameObject containersParent;
@@ -46,6 +47,7 @@ public class SaveLoad : MonoBehaviour
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
         playerEquipmentManager = GameObject.Find("Player").GetComponent<EquipmentManager>();
+        meshParticleSystem = FindObjectOfType<MeshParticleSystem>();
         NPCsParent = GameObject.Find("NPCs");
         looseItemsParent = GameObject.Find("Loose Items");
         containersParent = GameObject.Find("Containers");
@@ -113,7 +115,9 @@ public class SaveLoad : MonoBehaviour
         autosaveSceneName = ES3.Load<string>("autosaveSceneName", "AutoSaveSceneName.es3");
 
         if (autosaveSceneName != SceneManager.GetActiveScene().name)
-            SceneManager.LoadScene(autosaveSceneName);
+            SceneManager.LoadScene(autosaveSceneName); // Load the scene that the player was in when they saved
+        else
+            meshParticleSystem.SetUpMesh(); // Reset any blood in the scene
 
         // Destroy all inventory slots before loading in the ones from the save file...
         // (We do this because since we Instantiate the slots when starting up the game, the load function won't 
@@ -211,18 +215,6 @@ public class SaveLoad : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         autoSaveManager.Load(autoSaveFileName);
         isLoading = false;
-
-        /*for (int i = 0; i < NPCsParent.transform.childCount; i++)
-        {
-            if (NPCsParent.transform.GetChild(i).childCount > 6)
-            {
-                for (int j = 0; j < NPCsParent.transform.GetChild(i).childCount - 6; j++)
-                {
-                    if (NPCsParent.transform.GetChild(i).GetChild(j + 6) != null)
-                        Destroy(NPCsParent.transform.GetChild(i).GetChild(j + 6).gameObject);
-                }
-            }
-        }*/
     }
 
     IEnumerator SetSlots()

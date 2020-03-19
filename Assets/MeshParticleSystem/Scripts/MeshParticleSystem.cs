@@ -32,8 +32,33 @@ public class MeshParticleSystem : MonoBehaviour
 
     bool updateVertices, updateUV, updateTriangles;
 
-
     void Awake()
+    {
+        SetUpMesh();
+    }
+
+    void LateUpdate()
+    {
+        if (updateVertices)
+        {
+            mesh.vertices = vertices;
+            updateVertices = false;
+        }
+
+        if (updateUV)
+        {
+            mesh.uv = uv;
+            updateUV = false;
+        }
+
+        if (updateTriangles)
+        {
+            mesh.triangles = triangles;
+            updateTriangles = false;
+        }
+    }
+
+    public void SetUpMesh()
     {
         mesh = new Mesh();
 
@@ -67,27 +92,6 @@ public class MeshParticleSystem : MonoBehaviour
         }
 
         uvCoordsArray = uvCoordsList.ToArray();
-    }
-
-    void LateUpdate()
-    {
-        if (updateVertices)
-        {
-            mesh.vertices = vertices;
-            updateVertices = false;
-        }
-
-        if (updateUV)
-        {
-            mesh.uv = uv;
-            updateUV = false;
-        }
-
-        if (updateTriangles)
-        {
-            mesh.triangles = triangles;
-            updateTriangles = false;
-        }
     }
 
     public int AddQuad(Vector3 position, float rotation, Vector3 quadSize, bool isSkewed, int uvIndex)

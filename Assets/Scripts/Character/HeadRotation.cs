@@ -39,15 +39,19 @@ public class HeadRotation : MonoBehaviour
 
             foreach (Transform target in fov.visibleTargets)
             {
-                float distance = Vector2.Distance(transform.position, target.position);
-                if (distance < closestPointOfInterestDist || closestPointOfInterestDist == 0)
+                if (target != null)
                 {
-                    closestPointOfInterestDist = distance;
-                    closestPointOfInterest = target;
+                    float distance = Vector2.Distance(transform.position, target.position);
+                    if (distance < closestPointOfInterestDist || closestPointOfInterestDist == 0)
+                    {
+                        closestPointOfInterestDist = distance;
+                        closestPointOfInterest = target;
+                    }
                 }
             }
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, closestPointOfInterest.position - transform.position), 200f * Time.fixedDeltaTime);
+            if (closestPointOfInterest != null)
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, closestPointOfInterest.position - transform.position), 200f * Time.fixedDeltaTime);
         }
         else
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, headReset.position - transform.position), 200f * Time.fixedDeltaTime);
@@ -55,6 +59,7 @@ public class HeadRotation : MonoBehaviour
 
     void LookAtLockOnTarget()
     {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, player.lockOnTarget.position - transform.position), 200f * Time.fixedDeltaTime);
+        if (player.lockOnTarget != null)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, player.lockOnTarget.position - transform.position), 200f * Time.fixedDeltaTime);
     }
 }
