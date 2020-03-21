@@ -24,7 +24,6 @@ namespace ES3Types
 			writer.WritePropertyByRef("attackTarget", instance.attackTarget);
 			writer.WriteProperty("walkSpeed", instance.walkSpeed, ES3Type_float.Instance);
 			writer.WriteProperty("runSpeed", instance.runSpeed, ES3Type_float.Instance);
-			writer.WriteProperty("attackDistance", instance.attackDistance, ES3Type_float.Instance);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
@@ -52,9 +51,6 @@ namespace ES3Types
 						break;
 					case "runSpeed":
 						instance.runSpeed = reader.Read<System.Single>(ES3Type_float.Instance);
-						break;
-					case "attackDistance":
-						instance.attackDistance = reader.Read<System.Single>(ES3Type_float.Instance);
 						break;
 					default:
 						reader.Skip();

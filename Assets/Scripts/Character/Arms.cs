@@ -20,9 +20,9 @@ public class Arms : MonoBehaviour
 
     public Transform leftArm, rightArm;
     public Equipment leftWeapon, rightWeapon;
-    Animator leftArmAnim, rightArmAnim;
+    public Animator leftArmAnim, rightArmAnim;
     
-    void Start()
+    void Awake()
     {
         StartCoroutine(SetArmAnims(0.05f));
     }
@@ -36,6 +36,9 @@ public class Arms : MonoBehaviour
 
         if (leftWeapon != null)
         {
+            leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().enabled = true;
+            leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<BoxCollider2D>().enabled = true;
+
             if (leftWeapon.generalClassification == GeneralClassification.Shield)
             {
                 leftShieldEquipped = true;
@@ -71,6 +74,9 @@ public class Arms : MonoBehaviour
         
         if (rightWeapon != null)
         {
+            rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().enabled = true;
+            rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<BoxCollider2D>().enabled = true;
+
             if (rightWeapon.generalClassification == GeneralClassification.Shield)
             {
                 rightShieldEquipped = true;
@@ -103,11 +109,27 @@ public class Arms : MonoBehaviour
 
         leftArm = transform.Find("Left Arm");
         rightArm = transform.Find("Right Arm");
-
+        
         leftArmAnim = leftArm.GetComponent<Animator>();
         rightArmAnim = rightArm.GetComponent<Animator>();
 
         SetLeftAnims();
         SetRightAnims();
+    }
+
+    public void RaiseShield()
+    {
+        if (leftShieldEquipped)
+            leftArmAnim.SetBool("isBlocking", true);
+        else if (rightShieldEquipped)
+            rightArmAnim.SetBool("isBlocking", true);
+    }
+
+    public void LowerShield()
+    {
+        if (leftShieldEquipped)
+            leftArmAnim.SetBool("isBlocking", false);
+        if (rightShieldEquipped)
+            rightArmAnim.SetBool("isBlocking", false);
     }
 }

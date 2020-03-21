@@ -14,21 +14,23 @@ public class WeaponDamage : MonoBehaviour
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
     PlayerSpecialAttack playerSpecialAttack;
+    NPCAttacks npcAttacks;
     Transform thisWeapon;
     Transform weaponOwner;
-    Transform weaponOwnwerHeadReset;
+    Transform weaponOwnerHeadReset;
 
     LayerMask obstacleMask;
 
     void Start()
     {
         bloodSystem = BloodParticleSystemHandler.Instance;
-        playerAttack = PlayerAttack.instance;
-        playerMovement = playerAttack.GetComponent<PlayerMovement>();
-        playerSpecialAttack = FindObjectOfType<PlayerSpecialAttack>();
         thisWeapon = transform.parent.parent;
         weaponOwner = transform.parent.parent.parent.parent.parent.parent;
-        weaponOwnwerHeadReset = weaponOwner.Find("Head Reset");
+        weaponOwnerHeadReset = weaponOwner.Find("Head Reset");
+        playerAttack = weaponOwner.GetComponent<PlayerAttack>();
+        playerSpecialAttack = weaponOwner.GetComponent<PlayerSpecialAttack>();
+        playerMovement = PlayerMovement.instance;
+        npcAttacks = weaponOwner.GetComponent<NPCAttacks>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
         itemData = GetComponent<ItemData>();
         equipment = itemData.equipment;
@@ -54,7 +56,7 @@ public class WeaponDamage : MonoBehaviour
 
     void Knockback(Transform whoToKnockback, float knockbackDistance)
     {
-        Vector3 dir = (weaponOwnwerHeadReset.position - weaponOwner.position).normalized;
+        Vector3 dir = (weaponOwnerHeadReset.position - weaponOwner.position).normalized;
         float raycastDistance = Vector3.Distance(whoToKnockback.position, whoToKnockback.position + dir * knockbackDistance);
         RaycastHit2D hit = Physics2D.Raycast(whoToKnockback.position, dir, raycastDistance, obstacleMask);
 
@@ -87,44 +89,74 @@ public class WeaponDamage : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (thisWeapon.name == "Left Weapon" && (playerAttack.leftArmAttacking || playerAttack.leftQuickAttacking))
+        if (thisWeapon.name == "Left Weapon" 
+            && (playerAttack != null && (playerAttack.leftArmAttacking || playerAttack.leftQuickAttacking))
+            || (npcAttacks != null && (npcAttacks.leftArmAttacking || npcAttacks.leftQuickAttacking)))
         {
-            if (canDoDamage && collision.tag == "NPC")
+            if (canDoDamage && collision.gameObject != weaponOwner.gameObject && (collision.tag == "NPC" || collision.tag == "Player"))
             {
-                BasicStats NPCStats = collision.GetComponent<BasicStats>();
-                NPCStats.TakeDamage(itemData.damage);
+                BasicStats basicStats = collision.GetComponent<BasicStats>();
+                basicStats.TakeDamage(itemData.damage);
                 canDoDamage = false;
 
-                float percentDamage = itemData.damage / NPCStats.maxHealth;
+                float percentDamage = itemData.damage / basicStats.maxHealth;
                 SpawnBlood(collision.transform, percentDamage);
 
-                if (playerAttack.leftArmAttacking)
+                if (playerAttack != null)
                 {
-                    Knockback(collision.transform, equipment.knockbackPower);
-                    StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                    if (playerAttack.leftArmAttacking)
+                    {
+                        Knockback(collision.transform, equipment.knockbackPower);
+                        StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                    }
+                    else if (playerAttack.leftQuickAttacking)
+                        StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
                 }
-                else if (playerAttack.leftQuickAttacking)
-                    StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
+                else if (npcAttacks != null)
+                {
+                    if (npcAttacks.leftArmAttacking)
+                    {
+                        Knockback(collision.transform, equipment.knockbackPower);
+                        StartCoroutine(DamageCooldown(npcAttacks.leftHeavyAttackTime));
+                    }
+                    else if (npcAttacks.leftQuickAttacking)
+                        StartCoroutine(DamageCooldown(npcAttacks.leftQuickAttackTime));
+                }
             }
         }
-        else if (thisWeapon.name == "Right Weapon" && (playerAttack.rightArmAttacking || playerAttack.rightQuickAttacking))
+        else if (thisWeapon.name == "Right Weapon" 
+            && (playerAttack != null && (playerAttack.rightArmAttacking || playerAttack.rightQuickAttacking))
+            || (npcAttacks != null && (npcAttacks.rightArmAttacking || npcAttacks.rightQuickAttacking)))
         {
-            if (canDoDamage && collision.tag == "NPC")
+            if (canDoDamage && collision.gameObject != weaponOwner.gameObject && (collision.tag == "NPC" || collision.tag == "Player"))
             {
-                BasicStats NPCStats = collision.GetComponent<BasicStats>();
-                NPCStats.TakeDamage(itemData.damage);
+                BasicStats basicStats = collision.GetComponent<BasicStats>();
+                basicStats.TakeDamage(itemData.damage);
                 canDoDamage = false;
 
-                float percentDamage = itemData.damage / NPCStats.maxHealth;
+                float percentDamage = itemData.damage / basicStats.maxHealth;
                 SpawnBlood(collision.transform, percentDamage);
 
-                if (playerAttack.rightArmAttacking)
+                if (playerAttack != null)
                 {
-                    Knockback(collision.transform, equipment.knockbackPower);
-                    StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                    if (playerAttack.rightArmAttacking)
+                    {
+                        Knockback(collision.transform, equipment.knockbackPower);
+                        StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                    }
+                    else if (playerAttack.rightQuickAttacking)
+                        StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
                 }
-                else if (playerAttack.rightQuickAttacking)
-                    StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
+                else if (npcAttacks != null)
+                {
+                    if (npcAttacks.rightArmAttacking)
+                    {
+                        Knockback(collision.transform, equipment.knockbackPower);
+                        StartCoroutine(DamageCooldown(npcAttacks.rightHeavyAttackTime));
+                    }
+                    else if (npcAttacks.rightQuickAttacking)
+                        StartCoroutine(DamageCooldown(npcAttacks.rightQuickAttackTime));
+                }
             }
         }
     }

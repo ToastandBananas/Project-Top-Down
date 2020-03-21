@@ -5,7 +5,7 @@ public class HeadRotation : MonoBehaviour
     /// <summary>Empty gameObject in front of the player that we use the position of to reset our head's rotation.</summary>
     Transform headReset;
     FieldOfView fov;
-    PlayerMovement player;
+    LockOn lockOnScript;
 
     Transform[] pointsOfInterest;
     Transform closestPointOfInterest;
@@ -17,13 +17,13 @@ public class HeadRotation : MonoBehaviour
     void Start()
     {
         fov = GetComponentInParent<FieldOfView>();
-        player = FindObjectOfType<PlayerMovement>();
+        lockOnScript = transform.parent.GetComponent<LockOn>();
         headReset = fov.transform.Find("Head Reset");
     }
     
     void FixedUpdate()
     {
-        if (fov.gameObject.tag == "Player" && player.isLockedOn)
+        if (lockOnScript.isLockedOn)
             LookAtLockOnTarget();
         else
             LookAtPointsOfInterest();
@@ -59,7 +59,7 @@ public class HeadRotation : MonoBehaviour
 
     void LookAtLockOnTarget()
     {
-        if (player.lockOnTarget != null)
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, player.lockOnTarget.position - transform.position), 200f * Time.fixedDeltaTime);
+        if (lockOnScript.lockOnTarget != null)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.forward, lockOnScript.lockOnTarget.position - transform.position), 200f * Time.fixedDeltaTime);
     }
 }

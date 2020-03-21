@@ -10,6 +10,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
+    LockOn playerLockOnScript;
     Arms arms;
     Transform headReset;
     
@@ -19,8 +20,9 @@ public class PlayerSpecialAttack : MonoBehaviour
     
     void Start()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
+        playerMovement = PlayerMovement.instance;
         playerAttack = PlayerAttack.instance;
+        playerLockOnScript = GetComponent<LockOn>();
         arms = transform.root.Find("Arms").GetComponent<Arms>();
         headReset = playerMovement.transform.Find("Head Reset");
         leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
@@ -89,8 +91,8 @@ public class PlayerSpecialAttack : MonoBehaviour
         {
             rightArmAnim.SetBool("doShieldBash", true);
 
-            if (playerMovement.isLockedOn)
-                StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (playerMovement.lockOnTarget.transform.position - playerMovement.transform.position).normalized * 1f));
+            if (playerLockOnScript.isLockedOn)
+                StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (playerLockOnScript.lockOnTarget.transform.position - playerMovement.transform.position).normalized * 1f));
             else
                 StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (headReset.position - playerMovement.transform.position).normalized * 1f));
 
@@ -104,6 +106,4 @@ public class PlayerSpecialAttack : MonoBehaviour
         leftArmAnim.SetBool("doShieldBash", false);
         rightArmAnim.SetBool("doShieldBash", false);
     }
-
-    
 }

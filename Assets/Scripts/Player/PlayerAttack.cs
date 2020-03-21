@@ -1,14 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public enum QUICK_ATTACK_TURN { LEFT, RIGHT }
 
 public class PlayerAttack : MonoBehaviour
 {
     public static PlayerAttack instance;
-
-    QUICK_ATTACK_TURN currentQuickAttackTurn;
 
     PlayerMovement playerMovement;
     Transform headReset;
@@ -24,6 +19,8 @@ public class PlayerAttack : MonoBehaviour
     [HideInInspector] public float leftQuickAttackTime;
     [HideInInspector] public float rightQuickAttackTime;
     [HideInInspector] public float leftChargeAttackTime;
+    [HideInInspector] public float leftHeavyAttackTime;
+    [HideInInspector] public float rightHeavyAttackTime;
     [HideInInspector] public float rightChargeAttackTime;
     [HideInInspector] public float shieldBashTime;
 
@@ -52,7 +49,7 @@ public class PlayerAttack : MonoBehaviour
         leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
-        UpdateAnimClipTimes();
+        StartCoroutine(UpdateAnimClipTimes());
     }
     
     void Update()
@@ -252,8 +249,9 @@ public class PlayerAttack : MonoBehaviour
             StartCoroutine(playerMovement.SmoothMovement(transform.position + dir * dashDistance));
     }
 
-    public void UpdateAnimClipTimes()
+    public IEnumerator UpdateAnimClipTimes()
     {
+        yield return new WaitForSeconds(0.1f);
         leftArmAnimClips = leftArmAnim.runtimeAnimatorController.animationClips;
         rightArmAnimClips = rightArmAnim.runtimeAnimatorController.animationClips;
 
@@ -263,6 +261,9 @@ public class PlayerAttack : MonoBehaviour
             {
                 case "Quick_Attack_1H_L":
                     leftQuickAttackTime = clip.length;
+                    break;
+                case "Heavy_Attack_1H_L":
+                    leftHeavyAttackTime = clip.length;
                     break;
                 case "Attack_1H_Close_L":
                     leftChargeAttackTime = clip.length;
@@ -279,6 +280,9 @@ public class PlayerAttack : MonoBehaviour
             {
                 case "Quick_Attack_1H_R":
                     rightQuickAttackTime = clip.length;
+                    break;
+                case "Heavy_Attack_1H_R":
+                    rightHeavyAttackTime = clip.length;
                     break;
                 case "Attack_1H_Close_R":
                     rightChargeAttackTime = clip.length;

@@ -24,6 +24,9 @@ public class QuantityMenu : MonoBehaviour
 
     void Update()
     {
+        if (EventSystem.current.currentSelectedGameObject != null)
+            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+
         if ((GameControls.gamePlayActions.menuSelect.WasPressed || GameControls.gamePlayActions.menuContext.WasPressed || Input.GetMouseButtonDown(2))
             && (EventSystem.current.currentSelectedGameObject == null 
             || (EventSystem.current.currentSelectedGameObject != gameObject

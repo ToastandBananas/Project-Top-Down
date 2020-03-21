@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public enum STATE { IDLE, PATROL, PURSUE, ATTACK };
-public enum ALLIANCE { NEUTRAL, PLAYER, BANDITS };
+public enum STATE { IDLE, PATROL, PURSUE, COMBAT, FLEE };
+public enum ALLIANCE { NEUTRAL, PLAYER, BANDITS, GUARDS };
 
 public class NPCMovement : MonoBehaviour
 {
-    public STATE currentState;
+    public STATE defaultState = STATE.IDLE;
+    public STATE currentState = STATE.IDLE;
     public ALLIANCE currentAlliance = ALLIANCE.NEUTRAL;
 
     public Transform targetPos;
@@ -15,26 +16,25 @@ public class NPCMovement : MonoBehaviour
 
     public float walkSpeed = 2f;
     public float runSpeed = 3f;
-    public float attackDistance = 1.3f;
 
     FieldOfView fov;
     AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
     Animator anim, legsAnim, leftArmAnim, rightArmAnim;
+    NPCCombat npcCombat;
 
     Transform closestTarget;
     float closestTargetDist;
     
     void Start()
     {
-        currentState = STATE.IDLE;
-
         anim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         patrolPoint = transform.Find("Patrol Point");
+        npcCombat = GetComponent<NPCCombat>();
 
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
@@ -42,7 +42,7 @@ public class NPCMovement : MonoBehaviour
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
 
         AIPath.maxSpeed = walkSpeed;
-        AIPath.endReachedDistance = attackDistance;
+        AIPath.endReachedDistance = npcCombat.attackDistance;
 
         if (attackTarget != null)
         {
@@ -65,12 +65,12 @@ public class NPCMovement : MonoBehaviour
         if (fov.visibleTargets.Count > 0)
         {
             closestTarget = null;
-            closestTargetDist = -100;
+            closestTargetDist = 0;
 
             foreach (Transform target in fov.visibleTargets)
             {
                 float dist = Vector2.Distance(transform.position, target.position);
-                if (closestTargetDist == -100 || dist < closestTargetDist)
+                if (closestTarget == null || dist < closestTargetDist)
                 {
                     closestTargetDist = dist;
                     closestTarget = target;
@@ -80,19 +80,24 @@ public class NPCMovement : MonoBehaviour
             if (closestTarget != null)
             {
                 attackTarget = closestTarget;
-                AIDestSetter.target = attackTarget;
-                currentState = STATE.PURSUE;
+                if (currentState != STATE.COMBAT)
+                {
+                    AIDestSetter.target = attackTarget;
+                    currentState = STATE.PURSUE;
+                }
             }
         }
+
+        if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) < npcCombat.combatDistance)
+            currentState = STATE.COMBAT;
+        else if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) >= npcCombat.combatDistance)
+            currentState = STATE.PURSUE;
+        else
+            currentState = defaultState;
     }
 
     void Movement()
     {
-        if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) < attackDistance)
-            currentState = STATE.ATTACK;
-        else if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) >= attackDistance)
-            currentState = STATE.PURSUE;
-
         // NPC's don't move sideways currently, so set these to false
         legsAnim.SetBool("isMovingRight", false);
         legsAnim.SetBool("isMovingLeft", false);
@@ -107,11 +112,21 @@ public class NPCMovement : MonoBehaviour
             SetIsMoving(true);
             AIPath.maxSpeed = walkSpeed;
         }
-        else if (currentState == STATE.ATTACK)
+        else if (currentState == STATE.COMBAT)
         {
-            SetIsMoving(false);
+            if (Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.attackDistance)
+                SetIsMoving(true);
+            else
+                SetIsMoving(false);
+            AIPath.maxSpeed = runSpeed;
+
+            npcCombat.DetermineCombatActions();
 
             // Debug.Log(name + " attacked you.");
+        }
+        else if (currentState == STATE.FLEE)
+        {
+            SetIsMoving(true);
         }
         else // Idle
         {
@@ -129,8 +144,13 @@ public class NPCMovement : MonoBehaviour
 
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
+        float timer = 0;
         while (Vector2.Distance(transform.position, targetPos) > 0.01f)
         {
+            timer += Time.smoothDeltaTime;
+            if (timer > 5f)
+                break;
+
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
             yield return null; // Pause for one frame
         }

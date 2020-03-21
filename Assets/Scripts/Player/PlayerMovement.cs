@@ -5,35 +5,28 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
 
-    public Transform effectsPrefab;
+    public Vector2 movementInput;
 
     public float moveSpeed;
     public float runSpeed = 3f;
+    float walkSpeed;
     public float dodgeDistance = 1f;
     public float dodgeCooldownTime = 1f;
-    float walkSpeed;
+    public bool isMoving;
 
     public bool isMounted;
-    public bool isLockedOn;
-    public Transform lockOnTarget;
 
     Animator anim, legsAnim, rightArmAnim, leftArmAnim;
     Rigidbody2D rb;
     Camera cam;
     PlayerAttack playerAttack;
-    FieldOfView fov;
-
     Transform headReset;
 
-    Vector2 movementInput;
     float angleToRotateTowards;
     Vector3 dir;
     Vector3 move;
     Vector3 lastMoveDir;
     bool canDodge = true;
-    bool isMoving;
-    bool canSwitchLockOnTarget = true;
-    float maxLockOnDist = 12f;
 
     LayerMask obstacleMask;
 
@@ -58,7 +51,6 @@ public class PlayerMovement : MonoBehaviour
         rb   = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
-        fov = GetComponent<FieldOfView>();
         headReset = transform.Find("Head Reset");
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
@@ -71,18 +63,12 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Update_Dodge();
-        Update_LockOn();
     }
 
     void FixedUpdate()
     {
         if (canDodge)
             Update_Movement();
-
-        if (isLockedOn == false)
-            FaceForward();
-        else
-            FaceLockOnTarget();
 
         /*if (Vector2.Distance(transform.position, cam.ScreenToWorldPoint(Input.mousePosition)) > 0.25f)
         {
@@ -163,95 +149,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Update_LockOn()
-    {
-        if (GameControls.gamePlayActions.playerLockOn.WasPressed)
-        {
-            if (isLockedOn == false)
-            {
-                fov.closestEnemy = fov.GetClosestEnemy();
-
-                if (fov.closestEnemy != null)
-                {
-                    isLockedOn = true;
-                    lockOnTarget = fov.closestEnemy;
-                }
-            }
-            else
-                UnLockOn();
-        }
-
-        if (isLockedOn)
-        {
-            if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value < -0.3f && canSwitchLockOnTarget)
-            {
-                fov.GetNearbyEnemies();
-
-                if (fov.nearbyEnemies.Count > 1)
-                {
-                    int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
-
-                    if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[0])
-                        lockOnTarget = fov.nearbyEnemies[fov.nearbyEnemies.Count - 1];
-                    else
-                        lockOnTarget = fov.nearbyEnemies[closestEnemyIndex - 1];
-
-                    canSwitchLockOnTarget = false;
-                    StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
-                }
-            }
-            else if (GameControls.gamePlayActions.playerSwitchLockOnTargetAxis.Value > 0.3f && canSwitchLockOnTarget)
-            {
-                fov.GetNearbyEnemies();
-
-                if (fov.nearbyEnemies.Count > 1)
-                {
-                    int closestEnemyIndex = fov.nearbyEnemies.IndexOf(lockOnTarget);
-
-                    if (fov.nearbyEnemies[closestEnemyIndex] == fov.nearbyEnemies[fov.nearbyEnemies.Count - 1])
-                        lockOnTarget = fov.nearbyEnemies[0];
-                    else
-                        lockOnTarget = fov.nearbyEnemies[closestEnemyIndex + 1];
-
-                    canSwitchLockOnTarget = false;
-                    StartCoroutine(LockOnSwitchTargetCooldown(0.25f));
-                }
-            }
-        }
-
-        if (lockOnTarget != null && Vector2.Distance(transform.position, lockOnTarget.position) > maxLockOnDist)
-            UnLockOn();
-    }
-
-    void UnLockOn()
-    {
-        isLockedOn = false;
-        lockOnTarget = null;
-    }
-
-    void FaceLockOnTarget()
-    {
-        if (lockOnTarget != null)
-        {
-            dir = lockOnTarget.transform.position - transform.position;
-            angleToRotateTowards = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(angleToRotateTowards, Vector3.forward), 300f * Time.fixedDeltaTime);
-        }
-        else
-            UnLockOn();
-    }
-
-    void FaceForward()
-    {
-        if (isMoving)
-            dir = movementInput;
-        else
-            dir = headReset.position - transform.position;
-
-        angleToRotateTowards = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(angleToRotateTowards, Vector3.forward), 300f * Time.fixedDeltaTime);
-    }
-
     void LookAtMouse()
     {
         dir = Input.mousePosition - cam.WorldToScreenPoint(transform.position);
@@ -280,12 +177,6 @@ public class PlayerMovement : MonoBehaviour
         return Physics2D.Raycast(transform.position, dir, distance, obstacleMask).collider == null;
     }
 
-    IEnumerator LockOnSwitchTargetCooldown(float cooldownTime)
-    {
-        yield return new WaitForSeconds(cooldownTime);
-        canSwitchLockOnTarget = true;
-    }
-
     IEnumerator DodgeCooldown(float cooldownTime)
     {
         yield return new WaitForSeconds(cooldownTime);
@@ -311,8 +202,13 @@ public class PlayerMovement : MonoBehaviour
 
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
-        while (Vector2.Distance(transform.position, targetPos) > 0.01f)
+        float timer = 0;
+        while (Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
+            timer += Time.smoothDeltaTime;
+            if (timer > 5f)
+                break;
+
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
             yield return null; // Pause for one frame
         }
