@@ -206,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
         while (Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
             timer += Time.smoothDeltaTime;
-            if (timer > 5f)
+            if (timer > 1f)
                 break;
 
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);

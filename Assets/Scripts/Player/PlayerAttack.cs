@@ -6,6 +6,7 @@ public class PlayerAttack : MonoBehaviour
     public static PlayerAttack instance;
 
     PlayerMovement playerMovement;
+    BasicStats stats;
     Transform headReset;
     
     Arms arms;
@@ -24,6 +25,8 @@ public class PlayerAttack : MonoBehaviour
     [HideInInspector] public float rightChargeAttackTime;
     [HideInInspector] public float shieldBashTime;
 
+    float heavyAttackStaminaMultiplier = 1.75f;
+
     public float minChargeAttackTime = 0.3f;
     public bool isBlocking;
     public bool leftArmAttacking, rightArmAttacking;
@@ -41,7 +44,8 @@ public class PlayerAttack : MonoBehaviour
 
     void Start()
     {
-        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = PlayerMovement.instance;
+        stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
         bodyAnim = GetComponent<Animator>();
         arms = transform.Find("Arms").GetComponent<Arms>();
@@ -167,20 +171,28 @@ public class PlayerAttack : MonoBehaviour
         {
             if (attackTimerLeftArm > minChargeAttackTime)
             {
-                leftArmAttacking = true;
-                leftArmAnim.SetBool("startAttack", false);
-                leftArmAnim.SetBool("doAttack", true);
-                bodyAnim.SetBool("powerAttackLeft", true);
+                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                {
+                    leftArmAttacking = true;
+                    leftArmAnim.SetBool("doAttack", true);
+                    bodyAnim.SetBool("powerAttackLeft", true);
 
-                AttackDash(0.5f);
+                    AttackDash(0.5f);
+                }
+
+                leftArmAnim.SetBool("startAttack", false);
             }
             else
             {
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                {
+                    leftQuickAttacking = true;
+                    leftArmAnim.SetBool("doQuickAttack", true);
+                    StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
+                }
+
                 leftArmAnim.SetBool("startAttack", false);
-                leftQuickAttacking = true;
-                leftArmAnim.SetBool("doQuickAttack", true);
                 attackTimerLeftArm = 0;
-                StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
             }
 
             StartCoroutine(ResetChargeAttackTimerLeftArm(leftChargeAttackTime));
@@ -210,20 +222,28 @@ public class PlayerAttack : MonoBehaviour
         {
             if (attackTimerRightArm > minChargeAttackTime)
             {
-                rightArmAttacking = true;
-                rightArmAnim.SetBool("startAttack", false);
-                rightArmAnim.SetBool("doAttack", true);
-                bodyAnim.SetBool("powerAttackRight", true);
+                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                {
+                    rightArmAttacking = true;
+                    rightArmAnim.SetBool("doAttack", true);
+                    bodyAnim.SetBool("powerAttackRight", true);
 
-                AttackDash(0.5f);
+                    AttackDash(0.5f);
+                }
+
+                rightArmAnim.SetBool("startAttack", false);
             }
             else
             {
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                {
+                    rightQuickAttacking = true;
+                    rightArmAnim.SetBool("doQuickAttack", true);
+                    StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
+                }
+
                 rightArmAnim.SetBool("startAttack", false);
-                rightQuickAttacking = true;
-                rightArmAnim.SetBool("doQuickAttack", true);
                 attackTimerRightArm = 0;
-                StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
             }
 
             StartCoroutine(ResetChargeAttackTimerRightArm(rightChargeAttackTime));

@@ -7,7 +7,8 @@ public class PlayerStatBar : MonoBehaviour
 {
     public StatType thisStatType;
 
-    RectTransform backgroundRect;
+    Slider slider;
+    RectTransform rectTransform;
     Transform bar;
     Image barSprite;
     RectTransform barSpriteRect;
@@ -15,15 +16,13 @@ public class PlayerStatBar : MonoBehaviour
 
     void Awake()
     {
-        backgroundRect = transform.Find("Background").GetComponent<RectTransform>();
-        bar = transform.Find("Bar");
-        barSprite = bar.Find("Bar Sprite").GetComponent<Image>();
-        barSpriteRect = barSprite.GetComponent<RectTransform>();
+        slider = GetComponent<Slider>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     void Start()
     {
-        playerStats = FindObjectOfType<PlayerMovement>().GetComponent<BasicStats>();
+        playerStats = PlayerMovement.instance.GetComponent<BasicStats>();
 
         ChangeBar();
     }
@@ -34,15 +33,15 @@ public class PlayerStatBar : MonoBehaviour
         {
             case StatType.HEALTH:
                 SetBarSize(playerStats.maxHealth);
-                SetBarFill(playerStats.health / playerStats.maxHealth);
+                SetBarFill(playerStats.health);
                 break;
             case StatType.MANA:
                 SetBarSize(playerStats.maxMana);
-                SetBarFill(playerStats.mana / playerStats.maxMana);
+                SetBarFill(playerStats.mana);
                 break;
             case StatType.STAMINA:
                 SetBarSize(playerStats.maxStamina);
-                SetBarFill(playerStats.stamina / playerStats.maxStamina);
+                SetBarFill(playerStats.stamina);
                 break;
             case StatType.EXPERIENCE:
                 Debug.Log("Experience bar system still needs created");
@@ -50,9 +49,9 @@ public class PlayerStatBar : MonoBehaviour
         }
     }
 
-    public void SetBarFill(float sizeNormalized)
+    public void SetBarFill(float statValue)
     {
-        bar.localScale = new Vector3(sizeNormalized, 1f);
+        slider.value = statValue;
     }
 
     public void SetColor(Color color)
@@ -62,8 +61,7 @@ public class PlayerStatBar : MonoBehaviour
 
     public void SetBarSize(float maxStatValue)
     {
-        backgroundRect.sizeDelta = new Vector2(maxStatValue * 2, 20);
-        barSpriteRect.sizeDelta  = new Vector2(maxStatValue * 2, 20);
-        barSpriteRect.anchoredPosition = new Vector2(maxStatValue * 0.2f, 0);
+        slider.maxValue = maxStatValue;
+        rectTransform.sizeDelta = new Vector2(maxStatValue * 2, 28);
     }
 }

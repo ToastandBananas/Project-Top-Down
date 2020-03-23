@@ -1601,22 +1601,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 50
+  maxHealth: 100
   health: 50
-  maxStamina: 50
-  stamina: 50
   maxMana: 50
   mana: 50
+  maxStamina: 50
+  stamina: 50
+  staminaRegenRate: 5
   maxEncumbrance: 100
   encumbrance: 0
   defense: 0
   isPlayer: 1
   isDead: 0
-  leftWeaponItemDrop: {fileID: 0}
-  rightWeaponItemDrop: {fileID: 0}
-  playerHealthStatBar: {fileID: 0}
-  playerManaStatBar: {fileID: 0}
-  playerStaminaStatBar: {fileID: 0}
 --- !u!114 &5498091333407413291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1676,6 +1672,8 @@ MonoBehaviour:
   leftQuickAttackTime: 0
   rightQuickAttackTime: 0
   leftChargeAttackTime: 0
+  leftHeavyAttackTime: 0
+  rightHeavyAttackTime: 0
   rightChargeAttackTime: 0
   shieldBashTime: 0
   minChargeAttackTime: 0.3

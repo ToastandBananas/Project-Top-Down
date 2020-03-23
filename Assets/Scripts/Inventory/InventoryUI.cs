@@ -45,7 +45,7 @@ public class InventoryUI : MonoBehaviour
     [HideInInspector] public int maxOverallInventoryHeight = 12;
 
     [Header("Equip Slots")]
-    public EquipSlot[] weaponSlots = new EquipSlot[3];
+    [HideInInspector] public EquipSlot[] weaponSlots = new EquipSlot[3];
     public EquipSlot leftWeaponSlot = null;
     public EquipSlot rightWeaponSlot = null;
     public EquipSlot rangedWeaponSlot = null;
@@ -79,6 +79,9 @@ public class InventoryUI : MonoBehaviour
         }
         #endregion
 
+        inventoryMenu.SetActive(true);
+        playerEquipmentMenu.SetActive(true);
+
         inventory = Inventory.instance;
 
         if (GameManager.instance != null && GameManager.instance.GetComponent<SaveLoad>().isLoading == false)
@@ -93,6 +96,9 @@ public class InventoryUI : MonoBehaviour
         }
 
         SetEquipmentSlotLists();
+
+        inventoryMenu.SetActive(false);
+        playerEquipmentMenu.SetActive(false);
     }
 
     void Start()

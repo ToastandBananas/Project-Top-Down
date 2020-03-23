@@ -18,7 +18,7 @@ namespace ES3Types
 		{
 			var instance = (BasicStats)obj;
 			
-			writer.WriteProperty("level", instance.level, ES3Type_int.Instance);
+			writer.WriteProperty("level", instance.level, ES3Type_float.Instance);
 			writer.WriteProperty("maxHealth", instance.maxHealth, ES3Type_float.Instance);
 			writer.WriteProperty("health", instance.health, ES3Type_float.Instance);
 			writer.WriteProperty("maxStamina", instance.maxStamina, ES3Type_float.Instance);
@@ -41,7 +41,7 @@ namespace ES3Types
 				{
 					
 					case "level":
-						instance.level = reader.Read<System.Int32>(ES3Type_int.Instance);
+						instance.level = reader.Read<System.Single>(ES3Type_float.Instance);
 						break;
 					case "maxHealth":
 						instance.maxHealth = reader.Read<System.Single>(ES3Type_float.Instance);

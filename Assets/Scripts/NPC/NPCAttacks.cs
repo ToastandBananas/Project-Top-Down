@@ -7,9 +7,12 @@ public class NPCAttacks : MonoBehaviour
     Animator bodyAnim;
     NPCCombat npcCombat;
     NPCMovement npcMovement;
+    BasicStats stats;
     Transform headReset;
 
     LayerMask obstacleMask;
+
+    float heavyAttackStaminaMultiplier = 1.75f;
 
     [HideInInspector] public bool leftArmAttacking, rightArmAttacking;
     [HideInInspector] public bool leftQuickAttacking, rightQuickAttacking;
@@ -28,6 +31,7 @@ public class NPCAttacks : MonoBehaviour
         bodyAnim = GetComponent<Animator>();
         npcCombat = GetComponent<NPCCombat>();
         npcMovement = GetComponent<NPCMovement>();
+        stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
 
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
@@ -42,30 +46,50 @@ public class NPCAttacks : MonoBehaviour
         {
             int randomNumber = Random.Range(1, 3);
 
-            if (randomNumber == 1)
+            if (randomNumber == 1) // Use left weapon
+            {
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                {
+                    leftQuickAttacking = true;
+                    arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
+                    StartCoroutine(ResetLeftQuickAttack());
+                }
+                else
+                    npcCombat.determineMoveDirection = true;
+            }
+            else // Use right weapon
+            {
+                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
+                {
+                    rightQuickAttacking = true;
+                    arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
+                    StartCoroutine(ResetRightQuickAttack());
+                }
+                else
+                    npcCombat.determineMoveDirection = true;
+            }
+        }
+        else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
+        {
+            if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
             {
                 leftQuickAttacking = true;
                 arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
                 StartCoroutine(ResetLeftQuickAttack());
             }
             else
+                npcCombat.determineMoveDirection = true;
+        }
+        else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
+        {
+            if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
             {
                 rightQuickAttacking = true;
                 arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
                 StartCoroutine(ResetRightQuickAttack());
             }
-        }
-        else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm
-        {
-            leftQuickAttacking = true;
-            arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
-            StartCoroutine(ResetLeftQuickAttack());
-        }
-        else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm
-        {
-            rightQuickAttacking = true;
-            arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
-            StartCoroutine(ResetRightQuickAttack());
+            else
+                npcCombat.determineMoveDirection = true;
         }
     }
 
@@ -93,7 +117,34 @@ public class NPCAttacks : MonoBehaviour
         {
             int randomNumber = Random.Range(1, 3);
 
-            if (randomNumber == 1)
+            if (randomNumber == 1) // Use left weapon
+            {
+                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                {
+                    leftArmAttacking = true;
+                    arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
+                    StartCoroutine(AttackDash(leftHeavyAttackTime * 0.7f, 0.5f));
+                    StartCoroutine(ResetLeftHeavyAttack());
+                }
+                else
+                    npcCombat.determineMoveDirection = true;
+            }
+            else // Use right weapon
+            {
+                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                {
+                    rightArmAttacking = true;
+                    arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
+                    StartCoroutine(AttackDash(rightHeavyAttackTime * 0.7f, 0.5f));
+                    StartCoroutine(ResetRightHeavyAttack());
+                }
+                else
+                    npcCombat.determineMoveDirection = true;
+            }
+        }
+        else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
+        {
+            if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
             {
                 leftArmAttacking = true;
                 arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
@@ -101,26 +152,19 @@ public class NPCAttacks : MonoBehaviour
                 StartCoroutine(ResetLeftHeavyAttack());
             }
             else
+                npcCombat.determineMoveDirection = true;
+        }
+        else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
+        {
+            if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
             {
                 rightArmAttacking = true;
                 arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
                 StartCoroutine(AttackDash(rightHeavyAttackTime * 0.7f, 0.5f));
                 StartCoroutine(ResetRightHeavyAttack());
             }
-        }
-        else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm
-        {
-            leftArmAttacking = true;
-            arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
-            StartCoroutine(AttackDash(leftHeavyAttackTime * 0.7f, 0.5f));
-            StartCoroutine(ResetLeftHeavyAttack());
-        }
-        else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm
-        {
-            rightArmAttacking = true;
-            arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
-            StartCoroutine(AttackDash(rightHeavyAttackTime * 0.7f, 0.5f));
-            StartCoroutine(ResetRightHeavyAttack());
+            else
+                npcCombat.determineMoveDirection = true;
         }
     }
 

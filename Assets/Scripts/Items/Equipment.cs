@@ -30,6 +30,7 @@ public class Equipment : Item
     public int maxBaseDamage = 1;
     public float damageModifier = 1f;
     public float knockbackPower = 1f;
+    public int baseStaminaUse = 5;
 
     [Header("Armor Stats")]
     public int minBaseDefense = 1;

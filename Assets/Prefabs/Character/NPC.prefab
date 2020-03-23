@@ -1540,20 +1540,16 @@ MonoBehaviour:
   level: 10
   maxHealth: 20
   health: 20
-  maxStamina: 100
-  stamina: 100
   maxMana: 50
   mana: 50
+  maxStamina: 100
+  stamina: 100
+  staminaRegenRate: 5
   maxEncumbrance: 200
   encumbrance: 50
   defense: 20
   isPlayer: 0
   isDead: 0
-  leftWeaponItemDrop: {fileID: 0}
-  rightWeaponItemDrop: {fileID: 0}
-  playerHealthStatBar: {fileID: 0}
-  playerManaStatBar: {fileID: 0}
-  playerStaminaStatBar: {fileID: 0}
 --- !u!114 &4490644663598777807
 MonoBehaviour:
   m_ObjectHideFlags: 0
