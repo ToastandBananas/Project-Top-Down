@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     Camera cam;
     PlayerAttack playerAttack;
+    BasicStats stats;
     Transform headReset;
 
     float angleToRotateTowards;
@@ -51,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         rb   = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
+        stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
@@ -203,7 +205,7 @@ public class PlayerMovement : MonoBehaviour
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
         float timer = 0;
-        while (Vector2.Distance(transform.position, targetPos) > 0.1f)
+        while (stats.isDead == false && Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
             timer += Time.smoothDeltaTime;
             if (timer > 1f)

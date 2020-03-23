@@ -23,6 +23,7 @@ public class NPCMovement : MonoBehaviour
     Pathfinding.AIDestinationSetter AIDestSetter;
     Animator anim, legsAnim, leftArmAnim, rightArmAnim;
     NPCCombat npcCombat;
+    BasicStats stats;
 
     Transform closestTarget;
     float closestTargetDist;
@@ -35,6 +36,7 @@ public class NPCMovement : MonoBehaviour
         rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         patrolPoint = transform.Find("Patrol Point");
         npcCombat = GetComponent<NPCCombat>();
+        stats = GetComponent<BasicStats>();
 
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
@@ -145,7 +147,7 @@ public class NPCMovement : MonoBehaviour
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
         float timer = 0;
-        while (Vector2.Distance(transform.position, targetPos) > 0.01f)
+        while (stats.isDead == false && Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
             timer += Time.smoothDeltaTime;
             if (timer > 1f)

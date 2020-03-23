@@ -26,6 +26,7 @@ public class BasicStats : MonoBehaviour
     public float defense = 0;
 
     [Header("Other")]
+    public GameObject deadBodyPrefab;
     public bool isPlayer;
     public bool isDead;
 
@@ -65,10 +66,7 @@ public class BasicStats : MonoBehaviour
             playerHealthStatBar.ChangeBar();
 
         if (health <= 0)
-        {
-            isDead = true;
-            Die();
-        }
+            StartCoroutine(Die());
     }
 
     public void Heal(int healAmount)
@@ -92,8 +90,12 @@ public class BasicStats : MonoBehaviour
         }
     }
 
-    public void Die()
+    public IEnumerator Die()
     {
+        isDead = true;
+
+        yield return new WaitForSeconds(0.05f);
+
         if (arms.leftWeaponEquipped || arms.leftShieldEquipped)
             leftWeaponItemDrop = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
         if (arms.rightWeaponEquipped || arms.rightShieldEquipped)
@@ -104,6 +106,8 @@ public class BasicStats : MonoBehaviour
 
         if (rightWeaponItemDrop != null)
             rightWeaponItemDrop.DropItem(false);
+
+        GameObject deadBody = Instantiate(deadBodyPrefab, transform.position, transform.rotation, GameObject.Find("NPCs").transform);
 
         // TODO: Death animation
         Destroy(gameObject);
