@@ -33,7 +33,7 @@ public class EquipSlot : MonoBehaviour
     float xPosOffset = 0;
     float yPosOffset = 0;
 
-    void Start()
+    void Awake()
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
@@ -216,7 +216,7 @@ public class EquipSlot : MonoBehaviour
         slotToFill.slotBackgroundImage.color = Color.white;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
         slotToFill.iconImage.sprite = slotToFill.equipment.inventoryIcon;
-        slotText.enabled = false;
+        slotToFill.slotText.enabled = false;
     }
 
     public void AddItem(Equipment newItem, ItemData itemDataToTransferDataFrom)

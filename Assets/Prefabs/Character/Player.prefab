@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 577232990510110178}
   - component: {fileID: 8767297743416750157}
+  - component: {fileID: 8200943661376756935}
   m_Layer: 0
   m_Name: Shirt Sprite
   m_TagString: Untagged
@@ -111,6 +112,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8200943661376756935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685606494388887429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &1017104888850771452
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,6 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9134946588256034491}
   - component: {fileID: 2029026124933581082}
+  - component: {fileID: 3380860038958725124}
   m_Layer: 0
   m_Name: Left Boot
   m_TagString: Untagged
@@ -192,6 +216,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3380860038958725124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017104888850771452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &1696256583753344252
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,6 +268,7 @@ Transform:
   m_Children:
   - {fileID: 9039579747518112602}
   - {fileID: 45060657}
+  - {fileID: 9041623425701122301}
   m_Father: {fileID: 5363199645053670275}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -85}
@@ -478,6 +525,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8600155475858216544}
   - component: {fileID: 18568730452415027}
+  - component: {fileID: 2229616179659622719}
   m_Layer: 0
   m_Name: Left Pants Sprite
   m_TagString: Untagged
@@ -549,6 +597,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2229616179659622719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2806654982977292981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &2967581937715579870
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,6 +700,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3257153745458683601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7620803318108703341}
+  - component: {fileID: 2749590552166578289}
+  m_Layer: 12
+  m_Name: Quiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7620803318108703341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257153745458683601}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5363199645069364972}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2749590552166578289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257153745458683601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &3300043555212496615
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,6 +898,112 @@ Transform:
   m_Father: {fileID: 5363199645069364972}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4377237750628377051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9041623425701122301}
+  - component: {fileID: 9196464850471586817}
+  m_Layer: 0
+  m_Name: Left Ring
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9041623425701122301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377237750628377051}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5939931775764640198}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9196464850471586817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377237750628377051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
+--- !u!1 &4456518924596804912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5778519280453307775}
+  - component: {fileID: 4096162024538448558}
+  m_Layer: 12
+  m_Name: Belt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5778519280453307775
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4456518924596804912}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5363199645069364972}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4096162024538448558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4456518924596804912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &4851659880429100248
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +1093,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4218971818058725235}
   - component: {fileID: 7539476965437084824}
+  - component: {fileID: 7675690099566895352}
   m_Layer: 0
   m_Name: Cuirass Sprite
   m_TagString: Untagged
@@ -935,6 +1165,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7675690099566895352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875744318545980932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &4887461963922808271
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,6 +1465,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8068112877595891528}
+  - {fileID: 4566555882552097965}
   m_Father: {fileID: 5363199645066194799}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1656,6 +1909,11 @@ MonoBehaviour:
   rightPants: {fileID: 7316464944187774268}
   leftBoot: {fileID: 2029026124933581082}
   rightBoot: {fileID: 5205968818566425830}
+  amulet: {fileID: 8102329726029231313}
+  leftRing: {fileID: 4377237750628377051}
+  rightRing: {fileID: 8108439376976753870}
+  belt: {fileID: 4456518924596804912}
+  quiver: {fileID: 3257153745458683601}
   quiverSlot: {fileID: 0}
 --- !u!114 &3763997127521640253
 MonoBehaviour:
@@ -1937,6 +2195,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4980563717705088553}
+  - {fileID: 5778519280453307775}
+  - {fileID: 7620803318108703341}
   m_Father: {fileID: 5363199645066194799}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2055,7 +2315,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 45872
+  m_InstanceId: 258410
 --- !u!1 &5638075717431976091
 GameObject:
   m_ObjectHideFlags: 0
@@ -2066,6 +2326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9039579747518112602}
   - component: {fileID: 2547818510834654997}
+  - component: {fileID: 1370673627600324324}
   m_Layer: 0
   m_Name: Left Gauntlets Sprite
   m_TagString: Untagged
@@ -2137,6 +2398,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1370673627600324324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5638075717431976091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &5730417389927065676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2147,6 +2430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8068112877595891528}
   - component: {fileID: 6444655732077939084}
+  - component: {fileID: 9151571466039044097}
   m_Layer: 0
   m_Name: Helmet Sprite
   m_TagString: Untagged
@@ -2218,6 +2502,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9151571466039044097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5730417389927065676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &6117010550913244840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2329,6 +2635,7 @@ Transform:
   m_Children:
   - {fileID: 4057893966010333171}
   - {fileID: 7545325415467255522}
+  - {fileID: 2136405031069129970}
   m_Father: {fileID: 5363199643864657094}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 85}
@@ -2518,6 +2825,112 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &8102329726029231313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4566555882552097965}
+  - component: {fileID: 9066792828148500612}
+  m_Layer: 0
+  m_Name: Amulet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4566555882552097965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8102329726029231313}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5363199644083448251}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9066792828148500612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8102329726029231313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
+--- !u!1 &8108439376976753870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2136405031069129970}
+  - component: {fileID: 6854254244326653097}
+  m_Layer: 0
+  m_Name: Right Ring
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2136405031069129970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108439376976753870}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 563164833156845011}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6854254244326653097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108439376976753870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &8462364711952251422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2585,6 +2998,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2900636640651990343}
   - component: {fileID: 6332154130928930097}
+  - component: {fileID: 9116230728699941848}
   m_Layer: 0
   m_Name: Left Greaves Sprite
   m_TagString: Untagged
@@ -2656,6 +3070,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9116230728699941848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8589355022225801217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 0
+  item: {fileID: 0}
+  equipment: {fileID: 0}
+  itemName: 
+  value: 0
+  currentStackSize: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!1 &8723205493643125693
 GameObject:
   m_ObjectHideFlags: 0

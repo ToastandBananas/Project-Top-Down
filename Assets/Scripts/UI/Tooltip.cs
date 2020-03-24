@@ -54,6 +54,9 @@ public class Tooltip : MonoBehaviour
                 tooltipText.text += "Durability: " + tooltipSlot.itemData.durability.ToString() + "/" + tooltipSlot.itemData.maxDurability.ToString() + "\n";
             }
 
+            // Weight
+            tooltipText.text += "Weight: " + tooltipSlot.item.weight.ToString() + "\n";
+
             // Value
             tooltipText.text += "Value: " + tooltipSlot.itemData.value.ToString();
 
@@ -84,6 +87,9 @@ public class Tooltip : MonoBehaviour
             {
                 tooltipText.text += "Durability: " + equipSlot.itemData.durability.ToString() + "/" + equipSlot.itemData.maxDurability.ToString() + "\n";
             }
+
+            // Weight
+            tooltipText.text += "Weight: " + equipSlot.equipment.weight.ToString() + "\n";
 
             // Value
             tooltipText.text += "Value: " + equipSlot.itemData.value.ToString();

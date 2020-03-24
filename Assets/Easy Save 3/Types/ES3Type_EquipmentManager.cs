@@ -31,10 +31,10 @@ namespace ES3Types
 				{
 					
 					case "currentWeapons":
-						instance.currentWeapons = reader.Read<Equipment[]>();
+						instance.currentWeapons = reader.Read<ItemData[]>();
 						break;
 					case "currentEquipment":
-						instance.currentEquipment = reader.Read<Equipment[]>();
+						instance.currentEquipment = reader.Read<ItemData[]>();
 						break;
 					default:
 						reader.Skip();

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public enum WeaponSlot { None, WeaponLeft, WeaponRight, Ranged }
-public enum EquipmentSlot { None, Head, Shirt, Cuirass, Gauntlets, Pants, Greaves, Belt, Boots, LeftRing, RightRing, Amulet, Quiver, Ammunition }
+public enum EquipmentSlot { None, Head, Shirt, Cuirass, Gauntlets, Pants, Greaves, Belt, Boots, LeftRing, RightRing, Amulet, Quiver }
 
 public enum GeneralClassification { Weapon1H, Weapon2H, RangedWeapon, Shield, Armor, Quiver, Ammunition }
 public enum WeaponType { NotAWeapon, Shield, Sword, Mace, Axe, Spear, Staff, Bow, Crossbow }

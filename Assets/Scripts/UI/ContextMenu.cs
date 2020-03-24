@@ -52,7 +52,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 contextMenu.transform.position = canvas.transform.TransformPoint(pos) + new Vector3(1, -0.5f, 0);
 
                 // If this slot is on the far right of the inventory menu
-                if (thisInvSlot.slotCoordinate.x == invUI.maxInventoryWidth)
+                if (thisInvSlot != null && thisInvSlot.slotCoordinate.x == invUI.maxInventoryWidth)
                     contextMenu.transform.position += new Vector3(-2, 0, 0);
 
                 // If this slot is on the very bottom of the screen

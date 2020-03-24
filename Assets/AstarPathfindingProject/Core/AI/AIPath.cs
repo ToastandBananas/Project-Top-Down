@@ -426,7 +426,7 @@ namespace Pathfinding {
 			return position;
 		}
 
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 		[System.NonSerialized]
 		int gizmoHash = 0;
 
@@ -462,7 +462,7 @@ namespace Pathfinding {
 				Draw.Gizmos.CircleXZ(Vector3.zero, endReachedDistance, Color.Lerp(GizmoColor, Color.red, 0.8f) * new Color(1, 1, 1, alpha));
 			}
 		}
-	#endif
+#endif
 
 		protected override int OnUpgradeSerializedData (int version, bool unityThread) {
 			base.OnUpgradeSerializedData(version, unityThread);

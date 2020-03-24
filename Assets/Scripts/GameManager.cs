@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,8 +36,8 @@ public class GameManager : MonoBehaviour
         if (invUI.playerEquipmentMenu.activeSelf == true)
             invUI.ToggleEquipmentMenu();
 
-        //if (invUI.containerMenuGO.activeSelf == true)
-            //invUI.ToggleContainerMenu();
+        if (invUI.containerMenu.activeSelf == true)
+            invUI.ToggleContainerMenu();
     }
 
     void Update()
@@ -46,6 +47,9 @@ public class GameManager : MonoBehaviour
             TurnOffMenus();
             TogglePauseMenu();
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void TogglePauseMenu()

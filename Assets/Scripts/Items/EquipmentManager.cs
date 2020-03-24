@@ -12,8 +12,8 @@ public class EquipmentManager : MonoBehaviour
     public GameObject prefabRangedWeaponBase;
 
     [Header("Currently Equipped Lists")]
-    public Equipment[] currentWeapons;
-    public Equipment[] currentEquipment;
+    public ItemData[] currentWeapons;
+    public ItemData[] currentEquipment;
 
     [Header("Weapon Sprite Renderers")]
     public Transform leftWeaponParent;
@@ -37,7 +37,13 @@ public class EquipmentManager : MonoBehaviour
     public SpriteRenderer leftBoot;
     public SpriteRenderer rightBoot;
 
-    [Header("Quiver")]
+    [Header("Other Equipment")]
+    public GameObject amulet;
+    public GameObject leftRing, rightRing;
+    public GameObject belt;
+    public GameObject quiver;
+
+    [Header("Quiver Slot")]
     public EquipSlot quiverSlot;
 
     GameManager GM;
@@ -45,9 +51,11 @@ public class EquipmentManager : MonoBehaviour
     InventoryUI invUI;
     Arms arms;
     BasicStats basicStats;
+    GameObject weaponsParent;
+    GameObject EquipmentParent;
 
     int slotIndex = 0;
-    Equipment oldItem = null;
+    ItemData oldItem = null;
 
     void Start()
     {
@@ -56,12 +64,16 @@ public class EquipmentManager : MonoBehaviour
         invUI = InventoryUI.instance;
         arms = transform.Find("Arms").GetComponent<Arms>();
         basicStats = GetComponent<BasicStats>();
+        weaponsParent = invUI.playerEquipmentMenu.transform.GetChild(0).Find("Weapons").gameObject;
+        EquipmentParent = invUI.playerEquipmentMenu.transform.GetChild(0).Find("Equipment").gameObject;
 
         int numWeaponSlots = System.Enum.GetNames(typeof(WeaponSlot)).Length;
-        currentWeapons = new Equipment[numWeaponSlots];
+        currentWeapons = new ItemData[numWeaponSlots];
 
         int numEquipmentSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
-        currentEquipment = new Equipment[numEquipmentSlots];
+        currentEquipment = new ItemData[numEquipmentSlots];
+
+        SetCurrentlyEquipped();
     }
 
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
@@ -75,7 +87,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentWeapons[slotIndex] != null) // Make a reference to our old weapon if we already had something equipped in this slot
                 oldItem = currentWeapons[slotIndex];
 
-            currentWeapons[slotIndex] = newItem; // Assign the weapon to our currentWeapons array
+            currentWeapons[slotIndex] = itemData; // Assign the weapon to our currentWeapons array
         }
         else if (equipmentSlot != EquipmentSlot.None) // If the item is a piece of equipment
         {
@@ -84,7 +96,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentEquipment[slotIndex] != null) // Make a reference to our old armor if we already had something equipped in this slot
                 oldItem = currentEquipment[slotIndex];
 
-            currentEquipment[slotIndex] = newItem; // Assign the equipment to our currentEquipment array
+            currentEquipment[slotIndex] = itemData; // Assign the equipment to our currentEquipment array
         }
 
         EquipToCharacter(newItem, itemData, weaponSlot, equipmentSlot); // Physically equip the weapon/equipment on the character
@@ -116,7 +128,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentWeapons[slotIndex] != null)
                 oldItem = currentWeapons[slotIndex];
             
-            currentWeapons[slotIndex] = newItem;
+            currentWeapons[slotIndex] = itemData;
         }
         else if (newItem.armorType == ArmorType.Ring)
         {
@@ -131,7 +143,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentEquipment[slotIndex] != null)
                 oldItem = currentEquipment[slotIndex];
 
-            currentEquipment[slotIndex] = newItem;
+            currentEquipment[slotIndex] = itemData;
         }
         else
         {
@@ -140,7 +152,7 @@ public class EquipmentManager : MonoBehaviour
             if (currentEquipment[slotIndex] != null)
                 oldItem = currentEquipment[slotIndex];
 
-            currentEquipment[slotIndex] = newItem;
+            currentEquipment[slotIndex] = itemData;
         }
 
         foreach (EquipSlot equipSlot in FindObjectsOfType<EquipSlot>())
@@ -405,5 +417,82 @@ public class EquipmentManager : MonoBehaviour
     {
         stats.defense -= itemData.defense;
         stats.encumbrance -= itemData.equipment.weight;
+    }
+
+    void SetCurrentlyEquipped()
+    {
+        // Get weapon sprites if any are in the characters arms
+        if (leftWeaponParent != null)
+        {
+            if (leftWeaponParent.GetChild(0).GetComponentInChildren<ItemData>().equipment.generalClassification == GeneralClassification.RangedWeapon)
+                rangedWeapon = leftWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
+            else
+                leftWeapon = leftWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
+        }
+
+        if (rightWeaponParent != null)
+            rightWeapon = rightWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
+
+        // Add each weapon's ItemData to our currentWeapons and add the weapons to the appropriate slots in the Equipment Menu
+        SetEquippedItem(leftWeapon, null, WeaponSlot.WeaponLeft, EquipmentSlot.None);
+        SetEquippedItem(rightWeapon, null, WeaponSlot.WeaponRight, EquipmentSlot.None);
+        SetEquippedItem(rangedWeapon, null, WeaponSlot.Ranged, EquipmentSlot.None);
+
+        // Add each equipment's ItemData to our currentEquipment and add the equipment to the appropriate slots in the Equipment Menu
+        SetEquippedItem(helmet, null, WeaponSlot.None, EquipmentSlot.Head);
+        SetEquippedItem(shirt, null, WeaponSlot.None, EquipmentSlot.Shirt);
+        SetEquippedItem(cuirass, null, WeaponSlot.None, EquipmentSlot.Cuirass);
+        SetEquippedItem(leftGauntlet, null, WeaponSlot.None, EquipmentSlot.Gauntlets);
+        SetEquippedItem(leftPants, null, WeaponSlot.None, EquipmentSlot.Pants);
+        SetEquippedItem(leftGreaves, null, WeaponSlot.None, EquipmentSlot.Greaves);
+        SetEquippedItem(leftBoot, null, WeaponSlot.None, EquipmentSlot.Boots);
+        SetEquippedItem(null, amulet, WeaponSlot.None, EquipmentSlot.Amulet);
+        SetEquippedItem(null, leftRing, WeaponSlot.None, EquipmentSlot.LeftRing);
+        SetEquippedItem(null, rightRing, WeaponSlot.None, EquipmentSlot.RightRing);
+        SetEquippedItem(null, belt, WeaponSlot.None, EquipmentSlot.Belt);
+        SetEquippedItem(null, quiver, WeaponSlot.None, EquipmentSlot.Quiver);
+    }
+
+    void SetEquippedItem(SpriteRenderer spriteRenderer, GameObject itemGameObject, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
+    {
+        if ((spriteRenderer != null && spriteRenderer.sprite != null) || (itemGameObject != null && itemGameObject.GetComponent<ItemData>().equipment != null))
+        {
+            ItemData itemData;
+            if (spriteRenderer != null)
+                itemData = spriteRenderer.GetComponent<ItemData>();
+            else
+                itemData = itemGameObject.GetComponent<ItemData>();
+
+            if (basicStats != null && basicStats.isPlayer)
+            {
+                if (weaponSlot != WeaponSlot.None)
+                {
+                    foreach (EquipSlot equipSlot in invUI.weaponSlots)
+                    {
+                        if (equipSlot.thisWeaponSlot == weaponSlot)
+                        {
+                            equipSlot.AddItem(itemData.equipment, itemData);
+                            break;
+                        }
+                    }
+                }
+                else if (equipmentSlot != EquipmentSlot.None)
+                {
+                    foreach (EquipSlot equipSlot in invUI.equipSlots)
+                    {
+                        if (equipSlot.thisEquipmentSlot == equipmentSlot)
+                        {
+                            equipSlot.AddItem(itemData.equipment, itemData);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (weaponSlot != WeaponSlot.None)
+                currentWeapons[(int)weaponSlot] = itemData;
+            else if (equipmentSlot != EquipmentSlot.None)
+                currentEquipment[(int)equipmentSlot] = itemData;
+        }
     }
 }

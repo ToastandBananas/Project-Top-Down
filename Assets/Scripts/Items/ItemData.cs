@@ -39,6 +39,8 @@ public class ItemData : MonoBehaviour
     {
         if (hasBeenRandomized)
             value = CalculateItemValue();
+        else if (item != null)
+            RandomizeData();
     }
 
     public void TransferData(ItemData dataGiver, ItemData dataReceiver)
