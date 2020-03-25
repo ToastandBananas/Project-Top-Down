@@ -197,44 +197,46 @@ public class EquipmentManager : MonoBehaviour
             switch (weaponSlot) // Determine which slot to change
             {
                 case WeaponSlot.WeaponLeft:
-                    EquipWeaponSprite(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
+                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
                     break;
                 case WeaponSlot.WeaponRight:
-                    EquipWeaponSprite(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
+                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
                     break;
                 case WeaponSlot.Ranged:
-                    EquipWeaponSprite(newItem, itemData, prefabRangedWeaponBase, leftWeaponParent);
+                    EquipWeapon(newItem, itemData, prefabRangedWeaponBase, leftWeaponParent);
                     break;
             }
+
+            AdjustStats(itemData, basicStats);
         }
         else if (equipmentSlot != EquipmentSlot.None) // If this is a piece of armor
         {
             switch (equipmentSlot) // Determine which slot to change
             {
                 case EquipmentSlot.Head:
-                    EquipArmorSprite(newItem, itemData, helmet);
+                    EquipArmor(newItem, itemData, helmet);
                     break;
                 case EquipmentSlot.Shirt:
-                    EquipArmorSprite(newItem, itemData, shirt);
+                    EquipArmor(newItem, itemData, shirt);
                     break;
                 case EquipmentSlot.Cuirass:
-                    EquipArmorSprite(newItem, itemData, cuirass);
+                    EquipArmor(newItem, itemData, cuirass);
                     break;
                 case EquipmentSlot.Gauntlets:
-                    EquipArmorSprite(newItem, itemData, leftGauntlet);
-                    EquipArmorSprite(newItem, itemData, rightGauntlet);
+                    EquipArmor(newItem, itemData, leftGauntlet);
+                    EquipArmor(newItem, itemData, rightGauntlet);
                     break;
                 case EquipmentSlot.Pants:
-                    EquipArmorSprite(newItem, itemData, leftPants);
-                    EquipArmorSprite(newItem, itemData, rightPants);
+                    EquipArmor(newItem, itemData, leftPants);
+                    EquipArmor(newItem, itemData, rightPants);
                     break;
                 case EquipmentSlot.Greaves:
-                    EquipArmorSprite(newItem, itemData, leftGreaves);
-                    EquipArmorSprite(newItem, itemData, rightGreaves);
+                    EquipArmor(newItem, itemData, leftGreaves);
+                    EquipArmor(newItem, itemData, rightGreaves);
                     break;
                 case EquipmentSlot.Boots:
-                    EquipArmorSprite(newItem, itemData, leftBoot);
-                    EquipArmorSprite(newItem, itemData, rightBoot);
+                    EquipArmor(newItem, itemData, leftBoot);
+                    EquipArmor(newItem, itemData, rightBoot);
                     break;
                 case EquipmentSlot.Quiver:
                     quiverSlot.SetQuiverStackSizeText();
@@ -258,7 +260,7 @@ public class EquipmentManager : MonoBehaviour
             Debug.LogError("Either a valid weaponSlot or equipmentSlot needs passed into this function to work.");
     }
 
-    void EquipWeaponSprite(Equipment newItem, ItemData itemData, GameObject weaponBasePrefab, Transform weaponParent)
+    void EquipWeapon(Equipment newItem, ItemData itemData, GameObject weaponBasePrefab, Transform weaponParent)
     {
         GameObject weaponBase = Instantiate(weaponBasePrefab, weaponParent);
         GameObject weapon = Instantiate(newItem.prefab, weaponBase.transform);
@@ -286,8 +288,10 @@ public class EquipmentManager : MonoBehaviour
         StartCoroutine(arms.SetArmAnims());
     }
 
-    void EquipArmorSprite(Equipment newItem, ItemData itemData, SpriteRenderer armorSpriteRenderer)
+    void EquipArmor(Equipment newItem, ItemData itemData, SpriteRenderer armorSpriteRenderer)
     {
+        itemData.TransferData(itemData, armorSpriteRenderer.GetComponent<ItemData>());
+
         armorSpriteRenderer.sprite = newItem.sprite;
 
         if (newItem.armorType == ArmorType.Cuirass)
@@ -356,41 +360,48 @@ public class EquipmentManager : MonoBehaviour
                 switch (equipmentSlot) // Determine which slot to change
                 {
                     case EquipmentSlot.Head:
-                        helmet.sprite = null;
+                        ClearSpriteAndData(helmet, helmet.GetComponent<ItemData>());
                         break;
                     case EquipmentSlot.Shirt:
-                        shirt.sprite = null;
+                        ClearSpriteAndData(shirt, shirt.GetComponent<ItemData>());
                         break;
                     case EquipmentSlot.Cuirass:
-                        cuirass.sprite = null;
+                        ClearSpriteAndData(cuirass, cuirass.GetComponent<ItemData>());
+                        ClearSpriteAndData(leftCuirassArm, null);
+                        ClearSpriteAndData(rightCuirassArm, null);
                         break;
                     case EquipmentSlot.Gauntlets:
-                        leftGauntlet.sprite = null;
-                        rightGauntlet.sprite = null;
+                        ClearSpriteAndData(leftGauntlet, leftGauntlet.GetComponent<ItemData>());
+                        ClearSpriteAndData(rightGauntlet, null);
                         break;
                     case EquipmentSlot.Pants:
-                        leftPants.sprite = null;
-                        rightPants.sprite = null;
+                        ClearSpriteAndData(leftPants, leftPants.GetComponent<ItemData>());
+                        ClearSpriteAndData(rightPants, null);
                         break;
                     case EquipmentSlot.Greaves:
-                        leftGreaves.sprite = null;
-                        rightGreaves.sprite = null;
+                        ClearSpriteAndData(leftGreaves, leftGreaves.GetComponent<ItemData>());
+                        ClearSpriteAndData(rightGreaves, null);
                         break;
                     case EquipmentSlot.Boots:
-                        leftBoot.sprite = null;
-                        rightBoot.sprite = null;
+                        ClearSpriteAndData(leftBoot, leftBoot.GetComponent<ItemData>());
+                        ClearSpriteAndData(rightBoot, null);
                         break;
                     case EquipmentSlot.Quiver:
-                        // TODO: Make visible quiver on character? // quiver.sprite = null;
+                        // TODO: Make visible quiver on character?
+                        ClearSpriteAndData(null, quiver.GetComponent<ItemData>());
                         quiverSlot.GetComponentInChildren<Text>().text = "";
                         break;
                     case EquipmentSlot.Belt:
-                        break;
-                    case EquipmentSlot.RightRing:
+                        ClearSpriteAndData(null, belt.GetComponent<ItemData>());
                         break;
                     case EquipmentSlot.LeftRing:
+                        ClearSpriteAndData(null, leftRing.GetComponent<ItemData>());
+                        break;
+                    case EquipmentSlot.RightRing:
+                        ClearSpriteAndData(null, rightRing.GetComponent<ItemData>());
                         break;
                     case EquipmentSlot.Amulet:
+                        ClearSpriteAndData(null, amulet.GetComponent<ItemData>());
                         break;
                 }
             }
@@ -409,16 +420,27 @@ public class EquipmentManager : MonoBehaviour
 
     void AdjustStats(ItemData itemData, BasicStats stats)
     {
-        stats.defense += itemData.defense;
+        if (itemData.equipment.itemType != ItemType.Weapon)
+            stats.defense += itemData.defense;
         stats.encumbrance += itemData.equipment.weight;
     }
 
     void RemoveStats(ItemData itemData, BasicStats stats)
     {
-        stats.defense -= itemData.defense;
+        if (itemData.equipment.itemType != ItemType.Weapon)
+            stats.defense -= itemData.defense;
         stats.encumbrance -= itemData.equipment.weight;
     }
 
+    void ClearSpriteAndData(SpriteRenderer spriteRenderer, ItemData itemData)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.sprite = null;
+        if (itemData != null)
+            itemData.ClearData();
+    }
+
+    // This function runs only if we manually equip item's on the character in the hierarchy
     void SetCurrentlyEquipped()
     {
         // Get weapon sprites if any are in the characters arms
@@ -452,7 +474,7 @@ public class EquipmentManager : MonoBehaviour
         SetEquippedItem(null, belt, WeaponSlot.None, EquipmentSlot.Belt);
         SetEquippedItem(null, quiver, WeaponSlot.None, EquipmentSlot.Quiver);
     }
-
+    
     void SetEquippedItem(SpriteRenderer spriteRenderer, GameObject itemGameObject, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
         if ((spriteRenderer != null && spriteRenderer.sprite != null) || (itemGameObject != null && itemGameObject.GetComponent<ItemData>().equipment != null))
@@ -472,6 +494,7 @@ public class EquipmentManager : MonoBehaviour
                         if (equipSlot.thisWeaponSlot == weaponSlot)
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
+                            StartCoroutine(TransferData(itemData, equipSlot));
                             break;
                         }
                     }
@@ -483,16 +506,26 @@ public class EquipmentManager : MonoBehaviour
                         if (equipSlot.thisEquipmentSlot == equipmentSlot)
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
+                            StartCoroutine(TransferData(itemData, equipSlot));
                             break;
                         }
                     }
                 }
             }
 
+            if (basicStats != null)
+                AdjustStats(itemData, basicStats);
+
             if (weaponSlot != WeaponSlot.None)
                 currentWeapons[(int)weaponSlot] = itemData;
             else if (equipmentSlot != EquipmentSlot.None)
                 currentEquipment[(int)equipmentSlot] = itemData;
         }
+    }
+
+    IEnumerator TransferData(ItemData itemData, EquipSlot equipSlot)
+    {
+        yield return new WaitForSeconds(0.1f);
+        itemData.TransferData(itemData, equipSlot.itemData);
     }
 }

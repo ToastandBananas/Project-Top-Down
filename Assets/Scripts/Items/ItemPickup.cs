@@ -2,7 +2,7 @@
 
 public class ItemPickup : Interactable
 {
-    [HideInInspector] public Item item;
+    public Item item;
     ItemData itemData;
     
     ItemDrop itemDropScript;
@@ -14,12 +14,13 @@ public class ItemPickup : Interactable
         itemDropScript = GetComponent<ItemDrop>();
         weaponDamageScript = GetComponent<WeaponDamage>();
         boxCollider = GetComponent<BoxCollider2D>();
-        item = itemDropScript.item;
         itemData = GetComponent<ItemData>();
     }
 
     void Start()
     {
+        item = itemDropScript.item;
+
         if (itemDropScript.isDropped == false)
             enabled = false;
         else
@@ -42,7 +43,6 @@ public class ItemPickup : Interactable
 
     void PickUp()
     {
-        // Debug.Log("Picking up " + item.name);
         bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData); // If this returns true, it will add the item to the appropriate bag
         if (wasPickedUp == false)
             wasPickedUp = Inventory.instance.AddToBag(item, itemData);

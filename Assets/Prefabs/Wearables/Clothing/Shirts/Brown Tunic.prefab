@@ -1,0 +1,205 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5474431354769912416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5474431354769912447}
+  - component: {fileID: 5474431354769912444}
+  - component: {fileID: 6007463617900547621}
+  - component: {fileID: -9058958525889427172}
+  - component: {fileID: 7361386747976559446}
+  - component: {fileID: 2583632880563720389}
+  - component: {fileID: -709533001092205605}
+  - component: {fileID: -5528633436679901011}
+  m_Layer: 0
+  m_Name: Brown Tunic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5474431354769912447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5474431354769912444
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 326582721
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -5741852857094109015, guid: 7b95be738cfc84e4aafa3518a93c3a17,
+    type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!50 &6007463617900547621
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 1
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &-9058958525889427172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasBeenRandomized: 1
+  item: {fileID: 11400000, guid: 16ce878d495a1cc4f85242f36d6b470b, type: 2}
+  equipment: {fileID: 11400000, guid: 16ce878d495a1cc4f85242f36d6b470b, type: 2}
+  itemName: Tunic
+  value: 3
+  currentStackSize: 1
+  maxDurability: 13
+  durability: 13
+  damage: 2
+  defense: 1
+--- !u!114 &7361386747976559446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
+  isDropped: 0
+--- !u!114 &2583632880563720389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
+  item: {fileID: 0}
+--- !u!114 &-709533001092205605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 7238971127290814646
+  localRefs:
+    _Keys:
+    - {fileID: 5474431354769912416}
+    - {fileID: 5474431354769912447}
+    - {fileID: 5474431354769912444}
+    - {fileID: 6007463617900547621}
+    - {fileID: -9058958525889427172}
+    - {fileID: 7361386747976559446}
+    - {fileID: 2583632880563720389}
+    - {fileID: -709533001092205605}
+    - {fileID: -5528633436679901011}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: -5741852857094109015, guid: 7b95be738cfc84e4aafa3518a93c3a17, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: 16ce878d495a1cc4f85242f36d6b470b, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: d3b81d6545e8f30c6de721c5f0948d01c82103a5addb306486a490d52c3ce10fe4954833e0c08f3067c857af3b21f43ef2fad4801dfbda50e882dfa0571de031faed5779223f1e0792d23ee48480295899cfc72610612c174408e39d60cf777c57764ab23585e34d243211b5430a336954c8f877aa46de5b
+--- !u!114 &-5528633436679901011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveChildren: 0

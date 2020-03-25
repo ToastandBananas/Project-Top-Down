@@ -5,7 +5,8 @@ public class GameManager : MonoBehaviour
 {
     [HideInInspector] public TextFade[] floatingTexts;
     [HideInInspector] public int floatingTextIndex = 0;
-
+    
+    public bool menuOpen;
     public GameObject pauseMenu;
 
     InventoryUI invUI;
@@ -55,6 +56,10 @@ public class GameManager : MonoBehaviour
     public void TogglePauseMenu()
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
+        if (pauseMenu.activeSelf)
+            menuOpen = true;
+        else
+            menuOpen = false;
     }
 
     public void TurnOffMenus()

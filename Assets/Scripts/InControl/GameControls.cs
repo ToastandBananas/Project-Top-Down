@@ -13,9 +13,6 @@ public class GameControls : MonoBehaviour
 
     void BindDefaultControls()
     {
-        gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
-        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action4);
-
         gamePlayActions.playerInteract.AddDefaultBinding(Key.R);
         gamePlayActions.playerInteract.AddDefaultBinding(InputControlType.Action3);
 
@@ -59,6 +56,9 @@ public class GameControls : MonoBehaviour
         gamePlayActions.playerRightSpecialAttack.AddDefaultBinding(InputControlType.RightBumper);
 
         // UI Actions
+        gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action4);
+
         gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
         gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);
 

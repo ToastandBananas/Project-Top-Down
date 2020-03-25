@@ -5,6 +5,7 @@ public class PlayerAttack : MonoBehaviour
 {
     public static PlayerAttack instance;
 
+    GameManager gm;
     PlayerMovement playerMovement;
     BasicStats stats;
     Transform headReset;
@@ -44,6 +45,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Start()
     {
+        gm = GameManager.instance;
         playerMovement = PlayerMovement.instance;
         stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
@@ -58,11 +60,11 @@ public class PlayerAttack : MonoBehaviour
     
     void Update()
     {
-        Update_LeftArmAnims();
-        Update_RightArmAnims();
-
-        // Debug.Log(attackTimerLeftArm);
-        // Debug.Log(attackTimerRightArm);
+        if (gm.menuOpen == false)
+        {
+            Update_LeftArmAnims();
+            Update_RightArmAnims();
+        }
     }
 
     /*void Update_QuickAttack()

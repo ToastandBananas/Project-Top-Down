@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8a592c18f4e6c60428d1ce77ac37316a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
+  itemData: {fileID: 0}
   positionOffset: {x: 0, y: 0}
 --- !u!114 &8479428350304003610
 MonoBehaviour:
@@ -162,16 +163,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasBeenRandomized: 1
   item: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
   equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
   itemName: Steel Short Sword
-  rarity: 0
-  value: 5
+  value: 40
   currentStackSize: 1
-  maxDurability: 10
-  durability: 10
-  damage: 2
-  defense: 100
+  maxDurability: 17
+  durability: 17
+  damage: 8
+  defense: 0
 --- !u!114 &3873751190061389563
 MonoBehaviour:
   m_ObjectHideFlags: 0

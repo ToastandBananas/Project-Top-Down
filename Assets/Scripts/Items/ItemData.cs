@@ -45,6 +45,9 @@ public class ItemData : MonoBehaviour
 
     public void TransferData(ItemData dataGiver, ItemData dataReceiver)
     {
+        // Randomization Data
+        dataReceiver.hasBeenRandomized = dataGiver.hasBeenRandomized;
+
         // Item Class
         dataReceiver.item = dataGiver.item;
         dataReceiver.equipment = dataGiver.equipment;
@@ -109,6 +112,25 @@ public class ItemData : MonoBehaviour
 
         hasBeenRandomized = true;
     }
+
+    public void ClearData()
+    {
+        hasBeenRandomized = false;
+        
+        item = null;
+        equipment = null;
+        // consumable = null;
+        
+        itemName = "";
+        value = 0;
+        currentStackSize = 0;
+        maxDurability = 0;
+        durability = 0;
+        
+        damage = 0;
+
+        defense = 0;
+}
 
     int CalculateItemValue()
     {

@@ -6,10 +6,7 @@ using UnityEngine.EventSystems;
 public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI instance;
-
-    [Header("Transform References")]
-    public Transform menusParent;
-
+    
     [Header("GameObject References")]
     public GameObject inventoryMenu;
     public GameObject playerEquipmentMenu;
@@ -21,6 +18,7 @@ public class InventoryUI : MonoBehaviour
     public GameObject floatingTextPrefab;
 
     [Header("Parents")]
+    public Transform menusParent;
     public Transform invItemsParent;
     public Transform containerItemsParent;
     public Transform pocketsParent;
@@ -141,6 +139,17 @@ public class InventoryUI : MonoBehaviour
         {
             if (invSlotMovingFrom != null)
             {
+                if (invSlotMovingFrom.slotParent == containerParent)
+                {
+                    for (int i = 0; i < currentlyActiveContainer.transform.childCount; i++)
+                    {
+                        if (currentlyActiveContainer.transform.GetChild(i).GetComponent<ItemData>() == currentlySelectedItemData)
+                        {
+                            Destroy(currentlyActiveContainer.transform.GetChild(i).gameObject);
+                        }
+                    }
+                }
+
                 invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
                 invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
             }
@@ -247,6 +256,10 @@ public class InventoryUI : MonoBehaviour
     public void ToggleInventory()
     {
         inventoryMenu.SetActive(!inventoryMenu.activeSelf);
+        if (inventoryMenu.activeSelf)
+            gm.menuOpen = true;
+        else
+            gm.menuOpen = false;
     }
 
     public void ToggleEquipmentMenu()

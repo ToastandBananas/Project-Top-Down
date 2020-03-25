@@ -130,6 +130,7 @@ public class WeaponDamage : MonoBehaviour
         {
             if (canDoDamage && collision.gameObject != weaponOwner.gameObject && (collision.tag == "NPC" || collision.tag == "Player"))
             {
+                Debug.Log(collision.name);
                 BasicStats basicStats = collision.GetComponent<BasicStats>();
                 basicStats.TakeDamage(itemData.damage);
                 canDoDamage = false;

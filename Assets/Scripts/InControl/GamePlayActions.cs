@@ -2,7 +2,6 @@
 
 public class GamePlayActions : PlayerActionSet
 {
-    public PlayerAction playerInventory;
     public PlayerAction playerInteract;
     public PlayerAction playerDodge;
     public PlayerAction playerSprint;
@@ -15,12 +14,12 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerLeftSpecialAttack, playerRightSpecialAttack;
 
     // UI Actions
+    public PlayerAction playerInventory;
     public PlayerAction menuPause, menuSelect, menuContext;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
 
     public GamePlayActions()
     {
-        playerInventory = CreatePlayerAction("PlayerInventory");
         playerInteract = CreatePlayerAction("PlayerInteract");
         playerDodge = CreatePlayerAction("PlayerDodge");
         playerSprint = CreatePlayerAction("PlayerSprint");
@@ -42,6 +41,7 @@ public class GamePlayActions : PlayerActionSet
         playerRightSpecialAttack = CreatePlayerAction("PlayerRightSpecialAttack");
 
         // UI Actions
+        playerInventory = CreatePlayerAction("PlayerInventory");
         menuPause = CreatePlayerAction("MenuPause");
         menuSelect = CreatePlayerAction("MenuSelect");
         menuContext = CreatePlayerAction("MenuContext");

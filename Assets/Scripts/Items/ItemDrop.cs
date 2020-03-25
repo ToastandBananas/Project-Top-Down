@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemDrop : MonoBehaviour
 {
-    [HideInInspector]public Item item;
+    public Item item;
     public bool isDropped;
     
     Rigidbody2D rb;
