@@ -132,7 +132,16 @@ public class EquipSlot : MonoBehaviour
             invUI.tempSlot.item = invUI.tempSlot.itemData.equipment;
 
             // Assign the appropriate icon sprite to both slots
-            iconImage.sprite = equipment.inventoryIcon;
+            if (equipment.equipSlotIcon != null)
+            {
+                iconImage.sprite = equipment.equipSlotIcon;
+                RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
+                if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
+                    rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
+            }
+            else
+                iconImage.sprite = equipment.inventoryIcon;
+
             slotBackgroundImage.color = Color.white;
             iconImage.name = itemData.name;
             invUI.tempSlot.iconImage.sprite = invUI.tempSlot.item.inventoryIcon;
@@ -215,7 +224,17 @@ public class EquipSlot : MonoBehaviour
         slotToFill.isEmpty = false;
         slotToFill.slotBackgroundImage.color = Color.white;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
-        slotToFill.iconImage.sprite = slotToFill.equipment.inventoryIcon;
+
+        if (equipment.equipSlotIcon != null)
+        {
+            iconImage.sprite = equipment.equipSlotIcon;
+            RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
+            if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
+                rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
+        }
+        else
+            slotToFill.iconImage.sprite = slotToFill.equipment.inventoryIcon;
+
         slotToFill.slotText.enabled = false;
     }
 
@@ -234,7 +253,17 @@ public class EquipSlot : MonoBehaviour
         equipment = newItem;
         
         iconImage.preserveAspect = true;
-        iconImage.sprite = equipment.inventoryIcon;
+
+        if (equipment.equipSlotIcon != null)
+        {
+            iconImage.sprite = equipment.equipSlotIcon;
+            RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
+            if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
+                rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
+        }
+        else
+            iconImage.sprite = equipment.inventoryIcon;
+        
         slotBackgroundImage.sprite = fullSlotSprite;
 
         itemData.TransferData(itemDataToTransferDataFrom, itemData); // Transfer the item's data to this slot

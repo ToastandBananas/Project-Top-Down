@@ -30,9 +30,12 @@ public class Item : ScriptableObject
     public int staticValue = 1;
 
     [Header("Inventory Icon Info")]
+    public Sprite inventoryIcon;
     public int iconWidth = 1;
     public int iconHeight = 1;
-    public Sprite inventoryIcon;
+    public Sprite equipSlotIcon;
+    public int equipSlotIconWidth = 0;
+    public int equipSlotIconHeight = 0;
 
     [Header("Stackability")]
     public bool isStackable;

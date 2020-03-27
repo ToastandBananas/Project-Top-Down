@@ -25,10 +25,14 @@ MonoBehaviour:
   minBaseValue: 1
   maxBaseValue: 10
   staticValue: 1
-  iconWidth: 2
-  iconHeight: 1
-  inventoryIcon: {fileID: -5741852857094109015, guid: 7b95be738cfc84e4aafa3518a93c3a17,
+  inventoryIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
     type: 3}
+  iconWidth: 1
+  iconHeight: 2
+  equipSlotIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
+    type: 3}
+  equipSlotIconWidth: 2
+  equipSlotIconHeight: 2
   isStackable: 0
   maxStackSize: 1
   onUseItemText: 

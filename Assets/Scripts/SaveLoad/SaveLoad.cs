@@ -297,7 +297,10 @@ public class SaveLoad : MonoBehaviour
 
         // Setup the icon's sprite
         slot.iconImage.preserveAspect = true;
-        slot.iconImage.sprite = slot.equipment.inventoryIcon;
+        if (slot.equipment.equipSlotIcon != null)
+            slot.iconImage.sprite = slot.equipment.equipSlotIcon;
+        else
+            slot.iconImage.sprite = slot.equipment.inventoryIcon;
 
         // Reposition/resize the icon
         RectTransform iconRectTransform = slot.iconImage.GetComponent<RectTransform>();

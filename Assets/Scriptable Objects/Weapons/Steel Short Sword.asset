@@ -24,9 +24,12 @@ MonoBehaviour:
   minBaseValue: 10
   maxBaseValue: 50
   staticValue: 10
+  inventoryIcon: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
   iconWidth: 1
   iconHeight: 2
-  inventoryIcon: {fileID: 21300000, guid: 2453a57c37be06b46b3fde6a02664f93, type: 3}
+  equipSlotIcon: {fileID: 0}
+  equipSlotIconWidth: 0
+  equipSlotIconHeight: 0
   isStackable: 0
   maxStackSize: 1
   onUseItemText: Weapon equipped
