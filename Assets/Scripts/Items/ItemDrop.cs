@@ -5,7 +5,8 @@ public class ItemDrop : MonoBehaviour
 {
     public Item item;
     public bool isDropped;
-    
+
+    SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
     BoxCollider2D boxCollider;
     ItemPickup itemPickupScript;
@@ -22,6 +23,7 @@ public class ItemDrop : MonoBehaviour
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         item = GetComponent<ItemData>().item;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -38,6 +40,9 @@ public class ItemDrop : MonoBehaviour
 
         if (weaponDamageScript != null)
             weaponDamageScript.enabled = false;
+
+        if (item.droppedSprite != null)
+            spriteRenderer.sprite = item.droppedSprite;
         
         itemPickupScript.enabled = true;
         isDropped = true;

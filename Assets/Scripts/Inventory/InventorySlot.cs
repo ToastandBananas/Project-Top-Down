@@ -66,7 +66,10 @@ public class InventorySlot : MonoBehaviour
         iconImage = newIcon.GetComponent<Image>();
         itemData = iconImage.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
-        newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
+
+        RectTransform newIconRectTransform = newIcon.GetComponent<RectTransform>();
+        newIconRectTransform.sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
+        newIconRectTransform.localScale = new Vector3(67.5f, 67.5f, 67.5f);
 
         item = newItem;
         newIcon.name = item.name;
@@ -77,7 +80,7 @@ public class InventorySlot : MonoBehaviour
 
         isEmpty = false;
         
-        iconImage.transform.localPosition = inv.GetItemInvPosition(newItem);
+        iconImage.transform.localPosition = inv.GetItemInvPositionOffset(newItem);
     }
 
     /// <summary> Only use when intending to destroy an icon object. </summary>

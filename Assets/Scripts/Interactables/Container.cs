@@ -6,13 +6,13 @@ public class Container : MonoBehaviour
 {
     public string containerName = "Container";
     public bool shouldRandomizeItems = true;
+    public Transform itemsParent;
 
     [Header("Contents")]
     public List<GameObject> containerObjects = new List<GameObject>();
     public List<ItemData> containerItems = new List<ItemData>();
 
     [Header("Slots")]
-    //public GameObject containerPrefab;
     public Transform slotsParent;
     public int slotCount = 30;
 
@@ -26,25 +26,9 @@ public class Container : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
-        
-        for (int i = 0; i < containerObjects.Count; i++)
-        {
-            GameObject hierarchyObj = new GameObject();
-            hierarchyObj.transform.SetParent(transform);
-            hierarchyObj.AddComponent<ItemData>();
+        itemsParent = transform.Find("Items");
 
-            ItemData hierarchyObjItemData = hierarchyObj.GetComponent<ItemData>();
-            ItemData containerObjItemData = containerObjects[i].GetComponent<ItemData>();
-            if (shouldRandomizeItems)
-                containerObjItemData.RandomizeData();
-
-            hierarchyObjItemData.TransferData(containerObjItemData, hierarchyObjItemData);
-
-            hierarchyObj.name = hierarchyObjItemData.itemName;
-            containerObjects[i] = hierarchyObj;
-        }
-
-        shouldRandomizeItems = false;
+        InitializeData();
     }
 
     void Update()
@@ -60,12 +44,13 @@ public class Container : MonoBehaviour
                     {
                         invUI.containerSlots.Clear();
 
-                        foreach(InventorySlot slot in invUI.containerMenu.GetComponentsInChildren<InventorySlot>())
+                        foreach (InventorySlot slot in invUI.containerMenu.GetComponentsInChildren<InventorySlot>())
                         {
                             Destroy(slot.gameObject);
                         }
 
                         StartCoroutine(CreateSlots());
+
                         // Delay adding the items so that each slot has time to run its Awake()
                         StartCoroutine(DelayAddContainerItems());
                     }
@@ -81,6 +66,24 @@ public class Container : MonoBehaviour
             else // If the container menu is already open, close it
                 StartCoroutine(CloseMenus());
         }
+    }
+
+    public void InitializeData()
+    {
+        for (int i = 0; i < containerObjects.Count; i++)
+        {
+            GameObject hierarchyObj = new GameObject();
+            hierarchyObj.transform.SetParent(itemsParent);
+            hierarchyObj.AddComponent<ItemData>();
+
+            ItemData hierarchyObjItemData = hierarchyObj.GetComponent<ItemData>();
+            ItemData containerObjItemData = containerObjects[i].GetComponent<ItemData>();
+
+            StartCoroutine(SetupContainerObjects(hierarchyObj, containerObjects[i], hierarchyObjItemData, containerObjItemData));
+            StartCoroutine(SetLists());
+        }
+
+        shouldRandomizeItems = false;
     }
 
     void AddContainerItems()
@@ -125,6 +128,36 @@ public class Container : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         AddContainerItems();
+    }
+
+    IEnumerator SetupContainerObjects(GameObject hierarchyObj, GameObject containerObj, ItemData hierarchyObjItemData, ItemData containerObjItemData)
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        hierarchyObjItemData.item = containerObjItemData.item;
+        hierarchyObjItemData.equipment = containerObjItemData.equipment;
+        //hierarchyObjItemData.consumable = containerObjItemData.consumable;
+
+        if (containerObjItemData.hasBeenRandomized == false)
+            hierarchyObjItemData.RandomizeData();
+        else
+            containerObjItemData.TransferData(containerObjItemData, hierarchyObjItemData);
+
+        hierarchyObj.name = hierarchyObjItemData.itemName;
+    }
+
+    IEnumerator SetLists()
+    {
+        yield return new WaitForSeconds(0.15f);
+
+        containerObjects.Clear();
+        containerItems.Clear();
+
+        for (int i = 0; i < itemsParent.childCount; i++)
+        {
+            containerObjects.Add(itemsParent.GetChild(i).gameObject);
+            containerItems.Add(itemsParent.GetChild(i).GetComponent<ItemData>());
+        }
     }
 
     void ClearContainerSlots()

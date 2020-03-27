@@ -73,7 +73,7 @@ public class EquipmentManager : MonoBehaviour
         int numEquipmentSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         currentEquipment = new ItemData[numEquipmentSlots];
 
-        SetCurrentlyEquipped();
+        StartCoroutine(SetCurrentlyEquipped());
     }
 
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
@@ -441,8 +441,10 @@ public class EquipmentManager : MonoBehaviour
     }
 
     // This function runs only if we manually equip item's on the character in the hierarchy
-    void SetCurrentlyEquipped()
+    IEnumerator SetCurrentlyEquipped()
     {
+        yield return new WaitForSeconds(0.1f);
+
         // Get weapon sprites if any are in the characters arms
         if (leftWeaponParent != null)
         {
@@ -494,7 +496,7 @@ public class EquipmentManager : MonoBehaviour
                         if (equipSlot.thisWeaponSlot == weaponSlot)
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
-                            StartCoroutine(TransferData(itemData, equipSlot));
+                            StartCoroutine(TransferDataWithDelay(itemData, equipSlot));
                             break;
                         }
                     }
@@ -506,7 +508,7 @@ public class EquipmentManager : MonoBehaviour
                         if (equipSlot.thisEquipmentSlot == equipmentSlot)
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
-                            StartCoroutine(TransferData(itemData, equipSlot));
+                            StartCoroutine(TransferDataWithDelay(itemData, equipSlot));
                             break;
                         }
                     }
@@ -523,7 +525,65 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    IEnumerator TransferData(ItemData itemData, EquipSlot equipSlot)
+    public IEnumerator TransferEquippedItemsToBody(EquipmentManager deadBodyEquipmentManager)
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        TransferItemToBody(helmet, deadBodyEquipmentManager.helmet, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(shirt, deadBodyEquipmentManager.shirt, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(cuirass, deadBodyEquipmentManager.cuirass, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(leftCuirassArm, deadBodyEquipmentManager.leftCuirassArm, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(rightCuirassArm, deadBodyEquipmentManager.rightCuirassArm, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(leftGauntlet, deadBodyEquipmentManager.leftGauntlet, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(rightGauntlet, deadBodyEquipmentManager.rightGauntlet, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(leftPants, deadBodyEquipmentManager.leftPants, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(rightPants, deadBodyEquipmentManager.rightPants, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(leftGreaves, deadBodyEquipmentManager.leftGreaves, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(rightGreaves, deadBodyEquipmentManager.rightGreaves, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(leftBoot, deadBodyEquipmentManager.leftBoot, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(rightBoot, deadBodyEquipmentManager.rightBoot, null, null, deadBodyEquipmentManager);
+        TransferItemToBody(null, null, amulet, deadBodyEquipmentManager.amulet, deadBodyEquipmentManager);
+        TransferItemToBody(null, null, leftRing, deadBodyEquipmentManager.leftRing, deadBodyEquipmentManager);
+        TransferItemToBody(null, null, rightRing, deadBodyEquipmentManager.rightRing, deadBodyEquipmentManager);
+        TransferItemToBody(null, null, belt, deadBodyEquipmentManager.belt, deadBodyEquipmentManager);
+        TransferItemToBody(null, null, quiver, deadBodyEquipmentManager.quiver, deadBodyEquipmentManager);
+
+        Container deadBodyContainer = deadBodyEquipmentManager.GetComponent<Container>();
+        foreach (ItemData equippedObjItemData in deadBodyEquipmentManager.currentEquipment)
+        {
+            if (equippedObjItemData != null)
+                deadBodyContainer.containerObjects.Add(equippedObjItemData.gameObject);
+        }
+    }
+
+    void TransferItemToBody(SpriteRenderer giver, SpriteRenderer receiver, GameObject giverGameObject, GameObject receiverGameObject, EquipmentManager deadBodyEquipmentManager)
+    {
+        if (giver != null && giver.sprite != null)
+        {
+            ItemData giverItemData = giver.GetComponent<ItemData>();
+            if (giverItemData != null)
+            {
+                ItemData receiverItemData = receiver.GetComponent<ItemData>();
+                receiver.sprite = giverItemData.equipment.deathSprite;
+                giverItemData.TransferData(giverItemData, receiverItemData);
+
+                deadBodyEquipmentManager.currentEquipment[(int)giverItemData.equipment.equipmentSlot] = receiverItemData;
+            }
+        }
+        else if (giverGameObject != null)
+        {
+            ItemData giverItemData = giverGameObject.GetComponent<ItemData>();
+            if (giverItemData != null && giverItemData.equipment != null)
+            {
+                ItemData receiverItemData = receiverGameObject.GetComponent<ItemData>();
+                giverItemData.TransferData(giverItemData, receiverItemData);
+
+                deadBodyEquipmentManager.currentEquipment[(int)giverItemData.equipment.equipmentSlot] = receiverItemData;
+            }
+        }
+    }
+
+    IEnumerator TransferDataWithDelay(ItemData itemData, EquipSlot equipSlot)
     {
         yield return new WaitForSeconds(0.1f);
         itemData.TransferData(itemData, equipSlot.itemData);

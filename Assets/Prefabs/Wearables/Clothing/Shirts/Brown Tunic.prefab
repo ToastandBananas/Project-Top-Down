@@ -121,16 +121,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasBeenRandomized: 1
+  hasBeenRandomized: 0
   item: {fileID: 11400000, guid: 16ce878d495a1cc4f85242f36d6b470b, type: 2}
   equipment: {fileID: 11400000, guid: 16ce878d495a1cc4f85242f36d6b470b, type: 2}
-  itemName: Tunic
-  value: 3
+  itemName: 
+  value: 0
   currentStackSize: 1
-  maxDurability: 13
-  durability: 13
-  damage: 2
-  defense: 1
+  maxDurability: 0
+  durability: 0
+  damage: 0
+  defense: 0
 --- !u!114 &7361386747976559446
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -229,7 +229,7 @@ public class Inventory : MonoBehaviour
 
             invUI.StopDraggingInvItem();
             startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-            startSlot.iconImage.transform.localPosition = GetItemInvPosition(startSlot.item);
+            startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
             // Add ItemDatas/GameObjects to the appropriate lists
             if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
@@ -286,8 +286,15 @@ public class Inventory : MonoBehaviour
                     childSlot.SoftFillSlot(childSlot);
             }
 
-            if (invUI.currentlyActiveContainer != null && itemData.transform.parent.GetComponent<Container>() != null)
+            if (invUI.currentlyActiveContainer != null && invUI.invSlotMovingFrom != null && invUI.invSlotMovingFrom.slotParent == invUI.containerParent)
+            {
+                // Only will be used if this container is a dead body
+                EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
+                if (deadBodyEquipmentManager != null && itemData.equipment != null)
+                    deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] = null;
+
                 Destroy(itemData.gameObject);
+            }
 
             // We no longer have an item selected, so set the appropriate variables to null
             invUI.StopDraggingInvItem();
@@ -297,6 +304,11 @@ public class Inventory : MonoBehaviour
         {
             bool movingFromSlotSet = false;
             bool itemAdded = false;
+
+            // This is so that we can still access the slot we're moving from after we change invUI.invSlotMovingFrom
+            InventorySlot oldInvSlotMovingFrom = null;
+            if (invUI.invSlotMovingFrom != null)
+                oldInvSlotMovingFrom = invUI.invSlotMovingFrom;
 
             itemsList.Remove(parentSlotsTryingToReplace[0].itemData);
             if (invUI.currentlyActiveContainer != null && itemsList == invUI.currentlyActiveContainer.containerItems)
@@ -497,8 +509,15 @@ public class Inventory : MonoBehaviour
                     childSlot.stackSizeText.text = "";
             }
 
-            if (invUI.currentlyActiveContainer != null && itemData.transform.parent.GetComponent<Container>() != null)
+            if (invUI.currentlyActiveContainer != null && oldInvSlotMovingFrom != null && oldInvSlotMovingFrom.slotParent == invUI.containerParent)
+            {
+                // Only will be used if this container is a dead body
+                EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
+                if (deadBodyEquipmentManager != null && itemData.equipment != null)
+                    deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] = null;
+
                 Destroy(itemData.gameObject);
+            }
         }
 
         // Determine the parent and child slots
@@ -531,7 +550,7 @@ public class Inventory : MonoBehaviour
         }
 
         startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-        startSlot.iconImage.transform.localPosition = GetItemInvPosition(startSlot.item);
+        startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
         if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
             itemsList.Add(startSlot.itemData);
@@ -539,7 +558,7 @@ public class Inventory : MonoBehaviour
         {
             // Create a gameobject with ItemData
             GameObject newObj = new GameObject();
-            newObj.transform.SetParent(invUI.currentlyActiveContainer.transform);
+            newObj.transform.SetParent(invUI.currentlyActiveContainer.itemsParent);
             newObj.AddComponent<ItemData>();
 
             // Transfer data over to the new ItemData
@@ -766,7 +785,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public Vector3 GetItemInvPosition(Item item)
+    public Vector3 GetItemInvPositionOffset(Item item)
     {
         float addWidth = 0;
         float addHeight = 0;

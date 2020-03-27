@@ -141,12 +141,10 @@ public class InventoryUI : MonoBehaviour
             {
                 if (invSlotMovingFrom.slotParent == containerParent)
                 {
-                    for (int i = 0; i < currentlyActiveContainer.transform.childCount; i++)
+                    for (int i = 0; i < currentlyActiveContainer.itemsParent.childCount; i++)
                     {
-                        if (currentlyActiveContainer.transform.GetChild(i).GetComponent<ItemData>() == currentlySelectedItemData)
-                        {
-                            Destroy(currentlyActiveContainer.transform.GetChild(i).gameObject);
-                        }
+                        if (currentlyActiveContainer.itemsParent.GetChild(i).GetComponent<ItemData>() == currentlySelectedItemData)
+                            Destroy(currentlyActiveContainer.itemsParent.GetChild(i).gameObject);
                     }
                 }
 

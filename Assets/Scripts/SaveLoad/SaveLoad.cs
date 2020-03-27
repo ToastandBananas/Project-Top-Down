@@ -228,42 +228,42 @@ public class SaveLoad : MonoBehaviour
         foreach (InventorySlot slot in invUI.pocketsSlots)
         {
             if (slot.isEmpty == false && slot.item != null && slot.parentSlot == null)
-                RecalculateSlotData(slot, invUI.pocketsSlots);
+                RecalculateInvSlotData(slot, invUI.pocketsSlots);
         }
 
         foreach (InventorySlot slot in invUI.bagSlots)
         {
             if (slot.isEmpty == false && slot.parentSlot == null)
-                RecalculateSlotData(slot, invUI.bagSlots);
+                RecalculateInvSlotData(slot, invUI.bagSlots);
         }
 
         foreach (InventorySlot slot in invUI.horseBagSlots)
         {
             if (slot.isEmpty == false && slot.parentSlot == null)
-                RecalculateSlotData(slot, invUI.horseBagSlots);
+                RecalculateInvSlotData(slot, invUI.horseBagSlots);
         }
 
         foreach (InventorySlot slot in invUI.containerSlots)
         {
             if (slot.isEmpty == false && slot.parentSlot == null)
-                RecalculateSlotData(slot, invUI.containerSlots);
+                RecalculateInvSlotData(slot, invUI.containerSlots);
         }
 
         // Equipment slots will need to be set to the appropriate color
         foreach (EquipSlot slot in invUI.weaponSlots)
         {
             if (slot.isEmpty == false)
-                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+                RecalculateEquipSlotData(slot);
         }
 
         foreach (EquipSlot slot in invUI.equipSlots)
         {
             if (slot.isEmpty == false)
-                slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+                RecalculateEquipSlotData(slot);
         }
     }
 
-    void RecalculateSlotData(InventorySlot slot, List<InventorySlot> invSlots)
+    void RecalculateInvSlotData(InventorySlot slot, List<InventorySlot> invSlots)
     {
         // Set the parent and child slots
         inv.SetParentAndChildSlots(slot.item, slot, invSlots);
@@ -275,12 +275,33 @@ public class SaveLoad : MonoBehaviour
         slot.itemData = slot.iconImage.GetComponent<ItemData>();
 
         // Setup the icon's sprite
-        slot.iconImage.sprite = slot.item.inventoryIcon;
         slot.iconImage.preserveAspect = true;
+        slot.iconImage.sprite = slot.item.inventoryIcon;
 
         // Reposition/resize the icon
         RectTransform iconRectTransform = slot.iconImage.GetComponent<RectTransform>();
-        iconRectTransform.localPosition = inv.GetItemInvPosition(slot.item);
+        iconRectTransform.localPosition = inv.GetItemInvPositionOffset(slot.item);
+        iconRectTransform.localScale = new Vector3(67.5f, 67.5f, 67.5f);
+    }
+
+    void RecalculateEquipSlotData(EquipSlot slot)
+    {
+        // Change to the appropriate slot background color
+        slot.slotBackgroundImage.sprite = slot.fullSlotSprite;
+
+        // Find the slot's icon
+        slot.iconImage = slot.transform.GetChild(0).GetChild(0).GetComponent<Image>();
+
+        // Find the slot's ItemData
+        slot.itemData = slot.iconImage.GetComponent<ItemData>();
+
+        // Setup the icon's sprite
+        slot.iconImage.preserveAspect = true;
+        slot.iconImage.sprite = slot.equipment.inventoryIcon;
+
+        // Reposition/resize the icon
+        RectTransform iconRectTransform = slot.iconImage.GetComponent<RectTransform>();
+        iconRectTransform.localPosition = Vector3.zero;
         iconRectTransform.localScale = new Vector3(67.5f, 67.5f, 67.5f);
     }
 

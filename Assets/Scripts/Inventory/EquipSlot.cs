@@ -225,7 +225,10 @@ public class EquipSlot : MonoBehaviour
         iconImage = newIcon.GetComponent<Image>();
         itemData = iconImage.GetComponent<ItemData>();
         newIcon.transform.position = transform.position;
-        newIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
+
+        RectTransform newIconRectTransform = newIcon.GetComponent<RectTransform>();
+        newIconRectTransform.sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
+        newIconRectTransform.localScale = new Vector3(67.5f, 67.5f, 67.5f);
 
         isEmpty = false;
         equipment = newItem;

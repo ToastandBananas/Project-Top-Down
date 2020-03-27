@@ -37,19 +37,29 @@ public class BasicStats : MonoBehaviour
     ItemDrop leftWeaponItemDrop;
     ItemDrop rightWeaponItemDrop;
 
-    [Header("Player Only")]
+    // Player only
     PlayerStatBar playerHealthStatBar;
     PlayerStatBar playerManaStatBar;
     PlayerStatBar playerStaminaStatBar;
 
+    // NPC only
+    NPCInventory npcInv;
+
     Arms arms;
+    EquipmentManager equipmentManager;
 
     void Start()
     {
         arms = GetComponentInChildren<Arms>();
-        playerHealthStatBar = GameObject.Find("Player Health Bar").GetComponent<PlayerStatBar>();
-        playerManaStatBar = GameObject.Find("Player Mana Bar").GetComponent<PlayerStatBar>();
-        playerStaminaStatBar = GameObject.Find("Player Stamina Bar").GetComponent<PlayerStatBar>();
+        equipmentManager = GetComponent<EquipmentManager>();
+        npcInv = GetComponent<NPCInventory>();
+
+        if (isPlayer)
+        {
+            playerHealthStatBar = GameObject.Find("Player Health Bar").GetComponent<PlayerStatBar>();
+            playerManaStatBar = GameObject.Find("Player Mana Bar").GetComponent<PlayerStatBar>();
+            playerStaminaStatBar = GameObject.Find("Player Stamina Bar").GetComponent<PlayerStatBar>();
+        }
     }
 
     void FixedUpdate()
@@ -108,8 +118,12 @@ public class BasicStats : MonoBehaviour
             rightWeaponItemDrop.DropItem(false);
 
         GameObject deadBody = Instantiate(deadBodyPrefab, transform.position, transform.rotation, GameObject.Find("NPCs").transform);
+        StartCoroutine(equipmentManager.TransferEquippedItemsToBody(deadBody.GetComponent<EquipmentManager>()));
+        if (npcInv != null)
+            StartCoroutine(npcInv.TransferObjectsToBodyContainer(deadBody.GetComponent<Container>()));
 
-        // TODO: Death animation
+        yield return new WaitForSeconds(0.15f);
+        
         Destroy(gameObject);
     }
 

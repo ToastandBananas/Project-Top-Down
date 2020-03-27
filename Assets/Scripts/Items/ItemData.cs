@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public enum Rarity { Common, Uncommon, Rare, Epic, Legendary, Unique }
 
@@ -19,10 +20,10 @@ public class ItemData : MonoBehaviour
     public float durability = 0;
 
     [Header("Weapon Data")]
-    public int damage;
+    public int damage = 0;
 
     [Header("Armor Data")]
-    public int defense;
+    public int defense = 0;
 
     void Awake()
     {
@@ -70,6 +71,12 @@ public class ItemData : MonoBehaviour
         dataReceiver.defense = dataGiver.defense;
     }
 
+    public IEnumerator TransferDataWithDelay(ItemData dataGiver, ItemData dataReceiver)
+    {
+        yield return new WaitForSeconds(0.1f);
+        TransferData(dataGiver, dataReceiver);
+    }
+
     public void SwapData(ItemData dataSet1, ItemData dataSet2)
     {
         ItemData tempData1 = new ItemData(); // Our temporary ItemData classes
@@ -101,7 +108,6 @@ public class ItemData : MonoBehaviour
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
                 defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense);
         }
-
         // Consumable class data
         /*else if (consumable != null)
         {
@@ -111,6 +117,12 @@ public class ItemData : MonoBehaviour
         value = CalculateItemValue();
 
         hasBeenRandomized = true;
+    }
+
+    public IEnumerator RandomizeDataWithDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        RandomizeData();
     }
 
     public void ClearData()
