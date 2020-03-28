@@ -62,6 +62,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 CreateTakeItemButton();
                 CreateUseItemButton();
                 CreateSplitStackButton();
+                CreateRemoveAmmunitionButton();
                 CreateDropItemButton();
             }
         }
@@ -111,20 +112,50 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 menuButton.GetComponentInChildren<Text>().text = "Split Stack";
 
                 menuButton.GetComponent<Button>().onClick.AddListener(SplitStack);
+
+                invUI.quantityMenu.transform.position = parentSlot.transform.position + new Vector3(0, -2.25f, 0);
+
+                // If the slot is on the far right of the inventory menu
+                if (parentSlot.slotParent != invUI.containerParent && parentSlot.slotCoordinate.x == invUI.maxInventoryWidth)
+                    invUI.quantityMenu.transform.position += new Vector3(-1.25f, 0, 0);
+
+                // Get our mouse's screen position
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+
+                // If the slot is on the very bottom of the screen
+                if (pos.y < -290.0f)
+                    invUI.quantityMenu.transform.position += new Vector3(0, 4f, 0);
             }
+        }
+    }
 
-            invUI.quantityMenu.transform.position = parentSlot.transform.position + new Vector3(0, -2.25f, 0);
+    void CreateRemoveAmmunitionButton()
+    {
+        if (thisInvSlot != null)
+        {
+            InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 
-            // If the slot is on the far right of the inventory menu
-            if (parentSlot.slotParent != invUI.containerParent && parentSlot.slotCoordinate.x == invUI.maxInventoryWidth)
-                invUI.quantityMenu.transform.position += new Vector3(-1.25f, 0, 0);
+            if (parentSlot.item.itemType == ItemType.Quiver && parentSlot.itemData.currentAmmoCount > 0)
+            {
+                GameObject menuButton = Instantiate(contextMenuButtonPrefab, contextMenu.transform);
 
-            // Get our mouse's screen position
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+                menuButton.name = "Remove Ammunition";
+                menuButton.GetComponentInChildren<Text>().text = "Remove Ammunition";
 
-            // If the slot is on the very bottom of the screen
-            if (pos.y < -290.0f)
-                invUI.quantityMenu.transform.position += new Vector3(0, 4f, 0);
+                menuButton.GetComponent<Button>().onClick.AddListener(RemoveAmmunition);
+            }
+        }
+        else if (thisEquipSlot != null)
+        {
+            if (thisEquipSlot.thisEquipmentSlot == EquipmentSlot.Quiver && thisEquipSlot.itemData.currentAmmoCount > 0)
+            {
+                GameObject menuButton = Instantiate(contextMenuButtonPrefab, contextMenu.transform);
+
+                menuButton.name = "Remove Ammunition";
+                menuButton.GetComponentInChildren<Text>().text = "Remove Ammunition";
+
+                menuButton.GetComponent<Button>().onClick.AddListener(RemoveAmmunition);
+            }
         }
     }
 
@@ -221,6 +252,51 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         invUI.quantityMenu.currentItemData = parentSlot.itemData;
 
         DisableContextMenu();
+    }
+
+    void RemoveAmmunition()
+    {
+        if (thisInvSlot != null || thisEquipSlot != null)
+        {
+            InventorySlot parentSlot = null;
+            if (thisInvSlot != null)
+                parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
+
+            // Create a new icon, place it in the temp inv slot and transfer data to it
+            ItemData prefabItemData = null;
+            if (thisInvSlot != null)
+                prefabItemData = parentSlot.itemData.ammoTypePrefab.GetComponent<ItemData>();
+            else if (thisEquipSlot != null)
+                prefabItemData = thisEquipSlot.itemData.ammoTypePrefab.GetComponent<ItemData>();
+
+            invUI.tempSlot.AddItem(prefabItemData.equipment);
+            ItemData tempSlotItemData = invUI.tempSlot.itemData;
+            prefabItemData.TransferData(prefabItemData, tempSlotItemData);
+            tempSlotItemData.hasBeenRandomized = true;
+
+            if (thisInvSlot != null)
+                tempSlotItemData.currentStackSize = parentSlot.itemData.currentAmmoCount;
+            else if (thisEquipSlot != null)
+                tempSlotItemData.currentStackSize = thisEquipSlot.itemData.currentAmmoCount;
+
+            // Set the new icon as the currentlySelectedItem/ItemData and also set invSlotMovingFrom
+            invUI.currentlySelectedItem = tempSlotItemData.item;
+            invUI.currentlySelectedItemData = tempSlotItemData;
+            invUI.invSlotMovingFrom = invUI.tempSlot;
+
+            if (thisInvSlot != null)
+            {
+                parentSlot.itemData.currentAmmoCount = 0;
+                parentSlot.stackSizeText.text = "";
+            }
+            else if (thisEquipSlot != null)
+            {
+                thisEquipSlot.itemData.currentAmmoCount = 0;
+                thisEquipSlot.quiverText.text = "";
+            }
+
+            DisableContextMenu();
+        }
     }
 
     void UseItem()

@@ -203,6 +203,7 @@ public class EquipSlot : MonoBehaviour
                         {
                             itemData.currentAmmoCount++;
                             invUI.currentlySelectedItemData.currentStackSize--;
+                            itemData.ammoTypePrefab = invUI.currentlySelectedItem.prefab;
                         }
 
                         if (invUI.currentlySelectedItemData.currentStackSize <= 0)

@@ -26,6 +26,7 @@ public class ItemData : MonoBehaviour
     public int defense = 0;
 
     [Header("Quiver Data")]
+    public GameObject ammoTypePrefab;
     public int currentAmmoCount = 0;
 
     void Awake()
@@ -75,6 +76,7 @@ public class ItemData : MonoBehaviour
 
         // Ammo Data
         dataReceiver.currentAmmoCount = dataGiver.currentAmmoCount;
+        dataReceiver.ammoTypePrefab = dataGiver.ammoTypePrefab;
     }
 
     public IEnumerator TransferDataWithDelay(ItemData dataGiver, ItemData dataReceiver)
@@ -152,6 +154,7 @@ public class ItemData : MonoBehaviour
         defense = 0;
 
         currentAmmoCount = 0;
+        ammoTypePrefab = null;
 }
 
     int CalculateItemValue()

@@ -163,7 +163,7 @@ public class Inventory : MonoBehaviour
 
                     if (itemData.item.itemType == ItemType.Ammunition && itemData.currentStackSize > 1)
                         invSlots[i].stackSizeText.text = invSlots[i].itemData.currentStackSize.ToString(); // Set our stack size text for the slot
-                    else if (itemData.item.itemType == ItemType.Ammunition && itemData.currentAmmoCount > 0)
+                    else if (itemData.item.itemType == ItemType.Quiver && itemData.currentAmmoCount > 0)
                         invSlots[i].stackSizeText.text = invSlots[i].itemData.currentAmmoCount.ToString();
 
                     for (int j = 0; j < slotsToFill.Length; j++)
@@ -403,6 +403,7 @@ public class Inventory : MonoBehaviour
                                     {
                                         slot.itemData.currentAmmoCount++;
                                         slot.stackSizeText.text = slot.itemData.currentAmmoCount.ToString();
+                                        slot.itemData.ammoTypePrefab = invUI.currentlySelectedItem.prefab;
                                     }
 
                                     invUI.currentlySelectedItemData.currentStackSize--;

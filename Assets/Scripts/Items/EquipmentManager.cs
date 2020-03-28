@@ -55,7 +55,6 @@ public class EquipmentManager : MonoBehaviour
     GameObject EquipmentParent;
 
     int slotIndex = 0;
-    ItemData oldItem = null;
 
     void Start()
     {
@@ -78,23 +77,15 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
-        oldItem = null; // Reset the oldItem
-
         if (weaponSlot != WeaponSlot.None) // If the item is a weapon
         {
             slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
-
-            if (currentWeapons[slotIndex] != null) // Make a reference to our old weapon if we already had something equipped in this slot
-                oldItem = currentWeapons[slotIndex];
 
             currentWeapons[slotIndex] = itemData; // Assign the weapon to our currentWeapons array
         }
         else if (equipmentSlot != EquipmentSlot.None) // If the item is a piece of equipment
         {
             slotIndex = (int)equipmentSlot; // Grab the index number of this equipmentSlot
-
-            if (currentEquipment[slotIndex] != null) // Make a reference to our old armor if we already had something equipped in this slot
-                oldItem = currentEquipment[slotIndex];
 
             currentEquipment[slotIndex] = itemData; // Assign the equipment to our currentEquipment array
         }
@@ -107,17 +98,22 @@ public class EquipmentManager : MonoBehaviour
         int ammoCount = itemData.currentStackSize;
         for (int i = 0; i < ammoCount; i++)
         {
-            Debug.Log(currentEquipment[(int)EquipmentSlot.Quiver].name);
             if (currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount < currentEquipment[(int)EquipmentSlot.Quiver].equipment.maxAmmo)
             {
                 itemData.currentStackSize--;
                 currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount++;
                 quiverSlot.quiverText.text = currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();
-                invSlotTakingFrom.stackSizeText.text = itemData.currentStackSize.ToString();
+
+                if (itemData.currentStackSize > 1)
+                    invSlotTakingFrom.stackSizeText.text = itemData.currentStackSize.ToString();
+                else
+                    invSlotTakingFrom.stackSizeText.text = "";
             }
             else
                 break;
         }
+
+        currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;
 
         if (itemData.currentStackSize <= 0)
         {
@@ -128,9 +124,8 @@ public class EquipmentManager : MonoBehaviour
 
     public void AutoEquip(Equipment newItem, ItemData itemData, InventorySlot invSlotTakingFrom)
     {
-        oldItem = null;
-        int slotIndex = 0;
 
+        int slotIndex = 0;
         if (newItem.weaponType != WeaponType.NotAWeapon) // If this is a weapon
         {
             if (newItem.weaponSlot != WeaponSlot.None)
@@ -148,11 +143,6 @@ public class EquipmentManager : MonoBehaviour
             }
 
             slotIndex = (int)newItem.weaponSlot;
-
-            if (currentWeapons[slotIndex] != null)
-                oldItem = currentWeapons[slotIndex];
-            
-            currentWeapons[slotIndex] = itemData;
         }
         else if (newItem.armorType == ArmorType.Ring)
         {
@@ -163,26 +153,28 @@ public class EquipmentManager : MonoBehaviour
                 newItem.equipmentSlot = EquipmentSlot.LeftRing;
 
             slotIndex = (int)newItem.equipmentSlot;
-
-            if (currentEquipment[slotIndex] != null)
-                oldItem = currentEquipment[slotIndex];
-
-            currentEquipment[slotIndex] = itemData;
         }
         else
         {
             slotIndex = (int)newItem.equipmentSlot;
-
-            if (currentEquipment[slotIndex] != null)
-                oldItem = currentEquipment[slotIndex];
-
-            currentEquipment[slotIndex] = itemData;
         }
 
+        EquipSlot equipSlotAddingTo = null;
         foreach (EquipSlot equipSlot in FindObjectsOfType<EquipSlot>())
         {
             if (equipSlot.thisWeaponSlot == newItem.weaponSlot && equipSlot.thisEquipmentSlot == newItem.equipmentSlot)
             {
+                equipSlotAddingTo = equipSlot;
+
+                if (invSlotTakingFrom.slotParent == invUI.containerParent)
+                {
+                    for (int i = 0; i < invUI.currentlyActiveContainer.containerObjects.Count; i++)
+                    {
+                        if (invUI.currentlyActiveContainer.containerObjects[i].GetComponent<ItemData>() == invSlotTakingFrom.itemData)
+                            Destroy(invUI.currentlyActiveContainer.containerObjects[i]);
+                    }
+                }
+
                 invSlotTakingFrom.ClearSlot(); // Clear out the new item from the inventory
                 
                 if (equipSlot.isEmpty == false)
@@ -212,6 +204,11 @@ public class EquipmentManager : MonoBehaviour
                 break;
             }
         }
+
+        if (newItem.weaponType != WeaponType.NotAWeapon) // If this is a weapon
+            currentWeapons[slotIndex] = equipSlotAddingTo.itemData;
+        else // If this is equipment
+            currentEquipment[slotIndex] = equipSlotAddingTo.itemData;
     }
 
     void EquipToCharacter(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)

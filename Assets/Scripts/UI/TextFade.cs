@@ -10,7 +10,7 @@ public class TextFade : MonoBehaviour
     float timer;
     float fadeOutSpeed = 0.005f;
     float moveSpeed = 0.8f;
-    float fadeTime = 2f;
+    float fadeTime = 3f;
 
     GameManager GM;
 

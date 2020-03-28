@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ES3Types
 {
 	[UnityEngine.Scripting.Preserve]
-	[ES3PropertiesAttribute("hasBeenRandomized", "item", "equipment", "itemName", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense")]
+	[ES3PropertiesAttribute("hasBeenRandomized", "item", "equipment", "itemName", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense", "ammoType", "currentAmmoCount")]
 	public class ES3Type_ItemData : ES3ComponentType
 	{
 		public static ES3Type Instance = null;
@@ -28,6 +28,8 @@ namespace ES3Types
 			writer.WriteProperty("durability", instance.durability, ES3Type_float.Instance);
 			writer.WriteProperty("damage", instance.damage, ES3Type_int.Instance);
 			writer.WriteProperty("defense", instance.defense, ES3Type_int.Instance);
+			writer.WritePropertyByRef("ammoType", instance.ammoTypePrefab);
+			writer.WriteProperty("currentAmmoCount", instance.currentAmmoCount, ES3Type_int.Instance);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
@@ -67,6 +69,12 @@ namespace ES3Types
 						break;
 					case "defense":
 						instance.defense = reader.Read<System.Int32>(ES3Type_int.Instance);
+						break;
+					case "ammoType":
+						instance.ammoTypePrefab = reader.Read<GameObject>();
+						break;
+					case "currentAmmoCount":
+						instance.currentAmmoCount = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
 					default:
 						reader.Skip();

@@ -130,6 +130,7 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!114 &8481302789920993349
 MonoBehaviour:
@@ -173,8 +174,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId: 5684648089522393326
   localRefs:
-    _Keys: []
-    _Values: 
+    _Keys:
+    - {fileID: 6368744644473137523}
+    - {fileID: 6368744644473137516}
+    - {fileID: 6368744644473137519}
+    - {fileID: 4667287882495923510}
+    - {fileID: 1284468152648946191}
+    - {fileID: 8481302789920993349}
+    - {fileID: 3477251322806864854}
+    - {fileID: -7015548383423861188}
+    - {fileID: -2638905032433794660}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 21300000, guid: b69b7f2e2ec6a5742a823cccc28b38d6, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: ca8e65e6ecd6daa4292e15237482c471, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: 124e81677a27ef0245aaa051271c872ef209087863d7933d9e292a3666b7ca0c23dd27cb8367094d698e3c820da800012b3ec7dffa866b15e1bf04a352266973e19375054352b1591356e1f214154b462b2c0b28f0eb1255493ce9c46365fb4224c962a11e0644288d6dcca4a57900080a4bce7e3291630b
 --- !u!114 &-2638905032433794660
 MonoBehaviour:
   m_ObjectHideFlags: 0
