@@ -8,15 +8,18 @@ public class BasicStats : MonoBehaviour
     [Header("Health")]
     public float maxHealth = 50;
     public float health = 50;
+    public bool healthCanRegen = true;
 
     [Header("Mana")]
     public float maxMana = 50;
     public float mana = 50;
+    public bool manaCanRegen = true;
 
     [Header("Stamina")]
     public float maxStamina = 50;
     public float stamina = 50;
     public int staminaRegenRate = 5;
+    public bool staminaCanRegen = true;
 
     [Header("Encumbrance")]
     public float maxEncumbrance = 100f;
@@ -29,10 +32,6 @@ public class BasicStats : MonoBehaviour
     public GameObject deadBodyPrefab;
     public bool isPlayer;
     public bool isDead;
-
-    bool healthCanRegen = true;
-    bool staminaCanRegen = true;
-    bool manaCanRegen = true;
 
     ItemDrop leftWeaponItemDrop;
     ItemDrop rightWeaponItemDrop;
@@ -91,12 +90,10 @@ public class BasicStats : MonoBehaviour
 
     public IEnumerator HealthRegen(float goalHealth, int regenRate)
     {
-        if (health < goalHealth && health < maxHealth)
+        if (healthCanRegen && health < goalHealth && health < maxHealth)
         {
-            healthCanRegen = false;
             yield return new WaitForSeconds(0.2f);
             Heal(regenRate / 5);
-            healthCanRegen = true;
         }
     }
 
@@ -104,12 +101,12 @@ public class BasicStats : MonoBehaviour
     {
         isDead = true;
 
-        yield return new WaitForSeconds(0.05f);
-
         if (arms.leftWeaponEquipped || arms.leftShieldEquipped)
             leftWeaponItemDrop = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
         if (arms.rightWeaponEquipped || arms.rightShieldEquipped)
             rightWeaponItemDrop = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+
+        yield return new WaitForSeconds(0.05f);
 
         if (leftWeaponItemDrop != null)
             leftWeaponItemDrop.DropItem(false);
@@ -150,12 +147,10 @@ public class BasicStats : MonoBehaviour
 
     public IEnumerator ManaRegen(float goalMana, int regenRate)
     {
-        if (mana < goalMana && mana < maxMana)
+        if (manaCanRegen && mana < goalMana && mana < maxMana)
         {
-            manaCanRegen = false;
             yield return new WaitForSeconds(0.2f);
             RestoreMana(regenRate / 5);
-            manaCanRegen = true;
         }
     }
 
@@ -187,12 +182,10 @@ public class BasicStats : MonoBehaviour
 
     public IEnumerator StaminaRegen()
     {
-        if (stamina < maxStamina)
+        if (staminaCanRegen && stamina < maxStamina)
         {
-            staminaCanRegen = false;
             yield return new WaitForSeconds(0.2f);
             RestoreStamina(staminaRegenRate / 5);
-            staminaCanRegen = true;
         }
     }
 }

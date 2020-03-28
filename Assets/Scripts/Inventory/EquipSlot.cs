@@ -17,6 +17,7 @@ public class EquipSlot : MonoBehaviour
     public Sprite emptySlotSprite;
     public Sprite fullSlotSprite;
     public Text slotText;
+    public Text quiverText;
 
     [Header("Item Data")]
     public Equipment equipment;
@@ -26,8 +27,6 @@ public class EquipSlot : MonoBehaviour
     Inventory inv;
     EquipmentManager equipmentManager;
     HoverHighlight hoverHighlightScript;
-
-    Text quiverText;
 
     Vector3 mousePos;
     float xPosOffset = 0;
@@ -42,7 +41,7 @@ public class EquipSlot : MonoBehaviour
         slotText = transform.Find("Text").GetComponent<Text>();
 
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
-            quiverText = GetComponentInChildren<Text>();
+            quiverText = transform.Find("Stack Size Text").GetComponentInChildren<Text>();
 
         if (isEmpty == false)
             slotBackgroundImage.sprite = emptySlotSprite;
@@ -91,8 +90,8 @@ public class EquipSlot : MonoBehaviour
             if (invUI.currentlySelectedItemData.equipment != null) // If this item is of the equipment type (armor, weapons, etc.)
             {
                 // If this item belongs in this slot
-                if (invUI.currentlySelectedItemData.equipment.equipmentSlot != EquipmentSlot.None && invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipmentSlot
-                    || invUI.currentlySelectedItemData.equipment.weaponSlot != WeaponSlot.None && invUI.currentlySelectedItemData.equipment.weaponSlot == thisWeaponSlot
+                if ((invUI.currentlySelectedItemData.equipment.equipmentSlot != EquipmentSlot.None && invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipmentSlot)
+                    || (invUI.currentlySelectedItemData.equipment.weaponSlot != WeaponSlot.None && invUI.currentlySelectedItemData.equipment.weaponSlot == thisWeaponSlot)
                     || (thisWeaponSlot != WeaponSlot.None && thisWeaponSlot != WeaponSlot.Ranged
                         && (invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponLeft || invUI.currentlySelectedItemData.equipment.weaponSlot == WeaponSlot.WeaponRight)))
                 {
@@ -113,7 +112,7 @@ public class EquipSlot : MonoBehaviour
                 }
                 else // If we this item doesn't go here
                 {
-                    Debug.LogWarning(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
+                    Debug.Log(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
                 }
             }
             else // If this item is not of the equipment type
@@ -193,9 +192,31 @@ public class EquipSlot : MonoBehaviour
 
                     equipmentManager.EquipItem(equipment, itemData, thisWeaponSlot, thisEquipmentSlot); // Equip the item
                 }
+                // If we're trying to add ammo to the quiver
+                else if (isEmpty == false && invUI.invSlotMovingFrom != null && invUI.currentlySelectedItemData != null 
+                    && thisEquipmentSlot == EquipmentSlot.Quiver && invUI.currentlySelectedItemData.equipment.itemType == ItemType.Ammunition)
+                {
+                    int currentlySelectedItemStackSize = invUI.currentlySelectedItemData.currentStackSize;
+                    for (int i = 0; i < currentlySelectedItemStackSize; i++)
+                    {
+                        if (itemData.currentAmmoCount < equipment.maxAmmo)
+                        {
+                            itemData.currentAmmoCount++;
+                            invUI.currentlySelectedItemData.currentStackSize--;
+                        }
+
+                        if (invUI.currentlySelectedItemData.currentStackSize <= 0)
+                        {
+                            invUI.invSlotMovingFrom.ClearSlot();
+                            invUI.StopDraggingInvItem();
+                        }
+                    }
+
+                    SetQuiverStackSizeText();
+                }
                 else // If we this item doesn't go here
                 {
-                    Debug.LogWarning(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
+                    Debug.Log(invUI.currentlySelectedItem.name + " doesn't go in this slot.");
                 }
             }
             else // If this item is not of the equipment type
@@ -276,8 +297,8 @@ public class EquipSlot : MonoBehaviour
     {
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
         {
-            if (itemData.currentStackSize > 0)
-                quiverText.text = itemData.currentStackSize.ToString();
+            if (itemData.currentAmmoCount > 0)
+                quiverText.text = itemData.currentAmmoCount.ToString();
             else
                 quiverText.text = "";
         }

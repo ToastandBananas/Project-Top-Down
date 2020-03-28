@@ -27,7 +27,7 @@ MonoBehaviour:
   staticValue: 1
   inventoryIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
     type: 3}
-  iconWidth: 1
+  iconWidth: 2
   iconHeight: 2
   equipSlotIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
     type: 3}

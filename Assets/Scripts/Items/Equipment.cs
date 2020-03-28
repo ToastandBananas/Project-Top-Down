@@ -37,6 +37,9 @@ public class Equipment : Item
     public int maxBaseDefense = 1;
     public float armorModifier = 1f;
 
+    [Header("Quiver Stats")]
+    public int maxAmmo = 10;
+
     [Header("Other Stats")]
     public int minBaseDurability = 10;
     public int maxBaseDurability = 20;
@@ -45,10 +48,18 @@ public class Equipment : Item
     {
         base.Use(itemData);
 
-        // Equip the item
-        equipmentManager.AutoEquip(this, itemData, invSlot);
+        if (itemData.equipment.itemType != ItemType.Ammunition)
+        {
+            // Equip the item
+            equipmentManager.AutoEquip(this, itemData, invSlot);
 
-        // Remove from the inventory
-        RemoveFromInventory(itemData);
+            // Remove from the inventory
+            RemoveFromInventory(itemData);
+        }
+        else // If this item is ammunition
+        {
+            // Add ammo to the quiver
+            equipmentManager.AutoAddAmmoToQuiver(this, itemData, invSlot);
+        }
     }
 }

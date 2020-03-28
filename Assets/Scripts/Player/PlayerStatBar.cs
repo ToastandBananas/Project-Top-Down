@@ -9,15 +9,14 @@ public class PlayerStatBar : MonoBehaviour
 
     Slider slider;
     RectTransform rectTransform;
-    Transform bar;
-    Image barSprite;
-    RectTransform barSpriteRect;
+    Image barFill;
     BasicStats playerStats;
 
     void Awake()
     {
         slider = GetComponent<Slider>();
         rectTransform = GetComponent<RectTransform>();
+        barFill = transform.Find("Fill").GetComponent<Image>();
     }
 
     void Start()
@@ -56,7 +55,7 @@ public class PlayerStatBar : MonoBehaviour
 
     public void SetColor(Color color)
     {
-        barSprite.color = color;
+        barFill.color = color;
     } 
 
     public void SetBarSize(float maxStatValue)

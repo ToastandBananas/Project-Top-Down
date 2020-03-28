@@ -38,7 +38,7 @@ public class Tooltip : MonoBehaviour
             tooltipText.text += tooltipSlot.item.description + "\n";
 
             // Weapon specific info
-            if (tooltipSlot.item.itemType == ItemType.Weapon || tooltipSlot.item.itemType == ItemType.Ammunition)
+            if (tooltipSlot.item.itemType == ItemType.Weapon)
             {
                 tooltipText.text += "Damage: " + tooltipSlot.itemData.damage.ToString() + "\n";
             }
@@ -72,7 +72,7 @@ public class Tooltip : MonoBehaviour
             tooltipText.text += equipSlot.equipment.description + "\n";
 
             // Weapon specific info
-            if (equipSlot.equipment.itemType == ItemType.Weapon || equipSlot.equipment.itemType == ItemType.Ammunition)
+            if (equipSlot.equipment.itemType == ItemType.Weapon)
             {
                 tooltipText.text += "Damage: " + equipSlot.itemData.damage.ToString() + "\n";
             }

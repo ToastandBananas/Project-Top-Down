@@ -88,8 +88,9 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void HighlightEquipSlots()
     {
         // If this item goes in this slot
-        if (invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipSlot.thisEquipmentSlot
-            && invUI.currentlySelectedItemData.equipment.weaponSlot == thisEquipSlot.thisWeaponSlot)
+        if ((invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipSlot.thisEquipmentSlot
+            && invUI.currentlySelectedItemData.equipment.weaponSlot == thisEquipSlot.thisWeaponSlot) 
+            || (invUI.currentlySelectedItem.itemType == ItemType.Ammunition && thisEquipSlot.thisEquipmentSlot == EquipmentSlot.Quiver && thisEquipSlot.isEmpty == false))
         {
             TurnSlotGreen(null, thisEquipSlot);
         }

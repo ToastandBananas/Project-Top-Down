@@ -25,6 +25,9 @@ public class ItemData : MonoBehaviour
     [Header("Armor Data")]
     public int defense = 0;
 
+    [Header("Quiver Data")]
+    public int currentAmmoCount = 0;
+
     void Awake()
     {
         if (item == null)
@@ -69,6 +72,9 @@ public class ItemData : MonoBehaviour
 
         // Armor Data
         dataReceiver.defense = dataGiver.defense;
+
+        // Ammo Data
+        dataReceiver.currentAmmoCount = dataGiver.currentAmmoCount;
     }
 
     public IEnumerator TransferDataWithDelay(ItemData dataGiver, ItemData dataReceiver)
@@ -102,11 +108,14 @@ public class ItemData : MonoBehaviour
 
             durability = maxDurability;
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
                 damage = Random.Range(equipment.minBaseDamage, equipment.maxBaseDamage);
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
                 defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense);
+
+            if (equipment.isStackable)
+                currentStackSize = Random.Range(1, equipment.maxStackSize + 1);
         }
         // Consumable class data
         /*else if (consumable != null)
@@ -135,20 +144,21 @@ public class ItemData : MonoBehaviour
         
         itemName = "";
         value = 0;
-        currentStackSize = 0;
+        currentStackSize = 1;
         maxDurability = 0;
         durability = 0;
         
         damage = 0;
-
         defense = 0;
+
+        currentAmmoCount = 0;
 }
 
     int CalculateItemValue()
     {
         int itemValue = 0;
 
-        if (equipment != null)//|| consumable != null)
+        if (equipment != null && equipment.minBaseValue != 0 && equipment.maxBaseValue != 0)//|| consumable != null)
             itemValue = Mathf.RoundToInt(item.minBaseValue + ((item.maxBaseValue - item.minBaseValue) * CalculatePercentPointValue()));
         else
             itemValue = item.staticValue;
@@ -166,7 +176,7 @@ public class ItemData : MonoBehaviour
             if (equipment.maxBaseDurability > 0)
                 totalPointsPossible += (equipment.maxBaseDurability - equipment.minBaseDurability);
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
                 totalPointsPossible += (equipment.maxBaseDamage - equipment.minBaseDamage) * 2;
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)

@@ -21,12 +21,15 @@ MonoBehaviour:
   weight: 0.2
   itemType: 6
   baseRarity: 0
-  minBaseValue: 1
-  maxBaseValue: 5
-  staticValue: 1
+  minBaseValue: 0
+  maxBaseValue: 0
+  staticValue: 2
+  inventoryIcon: {fileID: 21300000, guid: 157ab6a67e67951478aa068912743c53, type: 3}
   iconWidth: 1
   iconHeight: 2
-  inventoryIcon: {fileID: 21300000, guid: 157ab6a67e67951478aa068912743c53, type: 3}
+  equipSlotIcon: {fileID: 0}
+  equipSlotIconWidth: 0
+  equipSlotIconHeight: 0
   isStackable: 1
   maxStackSize: 10
   onUseItemText: Added arrows to quiver
@@ -36,17 +39,18 @@ MonoBehaviour:
   armorType: 0
   thisWeaponsSpecialAttacks: 
   weaponSlot: 0
-  equipmentSlot: 13
+  equipmentSlot: 0
   deathSprite: {fileID: 0}
   leftCuirassArmSprite: {fileID: 0}
   rightCuirassArmSpite: {fileID: 0}
-  minBaseDamage: 1
-  maxBaseDamage: 10
-  damageModifier: 1
-  knockbackPower: 1
-  baseStaminaUse: 5
+  minBaseDamage: 0
+  maxBaseDamage: 0
+  damageModifier: 0
+  knockbackPower: 0
+  baseStaminaUse: 0
   minBaseDefense: 0
   maxBaseDefense: 0
   armorModifier: 0
+  maxAmmo: 10
   minBaseDurability: 0
   maxBaseDurability: 0

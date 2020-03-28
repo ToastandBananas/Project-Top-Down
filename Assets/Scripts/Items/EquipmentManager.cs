@@ -102,7 +102,31 @@ public class EquipmentManager : MonoBehaviour
         EquipToCharacter(newItem, itemData, weaponSlot, equipmentSlot); // Physically equip the weapon/equipment on the character
     }
 
-    public void AutoEquip(Equipment newItem, ItemData itemData, InventorySlot invSlot)
+    public void AutoAddAmmoToQuiver(Equipment newItem, ItemData itemData, InventorySlot invSlotTakingFrom)
+    {
+        int ammoCount = itemData.currentStackSize;
+        for (int i = 0; i < ammoCount; i++)
+        {
+            Debug.Log(currentEquipment[(int)EquipmentSlot.Quiver].name);
+            if (currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount < currentEquipment[(int)EquipmentSlot.Quiver].equipment.maxAmmo)
+            {
+                itemData.currentStackSize--;
+                currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount++;
+                quiverSlot.quiverText.text = currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();
+                invSlotTakingFrom.stackSizeText.text = itemData.currentStackSize.ToString();
+            }
+            else
+                break;
+        }
+
+        if (itemData.currentStackSize <= 0)
+        {
+            newItem.RemoveFromInventory(itemData);
+            invSlotTakingFrom.ClearSlot();
+        }
+    }
+
+    public void AutoEquip(Equipment newItem, ItemData itemData, InventorySlot invSlotTakingFrom)
     {
         oldItem = null;
         int slotIndex = 0;
@@ -159,7 +183,7 @@ public class EquipmentManager : MonoBehaviour
         {
             if (equipSlot.thisWeaponSlot == newItem.weaponSlot && equipSlot.thisEquipmentSlot == newItem.equipmentSlot)
             {
-                invSlot.ClearSlot(); // Clear out the new item from the inventory
+                invSlotTakingFrom.ClearSlot(); // Clear out the new item from the inventory
                 
                 if (equipSlot.isEmpty == false)
                 {
@@ -239,7 +263,8 @@ public class EquipmentManager : MonoBehaviour
                     EquipArmor(newItem, itemData, rightBoot);
                     break;
                 case EquipmentSlot.Quiver:
-                    quiverSlot.SetQuiverStackSizeText();
+                    if (itemData.currentAmmoCount > 0)
+                        quiverSlot.quiverText.text = itemData.currentAmmoCount.ToString();
                     // TODO: Make visible quiver on character? // EquipArmor(newItem, itemData, quiver, true);
                     break;
                 case EquipmentSlot.Belt:
