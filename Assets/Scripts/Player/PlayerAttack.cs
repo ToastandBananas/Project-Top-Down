@@ -64,6 +64,7 @@ public class PlayerAttack : MonoBehaviour
         {
             Update_LeftArmAnims();
             Update_RightArmAnims();
+            Update_BothArmAnims();
         }
     }
 
@@ -110,8 +111,7 @@ public class PlayerAttack : MonoBehaviour
         {
             LeftShield_Block();
         }
-
-        if (arms.leftWeaponEquipped && leftQuickAttacking == false)
+        else if (arms.leftWeaponEquipped && leftQuickAttacking == false)
         {
             Left1H_Attack();
         }
@@ -123,10 +123,17 @@ public class PlayerAttack : MonoBehaviour
         {
             RightShield_Block();
         }
-
-        if (arms.rightWeaponEquipped && rightQuickAttacking == false)
+        else if (arms.rightWeaponEquipped && rightQuickAttacking == false)
         {
             Right1H_Attack();
+        }
+    }
+
+    void Update_BothArmAnims()
+    {
+        if (arms.rangedWeaponEquipped)
+        {
+            DrawArrow();
         }
     }
 
@@ -259,6 +266,23 @@ public class PlayerAttack : MonoBehaviour
             rightQuickAttacking = false;
             rightArmAnim.SetBool("doQuickAttack", false);
             bodyAnim.SetBool("powerAttackRight", false);
+        }
+    }
+
+    void DrawArrow()
+    {
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
+        {
+            // Set bow string line renderer end positions here
+            bodyAnim.SetBool("doDrawArrow", true);
+            leftArmAnim.SetBool("doDrawArrow", true);
+            rightArmAnim.SetBool("doDrawArrow", true);
+        }
+        else
+        {
+            bodyAnim.SetBool("doDrawArrow", false);
+            leftArmAnim.SetBool("doDrawArrow", false);
+            rightArmAnim.SetBool("doDrawArrow", false);
         }
     }
 

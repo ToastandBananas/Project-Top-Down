@@ -9,7 +9,6 @@ public class EquipmentManager : MonoBehaviour
     public GameObject prefabWeaponBase1H_R;
     public GameObject prefabShieldBase_L;
     public GameObject prefabShieldBase_R;
-    public GameObject prefabRangedWeaponBase;
 
     [Header("Currently Equipped Lists")]
     public ItemData[] currentWeapons;
@@ -75,6 +74,40 @@ public class EquipmentManager : MonoBehaviour
         StartCoroutine(SetCurrentlyEquipped());
     }
 
+    void Update()
+    {
+        if (basicStats.isPlayer)
+        {
+            if (GameControls.gamePlayActions.playerSwapWeapon.WasPressed)
+            {
+                // Swap weapons if the player has both melee and ranged weapons equipped
+                if (currentWeapons[(int)WeaponSlot.Ranged] != null && (currentWeapons[(int)WeaponSlot.WeaponLeft] != null || currentWeapons[(int)WeaponSlot.WeaponRight] != null))
+                {
+                    if (arms.leftWeapon != null && arms.leftWeapon.generalClassification == GeneralClassification.RangedWeapon)
+                    {
+                        Unequip(currentWeapons[(int)WeaponSlot.Ranged].equipment, currentWeapons[(int)WeaponSlot.Ranged], WeaponSlot.Ranged, EquipmentSlot.None, false);
+
+                        if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
+                            EquipToCharacter(currentWeapons[(int)WeaponSlot.WeaponLeft].equipment, currentWeapons[(int)WeaponSlot.WeaponLeft], WeaponSlot.WeaponLeft, EquipmentSlot.None);
+
+                        if (currentWeapons[(int)WeaponSlot.WeaponRight] != null)
+                            EquipToCharacter(currentWeapons[(int)WeaponSlot.WeaponRight].equipment, currentWeapons[(int)WeaponSlot.WeaponRight], WeaponSlot.WeaponRight, EquipmentSlot.None);
+                    }
+                    else
+                    {
+                        if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
+                            Unequip(currentWeapons[(int)WeaponSlot.WeaponLeft].equipment, currentWeapons[(int)WeaponSlot.WeaponLeft], WeaponSlot.WeaponLeft, EquipmentSlot.None, false);
+
+                        if (currentWeapons[(int)WeaponSlot.WeaponRight] != null)
+                            Unequip(currentWeapons[(int)WeaponSlot.WeaponRight].equipment, currentWeapons[(int)WeaponSlot.WeaponRight], WeaponSlot.WeaponRight, EquipmentSlot.None, false);
+
+                        EquipToCharacter(currentWeapons[(int)WeaponSlot.Ranged].equipment, currentWeapons[(int)WeaponSlot.Ranged], WeaponSlot.Ranged, EquipmentSlot.None);
+                    }
+                }
+            }
+        }
+    }
+
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
         if (weaponSlot != WeaponSlot.None) // If the item is a weapon
@@ -90,7 +123,11 @@ public class EquipmentManager : MonoBehaviour
             currentEquipment[slotIndex] = itemData; // Assign the equipment to our currentEquipment array
         }
 
-        EquipToCharacter(newItem, itemData, weaponSlot, equipmentSlot); // Physically equip the weapon/equipment on the character
+        if ((weaponSlot == WeaponSlot.Ranged && !arms.leftShieldEquipped && !arms.rightShieldEquipped && !arms.leftWeaponEquipped && !arms.rightWeaponEquipped && !arms.twoHanderEquipped)
+            || (weaponSlot != WeaponSlot.None && weaponSlot != WeaponSlot.Ranged && !arms.rangedWeaponEquipped))
+        {
+            EquipToCharacter(newItem, itemData, weaponSlot, equipmentSlot); // Physically equip the weapon/equipment on the character
+        }
     }
 
     public void AutoAddAmmoToQuiver(Equipment newItem, ItemData itemData, InventorySlot invSlotTakingFrom)
@@ -133,12 +170,14 @@ public class EquipmentManager : MonoBehaviour
                 // If this is a ranged weapon
                 if (newItem.weaponType == WeaponType.Bow || newItem.weaponType == WeaponType.Crossbow)
                     newItem.weaponSlot = WeaponSlot.Ranged;
-                else // If this is a melee weapon
+                else // If this is a melee weapon or shield
                 {
                     // See if one of the weapon slots is empty and assign it, or if they're both full, equip to the right arm
                     newItem.weaponSlot = WeaponSlot.WeaponLeft;
                     if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
                         newItem.weaponSlot = WeaponSlot.WeaponRight;
+
+                    Debug.Log(newItem.weaponSlot);
                 }
             }
 
@@ -155,9 +194,7 @@ public class EquipmentManager : MonoBehaviour
             slotIndex = (int)newItem.equipmentSlot;
         }
         else
-        {
             slotIndex = (int)newItem.equipmentSlot;
-        }
 
         EquipSlot equipSlotAddingTo = null;
         foreach (EquipSlot equipSlot in FindObjectsOfType<EquipSlot>())
@@ -211,20 +248,26 @@ public class EquipmentManager : MonoBehaviour
             currentEquipment[slotIndex] = equipSlotAddingTo.itemData;
     }
 
-    void EquipToCharacter(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
+    public void EquipToCharacter(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
         if (weaponSlot != WeaponSlot.None) // If this is a weapon
         {
             switch (weaponSlot) // Determine which slot to change
             {
                 case WeaponSlot.WeaponLeft:
-                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
+                    if (newItem.itemType == ItemType.Shield)
+                        EquipWeapon(newItem, itemData, prefabShieldBase_L, leftWeaponParent);
+                    else
+                        EquipWeapon(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
                     break;
                 case WeaponSlot.WeaponRight:
-                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
+                    if (newItem.itemType == ItemType.Shield)
+                        EquipWeapon(newItem, itemData, prefabShieldBase_R, rightWeaponParent);
+                    else
+                        EquipWeapon(newItem, itemData, prefabWeaponBase1H_R, rightWeaponParent);
                     break;
                 case WeaponSlot.Ranged:
-                    EquipWeapon(newItem, itemData, prefabRangedWeaponBase, leftWeaponParent);
+                    EquipWeapon(newItem, itemData, prefabWeaponBase1H_L, leftWeaponParent);
                     break;
             }
 
@@ -340,7 +383,8 @@ public class EquipmentManager : MonoBehaviour
             {
                 slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
                 
-                currentWeapons[slotIndex] = null; // Unassign the weapon from our currentWeapons array
+                if (addToInventory)
+                    currentWeapons[slotIndex] = null; // Unassign the weapon from our currentWeapons array
 
                 switch (weaponSlot) // Determine which slot to change
                 {
@@ -468,7 +512,7 @@ public class EquipmentManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         // Get weapon sprites if any are in the characters arms
-        if (leftWeaponParent != null)
+        if (leftWeaponParent != null && leftWeaponParent.childCount > 0)
         {
             if (leftWeaponParent.GetChild(0).GetComponentInChildren<ItemData>().equipment.generalClassification == GeneralClassification.RangedWeapon)
                 rangedWeapon = leftWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
@@ -476,7 +520,7 @@ public class EquipmentManager : MonoBehaviour
                 leftWeapon = leftWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
         }
 
-        if (rightWeaponParent != null)
+        if (rightWeaponParent != null && rightWeaponParent.childCount > 0)
             rightWeapon = rightWeaponParent.GetChild(0).GetComponentInChildren<SpriteRenderer>();
 
         // Add each weapon's ItemData to our currentWeapons and add the weapons to the appropriate slots in the Equipment Menu

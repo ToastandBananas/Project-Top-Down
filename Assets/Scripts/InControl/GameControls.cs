@@ -22,6 +22,9 @@ public class GameControls : MonoBehaviour
         gamePlayActions.playerSprint.AddDefaultBinding(Key.LeftShift);
         gamePlayActions.playerSprint.AddDefaultBinding(InputControlType.LeftStickButton);
 
+        gamePlayActions.playerSwapWeapon.AddDefaultBinding(Key.LeftAlt);
+        gamePlayActions.playerSwapWeapon.AddDefaultBinding(InputControlType.Action4);
+
         gamePlayActions.playerLockOn.AddDefaultBinding(Key.Tab);
         gamePlayActions.playerLockOn.AddDefaultBinding(InputControlType.RightStickButton);
 
@@ -57,7 +60,7 @@ public class GameControls : MonoBehaviour
 
         // UI Actions
         gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
-        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action4);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.DPadUp);
 
         gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
         gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);

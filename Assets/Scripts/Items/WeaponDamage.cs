@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeaponDamage : MonoBehaviour
 {
-    [HideInInspector] public Equipment equipment;
+    public Equipment equipment;
     [HideInInspector] public ItemData itemData;
 
     public Vector2 positionOffset;
@@ -37,7 +37,7 @@ public class WeaponDamage : MonoBehaviour
 
         transform.position += new Vector3(positionOffset.x, positionOffset.y, 0);
 
-        if (thisWeapon != null && thisWeapon.name == "Left Weapon")
+        if (thisWeapon != null && thisWeapon.name == "Left Weapon" && equipment.weaponType != WeaponType.Bow)
             GetComponent<SpriteRenderer>().flipX = true;
 
         SetSpecialAttackSlots();

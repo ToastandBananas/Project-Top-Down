@@ -5,6 +5,7 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerInteract;
     public PlayerAction playerDodge;
     public PlayerAction playerSprint;
+    public PlayerAction playerSwapWeapon;
     public PlayerAction playerLockOn;
     public PlayerAction playerSwitchLockOnTargetLeft, playerSwitchLockOnTargetRight;
     public PlayerOneAxisAction playerSwitchLockOnTargetAxis;
@@ -23,6 +24,8 @@ public class GamePlayActions : PlayerActionSet
         playerInteract = CreatePlayerAction("PlayerInteract");
         playerDodge = CreatePlayerAction("PlayerDodge");
         playerSprint = CreatePlayerAction("PlayerSprint");
+
+        playerSwapWeapon = CreatePlayerAction("PlayerSwapWeapon");
 
         playerLockOn = CreatePlayerAction("PlayerLockOn");
         playerSwitchLockOnTargetLeft = CreatePlayerAction("PlayerSwitchLockOnTargetLeft");

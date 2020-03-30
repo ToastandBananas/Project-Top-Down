@@ -20,7 +20,7 @@ public class Arms : MonoBehaviour
 
     public Transform leftArm, rightArm;
     public Equipment leftWeapon, rightWeapon;
-    public Animator leftArmAnim, rightArmAnim;
+    public Animator leftArmAnim, rightArmAnim, bodyAnim;
     
     void Awake()
     {
@@ -30,6 +30,10 @@ public class Arms : MonoBehaviour
     public void SetLeftAnims()
     {
         leftWeapon = null;
+
+        leftArmAnim.SetBool("startAttack", false);
+        leftArmAnim.SetBool("doDrawArrow", false);
+        bodyAnim.SetBool("doDrawArrow", false);
 
         if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
             leftWeapon = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
@@ -43,31 +47,58 @@ public class Arms : MonoBehaviour
             {
                 leftShieldEquipped = true;
                 leftWeaponEquipped = false;
+                rangedWeaponEquipped = false;
+                twoHanderEquipped = false;
                 leftArmAnim.SetBool("weaponEquipped", false);
                 leftArmAnim.SetBool("shieldEquipped", true);
+                leftArmAnim.SetBool("rangedWeaponEquipped", false);
+                rightArmAnim.SetBool("rangedWeaponEquipped", false);
             }
             else if (leftWeapon.generalClassification == GeneralClassification.Weapon1H)
             {
                 leftShieldEquipped = false;
                 leftWeaponEquipped = true;
+                rangedWeaponEquipped = false;
+                twoHanderEquipped = false;
                 leftArmAnim.SetBool("weaponEquipped", true);
                 leftArmAnim.SetBool("shieldEquipped", false);
                 leftArmAnim.SetBool("isBlocking", false);
+                leftArmAnim.SetBool("rangedWeaponEquipped", false);
+                rightArmAnim.SetBool("rangedWeaponEquipped", false);
+            }
+            else if (leftWeapon.generalClassification == GeneralClassification.RangedWeapon)
+            {
+                leftShieldEquipped = false;
+                leftWeaponEquipped = false;
+                rangedWeaponEquipped = true;
+                twoHanderEquipped = false;
+                leftArmAnim.SetBool("weaponEquipped", false);
+                leftArmAnim.SetBool("shieldEquipped", false);
+                leftArmAnim.SetBool("isBlocking", false);
+                leftArmAnim.SetBool("rangedWeaponEquipped", true);
+                rightArmAnim.SetBool("rangedWeaponEquipped", true);
             }
         }
         else
         {
             leftShieldEquipped = false;
             leftWeaponEquipped = false;
+            rangedWeaponEquipped = false;
+            twoHanderEquipped = false;
             leftArmAnim.SetBool("weaponEquipped", false);
             leftArmAnim.SetBool("shieldEquipped", false);
             leftArmAnim.SetBool("isBlocking", false);
+            leftArmAnim.SetBool("rangedWeaponEquipped", false);
+            rightArmAnim.SetBool("rangedWeaponEquipped", false);
         }
     }
 
     public void SetRightAnims()
     {
         rightWeapon = null;
+        
+        rightArmAnim.SetBool("startAttack", false);
+        rightArmAnim.SetBool("doDrawArrow", false);
 
         if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
             rightWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
@@ -112,6 +143,7 @@ public class Arms : MonoBehaviour
         
         leftArmAnim = leftArm.GetComponent<Animator>();
         rightArmAnim = rightArm.GetComponent<Animator>();
+        bodyAnim = transform.parent.GetComponent<Animator>();
 
         SetLeftAnims();
         SetRightAnims();
