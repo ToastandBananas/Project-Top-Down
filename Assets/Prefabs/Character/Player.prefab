@@ -134,6 +134,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &1017104888850771452
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,6 +240,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &1696256583753344252
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +623,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &2967581937715579870
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +759,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &3435407888429325164
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,6 +895,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4456518924596804912
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,6 +950,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4851659880429100248
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,6 +1135,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4910743414806478440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1764,11 +1778,14 @@ MonoBehaviour:
   level: 1
   maxHealth: 100
   health: 50
+  healthCanRegen: 1
   maxMana: 50
   mana: 50
+  manaCanRegen: 1
   maxStamina: 50
   stamina: 50
   staminaRegenRate: 5
+  staminaCanRegen: 1
   maxEncumbrance: 100
   encumbrance: 0
   defense: 0
@@ -1796,7 +1813,6 @@ MonoBehaviour:
     type: 3}
   prefabShieldBase_R: {fileID: 1557083814658589624, guid: e4d366a5cc2097c46971834d9b3dc7eb,
     type: 3}
-  prefabRangedWeaponBase: {fileID: 0}
   currentWeapons: []
   currentEquipment: []
   leftWeaponParent: {fileID: 45060657}
@@ -1835,6 +1851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7ea5af6080264691f86ee9338a32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowPrefab: {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227,
+    type: 3}
   attackTimerLeftArm: 0
   attackTimerRightArm: 0
   leftQuickAttackTime: 0
@@ -1843,6 +1861,8 @@ MonoBehaviour:
   leftHeavyAttackTime: 0
   rightHeavyAttackTime: 0
   rightChargeAttackTime: 0
+  drawBowStringTime: 0
+  releaseArrowTime: 0
   shieldBashTime: 0
   minChargeAttackTime: 0.3
   isBlocking: 0
@@ -1850,6 +1870,9 @@ MonoBehaviour:
   rightArmAttacking: 0
   leftQuickAttacking: 0
   rightQuickAttacking: 0
+  firingArrow: 0
+  bowStringFullyDrawn: 0
+  shouldStartDrawingBowString: 0
 --- !u!114 &4409863260335959007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2350,6 +2373,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &5730417389927065676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,6 +2479,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &6117010550913244840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2809,6 +2836,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &8108439376976753870
 GameObject:
   m_ObjectHideFlags: 0
@@ -2862,6 +2891,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &8462364711952251422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2919,6 +2950,7 @@ MonoBehaviour:
   rightWeapon: {fileID: 0}
   leftArmAnim: {fileID: 0}
   rightArmAnim: {fileID: 0}
+  bodyAnim: {fileID: 0}
 --- !u!1 &8570270868506408097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3104,6 +3136,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &8723205493643125693
 GameObject:
   m_ObjectHideFlags: 0

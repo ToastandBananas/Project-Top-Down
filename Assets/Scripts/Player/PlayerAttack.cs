@@ -5,10 +5,14 @@ public class PlayerAttack : MonoBehaviour
 {
     public static PlayerAttack instance;
 
+    public GameObject arrowPrefab;
+
     GameManager gm;
     PlayerMovement playerMovement;
     BasicStats stats;
+    EquipmentManager equipmentManager;
     Transform headReset;
+    Transform looseItemsParent;
     
     Arms arms;
     Animator bodyAnim, rightArmAnim, leftArmAnim;
@@ -24,6 +28,8 @@ public class PlayerAttack : MonoBehaviour
     [HideInInspector] public float leftHeavyAttackTime;
     [HideInInspector] public float rightHeavyAttackTime;
     [HideInInspector] public float rightChargeAttackTime;
+    [HideInInspector] public float drawBowStringTime;
+    [HideInInspector] public float releaseArrowTime;
     [HideInInspector] public float shieldBashTime;
 
     float heavyAttackStaminaMultiplier = 1.75f;
@@ -32,6 +38,10 @@ public class PlayerAttack : MonoBehaviour
     public bool isBlocking;
     public bool leftArmAttacking, rightArmAttacking;
     public bool leftQuickAttacking, rightQuickAttacking;
+    public bool firingArrow, bowStringFullyDrawn, arrowSpawned;
+    public bool shouldStartDrawingBowString = true;
+
+    bool bowStringNeedsReset;
 
     LayerMask obstacleMask;
 
@@ -48,7 +58,9 @@ public class PlayerAttack : MonoBehaviour
         gm = GameManager.instance;
         playerMovement = PlayerMovement.instance;
         stats = GetComponent<BasicStats>();
+        equipmentManager = GetComponent<EquipmentManager>();
         headReset = transform.Find("Head Reset");
+        looseItemsParent = GameObject.Find("Loose Items").transform;
         bodyAnim = GetComponent<Animator>();
         arms = transform.Find("Arms").GetComponent<Arms>();
         rightArmAnim = arms.transform.Find("Right Arm").GetComponent<Animator>();
@@ -67,43 +79,6 @@ public class PlayerAttack : MonoBehaviour
             Update_BothArmAnims();
         }
     }
-
-    /*void Update_QuickAttack()
-    {
-        // TODO: Set cooldowns
-        if (Input.GetButton("Quick Attack") && quickAttacking == false)
-        {
-            if (arms.leftWeaponEquipped && arms.rightWeaponEquipped) // Alternate left/right quick attacks
-            {
-                if (currentQuickAttackTurn == QUICK_ATTACK_TURN.LEFT && leftArmAttacking == false && attackTimerLeftArm == 0)
-                {
-                    quickAttacking = true;
-                    leftArmAnim.SetBool("doQuickAttack", true);
-                    currentQuickAttackTurn = QUICK_ATTACK_TURN.RIGHT;
-                    StartCoroutine(ResetQuickAttackTimer(leftQuickAttackTime / 2));
-                }
-                else if (rightArmAttacking == false && attackTimerRightArm == 0)
-                {
-                    quickAttacking = true;
-                    rightArmAnim.SetBool("doQuickAttack", true);
-                    currentQuickAttackTurn = QUICK_ATTACK_TURN.LEFT;
-                    StartCoroutine(ResetQuickAttackTimer(rightQuickAttackTime / 2));
-                }
-            }
-            else if (arms.leftWeaponEquipped && leftArmAttacking == false && attackTimerLeftArm == 0)
-            {
-                quickAttacking = true;
-                leftArmAnim.SetBool("doQuickAttack", true);
-                StartCoroutine(ResetQuickAttackTimer(leftQuickAttackTime));
-            }
-            else if (arms.rightWeaponEquipped && rightArmAttacking == false && attackTimerRightArm == 0)
-            {
-                quickAttacking = true;
-                rightArmAnim.SetBool("doQuickAttack", true);
-                StartCoroutine(ResetQuickAttackTimer(rightQuickAttackTime));
-            }
-        }
-    }*/
 
     void Update_LeftArmAnims()
     {
@@ -273,16 +248,54 @@ public class PlayerAttack : MonoBehaviour
     {
         if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
         {
-            // Set bow string line renderer end positions here
-            bodyAnim.SetBool("doDrawArrow", true);
-            leftArmAnim.SetBool("doDrawArrow", true);
-            rightArmAnim.SetBool("doDrawArrow", true);
+            if (GameControls.gamePlayActions.playerRightAttack.WasReleased == false && firingArrow == false)
+            {
+                if (shouldStartDrawingBowString)
+                {
+                    // Spawn an arrow
+                    if (arrowSpawned == false)
+                    {
+                        GameObject arrow = Instantiate(arrowPrefab, arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").position, Quaternion.identity, arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String"));
+                        arrowSpawned = true;
+                    }
+                    // Draw the bow string
+                    bodyAnim.SetBool("doDrawArrow", true);
+                    rightArmAnim.SetBool("doReleaseArrow", false);
+                    leftArmAnim.SetBool("doDrawArrow", true);
+                    rightArmAnim.SetBool("doDrawArrow", true);
+
+                    StartCoroutine(DrawBowString());
+                }
+                else // If we already are drawing the bow string
+                    arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").position = equipmentManager.rightWeaponParent.position;
+            }
+            else if (GameControls.gamePlayActions.playerRightAttack.WasReleased && firingArrow == false && bowStringFullyDrawn)
+            {
+                // Fire the arrow
+                firingArrow = true;
+                bowStringFullyDrawn = false;
+                rightArmAnim.SetBool("doReleaseArrow", true);
+                rightArmAnim.SetBool("doDrawArrow", false);
+                arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").localPosition = arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+
+                StartCoroutine(ResetFireArrow(releaseArrowTime));
+            }
         }
         else
         {
+            if (bowStringNeedsReset)
+            {
+                arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").localPosition = arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+                bowStringNeedsReset = false;
+            }
+
+            shouldStartDrawingBowString = true;
+            firingArrow = false;
+            bowStringFullyDrawn = false;
             bodyAnim.SetBool("doDrawArrow", false);
             leftArmAnim.SetBool("doDrawArrow", false);
             rightArmAnim.SetBool("doDrawArrow", false);
+            rightArmAnim.SetBool("doReleaseArrow", false);
         }
     }
 
@@ -333,11 +346,39 @@ public class PlayerAttack : MonoBehaviour
                 case "Attack_1H_Close_R":
                     rightChargeAttackTime = clip.length;
                     break;
+                case "Draw_Arrow_R":
+                    drawBowStringTime = clip.length;
+                    break;
+                case "Release_Arrow_R":
+                    releaseArrowTime = clip.length;
+                    break;
                 case "Shield_Bash_R":
                     shieldBashTime = clip.length;
                     break;
             }
         }
+    }
+
+    IEnumerator DrawBowString()
+    {
+        yield return new WaitForSeconds(drawBowStringTime / 2);
+        bowStringNeedsReset = true;
+        shouldStartDrawingBowString = false;
+
+        yield return new WaitForSeconds(drawBowStringTime / 2);
+        bowStringFullyDrawn = true;
+    }
+
+    IEnumerator ResetFireArrow(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        shouldStartDrawingBowString = true;
+        arrowSpawned = false;
+        rightArmAnim.SetBool("doReleaseArrow", false);
+        firingArrow = false;
+        bowStringFullyDrawn = false;
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
+            rightArmAnim.SetBool("doDrawArrow", true);
     }
 
     IEnumerator ResetLeftQuickAttack(float waitTime)

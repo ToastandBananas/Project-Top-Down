@@ -159,10 +159,10 @@ TextureImporter:
       name: Arm
       rect:
         serializedVersion: 2
-        x: 40
-        y: 47
-        width: 18
-        height: 15
+        x: 38
+        y: 45
+        width: 20
+        height: 17
       alignment: 9
       pivot: {x: 0.2212268, y: 0.24193548}
       border: {x: 0, y: 0, z: 0, w: 0}
