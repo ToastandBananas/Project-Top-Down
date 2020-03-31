@@ -11,7 +11,7 @@ public class LockOn : MonoBehaviour
     Transform headReset;
 
     bool canSwitchLockOnTarget = true;
-    float maxLockOnDist = 12f;
+    float maxLockOnDist = 16f;
 
     float angleToRotateTowards;
     Vector3 dir;

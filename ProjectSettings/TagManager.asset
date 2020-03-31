@@ -6,6 +6,9 @@ TagManager:
   tags:
   - NPC
   - GenerateShadowCasters
+  - Weapon
+  - Shield
+  - Ammunition
   layers:
   - Default
   - TransparentFX

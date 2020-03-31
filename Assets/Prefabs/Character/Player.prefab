@@ -1777,7 +1777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   maxHealth: 100
-  health: 50
+  health: 100
   healthCanRegen: 1
   maxMana: 50
   mana: 50
@@ -1872,6 +1872,7 @@ MonoBehaviour:
   rightQuickAttacking: 0
   firingArrow: 0
   bowStringFullyDrawn: 0
+  arrowSpawned: 0
   shouldStartDrawingBowString: 0
 --- !u!114 &4409863260335959007
 MonoBehaviour:
@@ -1914,7 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAngle: 135
-  viewRadius: 7
+  viewRadius: 16
   showFOV: 0
   targetMask:
     serializedVersion: 2
@@ -2946,6 +2947,8 @@ MonoBehaviour:
   rangedWeaponEquipped: 0
   leftArm: {fileID: 0}
   rightArm: {fileID: 0}
+  leftEquippedWeapon: {fileID: 0}
+  rightEquippedWeapon: {fileID: 0}
   leftWeapon: {fileID: 0}
   rightWeapon: {fileID: 0}
   leftArmAnim: {fileID: 0}

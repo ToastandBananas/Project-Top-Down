@@ -19,12 +19,22 @@ public class Arms : MonoBehaviour
     public bool rangedWeaponEquipped;
 
     public Transform leftArm, rightArm;
+    public Transform leftEquippedWeapon, rightEquippedWeapon;
     public Equipment leftWeapon, rightWeapon;
     public Animator leftArmAnim, rightArmAnim, bodyAnim;
     
     void Awake()
     {
         StartCoroutine(SetArmAnims(0.05f));
+    }
+
+    public void GetWeaponTransforms()
+    {
+        if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
+            leftEquippedWeapon = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0);
+
+        if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
+            rightEquippedWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0);
     }
 
     public void SetLeftAnims()
@@ -35,13 +45,19 @@ public class Arms : MonoBehaviour
         leftArmAnim.SetBool("doDrawArrow", false);
         bodyAnim.SetBool("doDrawArrow", false);
 
-        if (leftArm.Find("Left Forearm").Find("Left Weapon").childCount > 0)
-            leftWeapon = leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+        if (leftEquippedWeapon == null)
+            GetWeaponTransforms();
+
+        if (leftEquippedWeapon != null)
+            leftWeapon = leftEquippedWeapon.GetComponent<ItemData>().equipment;
 
         if (leftWeapon != null)
         {
-            leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().enabled = true;
-            leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<BoxCollider2D>().enabled = true;
+            if (leftEquippedWeapon.GetComponent<WeaponDamage>() != null)
+                leftEquippedWeapon.GetComponent<WeaponDamage>().enabled = true;
+
+            if (leftEquippedWeapon.GetComponent<BoxCollider2D>() != null)
+                leftEquippedWeapon.GetComponent<BoxCollider2D>().enabled = true;
 
             if (leftWeapon.generalClassification == GeneralClassification.Shield)
             {
@@ -100,13 +116,19 @@ public class Arms : MonoBehaviour
         rightArmAnim.SetBool("startAttack", false);
         rightArmAnim.SetBool("doDrawArrow", false);
 
-        if (rightArm.Find("Right Forearm").Find("Right Weapon").childCount > 0)
-            rightWeapon = rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().equipment;
+        if (rightEquippedWeapon == null)
+            GetWeaponTransforms();
+
+        if (rightEquippedWeapon != null)
+            rightWeapon = rightEquippedWeapon.GetComponent<ItemData>().equipment;
         
         if (rightWeapon != null)
         {
-            rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<WeaponDamage>().enabled = true;
-            rightArm.Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<BoxCollider2D>().enabled = true;
+            if (rightEquippedWeapon.GetComponent<WeaponDamage>() != null)
+                rightEquippedWeapon.GetComponent<WeaponDamage>().enabled = true;
+
+            if (rightEquippedWeapon.GetComponent<BoxCollider2D>() != null)
+                rightEquippedWeapon.GetComponent<BoxCollider2D>().enabled = true;
 
             if (rightWeapon.generalClassification == GeneralClassification.Shield)
             {

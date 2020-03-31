@@ -76,7 +76,7 @@ public class EquipmentManager : MonoBehaviour
 
     void Update()
     {
-        if (basicStats.isPlayer)
+        if (basicStats != null && basicStats.isPlayer)
         {
             if (GameControls.gamePlayActions.playerSwapWeapon.WasPressed)
             {

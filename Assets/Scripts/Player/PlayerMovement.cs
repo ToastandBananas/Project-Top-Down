@@ -151,7 +151,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void LookAtMouse()
+    public void LookAtMouse()
     {
         dir = Input.mousePosition - cam.WorldToScreenPoint(transform.position);
         angleToRotateTowards = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;

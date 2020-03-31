@@ -297,9 +297,7 @@ GameObject:
   - component: {fileID: 9121319957708617626}
   - component: {fileID: 9121319957708617627}
   - component: {fileID: 9121319957708617624}
-  - component: {fileID: 9121319957708617625}
   - component: {fileID: 377374093528034213}
-  - component: {fileID: 9121319957708617630}
   - component: {fileID: 9121319957708617631}
   - component: {fileID: 9121319957708617628}
   - component: {fileID: 9121319957708617629}
@@ -307,7 +305,7 @@ GameObject:
   - component: {fileID: 9121319957065134257}
   m_Layer: 0
   m_Name: Wooden Long Bow
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -400,32 +398,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &9121319957708617625
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9121319957708617607}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0012901574, y: 0.46169493}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.41338113, y: 0.5}
-    oldSize: {x: 1.6666666, y: 1.6666666}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.08117589, y: 0.6601773}
-  m_EdgeRadius: 0
 --- !u!114 &377374093528034213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,21 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 754c697525f38f141929690ddb8df7ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9121319957708617630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9121319957708617607}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb73ac8bc78b914986cb049c7779fd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  equipment: {fileID: 11400000, guid: 929e2bd856c01224c803ed343f89ab93, type: 2}
-  itemData: {fileID: 0}
-  positionOffset: {x: 0, y: 0}
+  middleOfStringOriginalPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &9121319957708617631
 MonoBehaviour:
   m_ObjectHideFlags: 0

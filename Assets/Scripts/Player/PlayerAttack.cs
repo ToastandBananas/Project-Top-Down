@@ -9,6 +9,7 @@ public class PlayerAttack : MonoBehaviour
 
     GameManager gm;
     PlayerMovement playerMovement;
+    LockOn lockOnScript;
     BasicStats stats;
     EquipmentManager equipmentManager;
     Transform headReset;
@@ -42,7 +43,9 @@ public class PlayerAttack : MonoBehaviour
     public bool shouldStartDrawingBowString = true;
 
     bool bowStringNeedsReset;
+    float arrowSpeed = 32f;
 
+    Vector3 dir;
     LayerMask obstacleMask;
 
     void Awake()
@@ -57,6 +60,7 @@ public class PlayerAttack : MonoBehaviour
     {
         gm = GameManager.instance;
         playerMovement = PlayerMovement.instance;
+        lockOnScript = GetComponent<LockOn>();
         stats = GetComponent<BasicStats>();
         equipmentManager = GetComponent<EquipmentManager>();
         headReset = transform.Find("Head Reset");
@@ -219,7 +223,7 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
                 {
                     rightQuickAttacking = true;
                     rightArmAnim.SetBool("doQuickAttack", true);
@@ -246,8 +250,11 @@ public class PlayerAttack : MonoBehaviour
 
     void DrawArrow()
     {
-        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed 
+            && equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver] != null && equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount > 0)
         {
+            playerMovement.LookAtMouse();
+
             if (GameControls.gamePlayActions.playerRightAttack.WasReleased == false && firingArrow == false)
             {
                 if (shouldStartDrawingBowString)
@@ -255,7 +262,11 @@ public class PlayerAttack : MonoBehaviour
                     // Spawn an arrow
                     if (arrowSpawned == false)
                     {
-                        GameObject arrow = Instantiate(arrowPrefab, arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").position, Quaternion.identity, arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String"));
+                        if (arms.leftEquippedWeapon == null)
+                            arms.GetWeaponTransforms();
+
+                        GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
+                        arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
                         arrowSpawned = true;
                     }
                     // Draw the bow string
@@ -267,16 +278,18 @@ public class PlayerAttack : MonoBehaviour
                     StartCoroutine(DrawBowString());
                 }
                 else // If we already are drawing the bow string
-                    arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").position = equipmentManager.rightWeaponParent.position;
+                    arms.leftEquippedWeapon.Find("Middle of String").position = equipmentManager.rightWeaponParent.position;
             }
             else if (GameControls.gamePlayActions.playerRightAttack.WasReleased && firingArrow == false && bowStringFullyDrawn)
             {
+                StartCoroutine(ShootArrow());
+
                 // Fire the arrow
                 firingArrow = true;
                 bowStringFullyDrawn = false;
                 rightArmAnim.SetBool("doReleaseArrow", true);
                 rightArmAnim.SetBool("doDrawArrow", false);
-                arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").localPosition = arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+                arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
 
                 StartCoroutine(ResetFireArrow(releaseArrowTime));
             }
@@ -285,7 +298,10 @@ public class PlayerAttack : MonoBehaviour
         {
             if (bowStringNeedsReset)
             {
-                arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).Find("Middle of String").localPosition = arms.leftArm.Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+                if (arms.leftEquippedWeapon == null)
+                    arms.GetWeaponTransforms();
+
+                arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
                 bowStringNeedsReset = false;
             }
 
@@ -301,7 +317,7 @@ public class PlayerAttack : MonoBehaviour
 
     void AttackDash(float dashDistance)
     {
-        Vector3 dir = (headReset.position - transform.position).normalized;
+        dir = (headReset.position - transform.position).normalized;
         float raycastDistance = Vector3.Distance(transform.position, transform.position + dir * dashDistance);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, raycastDistance, obstacleMask);
         if (hit == false)
@@ -369,6 +385,38 @@ public class PlayerAttack : MonoBehaviour
         bowStringFullyDrawn = true;
     }
 
+    IEnumerator ShootArrow()
+    {
+        equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount--;
+        equipmentManager.quiverSlot.quiverText.text = equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();
+
+        Transform arrow = arms.leftEquippedWeapon.Find("Middle of String").GetChild(0);
+        arrow.SetParent(looseItemsParent);
+
+        Arrow arrowScript = arrow.GetComponent<Arrow>();
+        arrowScript.enabled = true;
+        arrowScript.bowShotFrom = arms.leftEquippedWeapon.GetComponent<ItemData>();
+
+        arrow.GetComponent<BoxCollider2D>().enabled = true;
+        arrow.GetComponent<SpriteRenderer>().sortingOrder = 10;
+
+        Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
+        arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
+        arrowRigidBody.AddForce(-arrow.up * arrowSpeed, ForceMode2D.Impulse);
+
+        float shotDistance = 18f;
+        if (lockOnScript.isLockedOn)
+            shotDistance = Vector2.Distance(arrow.position, lockOnScript.lockOnTarget.position) + 1;
+        
+        while (arrowScript.arrowShouldStop == false)
+        {
+            if (Vector2.Distance(arrow.position, transform.position) > shotDistance)
+                arrowScript.StopArrow();
+
+            yield return null;
+        }
+    }
+
     IEnumerator ResetFireArrow(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
@@ -411,5 +459,16 @@ public class PlayerAttack : MonoBehaviour
         rightArmAttacking = false;
         rightArmAnim.SetBool("doAttack", false);
         bodyAnim.SetBool("powerAttackRight", false);
+    }
+
+    public IEnumerator SmoothMovement(Transform objectToMove, Vector3 targetPos)
+    {
+        Debug.Log(objectToMove.position);
+        Debug.Log(targetPos);
+        while (Vector2.Distance(objectToMove.position, targetPos) > 0.1f)
+        {
+            objectToMove.position = Vector2.MoveTowards(objectToMove.position, targetPos, 1 * 4 * Time.deltaTime);
+            yield return null; // Pause for one frame
+        }
     }
 }

@@ -37,7 +37,7 @@ public class WeaponDamage : MonoBehaviour
 
         transform.position += new Vector3(positionOffset.x, positionOffset.y, 0);
 
-        if (thisWeapon != null && thisWeapon.name == "Left Weapon" && equipment.weaponType != WeaponType.Bow)
+        if (thisWeapon != null && thisWeapon.name == "Left Weapon")
             GetComponent<SpriteRenderer>().flipX = true;
 
         SetSpecialAttackSlots();

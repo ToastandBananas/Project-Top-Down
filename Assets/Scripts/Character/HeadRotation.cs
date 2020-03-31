@@ -10,9 +10,6 @@ public class HeadRotation : MonoBehaviour
     Transform[] pointsOfInterest;
     Transform closestPointOfInterest;
     float closestPointOfInterestDist;
-
-    Vector3 dir;
-    float angle;
     
     void Start()
     {

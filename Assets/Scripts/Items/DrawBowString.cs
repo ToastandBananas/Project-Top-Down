@@ -2,7 +2,7 @@
 
 public class DrawBowString : MonoBehaviour
 {
-    public Vector3 middleOfStringOriginalPosition;
+    [HideInInspector] public Vector3 middleOfStringOriginalPosition;
 
     Transform leftStringEnd, middleOfString, rightStringEnd;
     LineRenderer leftLine, rightLine;
@@ -19,7 +19,7 @@ public class DrawBowString : MonoBehaviour
         middleOfStringOriginalPosition = middleOfString.localPosition;
     }
     
-    void Update()
+    void FixedUpdate()
     {
         DrawString();
     }

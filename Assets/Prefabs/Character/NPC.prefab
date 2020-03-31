@@ -53,10 +53,13 @@ MonoBehaviour:
   rangedWeaponEquipped: 0
   leftArm: {fileID: 0}
   rightArm: {fileID: 0}
+  leftEquippedWeapon: {fileID: 0}
+  rightEquippedWeapon: {fileID: 0}
   leftWeapon: {fileID: 0}
   rightWeapon: {fileID: 0}
   leftArmAnim: {fileID: 0}
   rightArmAnim: {fileID: 0}
+  bodyAnim: {fileID: 0}
 --- !u!1 &220558512547719827
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +164,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &662128985819724801
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +598,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &2977968909088004981
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,6 +852,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &3992615731657799242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,6 +1037,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4180017548675058185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,6 +1143,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4303919997903045342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,6 +1249,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &4490644662189381521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1762,7 +1777,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: bb802bf99242c794f96696de10a4a343, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!95 &8375587198334745613
 Animator:
@@ -1798,11 +1813,14 @@ MonoBehaviour:
   level: 10
   maxHealth: 20
   health: 20
+  healthCanRegen: 1
   maxMana: 50
   mana: 50
+  manaCanRegen: 1
   maxStamina: 100
   stamina: 100
   staminaRegenRate: 5
+  staminaCanRegen: 1
   maxEncumbrance: 200
   encumbrance: 50
   defense: 20
@@ -1830,7 +1848,6 @@ MonoBehaviour:
     type: 3}
   prefabShieldBase_R: {fileID: 1557083814658589624, guid: e4d366a5cc2097c46971834d9b3dc7eb,
     type: 3}
-  prefabRangedWeaponBase: {fileID: 0}
   currentWeapons: []
   currentEquipment: []
   leftWeaponParent: {fileID: 8375587197147642019}
@@ -1869,6 +1886,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b03384d3d617227488a4b0ebf5d2c732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomizeItems: 0
+  carriedItems: []
 --- !u!114 &4490644663598777807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2566,6 +2585,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &6298228616316539585
 GameObject:
   m_ObjectHideFlags: 0
@@ -2781,6 +2802,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &6706678030829609292
 GameObject:
   m_ObjectHideFlags: 0
@@ -3000,6 +3023,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &7644760644358109063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3053,6 +3078,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &7760882337186087398
 GameObject:
   m_ObjectHideFlags: 0
@@ -3298,6 +3325,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
 --- !u!1 &9061193347856921879
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,3 +3431,5 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  ammoTypePrefab: {fileID: 0}
+  currentAmmoCount: 0
