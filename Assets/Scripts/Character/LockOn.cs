@@ -8,6 +8,7 @@ public class LockOn : MonoBehaviour
 
     FieldOfView fov;
     PlayerMovement playerMovementScript;
+    Arms arms;
     Transform headReset;
 
     bool canSwitchLockOnTarget = true;
@@ -19,6 +20,7 @@ public class LockOn : MonoBehaviour
     void Start()
     {
         fov = GetComponent<FieldOfView>();
+        arms = transform.Find("Arms").GetComponent<Arms>();
         headReset = transform.Find("Head Reset");
 
         if (gameObject.name == "Player")
@@ -121,7 +123,24 @@ public class LockOn : MonoBehaviour
     void FaceForward()
     {
         if (playerMovementScript != null && playerMovementScript.isMoving) // Only used for the player
-            dir = playerMovementScript.movementInput;
+        {
+            if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
+                dir = playerMovementScript.movementInput;
+            else if (playerMovementScript.lookInput.x > 0.3f || playerMovementScript.lookInput.x < -0.3f || playerMovementScript.lookInput.y > 0.3f || playerMovementScript.lookInput.y < -0.3f)
+                dir = playerMovementScript.lookInput;
+            else
+                dir = headReset.position - transform.position;
+        }
+        else if (playerMovementScript != null && playerMovementScript.isMoving == false)
+        {
+            if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
+                dir = headReset.position - transform.position;
+            else if (arms.rangedWeaponEquipped && GameControls.gamePlayActions.playerLeftAttack.IsPressed
+                && (playerMovementScript.lookInput.x > 0.3f || playerMovementScript.lookInput.x < -0.3f || playerMovementScript.lookInput.y > 0.3f || playerMovementScript.lookInput.y < -0.3f))
+            {
+                dir = playerMovementScript.lookInput;
+            }
+        }
         else
             dir = headReset.position - transform.position;
 

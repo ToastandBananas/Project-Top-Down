@@ -10,7 +10,6 @@ public class WeaponDamage : MonoBehaviour
 
     bool canDoDamage = true;
 
-    BloodParticleSystemHandler bloodSystem;
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
     PlayerSpecialAttack playerSpecialAttack;
@@ -23,7 +22,6 @@ public class WeaponDamage : MonoBehaviour
 
     void Start()
     {
-        bloodSystem = BloodParticleSystemHandler.Instance;
         thisWeapon = transform.parent.parent;
         weaponOwner = transform.parent.parent.parent.parent.parent.parent;
         weaponOwnerHeadReset = weaponOwner.Find("Head Reset");
@@ -69,18 +67,6 @@ public class WeaponDamage : MonoBehaviour
         }
     }
 
-    void SpawnBlood(Transform victim, float percentDamage)
-    {
-        Vector3 dir = (victim.position - weaponOwner.position).normalized;
-        float raycastDistance = Vector3.Distance(victim.position, victim.position + dir * 3f);
-        RaycastHit2D hit = Physics2D.Raycast(victim.position, dir, raycastDistance, obstacleMask);
-
-        if (hit == false)
-            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, false);
-        else
-            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, true);
-    }
-
     IEnumerator DamageCooldown(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
@@ -100,7 +86,7 @@ public class WeaponDamage : MonoBehaviour
                 canDoDamage = false;
 
                 float percentDamage = itemData.damage / basicStats.maxHealth;
-                SpawnBlood(collision.transform, percentDamage);
+                basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
 
                 if (playerAttack != null)
                 {
@@ -135,7 +121,7 @@ public class WeaponDamage : MonoBehaviour
                 canDoDamage = false;
 
                 float percentDamage = itemData.damage / basicStats.maxHealth;
-                SpawnBlood(collision.transform, percentDamage);
+                basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
 
                 if (playerAttack != null)
                 {

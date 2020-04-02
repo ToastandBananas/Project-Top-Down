@@ -36,15 +36,17 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.playerUp.AddDefaultBinding(Key.W);
         gamePlayActions.playerUp.AddDefaultBinding(InputControlType.LeftStickUp);
-
         gamePlayActions.playerDown.AddDefaultBinding(Key.S);
         gamePlayActions.playerDown.AddDefaultBinding(InputControlType.LeftStickDown);
-
         gamePlayActions.playerLeft.AddDefaultBinding(Key.A);
         gamePlayActions.playerLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
-
         gamePlayActions.playerRight.AddDefaultBinding(Key.D);
         gamePlayActions.playerRight.AddDefaultBinding(InputControlType.LeftStickRight);
+
+        gamePlayActions.playerLookUp.AddDefaultBinding(InputControlType.RightStickUp);
+        gamePlayActions.playerLookDown.AddDefaultBinding(InputControlType.RightStickDown);
+        gamePlayActions.playerLookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+        gamePlayActions.playerLookRight.AddDefaultBinding(InputControlType.RightStickRight);
 
         gamePlayActions.playerLeftAttack.AddDefaultBinding(Mouse.LeftButton);
         gamePlayActions.playerLeftAttack.AddDefaultBinding(InputControlType.LeftTrigger);

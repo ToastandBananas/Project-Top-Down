@@ -1550,7 +1550,7 @@ GameObject:
   - component: {fileID: 4490644662648230722}
   m_Layer: 10
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: NPC Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1688,7 +1688,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 81332
+  m_InstanceId: 199116
 --- !u!1 &4490644663598777794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,6 +1921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDistance: 1.6
+  rangedAttackDistance: 8
   combatDistance: 4
   determineMoveDirection: 1
 --- !u!114 &8683012622843688016
@@ -1945,7 +1946,11 @@ MonoBehaviour:
   rightChargeAttackTime: 0
   leftHeavyAttackTime: 0
   rightHeavyAttackTime: 0
+  drawBowStringTime: 0
+  releaseArrowTime: 0
   shieldBashTime: 0
+  arrowPrefab: {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227,
+    type: 3}
 --- !u!114 &8996884400188464323
 MonoBehaviour:
   m_ObjectHideFlags: 0

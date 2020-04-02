@@ -24,6 +24,7 @@ public class NPCMovement : MonoBehaviour
     Animator anim, legsAnim, leftArmAnim, rightArmAnim;
     NPCCombat npcCombat;
     BasicStats stats;
+    Arms arms;
 
     Transform closestTarget;
     float closestTargetDist;
@@ -37,6 +38,7 @@ public class NPCMovement : MonoBehaviour
         patrolPoint = transform.Find("Patrol Point");
         npcCombat = GetComponent<NPCCombat>();
         stats = GetComponent<BasicStats>();
+        arms = transform.Find("Arms").GetComponent<Arms>();
 
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
@@ -60,6 +62,17 @@ public class NPCMovement : MonoBehaviour
         // AstarPath.Scan(AstarPath.graphs);
         DetermineState();
         Movement();
+        
+        if (AIDestSetter.target == null)
+        {
+            AIPath.canMove = false;
+            SetIsMoving(false);
+        }
+        else
+        {
+            AIPath.canMove = true;
+            SetIsMoving(true);
+        }
     }
 
     void DetermineState()
@@ -90,9 +103,26 @@ public class NPCMovement : MonoBehaviour
             }
         }
 
-        if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) < npcCombat.combatDistance)
+        if (attackTarget != null && arms.rangedWeaponEquipped)
+        {
+            // Move away from target if too close
+            if (Vector2.Distance(attackTarget.position, transform.position) < npcCombat.rangedCombatDistance - 2)
+            {
+                Vector3 dir = (transform.position - attackTarget.position).normalized;
+                patrolPoint.position = dir * 2;
+                AIDestSetter.target = patrolPoint;
+            }
+            else
+                AIDestSetter.target = null;
+        }
+
+        if (attackTarget != null 
+            && (((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && Vector2.Distance(transform.position, attackTarget.position) < npcCombat.meleeCombatDistance) 
+            || (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, attackTarget.position) < npcCombat.rangedCombatDistance)))
             currentState = STATE.COMBAT;
-        else if (attackTarget != null && Vector2.Distance(transform.position, attackTarget.position) >= npcCombat.combatDistance)
+        else if (attackTarget != null
+            && (((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && Vector2.Distance(transform.position, attackTarget.position) >= npcCombat.meleeCombatDistance)
+            || (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, attackTarget.position) >= npcCombat.rangedCombatDistance)))
             currentState = STATE.PURSUE;
         else
             currentState = defaultState;
@@ -106,33 +136,32 @@ public class NPCMovement : MonoBehaviour
 
         if (currentState == STATE.PURSUE)
         {
-            SetIsMoving(true);
             AIPath.maxSpeed = runSpeed;
+            AIDestSetter.target = attackTarget;
         }
         else if (currentState == STATE.PATROL)
         {
-            SetIsMoving(true);
             AIPath.maxSpeed = walkSpeed;
         }
         else if (currentState == STATE.COMBAT)
         {
-            if (Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.attackDistance)
+            /*if (AIDestSetter.target == null || ((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.attackDistance)
+                || (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.rangedAttackDistance))
                 SetIsMoving(true);
             else
-                SetIsMoving(false);
+                SetIsMoving(false);*/
+
             AIPath.maxSpeed = runSpeed;
 
             npcCombat.DetermineCombatActions();
-
-            // Debug.Log(name + " attacked you.");
         }
         else if (currentState == STATE.FLEE)
         {
-            SetIsMoving(true);
+            //SetIsMoving(true);
         }
         else // Idle
         {
-            SetIsMoving(false);
+            AIDestSetter.target = null;
         }
     }
 

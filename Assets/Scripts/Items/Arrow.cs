@@ -13,6 +13,8 @@ public class Arrow : MonoBehaviour
     Rigidbody2D rigidBody;
     BoxCollider2D circleCollider;
 
+    LayerMask obstacleMask;
+
     void Start()
     {
         itemData = GetComponent<ItemData>();
@@ -20,6 +22,8 @@ public class Arrow : MonoBehaviour
         itemPickup = GetComponent<ItemPickup>();
         rigidBody = GetComponent<Rigidbody2D>();
         circleCollider = GetComponent<BoxCollider2D>();
+
+        obstacleMask = LayerMask.GetMask("Walls", "Doors");
     }
 
     public void StopArrow()
@@ -40,17 +44,41 @@ public class Arrow : MonoBehaviour
     {
         if (collision.isTrigger == false)
         {
-            if (collision.tag == "NPC")
+            if (collision.tag == "NPC Body" || collision.tag == "Player Body")
             {
-                collision.GetComponent<BasicStats>().TakeDamage(itemData.damage);
-                transform.SetParent(collision.transform);
+                BasicStats basicStats = collision.GetComponentInParent<BasicStats>();
+                basicStats.TakeDamage(bowShotFrom.damage);
+
+                float percentDamage = bowShotFrom.damage / basicStats.maxHealth;
+                basicStats.SpawnBlood(collision.transform, transform, percentDamage, obstacleMask);
+
+                if (collision.transform.Find("Arrows") != null)
+                    transform.SetParent(collision.transform.Find("Arrows"));
+                else
+                {
+                    GameObject Arrows = new GameObject();
+                    Arrows.name = "Arrows";
+                    Arrows.transform.SetParent(collision.transform);
+                    transform.SetParent(collision.transform.Find("Arrows"));
+                }
+
                 StopArrow();
             }
             else if (collision.tag != "Weapon")
             {
                 if (collision.GetComponent<ItemData>() != null)
-                    collision.GetComponent<ItemData>().durability -= itemData.damage;
-                transform.SetParent(collision.transform);
+                    collision.GetComponent<ItemData>().durability -= bowShotFrom.damage;
+
+                if (collision.transform.Find("Arrows") != null)
+                    transform.SetParent(collision.transform.Find("Arrows"));
+                else
+                {
+                    GameObject Arrows = new GameObject();
+                    Arrows.name = "Arrows";
+                    Arrows.transform.SetParent(collision.transform);
+                    transform.SetParent(collision.transform.Find("Arrows"));
+                }
+
                 StopArrow();
             }
         }

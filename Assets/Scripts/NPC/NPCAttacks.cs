@@ -7,10 +7,16 @@ public class NPCAttacks : MonoBehaviour
     Animator bodyAnim;
     NPCCombat npcCombat;
     NPCMovement npcMovement;
+    LockOn lockOnScript;
+    EquipmentManager equipmentManager;
     BasicStats stats;
     Transform headReset;
+    Transform looseItemsParent;
 
     LayerMask obstacleMask;
+
+    bool shouldSetArrowPosition;
+    float arrowSpeed = 32f;
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
@@ -23,7 +29,10 @@ public class NPCAttacks : MonoBehaviour
     [HideInInspector] public float leftQuickAttackTime, rightQuickAttackTime;
     [HideInInspector] public float leftChargeAttackTime, rightChargeAttackTime;
     [HideInInspector] public float leftHeavyAttackTime, rightHeavyAttackTime;
+    [HideInInspector] public float drawBowStringTime, releaseArrowTime;
     [HideInInspector] public float shieldBashTime;
+
+    public GameObject arrowPrefab;
     
     void Start()
     {
@@ -31,12 +40,21 @@ public class NPCAttacks : MonoBehaviour
         bodyAnim = GetComponent<Animator>();
         npcCombat = GetComponent<NPCCombat>();
         npcMovement = GetComponent<NPCMovement>();
+        lockOnScript = GetComponent<LockOn>();
+        equipmentManager = GetComponent<EquipmentManager>();
         stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
+        looseItemsParent = GameObject.Find("Loose Items").transform;
 
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         StartCoroutine(UpdateAnimClipTimes());
+    }
+
+    void Update()
+    {
+        if (shouldSetArrowPosition)
+            arms.leftEquippedWeapon.Find("Middle of String").position = equipmentManager.rightWeaponParent.position;
     }
 
     #region Quick Attack Functions
@@ -187,6 +205,66 @@ public class NPCAttacks : MonoBehaviour
     }
     #endregion
 
+    #region Ranged Attack Function
+    public IEnumerator RangedAttack()
+    {
+        if (arms.rangedWeaponEquipped)
+        {
+            if (arms.leftEquippedWeapon == null)
+                arms.GetWeaponTransforms();
+
+            GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
+            arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
+
+            arms.rightArmAnim.SetBool("doReleaseArrow", false);
+            arms.leftArmAnim.SetBool("doDrawArrow", true);
+            arms.rightArmAnim.SetBool("doDrawArrow", true);
+            arms.bodyAnim.SetBool("doDrawArrow", true);
+
+            yield return new WaitForSeconds(drawBowStringTime / 2);
+            shouldSetArrowPosition = true;
+            yield return new WaitForSeconds(drawBowStringTime / 2);
+
+            // Randomize wait to shoot time
+            yield return new WaitForSeconds(Random.Range(0f, 2.5f));
+            
+            // Fire the arrow
+            arms.rightArmAnim.SetBool("doReleaseArrow", true);
+            arms.rightArmAnim.SetBool("doDrawArrow", false);
+
+            // Reset the bow string to its default position
+            arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+            shouldSetArrowPosition = false;
+            npcCombat.determineMoveDirection = true;
+
+            arrow.transform.SetParent(looseItemsParent);
+
+            Arrow arrowScript = arrow.GetComponent<Arrow>();
+            arrowScript.enabled = true;
+            arrowScript.bowShotFrom = arms.leftEquippedWeapon.GetComponent<ItemData>();
+
+            arrow.GetComponent<BoxCollider2D>().enabled = true;
+            arrow.GetComponent<SpriteRenderer>().sortingOrder = 10;
+
+            Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
+            arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
+            arrowRigidBody.AddForce(-arrow.transform.up * arrowSpeed, ForceMode2D.Impulse);
+
+            float shotDistance = 18f;
+            if (lockOnScript.isLockedOn)
+                shotDistance = Vector2.Distance(arrow.transform.position, lockOnScript.lockOnTarget.position) + 1;
+
+            while (arrowScript.arrowShouldStop == false)
+            {
+                if (Vector2.Distance(arrow.transform.position, transform.position) > shotDistance)
+                    arrowScript.StopArrow();
+
+                yield return null;
+            }
+        }
+    }
+    #endregion
+
     IEnumerator AttackDash(float waitTime, float dashDistance)
     {
         yield return new WaitForSeconds(waitTime);
@@ -240,6 +318,12 @@ public class NPCAttacks : MonoBehaviour
                     break;
                 case "Attack_1H_Close_R":
                     rightChargeAttackTime = clip.length;
+                    break;
+                case "Draw_Arrow_R":
+                    drawBowStringTime = clip.length;
+                    break;
+                case "Release_Arrow_R":
+                    releaseArrowTime = clip.length;
                     break;
                 case "Shield_Bash_R":
                     shieldBashTime = clip.length;

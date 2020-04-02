@@ -9,6 +9,8 @@ TagManager:
   - Weapon
   - Shield
   - Ammunition
+  - NPC Body
+  - Player Body
   layers:
   - Default
   - TransparentFX

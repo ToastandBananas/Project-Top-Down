@@ -16,7 +16,6 @@ public class PlayerAttack : MonoBehaviour
     Transform looseItemsParent;
     
     Arms arms;
-    Animator bodyAnim, rightArmAnim, leftArmAnim;
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
     
@@ -65,10 +64,7 @@ public class PlayerAttack : MonoBehaviour
         equipmentManager = GetComponent<EquipmentManager>();
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
-        bodyAnim = GetComponent<Animator>();
         arms = transform.Find("Arms").GetComponent<Arms>();
-        rightArmAnim = arms.transform.Find("Right Arm").GetComponent<Animator>();
-        leftArmAnim = arms.transform.Find("Left Arm").GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         StartCoroutine(UpdateAnimClipTimes());
@@ -121,13 +117,13 @@ public class PlayerAttack : MonoBehaviour
         if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
         {
             isBlocking = true;
-            leftArmAnim.SetBool("isBlocking", true);
+            arms.leftArmAnim.SetBool("isBlocking", true);
         }
         
         if (GameControls.gamePlayActions.playerLeftAttack.WasReleased)
         {
             isBlocking = false;
-            leftArmAnim.SetBool("isBlocking", false);
+            arms.leftArmAnim.SetBool("isBlocking", false);
         }
     }
 
@@ -136,13 +132,13 @@ public class PlayerAttack : MonoBehaviour
         if (GameControls.gamePlayActions.playerRightAttack.IsPressed)
         {
             isBlocking = true;
-            rightArmAnim.SetBool("isBlocking", true);
+            arms.rightArmAnim.SetBool("isBlocking", true);
         }
 
         if (GameControls.gamePlayActions.playerRightAttack.WasReleased)
         {
             isBlocking = false;
-            rightArmAnim.SetBool("isBlocking", false);
+            arms.rightArmAnim.SetBool("isBlocking", false);
         }
     }
 
@@ -152,7 +148,7 @@ public class PlayerAttack : MonoBehaviour
         {
             attackTimerLeftArm += Time.smoothDeltaTime;
             if (attackTimerLeftArm >= minChargeAttackTime)
-                leftArmAnim.SetBool("startAttack", true);
+                arms.leftArmAnim.SetBool("startAttack", true);
         }
 
         if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimerLeftArm > 0)
@@ -162,24 +158,24 @@ public class PlayerAttack : MonoBehaviour
                 if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
                 {
                     leftArmAttacking = true;
-                    leftArmAnim.SetBool("doAttack", true);
-                    bodyAnim.SetBool("powerAttackLeft", true);
+                    arms.leftArmAnim.SetBool("doAttack", true);
+                    arms.bodyAnim.SetBool("powerAttackLeft", true);
 
                     AttackDash(0.5f);
                 }
 
-                leftArmAnim.SetBool("startAttack", false);
+                arms.leftArmAnim.SetBool("startAttack", false);
             }
             else
             {
                 if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
                 {
                     leftQuickAttacking = true;
-                    leftArmAnim.SetBool("doQuickAttack", true);
+                    arms.leftArmAnim.SetBool("doQuickAttack", true);
                     StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
                 }
 
-                leftArmAnim.SetBool("startAttack", false);
+                arms.leftArmAnim.SetBool("startAttack", false);
                 attackTimerLeftArm = 0;
             }
 
@@ -189,11 +185,11 @@ public class PlayerAttack : MonoBehaviour
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
             leftArmAttacking = false;
-            leftArmAnim.SetBool("startAttack", false);
-            leftArmAnim.SetBool("doAttack", false);
+            arms.leftArmAnim.SetBool("startAttack", false);
+            arms.leftArmAnim.SetBool("doAttack", false);
             leftQuickAttacking = false;
-            leftArmAnim.SetBool("doQuickAttack", false);
-            bodyAnim.SetBool("powerAttackLeft", false);
+            arms.leftArmAnim.SetBool("doQuickAttack", false);
+            arms.bodyAnim.SetBool("powerAttackLeft", false);
         }
     }
 
@@ -203,7 +199,7 @@ public class PlayerAttack : MonoBehaviour
         {
             attackTimerRightArm += Time.smoothDeltaTime;
             if (attackTimerRightArm >= minChargeAttackTime)
-                rightArmAnim.SetBool("startAttack", true);
+                arms.rightArmAnim.SetBool("startAttack", true);
         }
 
         if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimerRightArm > 0)
@@ -213,24 +209,24 @@ public class PlayerAttack : MonoBehaviour
                 if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
                 {
                     rightArmAttacking = true;
-                    rightArmAnim.SetBool("doAttack", true);
-                    bodyAnim.SetBool("powerAttackRight", true);
+                    arms.rightArmAnim.SetBool("doAttack", true);
+                    arms.bodyAnim.SetBool("powerAttackRight", true);
 
                     AttackDash(0.5f);
                 }
 
-                rightArmAnim.SetBool("startAttack", false);
+                arms.rightArmAnim.SetBool("startAttack", false);
             }
             else
             {
                 if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
                 {
                     rightQuickAttacking = true;
-                    rightArmAnim.SetBool("doQuickAttack", true);
+                    arms.rightArmAnim.SetBool("doQuickAttack", true);
                     StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
                 }
 
-                rightArmAnim.SetBool("startAttack", false);
+                arms.rightArmAnim.SetBool("startAttack", false);
                 attackTimerRightArm = 0;
             }
 
@@ -240,11 +236,11 @@ public class PlayerAttack : MonoBehaviour
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
             rightArmAttacking = false;
-            rightArmAnim.SetBool("startAttack", false);
-            rightArmAnim.SetBool("doAttack", false);
+            arms.rightArmAnim.SetBool("startAttack", false);
+            arms.rightArmAnim.SetBool("doAttack", false);
             rightQuickAttacking = false;
-            rightArmAnim.SetBool("doQuickAttack", false);
-            bodyAnim.SetBool("powerAttackRight", false);
+            arms.rightArmAnim.SetBool("doQuickAttack", false);
+            arms.bodyAnim.SetBool("powerAttackRight", false);
         }
     }
 
@@ -253,7 +249,8 @@ public class PlayerAttack : MonoBehaviour
         if (GameControls.gamePlayActions.playerLeftAttack.IsPressed 
             && equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver] != null && equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount > 0)
         {
-            playerMovement.LookAtMouse();
+            if (lockOnScript.isLockedOn == false && gm.isUsingController == false)
+                playerMovement.LookAtMouse();
 
             if (GameControls.gamePlayActions.playerRightAttack.WasReleased == false && firingArrow == false)
             {
@@ -269,11 +266,12 @@ public class PlayerAttack : MonoBehaviour
                         arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
                         arrowSpawned = true;
                     }
+
                     // Draw the bow string
-                    bodyAnim.SetBool("doDrawArrow", true);
-                    rightArmAnim.SetBool("doReleaseArrow", false);
-                    leftArmAnim.SetBool("doDrawArrow", true);
-                    rightArmAnim.SetBool("doDrawArrow", true);
+                    arms.bodyAnim.SetBool("doDrawArrow", true);
+                    arms.rightArmAnim.SetBool("doReleaseArrow", false);
+                    arms.leftArmAnim.SetBool("doDrawArrow", true);
+                    arms.rightArmAnim.SetBool("doDrawArrow", true);
 
                     StartCoroutine(DrawBowString());
                 }
@@ -287,8 +285,8 @@ public class PlayerAttack : MonoBehaviour
                 // Fire the arrow
                 firingArrow = true;
                 bowStringFullyDrawn = false;
-                rightArmAnim.SetBool("doReleaseArrow", true);
-                rightArmAnim.SetBool("doDrawArrow", false);
+                arms.rightArmAnim.SetBool("doReleaseArrow", true);
+                arms.rightArmAnim.SetBool("doDrawArrow", false);
                 arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
 
                 StartCoroutine(ResetFireArrow(releaseArrowTime));
@@ -308,10 +306,10 @@ public class PlayerAttack : MonoBehaviour
             shouldStartDrawingBowString = true;
             firingArrow = false;
             bowStringFullyDrawn = false;
-            bodyAnim.SetBool("doDrawArrow", false);
-            leftArmAnim.SetBool("doDrawArrow", false);
-            rightArmAnim.SetBool("doDrawArrow", false);
-            rightArmAnim.SetBool("doReleaseArrow", false);
+            arms.bodyAnim.SetBool("doDrawArrow", false);
+            arms.leftArmAnim.SetBool("doDrawArrow", false);
+            arms.rightArmAnim.SetBool("doDrawArrow", false);
+            arms.rightArmAnim.SetBool("doReleaseArrow", false);
         }
     }
 
@@ -327,8 +325,8 @@ public class PlayerAttack : MonoBehaviour
     public IEnumerator UpdateAnimClipTimes()
     {
         yield return new WaitForSeconds(0.1f);
-        leftArmAnimClips = leftArmAnim.runtimeAnimatorController.animationClips;
-        rightArmAnimClips = rightArmAnim.runtimeAnimatorController.animationClips;
+        leftArmAnimClips = arms.leftArmAnim.runtimeAnimatorController.animationClips;
+        rightArmAnimClips = arms.rightArmAnim.runtimeAnimatorController.animationClips;
 
         foreach (AnimationClip clip in leftArmAnimClips)
         {
@@ -422,25 +420,25 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         shouldStartDrawingBowString = true;
         arrowSpawned = false;
-        rightArmAnim.SetBool("doReleaseArrow", false);
+        arms.rightArmAnim.SetBool("doReleaseArrow", false);
         firingArrow = false;
         bowStringFullyDrawn = false;
         if (GameControls.gamePlayActions.playerLeftAttack.IsPressed)
-            rightArmAnim.SetBool("doDrawArrow", true);
+            arms.rightArmAnim.SetBool("doDrawArrow", true);
     }
 
     IEnumerator ResetLeftQuickAttack(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         leftQuickAttacking = false;
-        leftArmAnim.SetBool("doQuickAttack", false);
+        arms.leftArmAnim.SetBool("doQuickAttack", false);
     }
 
     IEnumerator ResetRightQuickAttack(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         rightQuickAttacking = false;
-        rightArmAnim.SetBool("doQuickAttack", false);
+        arms.rightArmAnim.SetBool("doQuickAttack", false);
     }
 
     IEnumerator ResetChargeAttackTimerLeftArm(float waitTime)
@@ -448,8 +446,8 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         attackTimerLeftArm = 0;
         leftArmAttacking = false;
-        leftArmAnim.SetBool("doAttack", false);
-        bodyAnim.SetBool("powerAttackLeft", false);
+        arms.leftArmAnim.SetBool("doAttack", false);
+        arms.bodyAnim.SetBool("powerAttackLeft", false);
     }
 
     IEnumerator ResetChargeAttackTimerRightArm(float waitTime)
@@ -457,17 +455,15 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         attackTimerRightArm = 0;
         rightArmAttacking = false;
-        rightArmAnim.SetBool("doAttack", false);
-        bodyAnim.SetBool("powerAttackRight", false);
+        arms.rightArmAnim.SetBool("doAttack", false);
+        arms.bodyAnim.SetBool("powerAttackRight", false);
     }
 
     public IEnumerator SmoothMovement(Transform objectToMove, Vector3 targetPos)
     {
-        Debug.Log(objectToMove.position);
-        Debug.Log(targetPos);
         while (Vector2.Distance(objectToMove.position, targetPos) > 0.1f)
         {
-            objectToMove.position = Vector2.MoveTowards(objectToMove.position, targetPos, 1 * 4 * Time.deltaTime);
+            objectToMove.position = Vector2.MoveTowards(objectToMove.position, targetPos, 4 * Time.deltaTime);
             yield return null; // Pause for one frame
         }
     }

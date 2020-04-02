@@ -44,11 +44,13 @@ public class BasicStats : MonoBehaviour
     // NPC only
     NPCInventory npcInv;
 
+    BloodParticleSystemHandler bloodSystem;
     Arms arms;
     EquipmentManager equipmentManager;
 
     void Start()
     {
+        bloodSystem = BloodParticleSystemHandler.Instance;
         arms = GetComponentInChildren<Arms>();
         equipmentManager = GetComponent<EquipmentManager>();
         npcInv = GetComponent<NPCInventory>();
@@ -65,6 +67,18 @@ public class BasicStats : MonoBehaviour
     {
         if (staminaCanRegen)
             StartCoroutine(StaminaRegen());
+    }
+
+    public void SpawnBlood(Transform victim, Transform weaponOwner, float percentDamage, LayerMask obstacleMask)
+    {
+        Vector3 dir = (victim.position - weaponOwner.position).normalized;
+        float raycastDistance = Vector3.Distance(victim.position, victim.position + dir * 3f);
+        RaycastHit2D hit = Physics2D.Raycast(victim.position, dir, raycastDistance, obstacleMask);
+
+        if (hit == false)
+            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, false);
+        else
+            bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, true);
     }
 
     public void TakeDamage(int damageAmount)
@@ -108,16 +122,76 @@ public class BasicStats : MonoBehaviour
 
         yield return new WaitForSeconds(0.05f);
 
+        GameObject deadBody = Instantiate(deadBodyPrefab, transform.position, transform.rotation, GameObject.Find("NPCs").transform);
+        StartCoroutine(equipmentManager.TransferEquippedItemsToBody(deadBody.GetComponent<EquipmentManager>()));
+
+        if (npcInv != null)
+        {
+            int randomNum;
+
+            // Get arrows from the character's body and possibly add them to the dead body container
+            if (transform.Find("Body").Find("Arrows") != null)
+            {
+                for (int i = 0; i < transform.Find("Body").Find("Arrows").childCount; i++)
+                {
+                    // 50% chance to add the arrow to the npcs inv
+                    randomNum = Random.Range(1, 3);
+                    if (randomNum == 1)
+                    { 
+                        GameObject prefab = transform.Find("Body").Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        prefab.GetComponent<ItemData>().hasBeenRandomized = true;
+                        prefab.GetComponent<ItemData>().TransferData(transform.Find("Body").Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
+                        npcInv.carriedItems.Add(prefab);
+                    }
+                }
+            }
+
+            // Get arrows from the character's shield (if they had one equipped) and possibly add them to the dead body container
+            if (leftWeaponItemDrop != null && leftWeaponItemDrop.transform.Find("Arrows") != null)
+            {
+                for (int i = 0; i < leftWeaponItemDrop.transform.Find("Arrows").childCount; i++)
+                {
+                    // 50% chance to add the arrow to the npcs inv
+                    randomNum = Random.Range(1, 3);
+                    if (randomNum == 1)
+                    {
+                        GameObject prefab = leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        prefab.GetComponent<ItemData>().hasBeenRandomized = true;
+                        prefab.GetComponent<ItemData>().TransferData(leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
+                        npcInv.carriedItems.Add(prefab);
+                    }
+                    
+                    Destroy(leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).gameObject);
+                }
+            }
+
+            // Get arrows from the character's shield (if they had one equipped) and possibly add them to the dead body container
+            if (rightWeaponItemDrop != null && rightWeaponItemDrop.transform.Find("Arrows") != null)
+            {
+                for (int i = 0; i < rightWeaponItemDrop.transform.Find("Arrows").childCount; i++)
+                {
+                    // 50% chance to add the arrow to the npcs inv
+                    randomNum = Random.Range(1, 3);
+                    if (randomNum == 1)
+                    {
+                        GameObject prefab = rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        prefab.GetComponent<ItemData>().hasBeenRandomized = true;
+                        prefab.GetComponent<ItemData>().TransferData(rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
+                        npcInv.carriedItems.Add(prefab);
+                    }
+
+                    Destroy(rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).gameObject);
+                }
+            }
+
+            StartCoroutine(npcInv.TransferObjectsToBodyContainer(deadBody.GetComponent<Container>()));
+        }
+
         if (leftWeaponItemDrop != null)
             leftWeaponItemDrop.DropItem(false);
 
         if (rightWeaponItemDrop != null)
             rightWeaponItemDrop.DropItem(false);
-
-        GameObject deadBody = Instantiate(deadBodyPrefab, transform.position, transform.rotation, GameObject.Find("NPCs").transform);
-        StartCoroutine(equipmentManager.TransferEquippedItemsToBody(deadBody.GetComponent<EquipmentManager>()));
-        if (npcInv != null)
-            StartCoroutine(npcInv.TransferObjectsToBodyContainer(deadBody.GetComponent<Container>()));
 
         yield return new WaitForSeconds(0.15f);
         

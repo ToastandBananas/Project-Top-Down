@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public bool menuOpen;
     public GameObject pauseMenu;
 
+    public bool isUsingController;
+
     InventoryUI invUI;
 
     #region Singleton

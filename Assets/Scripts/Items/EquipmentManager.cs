@@ -132,30 +132,33 @@ public class EquipmentManager : MonoBehaviour
 
     public void AutoAddAmmoToQuiver(Equipment newItem, ItemData itemData, InventorySlot invSlotTakingFrom)
     {
-        int ammoCount = itemData.currentStackSize;
-        for (int i = 0; i < ammoCount; i++)
+        if (currentEquipment[(int)EquipmentSlot.Quiver] != null)
         {
-            if (currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount < currentEquipment[(int)EquipmentSlot.Quiver].equipment.maxAmmo)
+            int ammoCount = itemData.currentStackSize;
+            for (int i = 0; i < ammoCount; i++)
             {
-                itemData.currentStackSize--;
-                currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount++;
-                quiverSlot.quiverText.text = currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();
+                if (currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount < currentEquipment[(int)EquipmentSlot.Quiver].equipment.maxAmmo)
+                {
+                    itemData.currentStackSize--;
+                    currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount++;
+                    quiverSlot.quiverText.text = currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();
 
-                if (itemData.currentStackSize > 1)
-                    invSlotTakingFrom.stackSizeText.text = itemData.currentStackSize.ToString();
+                    if (itemData.currentStackSize > 1)
+                        invSlotTakingFrom.stackSizeText.text = itemData.currentStackSize.ToString();
+                    else
+                        invSlotTakingFrom.stackSizeText.text = "";
+                }
                 else
-                    invSlotTakingFrom.stackSizeText.text = "";
+                    break;
             }
-            else
-                break;
-        }
 
-        currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;
+            currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;
 
-        if (itemData.currentStackSize <= 0)
-        {
-            newItem.RemoveFromInventory(itemData);
-            invSlotTakingFrom.ClearSlot();
+            if (itemData.currentStackSize <= 0)
+            {
+                newItem.RemoveFromInventory(itemData);
+                invSlotTakingFrom.ClearSlot();
+            }
         }
     }
 
@@ -235,6 +238,7 @@ public class EquipmentManager : MonoBehaviour
                 // Add new item
                 EquipItem(newItem, itemData, newItem.weaponSlot, newItem.equipmentSlot);
                 equipSlot.AddItem(newItem, itemData);
+                equipSlot.SetQuiverStackSizeText();
 
                 // Display floating text
                 GM.floatingTexts[GM.floatingTextIndex].DisplayUseItemFloatingText(equipSlot.equipment, PlayerMovement.instance.transform, true);
@@ -331,11 +335,15 @@ public class EquipmentManager : MonoBehaviour
         GameObject weapon = Instantiate(newItem.prefab, weaponBase.transform);
 
         itemData.TransferData(itemData, weapon.GetComponent<ItemData>());
+        Debug.Log(itemData.damage);
+        Debug.Log(weapon.GetComponent<ItemData>().damage);
 
         weapon.name = itemData.itemName;
         weapon.GetComponent<SpriteRenderer>().sprite = newItem.sprite;
-        weapon.GetComponent<BoxCollider2D>().enabled = true;
-        weapon.GetComponent<WeaponDamage>().enabled = true;
+        if (weapon.TryGetComponent(out BoxCollider2D boxCollider))
+            boxCollider.enabled = true;
+        if (weapon.TryGetComponent(out WeaponDamage weaponDamage))
+        weaponDamage.enabled = true;
         
         if (weaponParent == leftWeaponParent && newItem.generalClassification == GeneralClassification.Weapon1H)
             arms.leftWeaponEquipped = true;

@@ -47,6 +47,7 @@ public class ItemDrop : MonoBehaviour
         itemPickupScript.enabled = true;
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);
+
         AddForce(tossInAir);
     }
 

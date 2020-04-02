@@ -11,6 +11,8 @@ public class GamePlayActions : PlayerActionSet
     public PlayerOneAxisAction playerSwitchLockOnTargetAxis;
     public PlayerAction playerUp, playerDown, playerLeft, playerRight;
     public PlayerTwoAxisAction playerMovementAxis;
+    public PlayerAction playerLookUp, playerLookDown, playerLookLeft, playerLookRight;
+    public PlayerTwoAxisAction playerLookAxis;
     public PlayerAction playerLeftAttack, playerRightAttack;
     public PlayerAction playerLeftSpecialAttack, playerRightSpecialAttack;
 
@@ -37,6 +39,12 @@ public class GamePlayActions : PlayerActionSet
         playerLeft = CreatePlayerAction("PlayerLeft");
         playerRight = CreatePlayerAction("PlayerRight");
         playerMovementAxis = CreateTwoAxisPlayerAction(playerLeft, playerRight, playerDown, playerUp);
+
+        playerLookUp = CreatePlayerAction("PlayerLookUp");
+        playerLookDown = CreatePlayerAction("PlayerLookDown");
+        playerLookLeft = CreatePlayerAction("PlayerLookLeft");
+        playerLookRight = CreatePlayerAction("PlayerLookRight");
+        playerLookAxis = CreateTwoAxisPlayerAction(playerLookLeft, playerLookRight, playerLookDown, playerLookUp);
 
         playerLeftAttack = CreatePlayerAction("PlayerLeftAttack");
         playerRightAttack = CreatePlayerAction("PlayerRightAttack");

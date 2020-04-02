@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public static PlayerMovement instance;
 
     public Vector2 movementInput;
+    public Vector2 lookInput;
 
     public float moveSpeed;
     public float runSpeed = 3f;
@@ -71,19 +72,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canDodge)
             Update_Movement();
-
-        /*if (Vector2.Distance(transform.position, cam.ScreenToWorldPoint(Input.mousePosition)) > 0.25f)
-        {
-            Update_Movement();
-            LookAtMouse();
-        }
-        else
-            ResetAnims();*/
     }
 
     void Update_Movement()
     {
         movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
+        lookInput = GameControls.gamePlayActions.playerLookAxis.Value;
 
         if (GameControls.gamePlayActions.playerSprint.IsPressed)
             moveSpeed = walkSpeed;

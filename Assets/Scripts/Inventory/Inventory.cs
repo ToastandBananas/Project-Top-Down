@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -417,8 +418,9 @@ public class Inventory : MonoBehaviour
                                             Destroy(invUI.currentlySelectedItemData.gameObject);
                                         }
 
+                                        itemsTryingToReplaceCount = 0;
                                         invUI.StopDraggingInvItem();
-                                        return false;
+                                        return true;
                                     }
                                 }
                                 else if (slot.item.itemType == ItemType.Ammunition)
@@ -574,9 +576,10 @@ public class Inventory : MonoBehaviour
         {
             slot.SoftFillSlot(slot);
         }
-
-        startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-        startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
+        
+        //Debug.Log(invUI.tempSlot.iconImage);
+        //startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
+        //startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
         if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
             itemsList.Add(startSlot.itemData);
