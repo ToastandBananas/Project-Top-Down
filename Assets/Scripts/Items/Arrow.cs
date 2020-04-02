@@ -40,6 +40,21 @@ public class Arrow : MonoBehaviour
         this.enabled = false;
     }
 
+    void Knockback(Transform whoToKnockback, float knockbackDistance)
+    {
+        Vector3 dir = (whoToKnockback.position - transform.position).normalized;
+        float raycastDistance = Vector3.Distance(whoToKnockback.position, whoToKnockback.position + dir * knockbackDistance);
+        RaycastHit2D hit = Physics2D.Raycast(whoToKnockback.position, dir, raycastDistance, obstacleMask);
+
+        if (hit == false)
+        {
+            if (whoToKnockback.tag == "NPC")
+                StartCoroutine(whoToKnockback.GetComponent<NPCMovement>().SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
+            else if (whoToKnockback.tag == "Player")
+                StartCoroutine(PlayerMovement.instance.SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.isTrigger == false)
@@ -52,23 +67,16 @@ public class Arrow : MonoBehaviour
                 float percentDamage = bowShotFrom.damage / basicStats.maxHealth;
                 basicStats.SpawnBlood(collision.transform, transform, percentDamage, obstacleMask);
 
-                if (collision.transform.Find("Arrows") != null)
-                    transform.SetParent(collision.transform.Find("Arrows"));
-                else
-                {
-                    GameObject Arrows = new GameObject();
-                    Arrows.name = "Arrows";
-                    Arrows.transform.SetParent(collision.transform);
-                    transform.SetParent(collision.transform.Find("Arrows"));
-                }
-
-                StopArrow();
+                Knockback(collision.transform.parent, bowShotFrom.equipment.knockbackPower);
             }
             else if (collision.tag != "Weapon")
             {
                 if (collision.GetComponent<ItemData>() != null)
                     collision.GetComponent<ItemData>().durability -= bowShotFrom.damage;
+            }
 
+            if (collision.tag != "Weapon")
+            {
                 if (collision.transform.Find("Arrows") != null)
                     transform.SetParent(collision.transform.Find("Arrows"));
                 else

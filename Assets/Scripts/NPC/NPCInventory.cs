@@ -21,7 +21,7 @@ public class NPCInventory : MonoBehaviour
 
     public IEnumerator TransferObjectsToBodyContainer(Container deadBodyContainer)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
 
         foreach (GameObject obj in carriedItems)
         {

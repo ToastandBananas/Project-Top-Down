@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public float dodgeDistance = 1f;
     public float dodgeCooldownTime = 1f;
     public bool isMoving;
+    public bool isDodging;
 
     public bool isMounted;
 
@@ -70,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (canDodge)
+        if (isDodging == false)
             Update_Movement();
     }
 
@@ -138,9 +139,11 @@ public class PlayerMovement : MonoBehaviour
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 
             if (canDodge)
+            {
                 StartCoroutine(SmoothMovement(transform.position + lastMoveDir * dodgeDistance));
+                canDodge = false;
+            }
 
-            canDodge = false;
             StartCoroutine(DodgeCooldown(dodgeCooldownTime));
         }
     }
@@ -173,12 +176,6 @@ public class PlayerMovement : MonoBehaviour
         return Physics2D.Raycast(transform.position, dir, distance, obstacleMask).collider == null;
     }
 
-    IEnumerator DodgeCooldown(float cooldownTime)
-    {
-        yield return new WaitForSeconds(cooldownTime);
-        canDodge = true;
-    }
-
     IEnumerator DestroyEffect(Transform effect, float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
@@ -196,17 +193,38 @@ public class PlayerMovement : MonoBehaviour
         itemsToBePickedUpCount = 0;
     }
 
+    IEnumerator DodgeCooldown(float cooldownTime)
+    {
+        yield return new WaitForSeconds(cooldownTime);
+        canDodge = true;
+    }
+
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
+        isDodging = true;
         float timer = 0;
+
         while (stats.isDead == false && Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
-            timer += Time.smoothDeltaTime;
-            if (timer > 1f)
+            if (timer < 1f)
+                timer += Time.deltaTime;
+            else
+            {
+                isDodging = false;
                 break;
+            }
 
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
+
             yield return null; // Pause for one frame
+        }
+
+        while (isDodging)
+        {
+            if (Vector2.Distance(transform.position, targetPos) <= 0.1f)
+                isDodging = false;
+
+            yield return null;
         }
     }
 }

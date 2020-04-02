@@ -179,8 +179,6 @@ public class EquipmentManager : MonoBehaviour
                     newItem.weaponSlot = WeaponSlot.WeaponLeft;
                     if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
                         newItem.weaponSlot = WeaponSlot.WeaponRight;
-
-                    Debug.Log(newItem.weaponSlot);
                 }
             }
 
@@ -335,8 +333,6 @@ public class EquipmentManager : MonoBehaviour
         GameObject weapon = Instantiate(newItem.prefab, weaponBase.transform);
 
         itemData.TransferData(itemData, weapon.GetComponent<ItemData>());
-        Debug.Log(itemData.damage);
-        Debug.Log(weapon.GetComponent<ItemData>().damage);
 
         weapon.name = itemData.itemName;
         weapon.GetComponent<SpriteRenderer>().sprite = newItem.sprite;
@@ -571,6 +567,7 @@ public class EquipmentManager : MonoBehaviour
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
                             StartCoroutine(TransferDataWithDelay(itemData, equipSlot));
+                            currentWeapons[(int)weaponSlot] = equipSlot.itemData;
                             break;
                         }
                     }
@@ -583,6 +580,7 @@ public class EquipmentManager : MonoBehaviour
                         {
                             equipSlot.AddItem(itemData.equipment, itemData);
                             StartCoroutine(TransferDataWithDelay(itemData, equipSlot));
+                            currentEquipment[(int)equipmentSlot] = equipSlot.itemData;
                             break;
                         }
                     }
@@ -591,11 +589,6 @@ public class EquipmentManager : MonoBehaviour
 
             if (basicStats != null)
                 AdjustStats(itemData, basicStats);
-
-            if (weaponSlot != WeaponSlot.None)
-                currentWeapons[(int)weaponSlot] = itemData;
-            else if (equipmentSlot != EquipmentSlot.None)
-                currentEquipment[(int)equipmentSlot] = itemData;
         }
     }
 

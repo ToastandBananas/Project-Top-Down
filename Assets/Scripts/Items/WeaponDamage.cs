@@ -8,7 +8,7 @@ public class WeaponDamage : MonoBehaviour
 
     public Vector2 positionOffset;
 
-    bool canDoDamage = true;
+    public bool canDoDamage = true;
 
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
@@ -75,73 +75,119 @@ public class WeaponDamage : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (thisWeapon.name == "Left Weapon" 
+        if (canDoDamage)
+        {
+            if (thisWeapon.name == "Left Weapon"
             && (playerAttack != null && (playerAttack.leftArmAttacking || playerAttack.leftQuickAttacking))
             || (npcAttacks != null && (npcAttacks.leftArmAttacking || npcAttacks.leftQuickAttacking)))
-        {
-            if (canDoDamage && collision.gameObject != weaponOwner.gameObject && (collision.tag == "NPC" || collision.tag == "Player"))
             {
-                BasicStats basicStats = collision.GetComponent<BasicStats>();
-                basicStats.TakeDamage(itemData.damage);
-                canDoDamage = false;
-
-                float percentDamage = itemData.damage / basicStats.maxHealth;
-                basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
-
-                if (playerAttack != null)
+                if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
                 {
-                    if (playerAttack.leftArmAttacking)
+                    BasicStats basicStats = collision.GetComponentInParent<BasicStats>();
+                    basicStats.TakeDamage(itemData.damage);
+                    canDoDamage = false;
+
+                    float percentDamage = itemData.damage / basicStats.maxHealth;
+                    basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
+
+                    if (playerAttack != null)
                     {
-                        Knockback(collision.transform, equipment.knockbackPower);
-                        StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                        if (playerAttack.leftArmAttacking)
+                        {
+                            Knockback(collision.transform.parent, equipment.knockbackPower);
+                            StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                        }
+                        else if (playerAttack.leftQuickAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
                     }
-                    else if (playerAttack.leftQuickAttacking)
-                        StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
+                    else if (npcAttacks != null)
+                    {
+                        if (npcAttacks.leftArmAttacking)
+                        {
+                            Knockback(collision.transform.parent, equipment.knockbackPower);
+                            StartCoroutine(DamageCooldown(npcAttacks.leftHeavyAttackTime));
+                        }
+                        else if (npcAttacks.leftQuickAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.leftQuickAttackTime));
+                    }
                 }
-                else if (npcAttacks != null)
+                else if (collision.tag == "Shield" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
                 {
-                    if (npcAttacks.leftArmAttacking)
+                    Debug.Log("Damage blocked");
+                    canDoDamage = false;
+                    collision.GetComponent<ItemData>().durability -= itemData.damage;
+
+                    if (playerAttack != null)
                     {
-                        Knockback(collision.transform, equipment.knockbackPower);
-                        StartCoroutine(DamageCooldown(npcAttacks.leftHeavyAttackTime));
+                        if (playerAttack.leftArmAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                        else if (playerAttack.leftQuickAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
                     }
-                    else if (npcAttacks.leftQuickAttacking)
-                        StartCoroutine(DamageCooldown(npcAttacks.leftQuickAttackTime));
+                    else if (npcAttacks != null)
+                    {
+                        if (npcAttacks.leftArmAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.leftHeavyAttackTime));
+                        else if (npcAttacks.leftQuickAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.leftQuickAttackTime));
+                    }
                 }
+
             }
-        }
-        else if (thisWeapon.name == "Right Weapon" 
-            && (playerAttack != null && (playerAttack.rightArmAttacking || playerAttack.rightQuickAttacking))
-            || (npcAttacks != null && (npcAttacks.rightArmAttacking || npcAttacks.rightQuickAttacking)))
-        {
-            if (canDoDamage && collision.gameObject != weaponOwner.gameObject && (collision.tag == "NPC" || collision.tag == "Player"))
+            else if (thisWeapon.name == "Right Weapon"
+                && (playerAttack != null && (playerAttack.rightArmAttacking || playerAttack.rightQuickAttacking))
+                || (npcAttacks != null && (npcAttacks.rightArmAttacking || npcAttacks.rightQuickAttacking)))
             {
-                BasicStats basicStats = collision.GetComponent<BasicStats>();
-                basicStats.TakeDamage(itemData.damage);
-                canDoDamage = false;
-
-                float percentDamage = itemData.damage / basicStats.maxHealth;
-                basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
-
-                if (playerAttack != null)
+                if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
                 {
-                    if (playerAttack.rightArmAttacking)
+                    BasicStats basicStats = collision.GetComponentInParent<BasicStats>();
+                    basicStats.TakeDamage(itemData.damage);
+                    canDoDamage = false;
+
+                    float percentDamage = itemData.damage / basicStats.maxHealth;
+                    basicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
+
+                    if (playerAttack != null)
                     {
-                        Knockback(collision.transform, equipment.knockbackPower);
-                        StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                        if (playerAttack.rightArmAttacking)
+                        {
+                            Knockback(collision.transform.parent, equipment.knockbackPower);
+                            StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                        }
+                        else if (playerAttack.rightQuickAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
                     }
-                    else if (playerAttack.rightQuickAttacking)
-                        StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
+                    else if (npcAttacks != null)
+                    {
+                        if (npcAttacks.rightArmAttacking)
+                        {
+                            Knockback(collision.transform.parent, equipment.knockbackPower);
+                            StartCoroutine(DamageCooldown(npcAttacks.rightHeavyAttackTime));
+                        }
+                        else if (npcAttacks.rightQuickAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.rightQuickAttackTime));
+                    }
                 }
-                else if (npcAttacks != null)
+                else if (collision.tag == "Shield" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
                 {
-                    if (npcAttacks.rightArmAttacking)
+                    Debug.Log("Damage blocked");
+                    canDoDamage = false;
+                    collision.GetComponent<ItemData>().durability -= itemData.damage;
+
+                    if (playerAttack != null)
                     {
-                        Knockback(collision.transform, equipment.knockbackPower);
-                        StartCoroutine(DamageCooldown(npcAttacks.rightHeavyAttackTime));
+                        if (playerAttack.rightArmAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                        else if (playerAttack.rightQuickAttacking)
+                            StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
                     }
-                    else if (npcAttacks.rightQuickAttacking)
-                        StartCoroutine(DamageCooldown(npcAttacks.rightQuickAttackTime));
+                    else if (npcAttacks != null)
+                    {
+                        if (npcAttacks.rightArmAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.rightHeavyAttackTime));
+                        else if (npcAttacks.rightQuickAttacking)
+                            StartCoroutine(DamageCooldown(npcAttacks.rightQuickAttackTime));
+                    }
                 }
             }
         }

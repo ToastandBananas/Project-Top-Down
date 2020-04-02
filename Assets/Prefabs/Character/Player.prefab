@@ -1756,11 +1756,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementInput: {x: 0, y: 0}
+  lookInput: {x: 0, y: 0}
   moveSpeed: 2
   runSpeed: 3
   dodgeDistance: 1
   dodgeCooldownTime: 1
   isMoving: 0
+  isDodging: 0
   isMounted: 0
   itemsToBePickedUpCount: 0
 --- !u!114 &7665225410889906271
@@ -1922,7 +1924,7 @@ MonoBehaviour:
     m_Bits: 1024
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8448
   targetsInViewRadius: []
   closestEnemy: {fileID: 0}
   meshResolution: 1

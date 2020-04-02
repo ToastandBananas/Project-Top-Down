@@ -1908,6 +1908,7 @@ MonoBehaviour:
   patrolPoint: {fileID: 0}
   walkSpeed: 2
   runSpeed: 3
+  isDodging: 0
 --- !u!114 &7217126290731098577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1921,8 +1922,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDistance: 1.6
-  rangedAttackDistance: 8
-  combatDistance: 4
+  meleeCombatDistance: 5
+  rangedCombatDistance: 10
   determineMoveDirection: 1
 --- !u!114 &8683012622843688016
 MonoBehaviour:
@@ -1971,7 +1972,7 @@ MonoBehaviour:
     m_Bits: 4096
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8448
   targetsInViewRadius: []
   closestEnemy: {fileID: 0}
   meshResolution: 1

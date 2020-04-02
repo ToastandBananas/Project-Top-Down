@@ -17,6 +17,8 @@ public class NPCMovement : MonoBehaviour
     public float walkSpeed = 2f;
     public float runSpeed = 3f;
 
+    public bool isDodging;
+
     FieldOfView fov;
     AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
@@ -63,7 +65,7 @@ public class NPCMovement : MonoBehaviour
         DetermineState();
         Movement();
         
-        if (AIDestSetter.target == null)
+        if (AIDestSetter.target == null || isDodging)
         {
             AIPath.canMove = false;
             SetIsMoving(false);
@@ -145,19 +147,12 @@ public class NPCMovement : MonoBehaviour
         }
         else if (currentState == STATE.COMBAT)
         {
-            /*if (AIDestSetter.target == null || ((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.attackDistance)
-                || (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, AIDestSetter.target.position) > npcCombat.rangedAttackDistance))
-                SetIsMoving(true);
-            else
-                SetIsMoving(false);*/
-
             AIPath.maxSpeed = runSpeed;
-
             npcCombat.DetermineCombatActions();
         }
         else if (currentState == STATE.FLEE)
         {
-            //SetIsMoving(true);
+            // TODO
         }
         else // Idle
         {
@@ -175,15 +170,30 @@ public class NPCMovement : MonoBehaviour
 
     public IEnumerator SmoothMovement(Vector3 targetPos)
     {
+        isDodging = true;
         float timer = 0;
+        
         while (stats.isDead == false && Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
-            timer += Time.smoothDeltaTime;
-            if (timer > 1f)
+            if (timer < 1f)
+                timer += Time.deltaTime;
+            else
+            {
+                isDodging = false;
                 break;
+            }
 
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
+
             yield return null; // Pause for one frame
+        }
+
+        while (isDodging)
+        {
+            if (Vector2.Distance(transform.position, targetPos) <= 0.1f)
+                isDodging = false;
+
+            yield return null;
         }
     }
 }

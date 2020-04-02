@@ -11,6 +11,7 @@ public class ItemDrop : MonoBehaviour
     BoxCollider2D boxCollider;
     ItemPickup itemPickupScript;
     WeaponDamage weaponDamageScript;
+    Arrow arrowScript;
     Transform looseItemsContainer;
 
     LayerMask obstacleMask;
@@ -29,6 +30,7 @@ public class ItemDrop : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         itemPickupScript = GetComponent<ItemPickup>();
         weaponDamageScript = GetComponent<WeaponDamage>();
+        arrowScript = GetComponent<Arrow>();
         looseItemsContainer = GameObject.Find("Loose Items").transform;
         obstacleMask = LayerMask.GetMask("Walls", "Floors");
     }
@@ -40,6 +42,9 @@ public class ItemDrop : MonoBehaviour
 
         if (weaponDamageScript != null)
             weaponDamageScript.enabled = false;
+
+        if (arrowScript != null)
+            arrowScript.enabled = false;
 
         if (item.droppedSprite != null)
             spriteRenderer.sprite = item.droppedSprite;

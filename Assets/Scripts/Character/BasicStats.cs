@@ -115,10 +115,16 @@ public class BasicStats : MonoBehaviour
     {
         isDead = true;
 
-        if (arms.leftWeaponEquipped || arms.leftShieldEquipped)
+        // Drop any carried weapons/shields
+        if (transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").childCount > 0 &&
+            (arms.leftWeaponEquipped || arms.leftShieldEquipped || arms.rangedWeaponEquipped || arms.twoHanderEquipped))
+        {
             leftWeaponItemDrop = transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
-        if (arms.rightWeaponEquipped || arms.rightShieldEquipped)
+        }
+        if (transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").childCount > 0 && arms.rightWeaponEquipped || arms.rightShieldEquipped)
+        {
             rightWeaponItemDrop = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
+        }
 
         yield return new WaitForSeconds(0.05f);
 
@@ -138,7 +144,7 @@ public class BasicStats : MonoBehaviour
                     randomNum = Random.Range(1, 3);
                     if (randomNum == 1)
                     { 
-                        GameObject prefab = transform.Find("Body").Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        GameObject prefab = Instantiate(transform.Find("Body").Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab);
                         prefab.GetComponent<ItemData>().hasBeenRandomized = true;
                         prefab.GetComponent<ItemData>().TransferData(transform.Find("Body").Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
                         npcInv.carriedItems.Add(prefab);
@@ -155,7 +161,7 @@ public class BasicStats : MonoBehaviour
                     randomNum = Random.Range(1, 3);
                     if (randomNum == 1)
                     {
-                        GameObject prefab = leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        GameObject prefab = Instantiate(leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab);
                         prefab.GetComponent<ItemData>().hasBeenRandomized = true;
                         prefab.GetComponent<ItemData>().TransferData(leftWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
                         npcInv.carriedItems.Add(prefab);
@@ -174,7 +180,7 @@ public class BasicStats : MonoBehaviour
                     randomNum = Random.Range(1, 3);
                     if (randomNum == 1)
                     {
-                        GameObject prefab = rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab;
+                        GameObject prefab = Instantiate(rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>().item.prefab);
                         prefab.GetComponent<ItemData>().hasBeenRandomized = true;
                         prefab.GetComponent<ItemData>().TransferData(rightWeaponItemDrop.transform.Find("Arrows").GetChild(i).GetComponent<ItemData>(), prefab.GetComponent<ItemData>());
                         npcInv.carriedItems.Add(prefab);
@@ -188,12 +194,16 @@ public class BasicStats : MonoBehaviour
         }
 
         if (leftWeaponItemDrop != null)
+        {
+            if (arms.rangedWeaponEquipped && arms.leftEquippedWeapon.transform.Find("Middle of String").childCount > 0) // If an arrow is attached to the bow string, drop it
+                arms.leftEquippedWeapon.transform.Find("Middle of String").GetChild(0).GetComponent<ItemDrop>().DropItem(false);
             leftWeaponItemDrop.DropItem(false);
+        }
 
         if (rightWeaponItemDrop != null)
             rightWeaponItemDrop.DropItem(false);
 
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.10f);
         
         Destroy(gameObject);
     }
