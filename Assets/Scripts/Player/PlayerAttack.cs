@@ -28,6 +28,7 @@ public class PlayerAttack : MonoBehaviour
     [HideInInspector] public float leftHeavyAttackTime;
     [HideInInspector] public float rightHeavyAttackTime;
     [HideInInspector] public float rightChargeAttackTime;
+    [HideInInspector] public float deflectWeaponTime;
     [HideInInspector] public float drawBowStringTime;
     [HideInInspector] public float releaseArrowTime;
     [HideInInspector] public float shieldBashTime;
@@ -341,6 +342,9 @@ public class PlayerAttack : MonoBehaviour
                 case "Attack_1H_Close_L":
                     leftChargeAttackTime = clip.length;
                     break;
+                case "Weapon_Deflection_L":
+                    deflectWeaponTime = clip.length;
+                    break;
                 case "Shield_Bash_L":
                     shieldBashTime = clip.length;
                     break;
@@ -359,6 +363,9 @@ public class PlayerAttack : MonoBehaviour
                     break;
                 case "Attack_1H_Close_R":
                     rightChargeAttackTime = clip.length;
+                    break;
+                case "Weapon_Deflection_R":
+                    deflectWeaponTime = clip.length;
                     break;
                 case "Draw_Arrow_R":
                     drawBowStringTime = clip.length;

@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &8817556764781924269
 BoxCollider2D:
@@ -151,6 +151,7 @@ MonoBehaviour:
   equipment: {fileID: 11400000, guid: 2d5ae5f9e10147c47b27d8907acb88b2, type: 2}
   itemData: {fileID: 0}
   positionOffset: {x: 0, y: 0}
+  canDoDamage: 1
 --- !u!114 &8479428350304003610
 MonoBehaviour:
   m_ObjectHideFlags: 0

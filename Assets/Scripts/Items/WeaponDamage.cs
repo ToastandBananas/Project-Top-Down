@@ -14,6 +14,7 @@ public class WeaponDamage : MonoBehaviour
     PlayerAttack playerAttack;
     PlayerSpecialAttack playerSpecialAttack;
     NPCAttacks npcAttacks;
+    Arms arms;
     Transform thisWeapon;
     Transform weaponOwner;
     Transform weaponOwnerHeadReset;
@@ -29,6 +30,7 @@ public class WeaponDamage : MonoBehaviour
         playerSpecialAttack = weaponOwner.GetComponent<PlayerSpecialAttack>();
         playerMovement = PlayerMovement.instance;
         npcAttacks = weaponOwner.GetComponent<NPCAttacks>();
+        arms = weaponOwner.Find("Arms").GetComponent<Arms>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
         itemData = GetComponent<ItemData>();
         equipment = itemData.equipment;
@@ -71,6 +73,13 @@ public class WeaponDamage : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         canDoDamage = true;
+    }
+
+    IEnumerator WeaponDeflect(Animator anim, float waitTime)
+    {
+        anim.SetBool("doDeflectWeapon", true);
+        yield return new WaitForSeconds(waitTime);
+        anim.SetBool("doDeflectWeapon", false);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -120,14 +129,20 @@ public class WeaponDamage : MonoBehaviour
                     if (playerAttack != null)
                     {
                         if (playerAttack.leftArmAttacking)
+                        {
                             StartCoroutine(DamageCooldown(playerAttack.leftChargeAttackTime));
+                            StartCoroutine(WeaponDeflect(arms.leftArmAnim, playerAttack.deflectWeaponTime));
+                        }
                         else if (playerAttack.leftQuickAttacking)
                             StartCoroutine(DamageCooldown(playerAttack.leftQuickAttackTime));
                     }
                     else if (npcAttacks != null)
                     {
                         if (npcAttacks.leftArmAttacking)
+                        {
                             StartCoroutine(DamageCooldown(npcAttacks.leftHeavyAttackTime));
+                            StartCoroutine(WeaponDeflect(arms.leftArmAnim, npcAttacks.deflectWeaponTime));
+                        }
                         else if (npcAttacks.leftQuickAttacking)
                             StartCoroutine(DamageCooldown(npcAttacks.leftQuickAttackTime));
                     }
@@ -177,14 +192,20 @@ public class WeaponDamage : MonoBehaviour
                     if (playerAttack != null)
                     {
                         if (playerAttack.rightArmAttacking)
+                        {
                             StartCoroutine(DamageCooldown(playerAttack.rightChargeAttackTime));
+                            StartCoroutine(WeaponDeflect(arms.rightArmAnim, playerAttack.deflectWeaponTime));
+                        }
                         else if (playerAttack.rightQuickAttacking)
                             StartCoroutine(DamageCooldown(playerAttack.rightQuickAttackTime));
                     }
                     else if (npcAttacks != null)
                     {
                         if (npcAttacks.rightArmAttacking)
+                        {
                             StartCoroutine(DamageCooldown(npcAttacks.rightHeavyAttackTime));
+                            StartCoroutine(WeaponDeflect(arms.rightArmAnim, npcAttacks.deflectWeaponTime));
+                        }
                         else if (npcAttacks.rightQuickAttacking)
                             StartCoroutine(DamageCooldown(npcAttacks.rightQuickAttackTime));
                     }
