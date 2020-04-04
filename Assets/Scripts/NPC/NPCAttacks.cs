@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NPCAttacks : MonoBehaviour
 {
+    AnimTimeManager animTimeManager;
     Arms arms;
     Animator bodyAnim;
     NPCCombat npcCombat;
@@ -23,16 +24,6 @@ public class NPCAttacks : MonoBehaviour
     [HideInInspector] public bool leftArmAttacking, rightArmAttacking;
     [HideInInspector] public bool leftQuickAttacking, rightQuickAttacking;
 
-    AnimationClip[] leftArmAnimClips;
-    AnimationClip[] rightArmAnimClips;
-
-    [HideInInspector] public float leftQuickAttackTime, rightQuickAttackTime;
-    [HideInInspector] public float leftChargeAttackTime, rightChargeAttackTime;
-    [HideInInspector] public float leftHeavyAttackTime, rightHeavyAttackTime;
-    [HideInInspector] public float deflectWeaponTime;
-    [HideInInspector] public float drawBowStringTime, releaseArrowTime;
-    [HideInInspector] public float shieldBashTime;
-
     public GameObject arrowPrefab;
     
     void Start()
@@ -42,14 +33,13 @@ public class NPCAttacks : MonoBehaviour
         npcCombat = GetComponent<NPCCombat>();
         npcMovement = GetComponent<NPCMovement>();
         lockOnScript = GetComponent<LockOn>();
+        animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         equipmentManager = GetComponent<EquipmentManager>();
         stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
 
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
-
-        StartCoroutine(UpdateAnimClipTimes());
     }
 
     void Update()
@@ -114,7 +104,7 @@ public class NPCAttacks : MonoBehaviour
 
     IEnumerator ResetLeftQuickAttack()
     {
-        yield return new WaitForSeconds(leftQuickAttackTime);
+        yield return new WaitForSeconds(animTimeManager.leftQuickAttackTime);
         leftQuickAttacking = false;
         arms.leftArmAnim.SetBool("doQuickAttack", false);
         npcCombat.determineMoveDirection = true;
@@ -122,7 +112,7 @@ public class NPCAttacks : MonoBehaviour
 
     IEnumerator ResetRightQuickAttack()
     {
-        yield return new WaitForSeconds(rightQuickAttackTime);
+        yield return new WaitForSeconds(animTimeManager.rightQuickAttackTime);
         rightQuickAttacking = false;
         arms.rightArmAnim.SetBool("doQuickAttack", false);
         npcCombat.determineMoveDirection = true;
@@ -142,7 +132,7 @@ public class NPCAttacks : MonoBehaviour
                 {
                     leftArmAttacking = true;
                     arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
-                    StartCoroutine(AttackDash(leftHeavyAttackTime * 0.7f, 0.5f));
+                    StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
                     StartCoroutine(ResetLeftHeavyAttack());
                 }
                 else
@@ -154,7 +144,7 @@ public class NPCAttacks : MonoBehaviour
                 {
                     rightArmAttacking = true;
                     arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
-                    StartCoroutine(AttackDash(rightHeavyAttackTime * 0.7f, 0.5f));
+                    StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
                     StartCoroutine(ResetRightHeavyAttack());
                 }
                 else
@@ -167,7 +157,7 @@ public class NPCAttacks : MonoBehaviour
             {
                 leftArmAttacking = true;
                 arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
-                StartCoroutine(AttackDash(leftHeavyAttackTime * 0.7f, 0.5f));
+                StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
                 StartCoroutine(ResetLeftHeavyAttack());
             }
             else
@@ -179,7 +169,7 @@ public class NPCAttacks : MonoBehaviour
             {
                 rightArmAttacking = true;
                 arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
-                StartCoroutine(AttackDash(rightHeavyAttackTime * 0.7f, 0.5f));
+                StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
                 StartCoroutine(ResetRightHeavyAttack());
             }
             else
@@ -189,7 +179,7 @@ public class NPCAttacks : MonoBehaviour
 
     IEnumerator ResetLeftHeavyAttack()
     {
-        yield return new WaitForSeconds(leftHeavyAttackTime);
+        yield return new WaitForSeconds(animTimeManager.leftHeavyAttackTime);
         leftArmAttacking = false;
         arms.leftArmAnim.SetBool("doHeavyAttack", false);
         bodyAnim.SetBool("powerAttackLeft", false);
@@ -198,7 +188,7 @@ public class NPCAttacks : MonoBehaviour
 
     IEnumerator ResetRightHeavyAttack()
     {
-        yield return new WaitForSeconds(rightHeavyAttackTime);
+        yield return new WaitForSeconds(animTimeManager.rightHeavyAttackTime);
         rightArmAttacking = false;
         arms.rightArmAnim.SetBool("doHeavyAttack", false);
         bodyAnim.SetBool("powerAttackRight", false);
@@ -220,9 +210,9 @@ public class NPCAttacks : MonoBehaviour
         arms.rightArmAnim.SetBool("doDrawArrow", true);
         arms.bodyAnim.SetBool("doDrawArrow", true);
 
-        yield return new WaitForSeconds(drawBowStringTime / 2);
+        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
         shouldSetArrowPosition = true;
-        yield return new WaitForSeconds(drawBowStringTime / 2);
+        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
 
         // Randomize wait to shoot time
         yield return new WaitForSeconds(Random.Range(0f, 2.5f));
@@ -277,62 +267,5 @@ public class NPCAttacks : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, raycastDistance, obstacleMask);
         if (hit == false)
             StartCoroutine(npcMovement.SmoothMovement(transform.position + dir * dashDistance));
-    }
-
-    public IEnumerator UpdateAnimClipTimes()
-    {
-        yield return new WaitForSeconds(0.1f);
-        leftArmAnimClips = arms.leftArmAnim.runtimeAnimatorController.animationClips;
-        rightArmAnimClips = arms.rightArmAnim.runtimeAnimatorController.animationClips;
-
-        foreach (AnimationClip clip in leftArmAnimClips)
-        {
-            switch (clip.name)
-            {
-                case "Quick_Attack_1H_L":
-                    leftQuickAttackTime = clip.length;
-                    break;
-                case "Heavy_Attack_1H_L":
-                    leftHeavyAttackTime = clip.length;
-                    break;
-                case "Attack_1H_Close_L":
-                    leftChargeAttackTime = clip.length;
-                    break;
-                case "Weapon_Deflection_L":
-                    deflectWeaponTime = clip.length;
-                    break;
-                case "Shield_Bash_L":
-                    shieldBashTime = clip.length;
-                    break;
-            }
-        }
-
-        foreach (AnimationClip clip in rightArmAnimClips)
-        {
-            switch (clip.name)
-            {
-                case "Quick_Attack_1H_R":
-                    rightQuickAttackTime = clip.length;
-                    break;
-                case "Heavy_Attack_1H_R":
-                    rightHeavyAttackTime = clip.length;
-                    break;
-                case "Attack_1H_Close_R":
-                    rightChargeAttackTime = clip.length;
-                    break;
-                case "Draw_Arrow_R":
-                    drawBowStringTime = clip.length;
-                    break;
-                case "Weapon_Deflection_R":
-                    deflectWeaponTime = clip.length;
-                    break;
-                case "Release_Arrow_R":
-                    releaseArrowTime = clip.length;
-                    break;
-                case "Shield_Bash_R":
-                    shieldBashTime = clip.length;
-                    break;
-            }
-        }
     }
 }

@@ -18,13 +18,17 @@ public class ItemDrop : MonoBehaviour
 
     void Awake()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         if (transform.parent != null && transform.parent.name == "Loose Items")
+        {
             isDropped = true;
+            spriteRenderer.sortingOrder = -5;
+        }
     }
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         item = GetComponent<ItemData>().item;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -48,6 +52,8 @@ public class ItemDrop : MonoBehaviour
 
         if (item.droppedSprite != null)
             spriteRenderer.sprite = item.droppedSprite;
+
+        spriteRenderer.sortingOrder = -5;
         
         itemPickupScript.enabled = true;
         isDropped = true;

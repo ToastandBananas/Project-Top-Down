@@ -10,6 +10,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
+    AnimTimeManager animTimeManager;
     LockOn playerLockOnScript;
     Arms arms;
     Transform headReset;
@@ -22,6 +23,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     {
         playerMovement = PlayerMovement.instance;
         playerAttack = PlayerAttack.instance;
+        animTimeManager = GetComponent<AnimTimeManager>();
         playerLockOnScript = GetComponent<LockOn>();
         arms = transform.root.Find("Arms").GetComponent<Arms>();
         headReset = playerMovement.transform.Find("Head Reset");
@@ -81,7 +83,7 @@ public class PlayerSpecialAttack : MonoBehaviour
             //else
             StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (headReset.position - playerMovement.transform.position).normalized * 1f));
 
-            StartCoroutine(ResetShieldBash(playerAttack.shieldBashTime));
+            StartCoroutine(ResetShieldBash(animTimeManager.shieldBashTime));
         }
     }
 
@@ -96,7 +98,7 @@ public class PlayerSpecialAttack : MonoBehaviour
             else
                 StartCoroutine(playerMovement.SmoothMovement(playerMovement.transform.position + (headReset.position - playerMovement.transform.position).normalized * 1f));
 
-            StartCoroutine(ResetShieldBash(playerAttack.shieldBashTime));
+            StartCoroutine(ResetShieldBash(animTimeManager.shieldBashTime));
         }
     }
 

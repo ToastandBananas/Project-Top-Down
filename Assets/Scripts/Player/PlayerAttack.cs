@@ -11,27 +11,14 @@ public class PlayerAttack : MonoBehaviour
     PlayerMovement playerMovement;
     LockOn lockOnScript;
     BasicStats stats;
+    AnimTimeManager animTimeManager;
     EquipmentManager equipmentManager;
+    Arms arms;
     Transform headReset;
     Transform looseItemsParent;
     
-    Arms arms;
-    AnimationClip[] leftArmAnimClips;
-    AnimationClip[] rightArmAnimClips;
-    
     [HideInInspector] public float attackTimerLeftArm = 0;
     [HideInInspector] public float attackTimerRightArm = 0;
-
-    [HideInInspector] public float leftQuickAttackTime;
-    [HideInInspector] public float rightQuickAttackTime;
-    [HideInInspector] public float leftChargeAttackTime;
-    [HideInInspector] public float leftHeavyAttackTime;
-    [HideInInspector] public float rightHeavyAttackTime;
-    [HideInInspector] public float rightChargeAttackTime;
-    [HideInInspector] public float deflectWeaponTime;
-    [HideInInspector] public float drawBowStringTime;
-    [HideInInspector] public float releaseArrowTime;
-    [HideInInspector] public float shieldBashTime;
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
@@ -62,13 +49,12 @@ public class PlayerAttack : MonoBehaviour
         playerMovement = PlayerMovement.instance;
         lockOnScript = GetComponent<LockOn>();
         stats = GetComponent<BasicStats>();
+        animTimeManager = gm.GetComponent<AnimTimeManager>();
         equipmentManager = GetComponent<EquipmentManager>();
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
         arms = transform.Find("Arms").GetComponent<Arms>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
-
-        StartCoroutine(UpdateAnimClipTimes());
     }
     
     void Update()
@@ -173,14 +159,14 @@ public class PlayerAttack : MonoBehaviour
                 {
                     leftQuickAttacking = true;
                     arms.leftArmAnim.SetBool("doQuickAttack", true);
-                    StartCoroutine(ResetLeftQuickAttack(leftQuickAttackTime));
+                    StartCoroutine(ResetLeftQuickAttack(animTimeManager.leftQuickAttackTime));
                 }
 
                 arms.leftArmAnim.SetBool("startAttack", false);
                 attackTimerLeftArm = 0;
             }
 
-            StartCoroutine(ResetChargeAttackTimerLeftArm(leftChargeAttackTime));
+            StartCoroutine(ResetChargeAttackTimerLeftArm(animTimeManager.leftChargeAttackTime));
         }
         else if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false && attackTimerLeftArm == 0)
         {
@@ -224,14 +210,14 @@ public class PlayerAttack : MonoBehaviour
                 {
                     rightQuickAttacking = true;
                     arms.rightArmAnim.SetBool("doQuickAttack", true);
-                    StartCoroutine(ResetRightQuickAttack(rightQuickAttackTime));
+                    StartCoroutine(ResetRightQuickAttack(animTimeManager.rightQuickAttackTime));
                 }
 
                 arms.rightArmAnim.SetBool("startAttack", false);
                 attackTimerRightArm = 0;
             }
 
-            StartCoroutine(ResetChargeAttackTimerRightArm(rightChargeAttackTime));
+            StartCoroutine(ResetChargeAttackTimerRightArm(animTimeManager.rightChargeAttackTime));
         }
         else if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false && attackTimerRightArm == 0)
         {
@@ -290,7 +276,7 @@ public class PlayerAttack : MonoBehaviour
                 arms.rightArmAnim.SetBool("doDrawArrow", false);
                 arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
 
-                StartCoroutine(ResetFireArrow(releaseArrowTime));
+                StartCoroutine(ResetFireArrow(animTimeManager.releaseArrowTime));
             }
         }
         else
@@ -323,70 +309,13 @@ public class PlayerAttack : MonoBehaviour
             StartCoroutine(playerMovement.SmoothMovement(transform.position + dir * dashDistance));
     }
 
-    public IEnumerator UpdateAnimClipTimes()
-    {
-        yield return new WaitForSeconds(0.1f);
-        leftArmAnimClips = arms.leftArmAnim.runtimeAnimatorController.animationClips;
-        rightArmAnimClips = arms.rightArmAnim.runtimeAnimatorController.animationClips;
-
-        foreach (AnimationClip clip in leftArmAnimClips)
-        {
-            switch (clip.name)
-            {
-                case "Quick_Attack_1H_L":
-                    leftQuickAttackTime = clip.length;
-                    break;
-                case "Heavy_Attack_1H_L":
-                    leftHeavyAttackTime = clip.length;
-                    break;
-                case "Attack_1H_Close_L":
-                    leftChargeAttackTime = clip.length;
-                    break;
-                case "Weapon_Deflection_L":
-                    deflectWeaponTime = clip.length;
-                    break;
-                case "Shield_Bash_L":
-                    shieldBashTime = clip.length;
-                    break;
-            }
-        }
-
-        foreach (AnimationClip clip in rightArmAnimClips)
-        {
-            switch (clip.name)
-            {
-                case "Quick_Attack_1H_R":
-                    rightQuickAttackTime = clip.length;
-                    break;
-                case "Heavy_Attack_1H_R":
-                    rightHeavyAttackTime = clip.length;
-                    break;
-                case "Attack_1H_Close_R":
-                    rightChargeAttackTime = clip.length;
-                    break;
-                case "Weapon_Deflection_R":
-                    deflectWeaponTime = clip.length;
-                    break;
-                case "Draw_Arrow_R":
-                    drawBowStringTime = clip.length;
-                    break;
-                case "Release_Arrow_R":
-                    releaseArrowTime = clip.length;
-                    break;
-                case "Shield_Bash_R":
-                    shieldBashTime = clip.length;
-                    break;
-            }
-        }
-    }
-
     IEnumerator DrawBowString()
     {
-        yield return new WaitForSeconds(drawBowStringTime / 2);
+        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
         bowStringNeedsReset = true;
         shouldStartDrawingBowString = false;
 
-        yield return new WaitForSeconds(drawBowStringTime / 2);
+        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
         bowStringFullyDrawn = true;
     }
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
+  - component: {fileID: 6193931194439165326}
   - component: {fileID: 3661388085602504287}
   - component: {fileID: 68740533560211229}
   - component: {fileID: 3723423186980164384}
@@ -48,7 +49,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatingTexts: []
   floatingTextIndex: 0
+  menuOpen: 0
   pauseMenu: {fileID: 0}
+  isUsingController: 0
+--- !u!114 &6193931194439165326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3119b4f8c7097346900a800294ddb5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftArmAnimController: {fileID: 9100000, guid: 11ee1d063b261be45a756bf1304927f0,
+    type: 2}
+  rightArmAnimController: {fileID: 9100000, guid: 9c00119d1c4c3b646aa44457f7011dad,
+    type: 2}
+  leftQuickAttackTime: 0
+  rightQuickAttackTime: 0
+  leftChargeAttackTime: 0
+  rightChargeAttackTime: 0
+  leftHeavyAttackTime: 0
+  rightHeavyAttackTime: 0
+  deflectWeaponTime: 0
+  drawBowStringTime: 0
+  releaseArrowTime: 0
+  shieldBashTime: 0
+  shieldRecoilTime: 0
 --- !u!114 &3661388085602504287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,8 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 70
-  bagSlotCount: 70
+  pocketsSlotCount: 30
+  bagSlotCount: 42
   horseBagSlotCount: 10
   pocketItems: []
   bagItems: []
