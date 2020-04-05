@@ -20,6 +20,7 @@ public class BasicStats : MonoBehaviour
     public float stamina = 50;
     public int staminaRegenRate = 5;
     public bool staminaCanRegen = true;
+    float staminaRegenTimer = 0;
 
     [Header("Encumbrance")]
     public float maxEncumbrance = 100f;
@@ -40,9 +41,11 @@ public class BasicStats : MonoBehaviour
     PlayerStatBar playerHealthStatBar;
     PlayerStatBar playerManaStatBar;
     PlayerStatBar playerStaminaStatBar;
+    PlayerMovement playerMovement;
 
     // NPC only
     NPCInventory npcInv;
+    NPCMovement npcMovement;
 
     BloodParticleSystemHandler bloodSystem;
     Arms arms;
@@ -53,7 +56,9 @@ public class BasicStats : MonoBehaviour
         bloodSystem = BloodParticleSystemHandler.Instance;
         arms = GetComponentInChildren<Arms>();
         equipmentManager = GetComponent<EquipmentManager>();
+        playerMovement = PlayerMovement.instance;
         npcInv = GetComponent<NPCInventory>();
+        npcMovement = GetComponent<NPCMovement>();
 
         if (isPlayer)
         {
@@ -61,12 +66,8 @@ public class BasicStats : MonoBehaviour
             playerManaStatBar = GameObject.Find("Player Mana Bar").GetComponent<PlayerStatBar>();
             playerStaminaStatBar = GameObject.Find("Player Stamina Bar").GetComponent<PlayerStatBar>();
         }
-    }
 
-    void FixedUpdate()
-    {
-        if (staminaCanRegen)
-            StartCoroutine(StaminaRegen());
+        StartCoroutine(StaminaRegen());
     }
 
     public void SpawnBlood(Transform victim, Transform weaponOwner, float percentDamage, LayerMask obstacleMask)
@@ -238,9 +239,11 @@ public class BasicStats : MonoBehaviour
         }
     }
 
-    public bool UseStamina(int staminaAmount)
+    public bool UseStamina(int staminaAmount, bool forceStaminaUse)
     {
-        if (stamina - staminaAmount >= 0)
+        StartCoroutine(PauseStaminaRegen());
+
+        if (stamina - staminaAmount >= 0 || forceStaminaUse)
             stamina -= staminaAmount;
         else
         {
@@ -249,7 +252,25 @@ public class BasicStats : MonoBehaviour
         }
 
         if (isPlayer)
+        {
+            if (stamina < 0)
+            {
+                stamina = 0;
+                playerStaminaStatBar.ChangeBar();
+                StartCoroutine(playerMovement.Stagger());
+                return false;
+            }
             playerStaminaStatBar.ChangeBar();
+        }
+        else
+        {
+            if (stamina < 0)
+            {
+                stamina = 0;
+                StartCoroutine(npcMovement.Stagger());
+                return false;
+            }
+        }
 
         return true;
     }
@@ -264,12 +285,36 @@ public class BasicStats : MonoBehaviour
             playerStaminaStatBar.ChangeBar();
     }
 
-    public IEnumerator StaminaRegen()
+    IEnumerator StaminaRegen()
     {
-        if (staminaCanRegen && stamina < maxStamina)
+        while (true)
         {
-            yield return new WaitForSeconds(0.2f);
-            RestoreStamina(staminaRegenRate / 5);
+            if (staminaCanRegen && stamina < maxStamina)
+            {
+                yield return new WaitForSeconds(0.2f);
+                RestoreStamina(staminaRegenRate / 5);
+            }
+
+            yield return null;
+        }
+    }
+
+    IEnumerator PauseStaminaRegen()
+    {
+        staminaRegenTimer = 0;
+
+        while (staminaRegenTimer < 2f)
+        {
+            staminaCanRegen = false;
+            staminaRegenTimer += Time.smoothDeltaTime;
+
+            if (staminaRegenTimer >= 2f)
+            {
+                staminaCanRegen = true;
+                break;
+            }
+
+            yield return null;
         }
     }
 }

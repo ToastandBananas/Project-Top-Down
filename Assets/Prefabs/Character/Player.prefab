@@ -1766,6 +1766,7 @@ MonoBehaviour:
   dodgeCooldownTime: 1
   isMoving: 0
   isDodging: 0
+  isStaggered: 0
   isMounted: 0
   itemsToBePickedUpCount: 0
 --- !u!114 &7665225410889906271
@@ -1858,13 +1859,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227,
     type: 3}
-  animTimeManager: {fileID: 0}
   attackTimerLeftArm: 0
   attackTimerRightArm: 0
   minChargeAttackTime: 0.3
   isBlocking: 0
-  leftArmAttacking: 0
-  rightArmAttacking: 0
+  leftArmHeavyAttacking: 0
+  rightArmHeavyAttacking: 0
   leftQuickAttacking: 0
   rightQuickAttacking: 0
   firingArrow: 0
@@ -2948,9 +2948,9 @@ MonoBehaviour:
   rightEquippedWeapon: {fileID: 0}
   leftWeapon: {fileID: 0}
   rightWeapon: {fileID: 0}
-  leftArmAnim: {fileID: 0}
-  rightArmAnim: {fileID: 0}
-  bodyAnim: {fileID: 0}
+  leftArmAnim: {fileID: 671787726}
+  rightArmAnim: {fileID: 1711786068}
+  bodyAnim: {fileID: 1273616031}
 --- !u!1 &8570270868506408097
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@ public class PlayerAttack : MonoBehaviour
 
     public float minChargeAttackTime = 0.3f;
     public bool isBlocking;
-    public bool leftArmAttacking, rightArmAttacking;
+    public bool leftArmHeavyAttacking, rightArmHeavyAttacking;
     public bool leftQuickAttacking, rightQuickAttacking;
     public bool firingArrow, bowStringFullyDrawn, arrowSpawned;
     public bool shouldStartDrawingBowString = true;
@@ -59,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
     
     void Update()
     {
-        if (gm.menuOpen == false)
+        if (gm.menuOpen == false && playerMovement.isStaggered == false)
         {
             Update_LeftArmAnims();
             Update_RightArmAnims();
@@ -131,7 +131,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Left1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftArmAttacking == false)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftArmHeavyAttacking == false)
         {
             attackTimerLeftArm += Time.smoothDeltaTime;
             if (attackTimerLeftArm >= minChargeAttackTime)
@@ -142,9 +142,9 @@ public class PlayerAttack : MonoBehaviour
         {
             if (attackTimerLeftArm > minChargeAttackTime)
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    leftArmAttacking = true;
+                    leftArmHeavyAttacking = true;
                     arms.leftArmAnim.SetBool("doAttack", true);
                     arms.bodyAnim.SetBool("powerAttackLeft", true);
 
@@ -155,7 +155,7 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
                 {
                     leftQuickAttacking = true;
                     arms.leftArmAnim.SetBool("doQuickAttack", true);
@@ -171,7 +171,7 @@ public class PlayerAttack : MonoBehaviour
         else if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false && attackTimerLeftArm == 0)
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
-            leftArmAttacking = false;
+            leftArmHeavyAttacking = false;
             arms.leftArmAnim.SetBool("startAttack", false);
             arms.leftArmAnim.SetBool("doAttack", false);
             leftQuickAttacking = false;
@@ -182,7 +182,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Right1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightArmAttacking == false)
+        if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightArmHeavyAttacking == false)
         {
             attackTimerRightArm += Time.smoothDeltaTime;
             if (attackTimerRightArm >= minChargeAttackTime)
@@ -193,9 +193,9 @@ public class PlayerAttack : MonoBehaviour
         {
             if (attackTimerRightArm > minChargeAttackTime)
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    rightArmAttacking = true;
+                    rightArmHeavyAttacking = true;
                     arms.rightArmAnim.SetBool("doAttack", true);
                     arms.bodyAnim.SetBool("powerAttackRight", true);
 
@@ -206,7 +206,7 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
+                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
                 {
                     rightQuickAttacking = true;
                     arms.rightArmAnim.SetBool("doQuickAttack", true);
@@ -222,7 +222,7 @@ public class PlayerAttack : MonoBehaviour
         else if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false && attackTimerRightArm == 0)
         {
             // Failsafe in case GetButtonUp isn't detected for whatever odd reason
-            rightArmAttacking = false;
+            rightArmHeavyAttacking = false;
             arms.rightArmAnim.SetBool("startAttack", false);
             arms.rightArmAnim.SetBool("doAttack", false);
             rightQuickAttacking = false;
@@ -381,7 +381,7 @@ public class PlayerAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         attackTimerLeftArm = 0;
-        leftArmAttacking = false;
+        leftArmHeavyAttacking = false;
         arms.leftArmAnim.SetBool("doAttack", false);
         arms.bodyAnim.SetBool("powerAttackLeft", false);
     }
@@ -390,7 +390,7 @@ public class PlayerAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         attackTimerRightArm = 0;
-        rightArmAttacking = false;
+        rightArmHeavyAttacking = false;
         arms.rightArmAnim.SetBool("doAttack", false);
         arms.bodyAnim.SetBool("powerAttackRight", false);
     }

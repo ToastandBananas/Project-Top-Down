@@ -14,6 +14,7 @@ public class AnimTimeManager : MonoBehaviour
     [HideInInspector] public float deflectWeaponTime;
     [HideInInspector] public float drawBowStringTime, releaseArrowTime;
     [HideInInspector] public float shieldBashTime, shieldRecoilTime;
+    [HideInInspector] public float staggerTime;
 
     void Start()
     {
@@ -48,6 +49,9 @@ public class AnimTimeManager : MonoBehaviour
                 case "Shield_Recoil_L":
                     shieldRecoilTime = clip.length;
                     break;
+                case "Stagger_L":
+                    staggerTime = clip.length;
+                    break;
             }
         }
 
@@ -78,6 +82,9 @@ public class AnimTimeManager : MonoBehaviour
                     break;
                 case "Shield_Recoil_R":
                     shieldRecoilTime = clip.length;
+                    break;
+                case "Stagger_R":
+                    staggerTime = clip.length;
                     break;
             }
         }

@@ -26,13 +26,17 @@ public class NPCCombat : MonoBehaviour
 
     public void DetermineCombatActions()
     {
-        DetermineShieldState();
+        if (npcMovement.isStaggered == false)
+        {
+            // Raise or lower shield
+            DetermineShieldState();
 
-        // strafe left/right or move towards target
-        DetermineMoveDirection();
+            // Strafe left/right or move towards target
+            DetermineMoveDirection();
 
-        // if moving towards target, attack when close enough
-        DetermineAttack();
+            // If moving towards target, attack when close enough
+            DetermineAttack();
+        }
     }
 
     void DetermineShieldState()
@@ -117,7 +121,6 @@ public class NPCCombat : MonoBehaviour
             else if (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, npcMovement.attackTarget.position) <= rangedCombatDistance)
             {
                 StartCoroutine(npcAttacks.RangedAttack());
-
                 needsCombatAction = false;
             }
         }
@@ -131,14 +134,14 @@ public class NPCCombat : MonoBehaviour
 
     IEnumerator ShieldStateCooldown()
     {
-        float randomCooldownTime = Random.Range(4, 8);
+        float randomCooldownTime = Random.Range(4, 6);
         yield return new WaitForSeconds(randomCooldownTime);
         determineShieldState = true;
     }
 
     IEnumerator StrafeCooldown()
     {
-        float randomCooldownTime = Random.Range(2, 4);
+        float randomCooldownTime = Random.Range(1.5f, 3);
         yield return new WaitForSeconds(randomCooldownTime);
         determineMoveDirection = true;
     }

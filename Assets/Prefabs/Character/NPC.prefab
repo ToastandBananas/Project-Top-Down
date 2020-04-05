@@ -57,9 +57,9 @@ MonoBehaviour:
   rightEquippedWeapon: {fileID: 0}
   leftWeapon: {fileID: 0}
   rightWeapon: {fileID: 0}
-  leftArmAnim: {fileID: 0}
-  rightArmAnim: {fileID: 0}
-  bodyAnim: {fileID: 0}
+  leftArmAnim: {fileID: 8375587197795844188}
+  rightArmAnim: {fileID: 8375587198701085382}
+  bodyAnim: {fileID: 8375587198334745613}
 --- !u!1 &220558512547719827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,6 +1909,7 @@ MonoBehaviour:
   walkSpeed: 2
   runSpeed: 3
   isDodging: 0
+  isStaggered: 0
 --- !u!114 &7217126290731098577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1937,9 +1938,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6eb05d4f207d894fa4feaa7cc8acf35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animTimeManager: {fileID: 0}
-  leftArmAttacking: 0
-  rightArmAttacking: 0
+  leftArmHeavyAttacking: 0
+  rightArmHeavyAttacking: 0
   leftQuickAttacking: 0
   rightQuickAttacking: 0
   arrowPrefab: {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227,

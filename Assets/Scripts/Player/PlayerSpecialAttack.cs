@@ -43,7 +43,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     void SpecialAttackLeft()
     {
         if (GameControls.gamePlayActions.playerLeftSpecialAttack.WasPressed 
-            && playerAttack.leftArmAttacking == false 
+            && playerAttack.leftArmHeavyAttacking == false 
             && playerAttack.attackTimerLeftArm == 0 
             && (arms.leftWeaponEquipped || arms.leftShieldEquipped))
         { 
@@ -59,7 +59,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     void SpecialAttackRight()
     {
         if (GameControls.gamePlayActions.playerRightSpecialAttack.WasPressed 
-            && playerAttack.rightArmAttacking == false 
+            && playerAttack.rightArmHeavyAttacking == false 
             && playerAttack.attackTimerRightArm == 0 
             && (arms.rightWeaponEquipped || arms.rightShieldEquipped))
         {

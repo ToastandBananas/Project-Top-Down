@@ -18,12 +18,14 @@ public class NPCMovement : MonoBehaviour
     public float runSpeed = 3f;
 
     public bool isDodging;
+    public bool isStaggered;
 
+    AnimTimeManager animTimeManager;
     FieldOfView fov;
     AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
-    Animator anim, legsAnim, leftArmAnim, rightArmAnim;
+    Animator bodyAnim, legsAnim;
     NPCCombat npcCombat;
     BasicStats stats;
     Arms arms;
@@ -33,15 +35,14 @@ public class NPCMovement : MonoBehaviour
     
     void Start()
     {
-        anim = GetComponent<Animator>();
+        bodyAnim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
-        leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
-        rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
         patrolPoint = transform.Find("Patrol Point");
         npcCombat = GetComponent<NPCCombat>();
         stats = GetComponent<BasicStats>();
         arms = transform.Find("Arms").GetComponent<Arms>();
 
+        animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
         AIPath = GetComponent<Pathfinding.AIPath>();
@@ -162,10 +163,27 @@ public class NPCMovement : MonoBehaviour
 
     void SetIsMoving(bool isMoving)
     {
-        anim.SetBool("isMoving", isMoving);
+        bodyAnim.SetBool("isMoving", isMoving);
         legsAnim.SetBool("isMoving", isMoving);
-        leftArmAnim.SetBool("isMoving", isMoving);
-        rightArmAnim.SetBool("isMoving", isMoving);
+        arms.leftArmAnim.SetBool("isMoving", isMoving);
+        arms.rightArmAnim.SetBool("isMoving", isMoving);
+    }
+
+    public IEnumerator Stagger()
+    {
+        isStaggered = true;
+        AIPath.canMove = false;
+        arms.leftArmAnim.SetBool("doStagger", true);
+        arms.rightArmAnim.SetBool("doStagger", true);
+        bodyAnim.SetBool("doStagger", true);
+
+        yield return new WaitForSeconds(animTimeManager.staggerTime);
+
+        isStaggered = false;
+        AIPath.canMove = true;
+        arms.leftArmAnim.SetBool("doStagger", false);
+        arms.rightArmAnim.SetBool("doStagger", false);
+        bodyAnim.SetBool("doStagger", false);
     }
 
     public IEnumerator SmoothMovement(Vector3 targetPos)

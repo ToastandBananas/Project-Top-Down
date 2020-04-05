@@ -162,10 +162,6 @@ public class Arms : MonoBehaviour
 
         leftArm = transform.Find("Left Arm");
         rightArm = transform.Find("Right Arm");
-        
-        leftArmAnim = leftArm.GetComponent<Animator>();
-        rightArmAnim = rightArm.GetComponent<Animator>();
-        bodyAnim = transform.parent.GetComponent<Animator>();
 
         SetLeftAnims();
         SetRightAnims();

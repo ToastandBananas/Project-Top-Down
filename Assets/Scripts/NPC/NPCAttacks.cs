@@ -21,7 +21,7 @@ public class NPCAttacks : MonoBehaviour
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
-    [HideInInspector] public bool leftArmAttacking, rightArmAttacking;
+    [HideInInspector] public bool leftArmHeavyAttacking, rightArmHeavyAttacking;
     [HideInInspector] public bool leftQuickAttacking, rightQuickAttacking;
 
     public GameObject arrowPrefab;
@@ -57,7 +57,7 @@ public class NPCAttacks : MonoBehaviour
 
             if (randomNumber == 1) // Use left weapon
             {
-                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
                 {
                     leftQuickAttacking = true;
                     arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
@@ -68,7 +68,7 @@ public class NPCAttacks : MonoBehaviour
             }
             else // Use right weapon
             {
-                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
+                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
                 {
                     rightQuickAttacking = true;
                     arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
@@ -80,7 +80,7 @@ public class NPCAttacks : MonoBehaviour
         }
         else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
         {
-            if (stats.UseStamina(arms.leftWeapon.baseStaminaUse))
+            if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
             {
                 leftQuickAttacking = true;
                 arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
@@ -91,7 +91,7 @@ public class NPCAttacks : MonoBehaviour
         }
         else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
         {
-            if (stats.UseStamina(arms.rightWeapon.baseStaminaUse))
+            if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
             {
                 rightQuickAttacking = true;
                 arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
@@ -128,9 +128,9 @@ public class NPCAttacks : MonoBehaviour
 
             if (randomNumber == 1) // Use left weapon
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    leftArmAttacking = true;
+                    leftArmHeavyAttacking = true;
                     arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
                     StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
                     StartCoroutine(ResetLeftHeavyAttack());
@@ -140,9 +140,9 @@ public class NPCAttacks : MonoBehaviour
             }
             else // Use right weapon
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    rightArmAttacking = true;
+                    rightArmHeavyAttacking = true;
                     arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
                     StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
                     StartCoroutine(ResetRightHeavyAttack());
@@ -153,9 +153,9 @@ public class NPCAttacks : MonoBehaviour
         }
         else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
         {
-            if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+            if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
             {
-                leftArmAttacking = true;
+                leftArmHeavyAttacking = true;
                 arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
                 StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
                 StartCoroutine(ResetLeftHeavyAttack());
@@ -165,9 +165,9 @@ public class NPCAttacks : MonoBehaviour
         }
         else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
         {
-            if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier)))
+            if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
             {
-                rightArmAttacking = true;
+                rightArmHeavyAttacking = true;
                 arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
                 StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
                 StartCoroutine(ResetRightHeavyAttack());
@@ -180,7 +180,7 @@ public class NPCAttacks : MonoBehaviour
     IEnumerator ResetLeftHeavyAttack()
     {
         yield return new WaitForSeconds(animTimeManager.leftHeavyAttackTime);
-        leftArmAttacking = false;
+        leftArmHeavyAttacking = false;
         arms.leftArmAnim.SetBool("doHeavyAttack", false);
         bodyAnim.SetBool("powerAttackLeft", false);
         npcCombat.determineMoveDirection = true;
@@ -189,7 +189,7 @@ public class NPCAttacks : MonoBehaviour
     IEnumerator ResetRightHeavyAttack()
     {
         yield return new WaitForSeconds(animTimeManager.rightHeavyAttackTime);
-        rightArmAttacking = false;
+        rightArmHeavyAttacking = false;
         arms.rightArmAnim.SetBool("doHeavyAttack", false);
         bodyAnim.SetBool("powerAttackRight", false);
         npcCombat.determineMoveDirection = true;
@@ -199,56 +199,59 @@ public class NPCAttacks : MonoBehaviour
     #region Ranged Attack Function
     public IEnumerator RangedAttack()
     {
-        if (arms.leftEquippedWeapon == null)
-            arms.GetWeaponTransforms();
-
-        GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
-        arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
-
-        arms.rightArmAnim.SetBool("doReleaseArrow", false);
-        arms.leftArmAnim.SetBool("doDrawArrow", true);
-        arms.rightArmAnim.SetBool("doDrawArrow", true);
-        arms.bodyAnim.SetBool("doDrawArrow", true);
-
-        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
-        shouldSetArrowPosition = true;
-        yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
-
-        // Randomize wait to shoot time
-        yield return new WaitForSeconds(Random.Range(0f, 2.5f));
-            
-        // Fire the arrow
-        arms.rightArmAnim.SetBool("doReleaseArrow", true);
-        arms.rightArmAnim.SetBool("doDrawArrow", false);
-
-        // Reset the bow string to its default position
-        arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
-        shouldSetArrowPosition = false;
-        npcCombat.determineMoveDirection = true;
-
-        arrow.transform.SetParent(looseItemsParent);
-
-        Arrow arrowScript = arrow.GetComponent<Arrow>();
-        arrowScript.enabled = true;
-        arrowScript.bowShotFrom = arms.leftEquippedWeapon.GetComponent<ItemData>();
-
-        arrow.GetComponent<BoxCollider2D>().enabled = true;
-        arrow.GetComponent<SpriteRenderer>().sortingOrder = 10;
-
-        Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
-        arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
-        arrowRigidBody.AddForce(-arrow.transform.up * arrowSpeed, ForceMode2D.Impulse);
-
-        float shotDistance = 18f;
-        if (lockOnScript.isLockedOn)
-            shotDistance = Vector2.Distance(arrow.transform.position, lockOnScript.lockOnTarget.position) + 1;
-
-        while (arrowScript.arrowShouldStop == false)
+        if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse), false))
         {
-            if (Vector2.Distance(arrow.transform.position, transform.position) > shotDistance)
-                arrowScript.StopArrow();
+            if (arms.leftEquippedWeapon == null)
+                arms.GetWeaponTransforms();
 
-            yield return null;
+            GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
+            arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
+
+            arms.rightArmAnim.SetBool("doReleaseArrow", false);
+            arms.leftArmAnim.SetBool("doDrawArrow", true);
+            arms.rightArmAnim.SetBool("doDrawArrow", true);
+            arms.bodyAnim.SetBool("doDrawArrow", true);
+
+            yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
+            shouldSetArrowPosition = true;
+            yield return new WaitForSeconds(animTimeManager.drawBowStringTime / 2);
+
+            // Randomize wait to shoot time
+            yield return new WaitForSeconds(Random.Range(0f, 2.5f));
+
+            // Fire the arrow
+            arms.rightArmAnim.SetBool("doReleaseArrow", true);
+            arms.rightArmAnim.SetBool("doDrawArrow", false);
+
+            // Reset the bow string to its default position
+            arms.leftEquippedWeapon.Find("Middle of String").localPosition = arms.leftEquippedWeapon.GetComponent<DrawBowString>().middleOfStringOriginalPosition;
+            shouldSetArrowPosition = false;
+            npcCombat.determineMoveDirection = true;
+
+            arrow.transform.SetParent(looseItemsParent);
+
+            Arrow arrowScript = arrow.GetComponent<Arrow>();
+            arrowScript.enabled = true;
+            arrowScript.bowShotFrom = arms.leftEquippedWeapon.GetComponent<ItemData>();
+
+            arrow.GetComponent<BoxCollider2D>().enabled = true;
+            arrow.GetComponent<SpriteRenderer>().sortingOrder = 10;
+
+            Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
+            arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
+            arrowRigidBody.AddForce(-arrow.transform.up * arrowSpeed, ForceMode2D.Impulse);
+
+            float shotDistance = 18f;
+            if (lockOnScript.isLockedOn)
+                shotDistance = Vector2.Distance(arrow.transform.position, lockOnScript.lockOnTarget.position) + 1;
+
+            while (arrowScript.arrowShouldStop == false)
+            {
+                if (Vector2.Distance(arrow.transform.position, transform.position) > shotDistance)
+                    arrowScript.StopArrow();
+
+                yield return null;
+            }
         }
     }
     #endregion

@@ -15,10 +15,13 @@ public class PlayerMovement : MonoBehaviour
     public float dodgeCooldownTime = 1f;
     public bool isMoving;
     public bool isDodging;
+    public bool isStaggered;
 
     public bool isMounted;
 
-    Animator anim, legsAnim, rightArmAnim, leftArmAnim;
+    AnimTimeManager animTimeManager;
+    Animator bodyAnim, legsAnim;
+    Arms arms;
     Rigidbody2D rb;
     Camera cam;
     PlayerAttack playerAttack;
@@ -52,13 +55,13 @@ public class PlayerMovement : MonoBehaviour
     {
         cam  = Camera.main;
         rb   = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
         playerAttack = GetComponent<PlayerAttack>();
         stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
+        animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
+        arms = transform.Find("Arms").GetComponent<Arms>();
+        bodyAnim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
-        rightArmAnim = transform.Find("Arms").Find("Right Arm").GetComponent<Animator>();
-        leftArmAnim = transform.Find("Arms").Find("Left Arm").GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         CalculateMoveSpeeds();
@@ -71,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isDodging == false)
+        if (isDodging == false && isStaggered == false)
             Update_Movement();
     }
 
@@ -88,10 +91,10 @@ public class PlayerMovement : MonoBehaviour
         if (movementInput.x > 0.3f || movementInput.x < -0.3f || movementInput.y > 0.3f || movementInput.y < -0.3f)
         {
             isMoving = true;
-            anim.SetBool("isMoving", true);
+            bodyAnim.SetBool("isMoving", true);
             legsAnim.SetBool("isMoving", true);
-            rightArmAnim.SetBool("isMoving", true);
-            leftArmAnim.SetBool("isMoving", true);
+            arms.rightArmAnim.SetBool("isMoving", true);
+            arms.leftArmAnim.SetBool("isMoving", true);
             move = Vector3.zero;
 
             if (movementInput.y > 0.3f)
@@ -124,8 +127,9 @@ public class PlayerMovement : MonoBehaviour
             }
 
             lastMoveDir = move.normalized;
-
+            
             move = move.normalized * moveSpeed * Time.fixedDeltaTime;
+            Debug.Log(move);
             transform.position += move;
         }
         else
@@ -158,9 +162,9 @@ public class PlayerMovement : MonoBehaviour
     void ResetAnims()
     {
         isMoving = false;
-        anim.SetBool("isMoving", false);
-        rightArmAnim.SetBool("isMoving", false);
-        leftArmAnim.SetBool("isMoving", false);
+        bodyAnim.SetBool("isMoving", false);
+        arms.rightArmAnim.SetBool("isMoving", false);
+        arms.leftArmAnim.SetBool("isMoving", false);
         legsAnim.SetBool("isMoving", false);
         legsAnim.SetBool("isMovingLeft", false);
         legsAnim.SetBool("isMovingRight", false);
@@ -197,6 +201,21 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(cooldownTime);
         canDodge = true;
+    }
+
+    public IEnumerator Stagger()
+    {
+        isStaggered = true;
+        arms.leftArmAnim.SetBool("doStagger", true);
+        arms.rightArmAnim.SetBool("doStagger", true);
+        bodyAnim.SetBool("doStagger", true);
+
+        yield return new WaitForSeconds(animTimeManager.staggerTime);
+
+        isStaggered = false;
+        arms.leftArmAnim.SetBool("doStagger", false);
+        arms.rightArmAnim.SetBool("doStagger", false);
+        bodyAnim.SetBool("doStagger", false);
     }
 
     public IEnumerator SmoothMovement(Vector3 targetPos)

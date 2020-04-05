@@ -40,6 +40,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: powerAttackRight
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: doStagger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3120621968260852841}
   m_Solo: 0
@@ -68,6 +71,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: powerAttackRight
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: doStagger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3852822098287382366}
   m_Solo: 0
@@ -92,6 +98,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: doDrawArrow
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: doStagger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7244592157500453012}
@@ -173,25 +182,31 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: powerAttackLeft
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: powerAttackRight
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: doDrawArrow
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
+  - m_Name: doStagger
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -224,6 +239,9 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: doDrawArrow
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: doStagger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -9082042273645696565}
@@ -258,6 +276,9 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: doDrawArrow
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: doStagger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2006845609718838507}
@@ -310,10 +331,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -2006845609718838507}
-    m_Position: {x: 30, y: 320, z: 0}
+    m_Position: {x: -70, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9082042273645696565}
-    m_Position: {x: 30, y: 220, z: 0}
+    m_Position: {x: -70, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3852822098287382366}
     m_Position: {x: 450, y: 300, z: 0}
@@ -334,7 +355,7 @@ AnimatorStateMachine:
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 330, y: 190, z: 0}
-  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_EntryPosition: {x: -50, y: 90, z: 0}
   m_ExitPosition: {x: 320, y: 100, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -9082042273645696565}
