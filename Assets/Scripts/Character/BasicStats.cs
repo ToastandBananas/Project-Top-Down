@@ -42,10 +42,12 @@ public class BasicStats : MonoBehaviour
     PlayerStatBar playerManaStatBar;
     PlayerStatBar playerStaminaStatBar;
     PlayerMovement playerMovement;
+    PlayerAttack playerAttack;
 
     // NPC only
     NPCInventory npcInv;
     NPCMovement npcMovement;
+    NPCAttacks npcAttacks;
 
     BloodParticleSystemHandler bloodSystem;
     Arms arms;
@@ -56,15 +58,20 @@ public class BasicStats : MonoBehaviour
         bloodSystem = BloodParticleSystemHandler.Instance;
         arms = GetComponentInChildren<Arms>();
         equipmentManager = GetComponent<EquipmentManager>();
-        playerMovement = PlayerMovement.instance;
-        npcInv = GetComponent<NPCInventory>();
-        npcMovement = GetComponent<NPCMovement>();
 
         if (isPlayer)
         {
+            playerMovement = PlayerMovement.instance;
+            playerAttack = PlayerAttack.instance;
             playerHealthStatBar = GameObject.Find("Player Health Bar").GetComponent<PlayerStatBar>();
             playerManaStatBar = GameObject.Find("Player Mana Bar").GetComponent<PlayerStatBar>();
             playerStaminaStatBar = GameObject.Find("Player Stamina Bar").GetComponent<PlayerStatBar>();
+        }
+        else
+        {
+            npcInv = GetComponent<NPCInventory>();
+            npcMovement = GetComponent<NPCMovement>();
+            npcAttacks = GetComponent<NPCAttacks>();
         }
 
         StartCoroutine(StaminaRegen());
@@ -75,13 +82,13 @@ public class BasicStats : MonoBehaviour
         Vector3 dir = (victim.position - weaponOwner.position).normalized;
         float raycastDistance = Vector3.Distance(victim.position, victim.position + dir * 3f);
         RaycastHit2D hit = Physics2D.Raycast(victim.position, dir, raycastDistance, obstacleMask);
-
+        
         if (hit == false)
             bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, false);
         else
             bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, true);
     }
-
+    
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
@@ -291,8 +298,11 @@ public class BasicStats : MonoBehaviour
         {
             if (staminaCanRegen && stamina < maxStamina)
             {
-                yield return new WaitForSeconds(0.2f);
-                RestoreStamina(staminaRegenRate / 5);
+                if ((isPlayer && playerAttack.isBlocking == false) || (isPlayer == false && npcAttacks.isBlocking == false))
+                {
+                    yield return new WaitForSeconds(0.2f);
+                    RestoreStamina(staminaRegenRate / 5);
+                }
             }
 
             yield return null;

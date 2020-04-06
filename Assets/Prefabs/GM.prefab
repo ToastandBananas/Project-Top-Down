@@ -79,6 +79,7 @@ MonoBehaviour:
   releaseArrowTime: 0
   shieldBashTime: 0
   shieldRecoilTime: 0
+  staggerTime: 0
 --- !u!114 &3661388085602504287
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,15 +8,16 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 movementInput;
     public Vector2 lookInput;
 
+    float walkSpeed;
     public float moveSpeed;
     public float runSpeed = 3f;
-    float walkSpeed;
     public float dodgeDistance = 1f;
     public float dodgeCooldownTime = 1f;
+    int dodgeStaminaUse = 10;
+
     public bool isMoving;
     public bool isDodging;
     public bool isStaggered;
-
     public bool isMounted;
 
     AnimTimeManager animTimeManager;
@@ -127,9 +128,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             lastMoveDir = move.normalized;
-            
             move = move.normalized * moveSpeed * Time.fixedDeltaTime;
-            Debug.Log(move);
             transform.position += move;
         }
         else
@@ -144,6 +143,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (canDodge)
             {
+                stats.UseStamina(dodgeStaminaUse, false);
                 StartCoroutine(SmoothMovement(transform.position + lastMoveDir * dodgeDistance));
                 canDodge = false;
             }
@@ -206,9 +206,12 @@ public class PlayerMovement : MonoBehaviour
     public IEnumerator Stagger()
     {
         isStaggered = true;
+        playerAttack.isBlocking = false;
         arms.leftArmAnim.SetBool("doStagger", true);
         arms.rightArmAnim.SetBool("doStagger", true);
         bodyAnim.SetBool("doStagger", true);
+        legsAnim.SetBool("doStagger", true);
+        legsAnim.SetBool("isMoving", false);
 
         yield return new WaitForSeconds(animTimeManager.staggerTime);
 
@@ -216,6 +219,7 @@ public class PlayerMovement : MonoBehaviour
         arms.leftArmAnim.SetBool("doStagger", false);
         arms.rightArmAnim.SetBool("doStagger", false);
         bodyAnim.SetBool("doStagger", false);
+        legsAnim.SetBool("doStagger", false);
     }
 
     public IEnumerator SmoothMovement(Vector3 targetPos)

@@ -27,6 +27,7 @@ public class NPCMovement : MonoBehaviour
     Pathfinding.AIDestinationSetter AIDestSetter;
     Animator bodyAnim, legsAnim;
     NPCCombat npcCombat;
+    NPCAttacks npcAttacks;
     BasicStats stats;
     Arms arms;
 
@@ -39,6 +40,7 @@ public class NPCMovement : MonoBehaviour
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         patrolPoint = transform.Find("Patrol Point");
         npcCombat = GetComponent<NPCCombat>();
+        npcAttacks = GetComponent<NPCAttacks>();
         stats = GetComponent<BasicStats>();
         arms = transform.Find("Arms").GetComponent<Arms>();
 
@@ -173,9 +175,12 @@ public class NPCMovement : MonoBehaviour
     {
         isStaggered = true;
         AIPath.canMove = false;
+        npcAttacks.isBlocking = false;
         arms.leftArmAnim.SetBool("doStagger", true);
         arms.rightArmAnim.SetBool("doStagger", true);
         bodyAnim.SetBool("doStagger", true);
+        legsAnim.SetBool("doStagger", true);
+        legsAnim.SetBool("isMoving", false);
 
         yield return new WaitForSeconds(animTimeManager.staggerTime);
 
@@ -184,6 +189,7 @@ public class NPCMovement : MonoBehaviour
         arms.leftArmAnim.SetBool("doStagger", false);
         arms.rightArmAnim.SetBool("doStagger", false);
         bodyAnim.SetBool("doStagger", false);
+        legsAnim.SetBool("doStagger", false);
     }
 
     public IEnumerator SmoothMovement(Vector3 targetPos)

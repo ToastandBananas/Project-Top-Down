@@ -12,6 +12,7 @@ public class NPCCombat : MonoBehaviour
     bool needsCombatAction = false;
 
     Arms arms;
+    BasicStats basicStats;
     NPCMovement npcMovement;
     NPCAttacks npcAttacks;
     Pathfinding.AIDestinationSetter AIDestSetter;
@@ -19,6 +20,7 @@ public class NPCCombat : MonoBehaviour
     void Start()
     {
         arms = GetComponentInChildren<Arms>();
+        basicStats = GetComponent<BasicStats>();
         npcMovement = GetComponent<NPCMovement>();
         npcAttacks = GetComponent<NPCAttacks>();
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
@@ -44,11 +46,17 @@ public class NPCCombat : MonoBehaviour
         if (determineShieldState && (arms.leftShieldEquipped || arms.rightShieldEquipped))
         {
             int randomNumber = Random.Range(1, 101);
-            
-            if (randomNumber <= 70) // 70% chance to block
+
+            if (randomNumber <= 70 && basicStats.stamina / basicStats.maxStamina >= 0.15f) // 70% chance to block if the NPC has enough stamina
+            {
+                npcAttacks.isBlocking = true;
                 arms.RaiseShield();
+            }
             else // 30% chance to lower shield if already blocking
+            {
+                npcAttacks.isBlocking = false;
                 arms.LowerShield();
+            }
 
             determineShieldState = false;
             

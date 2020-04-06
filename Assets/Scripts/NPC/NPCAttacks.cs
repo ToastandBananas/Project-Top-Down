@@ -21,6 +21,7 @@ public class NPCAttacks : MonoBehaviour
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
+    [HideInInspector] public bool isBlocking;
     [HideInInspector] public bool leftArmHeavyAttacking, rightArmHeavyAttacking;
     [HideInInspector] public bool leftQuickAttacking, rightQuickAttacking;
 

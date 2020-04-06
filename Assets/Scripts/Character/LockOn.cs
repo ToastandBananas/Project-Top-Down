@@ -7,7 +7,8 @@ public class LockOn : MonoBehaviour
     public Transform lockOnTarget;
 
     FieldOfView fov;
-    PlayerMovement playerMovementScript;
+    PlayerMovement playerMovement;
+    NPCMovement npcMovement;
     Arms arms;
     Transform headReset;
 
@@ -23,8 +24,10 @@ public class LockOn : MonoBehaviour
         arms = transform.Find("Arms").GetComponent<Arms>();
         headReset = transform.Find("Head Reset");
 
-        if (gameObject.name == "Player")
-            playerMovementScript = GetComponent<PlayerMovement>();
+        if (gameObject.tag == "Player")
+            playerMovement = PlayerMovement.instance;
+        else
+            npcMovement = GetComponent<NPCMovement>();
     }
 
     void Update()
@@ -34,16 +37,19 @@ public class LockOn : MonoBehaviour
 
     void LateUpdate()
     {
-        if (isLockedOn == false)
-            FaceForward();
-        else
-            FaceLockOnTarget();
+        if ((playerMovement != null && playerMovement.isStaggered == false) || (npcMovement != null && npcMovement.isStaggered == false))
+        {
+            if (isLockedOn == false)
+                FaceForward();
+            else
+                FaceLockOnTarget();
+        }
     }
 
     void Update_LockOn()
     {
-        if ((GameControls.gamePlayActions.playerLockOn.WasPressed && playerMovementScript != null) // If this is the player and they press the lock on button
-            || (playerMovementScript == null && gameObject.name != "Player")) // Or if this is an NPC
+        if ((GameControls.gamePlayActions.playerLockOn.WasPressed && playerMovement != null) // If this is the player and they press the lock on button
+            || (playerMovement == null && gameObject.name != "Player")) // Or if this is an NPC
         {
             if (isLockedOn == false)
             {
@@ -55,7 +61,7 @@ public class LockOn : MonoBehaviour
                     lockOnTarget = fov.closestEnemy;
                 }
             }
-            else if (playerMovementScript != null) // If this is the player's lock on script
+            else if (playerMovement != null) // If this is the player's lock on script
                 UnLockOn();
         }
 
@@ -122,23 +128,23 @@ public class LockOn : MonoBehaviour
 
     void FaceForward()
     {
-        if (playerMovementScript != null && playerMovementScript.isMoving) // Only used for the player
+        if (playerMovement != null && playerMovement.isMoving) // Only used for the player
         {
             if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
-                dir = playerMovementScript.movementInput;
-            else if (playerMovementScript.lookInput.x > 0.3f || playerMovementScript.lookInput.x < -0.3f || playerMovementScript.lookInput.y > 0.3f || playerMovementScript.lookInput.y < -0.3f)
-                dir = playerMovementScript.lookInput;
+                dir = playerMovement.movementInput;
+            else if (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f)
+                dir = playerMovement.lookInput;
             else
                 dir = headReset.position - transform.position;
         }
-        else if (playerMovementScript != null && playerMovementScript.isMoving == false)
+        else if (playerMovement != null && playerMovement.isMoving == false)
         {
             if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
                 dir = headReset.position - transform.position;
             else if (arms.rangedWeaponEquipped && GameControls.gamePlayActions.playerLeftAttack.IsPressed
-                && (playerMovementScript.lookInput.x > 0.3f || playerMovementScript.lookInput.x < -0.3f || playerMovementScript.lookInput.y > 0.3f || playerMovementScript.lookInput.y < -0.3f))
+                && (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f))
             {
-                dir = playerMovementScript.lookInput;
+                dir = playerMovement.lookInput;
             }
         }
         else
