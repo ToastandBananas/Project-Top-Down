@@ -248,10 +248,11 @@ public class BasicStats : MonoBehaviour
 
     public bool UseStamina(int staminaAmount, bool forceStaminaUse)
     {
-        StartCoroutine(PauseStaminaRegen());
-
         if (stamina - staminaAmount >= 0 || forceStaminaUse)
+        {
             stamina -= staminaAmount;
+            StartCoroutine(PauseStaminaRegen());
+        }
         else
         {
             Debug.Log("Not enough stamina...");

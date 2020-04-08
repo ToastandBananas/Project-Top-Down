@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPickupable: 1
   prefab: {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
-  sprite: {fileID: -5741852857094109015, guid: 7b95be738cfc84e4aafa3518a93c3a17, type: 3}
+  possibleSprites:
+  - {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207, type: 3}
   droppedSprite: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
     type: 3}
   name: Tunic
@@ -25,14 +26,10 @@ MonoBehaviour:
   minBaseValue: 1
   maxBaseValue: 10
   staticValue: 1
-  inventoryIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
-    type: 3}
+  inventoryIcons:
+  - {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207, type: 3}
   iconWidth: 2
   iconHeight: 2
-  equipSlotIcon: {fileID: -5741852857094109015, guid: e80d9efee2e5d7746b974c51faa51207,
-    type: 3}
-  equipSlotIconWidth: 2
-  equipSlotIconHeight: 2
   isStackable: 0
   maxStackSize: 1
   onUseItemText: 
@@ -55,5 +52,6 @@ MonoBehaviour:
   minBaseDefense: 1
   maxBaseDefense: 2
   armorModifier: 1
+  maxAmmo: 10
   minBaseDurability: 10
   maxBaseDurability: 20

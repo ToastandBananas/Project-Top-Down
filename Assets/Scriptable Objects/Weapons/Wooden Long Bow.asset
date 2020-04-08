@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPickupable: 1
   prefab: {fileID: 9121319957708617607, guid: 5df2aa8ee384f9e41933da3944140e4b, type: 3}
-  sprite: {fileID: 21300000, guid: 7fc3ae66c9886e949b926630d12c1d77, type: 3}
+  possibleSprites:
+  - {fileID: 21300000, guid: 7fc3ae66c9886e949b926630d12c1d77, type: 3}
   droppedSprite: {fileID: 0}
   name: Wooden Long Bow
   description: Basic long bow.
@@ -24,12 +25,10 @@ MonoBehaviour:
   minBaseValue: 10
   maxBaseValue: 25
   staticValue: 10
-  inventoryIcon: {fileID: 21300000, guid: 591edb344c620cf4e9fcddffdb3230a6, type: 3}
+  inventoryIcons:
+  - {fileID: 21300000, guid: 591edb344c620cf4e9fcddffdb3230a6, type: 3}
   iconWidth: 1
   iconHeight: 3
-  equipSlotIcon: {fileID: 0}
-  equipSlotIconWidth: 0
-  equipSlotIconHeight: 0
   isStackable: 0
   maxStackSize: 1
   onUseItemText: Weapon equipped

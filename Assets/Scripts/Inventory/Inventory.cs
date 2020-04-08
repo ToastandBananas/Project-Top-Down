@@ -135,6 +135,8 @@ public class Inventory : MonoBehaviour
                                 break;
                         }
                     }
+
+                    parentSlot.SetAmmoSprites();
                 }
             }
         }
@@ -158,7 +160,7 @@ public class Inventory : MonoBehaviour
 
                 if (currentSlotsToFillIndex == totalSlotsToCheck) // We found a valid slot to put our item!
                 {
-                    invSlots[i].AddItem(itemToAdd);
+                    invSlots[i].AddItem(itemToAdd, itemData);
 
                     itemData.TransferData(itemData, invSlots[i].itemData); // Transfer our item data from the gameobject to the inventory object
 
@@ -166,6 +168,8 @@ public class Inventory : MonoBehaviour
                         invSlots[i].stackSizeText.text = invSlots[i].itemData.currentStackSize.ToString(); // Set our stack size text for the slot
                     else if (itemData.item.itemType == ItemType.Quiver && itemData.currentAmmoCount > 0)
                         invSlots[i].stackSizeText.text = invSlots[i].itemData.currentAmmoCount.ToString();
+
+                    invSlots[i].SetAmmoSprites();
 
                     for (int j = 0; j < slotsToFill.Length; j++)
                     {
@@ -236,6 +240,8 @@ public class Inventory : MonoBehaviour
             startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
             startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
+            startSlot.SetAmmoSprites();
+
             // Add ItemDatas/GameObjects to the appropriate lists
             if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
                 itemsList.Add(itemData);
@@ -259,7 +265,7 @@ public class Inventory : MonoBehaviour
         if (itemsTryingToReplaceCount == 0) // If we're not going to replace any items
         {
             ClearParentAndChildSlots(startSlot);
-            startSlot.AddItem(itemToAdd); // Add the item to the slot we clicked on
+            startSlot.AddItem(itemToAdd, itemData); // Add the item to the slot we clicked on
 
             // Clear out the parent/children slots of the slot we're moving the item from
             if (invUI.invSlotMovingFrom != null)
@@ -274,6 +280,12 @@ public class Inventory : MonoBehaviour
                 }
             }
 
+            itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing ititemslist.remove
+            if (invUI.invSlotMovingFrom != null)
+                invUI.invSlotMovingFrom.ClearSlot();
+            else
+                invUI.equipSlotMovingFrom.ClearSlot(invUI.equipSlotMovingFrom);
+
             if (itemData.item.itemType == ItemType.Ammunition && itemData.currentStackSize > 1)
                 startSlot.stackSizeText.text = itemData.currentStackSize.ToString();
             else if (itemData.item.itemType == ItemType.Quiver && itemData.currentAmmoCount > 0)
@@ -281,11 +293,7 @@ public class Inventory : MonoBehaviour
             else
                 startSlot.stackSizeText.text = "";
 
-            itemData.TransferData(itemData, startSlot.itemData); // Transfer data to the new slot before clearing ititemslist.remove
-            if (invUI.invSlotMovingFrom != null)
-                invUI.invSlotMovingFrom.ClearSlot();
-            else
-                invUI.equipSlotMovingFrom.ClearSlot(invUI.equipSlotMovingFrom);
+            startSlot.SetAmmoSprites();
 
             foreach (InventorySlot childSlot in startSlot.childrenSlots) // Soft fill our child slots just in case the moving from slot is now one of these children
             {
@@ -358,7 +366,7 @@ public class Inventory : MonoBehaviour
                         {
                             if (itemAdded == false && childSlot != null && slot != childSlot.parentSlot)
                             {
-                                slot.AddItem(itemToAdd);
+                                slot.AddItem(itemToAdd, itemData);
                                 itemData.TransferData(itemData, startSlot.itemData);
 
                                 if (startSlot.item.itemType == ItemType.Ammunition && startSlot.itemData.currentStackSize > 1)
@@ -367,6 +375,8 @@ public class Inventory : MonoBehaviour
                                     slot.stackSizeText.text = startSlot.itemData.currentAmmoCount.ToString();
                                 else
                                     startSlot.stackSizeText.text = "";
+
+                                slot.SetAmmoSprites();
 
                                 itemAdded = true;
 
@@ -407,6 +417,8 @@ public class Inventory : MonoBehaviour
                                         slot.itemData.ammoTypePrefab = invUI.currentlySelectedItem.prefab;
                                     }
 
+                                    slot.SetAmmoSprites();
+
                                     invUI.currentlySelectedItemData.currentStackSize--;
 
                                     // If we transferred over all of our currently selected ammo
@@ -436,8 +448,9 @@ public class Inventory : MonoBehaviour
                             }
                         }
                         
-                        invUI.tempSlot.AddItem(slot.item);
+                        invUI.tempSlot.AddItem(slot.item, slot.itemData);
                         itemData.TransferData(slot.itemData, invUI.tempSlot.itemData);
+                        invUI.tempSlot.SetAmmoSprites();
 
                         foreach (InventorySlot childSlot in slot.childrenSlots)
                         {
@@ -453,7 +466,7 @@ public class Inventory : MonoBehaviour
                             movingFromSlotSet = true;
                         }
 
-                        slot.AddItem(itemToAdd);
+                        slot.AddItem(itemToAdd, invUI.currentlySelectedItemData);
                         itemAdded = true;
                         itemData.TransferData(invUI.currentlySelectedItemData, slot.itemData);
 
@@ -464,16 +477,18 @@ public class Inventory : MonoBehaviour
                         else
                             slot.stackSizeText.text = "";
 
+                        slot.SetAmmoSprites();
+
                         invUI.currentlySelectedItem = invUI.tempSlot.item;
                         invUI.currentlySelectedItemData = invUI.tempSlot.itemData;
-                        //Debug.Log("Updating slot...");
                     }
                     else // If our startSlot is not the parent slot of the item we're replacing, but the parent slot is still being overlapped by our new item
                     {
                         if (slot.item != null)
                         {
-                            invUI.tempSlot.AddItem(slot.item);
+                            invUI.tempSlot.AddItem(slot.item, slot.itemData);
                             itemData.TransferData(slot.itemData, invUI.tempSlot.itemData);
+                            invUI.tempSlot.SetAmmoSprites();
                         }
                         
                         slot.ClearSlot();
@@ -488,6 +503,8 @@ public class Inventory : MonoBehaviour
                             else
                                 startSlot.stackSizeText.text = "";
 
+                            startSlot.SetAmmoSprites();
+
                             invUI.invSlotMovingFrom = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
@@ -500,15 +517,16 @@ public class Inventory : MonoBehaviour
                 {
                     if (slot == startSlot && itemAdded == false)
                     {
-                        slot.AddItem(itemToAdd);
+                        slot.AddItem(itemToAdd, itemData);
                         itemData.TransferData(itemData, startSlot.itemData);
                         if (startSlot.item.itemType == ItemType.Ammunition && startSlot.itemData.currentStackSize > 1)
                             startSlot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
                         else if (startSlot.item.itemType == ItemType.Quiver && startSlot.itemData.currentAmmoCount > 0)
                             startSlot.stackSizeText.text = startSlot.itemData.currentAmmoCount.ToString();
 
+                        startSlot.SetAmmoSprites();
+
                         itemAdded = true;
-                        //Debug.Log("Adding item to empty slot...");
                     }
                 }
 
@@ -576,10 +594,6 @@ public class Inventory : MonoBehaviour
         {
             slot.SoftFillSlot(slot);
         }
-        
-        //Debug.Log(invUI.tempSlot.iconImage);
-        //startSlot.iconImage.transform.SetParent(startSlot.GetBottomRightChildSlot(itemToAdd, startSlot).transform);
-        //startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
         if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
             itemsList.Add(startSlot.itemData);
@@ -801,16 +815,6 @@ public class Inventory : MonoBehaviour
                     }
                 }
             }
-        }
-    }
-
-    public void SortItemsAlphabetically(List<Item> itemsList, InventorySlot[] slotsArray)
-    {
-        itemsList.Sort(delegate (Item i1, Item i2) { return i1.name.CompareTo(i2.name); });
-        for (int i = 0; i < slotsArray.Length; i++)
-        {
-            if (i < itemsList.Count)
-                slotsArray[i].UpdateSlot(itemsList[i]);
         }
     }
 

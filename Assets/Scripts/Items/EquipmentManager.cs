@@ -152,6 +152,8 @@ public class EquipmentManager : MonoBehaviour
                     break;
             }
 
+            quiverSlot.SetQuiverAmmoSprites();
+
             currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;
 
             if (itemData.currentStackSize <= 0)
@@ -220,7 +222,7 @@ public class EquipmentManager : MonoBehaviour
                     // If there's no room in our inventory, send it to the temp slot so we can manually place or drop the item
                     if (inv.AddToInventory(equipSlot.equipment, equipSlot.itemData) == false)
                     {
-                        invUI.tempSlot.AddItem(equipSlot.equipment);
+                        invUI.tempSlot.AddItem(equipSlot.equipment, equipSlot.itemData);
                         itemData.TransferData(equipSlot.itemData, invUI.tempSlot.itemData);
 
                         invUI.currentlySelectedItem = invUI.tempSlot.item;
@@ -335,7 +337,7 @@ public class EquipmentManager : MonoBehaviour
         itemData.TransferData(itemData, weapon.GetComponent<ItemData>());
 
         weapon.name = itemData.itemName;
-        weapon.GetComponent<SpriteRenderer>().sprite = newItem.sprite;
+        weapon.GetComponent<SpriteRenderer>().sprite = itemData.gameSprite;
         if (weapon.TryGetComponent(out BoxCollider2D boxCollider))
             boxCollider.enabled = true;
         if (weapon.TryGetComponent(out WeaponDamage weaponDamage))
@@ -361,7 +363,7 @@ public class EquipmentManager : MonoBehaviour
     {
         itemData.TransferData(itemData, armorSpriteRenderer.GetComponent<ItemData>());
 
-        armorSpriteRenderer.sprite = newItem.sprite;
+        armorSpriteRenderer.sprite = itemData.gameSprite;
 
         if (newItem.armorType == ArmorType.Cuirass)
         {

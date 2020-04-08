@@ -136,7 +136,7 @@ public class Container : MonoBehaviour
         
         hierarchyObjItemData.item = containerObjItemData.item;
         hierarchyObjItemData.equipment = containerObjItemData.equipment;
-        //hierarchyObjItemData.consumable = containerObjItemData.consumable;
+        hierarchyObjItemData.consumable = containerObjItemData.consumable;
 
         if (containerObjItemData.hasBeenRandomized == false)
             hierarchyObjItemData.RandomizeData();

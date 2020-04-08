@@ -50,6 +50,8 @@ public class ItemDrop : MonoBehaviour
         if (arrowScript != null)
             arrowScript.enabled = false;
 
+        spriteRenderer.sprite = GetComponent<ItemData>().gameSprite;
+
         if (item.droppedSprite != null)
             spriteRenderer.sprite = item.droppedSprite;
 

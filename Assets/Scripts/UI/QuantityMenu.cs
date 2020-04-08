@@ -61,7 +61,7 @@ public class QuantityMenu : MonoBehaviour
     public void Submit()
     {
         // Create a new icon, place it in the temp inv slot and transfer data to it
-        invUI.tempSlot.AddItem(currentItemData.item);
+        invUI.tempSlot.AddItem(currentItemData.item, currentItemData);
         ItemData tempSlotItemData = invUI.tempSlot.itemData;
         currentItemData.TransferData(currentItemData, tempSlotItemData);
         tempSlotItemData.currentStackSize = currentQuantity;
@@ -77,6 +77,9 @@ public class QuantityMenu : MonoBehaviour
             currentParentSlot.stackSizeText.text = currentItemData.currentStackSize.ToString();
         else
             currentParentSlot.stackSizeText.text = "";
+
+        currentParentSlot.SetAmmoSprites();
+        invUI.tempSlot.SetAmmoSprites();
 
         CloseQuantityMenu();
     }

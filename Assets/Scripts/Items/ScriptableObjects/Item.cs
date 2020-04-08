@@ -9,7 +9,7 @@ public class Item : ScriptableObject
     public GameObject prefab;
 
     [Header("In Game Sprites")]
-    public Sprite sprite;
+    public Sprite[] possibleSprites;
     [Tooltip("Only used when the default sprite will differ from the dropped sprite.")]
     public Sprite droppedSprite;
 
@@ -30,12 +30,9 @@ public class Item : ScriptableObject
     public int staticValue = 1;
 
     [Header("Inventory Icon Info")]
-    public Sprite inventoryIcon;
+    public Sprite[] inventoryIcons;
     public int iconWidth = 1;
     public int iconHeight = 1;
-    public Sprite equipSlotIcon;
-    public int equipSlotIconWidth = 0;
-    public int equipSlotIconHeight = 0;
 
     [Header("Stackability")]
     public bool isStackable;

@@ -269,14 +269,14 @@ public class SaveLoad : MonoBehaviour
         inv.SetParentAndChildSlots(slot.item, slot, invSlots);
 
         // Find the slot's icon
-        slot.iconImage = slot.GetBottomRightChildSlot(slot.item, slot).transform.GetChild(2).GetComponent<Image>();
+        slot.iconImage = slot.GetBottomRightChildSlot(slot.item, slot).transform.GetChild(3).GetComponent<Image>();
 
         // Find the slot item's ItemData
         slot.itemData = slot.iconImage.GetComponent<ItemData>();
 
         // Setup the icon's sprite
         slot.iconImage.preserveAspect = true;
-        slot.iconImage.sprite = slot.item.inventoryIcon;
+        slot.iconImage.sprite = slot.itemData.inventoryIcon;
 
         // Reposition/resize the icon
         RectTransform iconRectTransform = slot.iconImage.GetComponent<RectTransform>();
@@ -297,10 +297,7 @@ public class SaveLoad : MonoBehaviour
 
         // Setup the icon's sprite
         slot.iconImage.preserveAspect = true;
-        if (slot.equipment.equipSlotIcon != null)
-            slot.iconImage.sprite = slot.equipment.equipSlotIcon;
-        else
-            slot.iconImage.sprite = slot.equipment.inventoryIcon;
+        slot.iconImage.sprite = slot.itemData.inventoryIcon;
 
         // Reposition/resize the icon
         RectTransform iconRectTransform = slot.iconImage.GetComponent<RectTransform>();

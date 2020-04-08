@@ -120,7 +120,7 @@ public class EquipSlot : MonoBehaviour
                 Debug.Log("Cannot equip this item.");
             }
         }
-        else if (isEmpty == false && invUI.invSlotMovingFrom == invUI.tempSlot) // If we're placing an item in the same slot it came from, but the slot already has an item in it (replace item)
+        else if (isEmpty == false && invUI.invSlotMovingFrom == invUI.tempSlot && invUI.currentlySelectedItem.itemType != ItemType.Ammunition) // If we're placing an item in the same slot it came from, but the slot already has an item in it (replace item)
         {
             equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item before we do anything else
 
@@ -130,20 +130,11 @@ public class EquipSlot : MonoBehaviour
             equipment = itemData.equipment;
             invUI.tempSlot.item = invUI.tempSlot.itemData.equipment;
 
-            // Assign the appropriate icon sprite to both slots
-            if (equipment.equipSlotIcon != null)
-            {
-                iconImage.sprite = equipment.equipSlotIcon;
-                RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
-                if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
-                    rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
-            }
-            else
-                iconImage.sprite = equipment.inventoryIcon;
+            iconImage.sprite = itemData.inventoryIcon;
 
             slotBackgroundImage.color = Color.white;
             iconImage.name = itemData.name;
-            invUI.tempSlot.iconImage.sprite = invUI.tempSlot.item.inventoryIcon;
+            invUI.tempSlot.iconImage.sprite = invUI.tempSlot.itemData.inventoryIcon;
 
             SetQuiverStackSizeText(); // If this is the quiver slot, set the stack size text
 
@@ -167,7 +158,7 @@ public class EquipSlot : MonoBehaviour
                     equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item before we do anything else
 
                     // Add the currently selected item and its data to a temp slot
-                    invUI.tempSlot.AddItem(equipment);
+                    invUI.tempSlot.AddItem(equipment, itemData);
                     itemData.TransferData(itemData, invUI.tempSlot.itemData);
 
                     // Clear this slot out and add the currently selected item
@@ -213,6 +204,7 @@ public class EquipSlot : MonoBehaviour
                         }
                     }
 
+                    SetQuiverAmmoSprites();
                     SetQuiverStackSizeText();
                 }
                 else // If we this item doesn't go here
@@ -247,16 +239,7 @@ public class EquipSlot : MonoBehaviour
         slotToFill.slotBackgroundImage.color = Color.white;
         slotToFill.slotBackgroundImage.sprite = fullSlotSprite;
 
-        if (equipment.equipSlotIcon != null)
-        {
-            iconImage.sprite = equipment.equipSlotIcon;
-            RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
-            if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
-                rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
-        }
-        else
-            slotToFill.iconImage.sprite = slotToFill.equipment.inventoryIcon;
-
+        slotToFill.iconImage.sprite = slotToFill.itemData.inventoryIcon;
         slotToFill.slotText.enabled = false;
     }
 
@@ -275,17 +258,7 @@ public class EquipSlot : MonoBehaviour
         equipment = newItem;
         
         iconImage.preserveAspect = true;
-
-        if (equipment.equipSlotIcon != null)
-        {
-            iconImage.sprite = equipment.equipSlotIcon;
-            RectTransform rectTransform = iconImage.GetComponent<RectTransform>();
-            if (equipment.equipSlotIconWidth != 0 && equipment.equipSlotIconHeight != 0)
-                rectTransform.sizeDelta = new Vector2(equipment.equipSlotIconWidth, equipment.equipSlotIconHeight);
-        }
-        else
-            iconImage.sprite = equipment.inventoryIcon;
-        
+        iconImage.sprite = itemData.inventoryIcon;
         slotBackgroundImage.sprite = fullSlotSprite;
 
         itemData.TransferData(itemDataToTransferDataFrom, itemData); // Transfer the item's data to this slot
@@ -302,6 +275,46 @@ public class EquipSlot : MonoBehaviour
                 quiverText.text = itemData.currentAmmoCount.ToString();
             else
                 quiverText.text = "";
+        }
+    }
+
+    public void SetQuiverAmmoSprites()
+    {
+        if (itemData.equipment != null && thisEquipmentSlot == EquipmentSlot.Quiver)
+        {
+            switch (itemData.currentAmmoCount)
+            {
+                case 0:
+                    itemData.gameSprite = itemData.item.possibleSprites[0]; // 0 arrows
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[0];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+                case 1:
+                    itemData.gameSprite = itemData.item.possibleSprites[1]; // 1 arrow
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[1];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+                case 2:
+                    itemData.gameSprite = itemData.item.possibleSprites[2]; // 2 arrows
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[2];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+                case 3:
+                    itemData.gameSprite = itemData.item.possibleSprites[3]; // 3 arrows
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[3];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+                case 4:
+                    itemData.gameSprite = itemData.item.possibleSprites[4]; // 4 arrows
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[4];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+                default:
+                    itemData.gameSprite = itemData.item.possibleSprites[5]; // 5 arrows
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[5];
+                    iconImage.sprite = itemData.inventoryIcon;
+                    break;
+            }
         }
     }
 

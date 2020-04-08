@@ -54,6 +54,25 @@ public class Tooltip : MonoBehaviour
                 tooltipText.text += "Durability: " + tooltipSlot.itemData.durability.ToString() + "/" + tooltipSlot.itemData.maxDurability.ToString() + "\n";
             }
 
+            // Consumable info
+            if (tooltipSlot.item.itemType == ItemType.Consumable)
+            {
+                if (tooltipSlot.itemData.consumable.consumableType == ConsumableType.Food)
+                    tooltipText.text += "Freshness: " + tooltipSlot.itemData.freshness + "%\n";
+
+                tooltipText.text += "\n<b>Effects:</b>\n";
+                if (tooltipSlot.itemData.consumable.nourishment > 0)
+                    tooltipText.text += "    + " + tooltipSlot.itemData.consumable.nourishment.ToString() + " nourishment\n";
+                if (tooltipSlot.itemData.consumable.healAmount > 0)
+                    tooltipText.text += "    + " + tooltipSlot.itemData.consumable.healAmount.ToString() + " health\n";
+                if (tooltipSlot.itemData.consumable.staminaRecoveryAmount > 0)
+                    tooltipText.text += "    + " + tooltipSlot.itemData.consumable.staminaRecoveryAmount.ToString() + " stamina\n";
+                if (tooltipSlot.itemData.consumable.manaRecoveryAmount > 0)
+                    tooltipText.text += "    + " + tooltipSlot.itemData.consumable.manaRecoveryAmount.ToString() + " mana\n";
+
+                tooltipText.text += "\n";
+            }
+
             // Weight
             tooltipText.text += "Weight: " + tooltipSlot.item.weight.ToString() + "\n";
 

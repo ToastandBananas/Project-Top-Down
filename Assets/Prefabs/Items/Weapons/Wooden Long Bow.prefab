@@ -98,7 +98,7 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -226,7 +226,7 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -364,7 +364,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 7fc3ae66c9886e949b926630d12c1d77, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -426,6 +426,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 11400000, guid: 929e2bd856c01224c803ed343f89ab93, type: 2}
   equipment: {fileID: 11400000, guid: 929e2bd856c01224c803ed343f89ab93, type: 2}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -433,6 +436,7 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!114 &9121319957708617628
@@ -477,8 +481,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId: 594621851891563919
   localRefs:
-    _Keys: []
-    _Values: 
+    _Keys:
+    - {fileID: 9121319957708617607}
+    - {fileID: 9121319957708617626}
+    - {fileID: 9121319957708617627}
+    - {fileID: 9121319957708617624}
+    - {fileID: 377374093528034213}
+    - {fileID: 9121319957708617631}
+    - {fileID: 9121319957708617628}
+    - {fileID: 9121319957708617629}
+    - {fileID: 9121319957065134262}
+    - {fileID: 9121319957065134257}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 21300000, guid: 7fc3ae66c9886e949b926630d12c1d77, type: 3}
+    - {fileID: 11500000, guid: 754c697525f38f141929690ddb8df7ae, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: 929e2bd856c01224c803ed343f89ab93, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    - {fileID: 3816436631412021217}
+    - {fileID: 8647972574128937822}
+    - {fileID: 8722811278564037005}
+    - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 1619144760964706701}
+    - {fileID: 8031958007367029401}
+    - {fileID: 4401777906586021107}
+    - {fileID: 5797510605399136278}
+    - {fileID: 4811974978315884628}
+    _Values: 5ce7c460561deb4218f37c0f0fd832476140e5c70d91c859ded545e97d0d6967b57feb3d944c4b6c22d43a9d9148e877be8f07d9e3beec351f6b3e2c63d4bf265de45990edf4b215f578e8e1cb66ea6a1231d311f96f7b746c201e290d1e090a6b9f058a5d879b4d421dce5ca6ce00467f2ce6ceff51d312981adc322976f829912189d39ea0f374968653163ed81b3adf9b58c5fa28f6437217227863ce7634db5b347abbd258213a726485a4ea506f3616548e1e322f672b4646b6c26bd8380f1e3be2a3a07f4e0c8673773b8e615c
 --- !u!114 &9121319957065134257
 MonoBehaviour:
   m_ObjectHideFlags: 0

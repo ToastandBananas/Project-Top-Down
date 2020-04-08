@@ -11,8 +11,11 @@ public class ItemData : MonoBehaviour
     [Header("Item Class")]
     public Item item;
     public Equipment equipment;
+    public Consumable consumable;
 
     [Header("General Data")]
+    public Sprite inventoryIcon;
+    public Sprite gameSprite;
     public string itemName;
     public int value;
     public int currentStackSize = 1;
@@ -25,6 +28,9 @@ public class ItemData : MonoBehaviour
     [Header("Armor Data")]
     public int defense = 0;
 
+    [Header("Consumable Data")]
+    public int freshness = 100;
+
     [Header("Quiver Data")]
     public GameObject ammoTypePrefab;
     public int currentAmmoCount = 0;
@@ -35,8 +41,8 @@ public class ItemData : MonoBehaviour
         {
             if (equipment != null)
                 item = equipment;
-            //if (consumable != null)
-                //item = consumable;
+            else if (consumable != null)
+                item = consumable;
         }
     }
 
@@ -56,9 +62,11 @@ public class ItemData : MonoBehaviour
         // Item Class
         dataReceiver.item = dataGiver.item;
         dataReceiver.equipment = dataGiver.equipment;
-        //dataReceiver.consumable = dataGiver.consumable;
+        dataReceiver.consumable = dataGiver.consumable;
 
         // General Data
+        dataReceiver.inventoryIcon = dataGiver.inventoryIcon;
+        dataReceiver.gameSprite = dataGiver.gameSprite;
         dataReceiver.itemName = dataGiver.itemName;
         dataReceiver.value = dataGiver.value;
         dataReceiver.currentStackSize = dataGiver.currentStackSize;
@@ -66,7 +74,7 @@ public class ItemData : MonoBehaviour
         dataReceiver.durability = dataGiver.durability;
 
         // Consumable Data
-        // dataReceiver.freshness = dataGiver.freshness;
+        dataReceiver.freshness = dataGiver.freshness;
 
         // Weapon Data
         dataReceiver.damage = dataGiver.damage;
@@ -106,24 +114,38 @@ public class ItemData : MonoBehaviour
         if (equipment != null)
         {
             if (equipment.maxBaseDurability > 0)
-                maxDurability = Random.Range(equipment.minBaseDurability, equipment.maxBaseDurability);
+                maxDurability = Random.Range(equipment.minBaseDurability, equipment.maxBaseDurability + 1);
 
             durability = maxDurability;
 
             if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
-                damage = Random.Range(equipment.minBaseDamage, equipment.maxBaseDamage);
+                damage = Random.Range(equipment.minBaseDamage, equipment.maxBaseDamage + 1);
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
-                defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense);
+                defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense + 1);
 
             if (equipment.isStackable)
                 currentStackSize = Random.Range(1, equipment.maxStackSize + 1);
         }
         // Consumable class data
-        /*else if (consumable != null)
+        else if (consumable != null)
         {
+            freshness = Random.Range(consumable.minBaseFreshness, consumable.maxBaseFreshness + 1);
+        }
 
-        }*/
+        // Multiple sprite possiblities item data
+        if (item.inventoryIcons.Length > 1 && item.itemType != ItemType.Ammunition)
+            inventoryIcon = item.inventoryIcons[Random.Range(0, item.inventoryIcons.Length - 1)];
+        else if (item.itemType == ItemType.Ammunition)
+            SetAmmoSprites();
+        else
+            inventoryIcon = item.inventoryIcons[0];
+
+        for (int i = 0; i < item.inventoryIcons.Length; i++)
+        {
+            if (inventoryIcon == item.inventoryIcons[i])
+                gameSprite = item.possibleSprites[i];
+        }
 
         value = CalculateItemValue();
 
@@ -136,14 +158,50 @@ public class ItemData : MonoBehaviour
         RandomizeData();
     }
 
+    public void SetAmmoSprites()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        switch (currentStackSize)
+        {
+            case 1:
+                gameSprite = item.possibleSprites[0]; // 1 arrow
+                inventoryIcon = item.inventoryIcons[0];
+                spriteRenderer.sprite = gameSprite;
+                break;
+            case 2:
+                gameSprite = item.possibleSprites[1]; // 2 arrows
+                inventoryIcon = item.inventoryIcons[1];
+                spriteRenderer.sprite = gameSprite;
+                break;
+            case 3:
+                gameSprite = item.possibleSprites[2]; // 3 arrows
+                inventoryIcon = item.inventoryIcons[2];
+                spriteRenderer.sprite = gameSprite;
+                break;
+            case 4:
+                gameSprite = item.possibleSprites[3]; // 4 arrows
+                inventoryIcon = item.inventoryIcons[3];
+                spriteRenderer.sprite = gameSprite;
+                break;
+            default:
+                gameSprite = item.possibleSprites[4]; // 5 arrows
+                inventoryIcon = item.inventoryIcons[4];
+                spriteRenderer.sprite = gameSprite;
+                break;
+        }
+    }
+
     public void ClearData()
     {
         hasBeenRandomized = false;
         
         item = null;
         equipment = null;
-        // consumable = null;
-        
+        consumable = null;
+
+        inventoryIcon = null;
+        gameSprite = null;
         itemName = "";
         value = 0;
         currentStackSize = 1;
@@ -152,6 +210,7 @@ public class ItemData : MonoBehaviour
         
         damage = 0;
         defense = 0;
+        freshness = 0;
 
         currentAmmoCount = 0;
         ammoTypePrefab = null;
@@ -161,7 +220,7 @@ public class ItemData : MonoBehaviour
     {
         int itemValue = 0;
 
-        if (equipment != null && equipment.minBaseValue != 0 && equipment.maxBaseValue != 0)//|| consumable != null)
+        if ((equipment != null || consumable != null) && item.minBaseValue != 0 && item.maxBaseValue != 0)
             itemValue = Mathf.RoundToInt(item.minBaseValue + ((item.maxBaseValue - item.minBaseValue) * CalculatePercentPointValue()));
         else
             itemValue = item.staticValue;
@@ -185,10 +244,11 @@ public class ItemData : MonoBehaviour
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
                 totalPointsPossible += (equipment.maxBaseDefense - equipment.minBaseDefense) * 2;
         }
-        /*else if (consumable != null)
+        else if (consumable != null)
         {
-
-        }*/
+            if (consumable.consumableType == ConsumableType.Food)
+                totalPointsPossible += (consumable.maxBaseFreshness - consumable.minBaseFreshness);
+        }
         
         return totalPointsPossible;
     }
@@ -207,10 +267,15 @@ public class ItemData : MonoBehaviour
                 pointIncrease += (maxDurability - equipment.minBaseDurability);
 
             if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
-                pointIncrease += (damage - equipment.minBaseDamage) * 2;
+                pointIncrease += (damage - equipment.minBaseDamage) * 2; // Damage contributes to value twice as much
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
-                pointIncrease += (defense - equipment.minBaseDefense) * 2;
+                pointIncrease += (defense - equipment.minBaseDefense) * 2; // Armor contributes to value twice as much
+        }
+        else if (consumable != null)
+        {
+            if (consumable.consumableType == ConsumableType.Food)
+                pointIncrease += (freshness - consumable.minBaseFreshness);
         }
 
         percent = pointIncrease / GetTotalPointValue();
@@ -250,9 +315,15 @@ public class ItemData : MonoBehaviour
                     defense = equipment.minBaseDefense;
             }
         }
-        /*else if (consumable != null)
+        else if (consumable != null)
         {
-
-        }*/
+            if (consumable.consumableType == ConsumableType.Food)
+            {
+                if (freshness > consumable.maxBaseFreshness)
+                    freshness = consumable.maxBaseFreshness;
+                else if (freshness < consumable.minBaseFreshness)
+                    freshness = consumable.minBaseFreshness;
+            }
+        }
     }
 }

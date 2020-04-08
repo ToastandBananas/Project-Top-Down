@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: Leather Quiver
   m_EditorClassIdentifier: 
   isPickupable: 1
-  prefab: {fileID: 0}
-  sprite: {fileID: 21300000, guid: b69b7f2e2ec6a5742a823cccc28b38d6, type: 3}
+  prefab: {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
+  possibleSprites:
+  - {fileID: 21300000, guid: b69b7f2e2ec6a5742a823cccc28b38d6, type: 3}
+  - {fileID: 21300000, guid: 3be9c13e148976e4d98ea02b7e821ef1, type: 3}
+  - {fileID: 21300000, guid: deb2eb7b9be001d4f98c744063c4b17b, type: 3}
+  - {fileID: 21300000, guid: e1711bcbf7aa1b445ba5e0518e551089, type: 3}
+  - {fileID: 21300000, guid: 2d2cf1c176ed97340bed16f991d0a5e7, type: 3}
+  - {fileID: 21300000, guid: 3a56709798c11234cb08ee13d35325ea, type: 3}
   droppedSprite: {fileID: 0}
   name: Leather Quiver
   description: Holds your arrows.
@@ -24,12 +30,15 @@ MonoBehaviour:
   minBaseValue: 0
   maxBaseValue: 0
   staticValue: 20
-  inventoryIcon: {fileID: 21300000, guid: c8547cc66733d2e488964dd17149f971, type: 3}
+  inventoryIcons:
+  - {fileID: 21300000, guid: c8547cc66733d2e488964dd17149f971, type: 3}
+  - {fileID: 21300000, guid: a366c74999acbdf4cbf5feafc2c65131, type: 3}
+  - {fileID: 21300000, guid: 1df89967f11b0de448c78ea1e1951b23, type: 3}
+  - {fileID: 21300000, guid: 10921d6f67f65ef4e9ed8d253cd80201, type: 3}
+  - {fileID: 21300000, guid: 0c603687e746692439daf403af0babc7, type: 3}
+  - {fileID: 21300000, guid: 172d124d4727d434d9ce9c9f42dc3165, type: 3}
   iconWidth: 1
   iconHeight: 2
-  equipSlotIcon: {fileID: 0}
-  equipSlotIconWidth: 0
-  equipSlotIconHeight: 0
   isStackable: 0
   maxStackSize: 1
   onUseItemText: 

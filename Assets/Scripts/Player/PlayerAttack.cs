@@ -332,7 +332,10 @@ public class PlayerAttack : MonoBehaviour
         arrowScript.bowShotFrom = arms.leftEquippedWeapon.GetComponent<ItemData>();
 
         arrow.GetComponent<BoxCollider2D>().enabled = true;
-        arrow.GetComponent<SpriteRenderer>().sortingOrder = 10;
+
+        SpriteRenderer arrowSR = arrow.GetComponent<SpriteRenderer>();
+        arrowSR.sortingLayerID = SortingLayer.GetLayerValueFromName("Default");
+        arrowSR.sortingOrder = 10;
 
         Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
         arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;

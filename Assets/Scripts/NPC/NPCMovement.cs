@@ -68,7 +68,7 @@ public class NPCMovement : MonoBehaviour
         DetermineState();
         Movement();
         
-        if (AIDestSetter.target == null || isDodging)
+        if (AIDestSetter.target == null || isDodging || isStaggered)
         {
             AIPath.canMove = false;
             SetIsMoving(false);
@@ -174,7 +174,6 @@ public class NPCMovement : MonoBehaviour
     public IEnumerator Stagger()
     {
         isStaggered = true;
-        AIPath.canMove = false;
         npcAttacks.isBlocking = false;
         arms.leftArmAnim.SetBool("doStagger", true);
         arms.rightArmAnim.SetBool("doStagger", true);
@@ -185,7 +184,6 @@ public class NPCMovement : MonoBehaviour
         yield return new WaitForSeconds(animTimeManager.staggerTime);
 
         isStaggered = false;
-        AIPath.canMove = true;
         arms.leftArmAnim.SetBool("doStagger", false);
         arms.rightArmAnim.SetBool("doStagger", false);
         bodyAnim.SetBool("doStagger", false);

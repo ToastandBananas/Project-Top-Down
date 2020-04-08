@@ -179,8 +179,13 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             }
             else if (parentSlot.item.itemType == ItemType.Ammunition)
             {
-                menuButton.name = "Add to Quiver";
-                menuButton.GetComponentInChildren<Text>().text = "Add to Quiver";
+                if (equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver] != null)
+                {
+                    menuButton.name = "Add to Quiver";
+                    menuButton.GetComponentInChildren<Text>().text = "Add to Quiver";
+                }
+                else
+                    Destroy(menuButton.gameObject);
             }
             else
             {
@@ -269,7 +274,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             else if (thisEquipSlot != null)
                 prefabItemData = thisEquipSlot.itemData.ammoTypePrefab.GetComponent<ItemData>();
 
-            invUI.tempSlot.AddItem(prefabItemData.equipment);
+            invUI.tempSlot.AddItem(prefabItemData.equipment, prefabItemData);
             ItemData tempSlotItemData = invUI.tempSlot.itemData;
             prefabItemData.TransferData(prefabItemData, tempSlotItemData);
             tempSlotItemData.hasBeenRandomized = true;
@@ -278,6 +283,8 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 tempSlotItemData.currentStackSize = parentSlot.itemData.currentAmmoCount;
             else if (thisEquipSlot != null)
                 tempSlotItemData.currentStackSize = thisEquipSlot.itemData.currentAmmoCount;
+
+            invUI.tempSlot.SetAmmoSprites();
 
             // Set the new icon as the currentlySelectedItem/ItemData and also set invSlotMovingFrom
             invUI.currentlySelectedItem = tempSlotItemData.item;
@@ -288,11 +295,13 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             {
                 parentSlot.itemData.currentAmmoCount = 0;
                 parentSlot.stackSizeText.text = "";
+                thisInvSlot.SetAmmoSprites();
             }
             else if (thisEquipSlot != null)
             {
                 thisEquipSlot.itemData.currentAmmoCount = 0;
                 thisEquipSlot.quiverText.text = "";
+                thisEquipSlot.SetQuiverAmmoSprites();
             }
 
             DisableContextMenu();
@@ -336,7 +345,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             GameObject itemToDrop = Instantiate(thisEquipSlot.equipment.prefab, player.transform.position, Quaternion.identity);
             thisEquipSlot.itemData.TransferData(thisEquipSlot.itemData, itemToDrop.GetComponent<ItemData>());
             itemToDrop.name = thisEquipSlot.itemData.itemName;
-            
+
             StartCoroutine(DelayDrop(itemToDrop));
 
             equipmentManager.Unequip(thisEquipSlot.equipment, thisEquipSlot.itemData, thisEquipSlot.thisWeaponSlot, thisEquipSlot.thisEquipmentSlot, false);

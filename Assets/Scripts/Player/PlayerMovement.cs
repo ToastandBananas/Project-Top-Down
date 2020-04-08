@@ -141,9 +141,8 @@ public class PlayerMovement : MonoBehaviour
         {
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 
-            if (canDodge)
+            if (canDodge && stats.UseStamina(dodgeStaminaUse, false))
             {
-                stats.UseStamina(dodgeStaminaUse, false);
                 StartCoroutine(SmoothMovement(transform.position + lastMoveDir * dodgeDistance));
                 canDodge = false;
             }
