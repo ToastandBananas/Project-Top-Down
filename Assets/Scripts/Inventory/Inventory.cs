@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     InventoryUI invUI;
-    PlayerMovement player;
+    PlayerMovement playerMovement;
+    BasicStats playerBasicStats;
 
     public int pocketsSlotCount = 10;
     public int bagSlotCount = 10;
@@ -36,7 +37,8 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         invUI = InventoryUI.instance;
-        player = PlayerMovement.instance;
+        playerMovement = PlayerMovement.instance;
+        playerBasicStats = playerMovement.GetComponent<BasicStats>();
     }
 
     public bool AddToPockets(Item itemToAdd, ItemData itemData)
@@ -99,7 +101,7 @@ public class Inventory : MonoBehaviour
             return true;
         else if (AddToBag(itemToAdd, itemData))
             return true;
-        else if (player.isMounted && AddToHorseBag(itemToAdd, itemData))
+        else if (playerMovement.isMounted && AddToHorseBag(itemToAdd, itemData))
             return true;
 
         return false;
@@ -776,8 +778,18 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void TakeGold()
+    {
+        playerBasicStats.gold += invUI.currentlyActiveContainer.gold;
+        invUI.playerGoldText.text = playerBasicStats.gold.ToString();
+        invUI.currentlyActiveContainer.gold = 0;
+        invUI.containerMenuGoldText.text = 0.ToString();
+    }
+
     public void TakeAll()
     {
+        TakeGold();
+
         ItemData[] itemsTaken = new ItemData[invUI.currentlyActiveContainer.containerObjects.Count];
         for (int i = 0; i < invUI.currentlyActiveContainer.containerObjects.Count; i++)
         {
@@ -791,7 +803,7 @@ public class Inventory : MonoBehaviour
                 itemsTaken[i] = objItemData;
         }
 
-        foreach(ItemData itemData in itemsTaken)
+        foreach (ItemData itemData in itemsTaken)
         {
             if (itemData != null)
             {

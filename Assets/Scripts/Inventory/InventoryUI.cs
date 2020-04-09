@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class InventoryUI : MonoBehaviour
     public GameObject inventoryMenu;
     public GameObject playerEquipmentMenu;
     public GameObject containerMenu;
+    public Text playerGoldText;
+    public Text containerMenuGoldText;
     public QuantityMenu quantityMenu;
 
     [Header("Prefabs")]

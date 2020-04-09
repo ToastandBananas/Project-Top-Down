@@ -5,8 +5,15 @@ using UnityEngine;
 public class Container : MonoBehaviour
 {
     public string containerName = "Container";
-    public bool shouldRandomizeItems = true;
+    public bool randomizeItems = true;
     public Transform itemsParent;
+
+    [Header("Gold")]
+    public bool randomizeGold = true;
+    public int percentChanceNoGold = 20;
+    public int minGoldPossible = 1;
+    public int maxGoldPossible = 10;
+    public int gold;
 
     [Header("Contents")]
     public List<GameObject> containerObjects = new List<GameObject>();
@@ -57,6 +64,8 @@ public class Container : MonoBehaviour
                     else // Otherwise, don't create any slots and add the items without a delay
                         AddContainerItems();
 
+                    invUI.containerMenuGoldText.text = gold.ToString();
+
                     // Set this container to be the currently active container so we can easily reference it in other scripts
                     invUI.currentlyActiveContainer = this;
                 }
@@ -66,6 +75,15 @@ public class Container : MonoBehaviour
             else // If the container menu is already open, close it
                 StartCoroutine(CloseMenus());
         }
+    }
+
+    void RandomizeGold()
+    {
+        int randomNum = Random.Range(1, 101);
+        if (randomNum <= percentChanceNoGold) // Chance for 0 gold
+            gold = 0;
+        else
+            gold = Random.Range(minGoldPossible, maxGoldPossible + 1);
     }
 
     public void InitializeData()
@@ -83,7 +101,10 @@ public class Container : MonoBehaviour
             StartCoroutine(SetLists());
         }
 
-        shouldRandomizeItems = false;
+        if (randomizeGold)
+            RandomizeGold();
+
+        randomizeItems = false;
     }
 
     void AddContainerItems()

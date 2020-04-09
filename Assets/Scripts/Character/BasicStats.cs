@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class BasicStats : MonoBehaviour
 {
+    [Header("General")]
     public float level = 1;
+    public float gold = 0;
 
     [Header("Health")]
     public float maxHealth = 50;
@@ -123,7 +125,7 @@ public class BasicStats : MonoBehaviour
     {
         isDead = true;
 
-        // Drop any carried weapons/shields
+        // Get ItemDrop scripts of carried weapons/shields
         if (transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").childCount > 0 &&
             (arms.leftWeaponEquipped || arms.leftShieldEquipped || arms.rangedWeaponEquipped || arms.twoHanderEquipped))
         {
@@ -201,6 +203,7 @@ public class BasicStats : MonoBehaviour
             StartCoroutine(npcInv.TransferObjectsToBodyContainer(deadBody.GetComponent<Container>()));
         }
 
+        // Drop any carried weapons/shields
         if (leftWeaponItemDrop != null)
         {
             if (arms.rangedWeaponEquipped && arms.leftEquippedWeapon.transform.Find("Middle of String").childCount > 0) // If an arrow is attached to the bow string, drop it

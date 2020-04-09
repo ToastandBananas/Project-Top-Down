@@ -34,17 +34,21 @@ public class EquipSlot : MonoBehaviour
 
     void Awake()
     {
-        invUI = InventoryUI.instance;
-        inv = Inventory.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
-        equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
         slotText = transform.Find("Text").GetComponent<Text>();
 
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
             quiverText = transform.Find("Stack Size Text").GetComponentInChildren<Text>();
 
         if (isEmpty == false)
-            slotBackgroundImage.sprite = emptySlotSprite;
+            slotBackgroundImage.sprite = fullSlotSprite;
+    }
+
+    void Start()
+    {
+        invUI = InventoryUI.instance;
+        inv = Inventory.instance;
+        equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
     }
 
     void Update()

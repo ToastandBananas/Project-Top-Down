@@ -24,18 +24,31 @@ public class Consumable : Item
         if (playerBasicStats == null)
             playerBasicStats = PlayerMovement.instance.GetComponent<BasicStats>();
 
-        Consume(playerBasicStats);
+        Consume(playerBasicStats, invSlot);
     }
 
-    public void Consume(BasicStats userStats)
+    public void Consume(BasicStats userStats, InventorySlot invSlot)
     {
         if (nourishment > 0)
-            Debug.Log("Nourished");
+            Debug.Log("Mmm tasty...TODO: Implement hunger");
         if (healAmount > 0)
             userStats.Heal(healAmount);
         if (staminaRecoveryAmount > 0)
             userStats.RestoreStamina(staminaRecoveryAmount);
         if (manaRecoveryAmount > 0)
             userStats.RestoreMana(manaRecoveryAmount);
+
+        // Clear out the slot's data
+        invSlot.ClearSlot();
+        for (int i = 0; i < invSlot.childrenSlots.Length; i++)
+        {
+            if (invSlot.childrenSlots[i] != null)
+            {
+                invSlot.childrenSlots[i].ClearSlot();
+                invSlot.childrenSlots[i].parentSlot = null;
+                invSlot.childrenSlots[i] = null;
+            }
+        }
+        invSlot.parentSlot = null;
     }
 }
