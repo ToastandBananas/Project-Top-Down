@@ -28,6 +28,7 @@ public class InventorySlot : MonoBehaviour
     [HideInInspector] public Text stackSizeText;
     Inventory inv;
     InventoryUI invUI;
+    AudioManager audioManager;
     HoverHighlight hoverHighlightScript;
     
     Vector3 mousePos;
@@ -39,6 +40,7 @@ public class InventorySlot : MonoBehaviour
     {
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
+        audioManager = AudioManager.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
         stackSizeText = GetComponentInChildren<Text>();
 
@@ -148,6 +150,8 @@ public class InventorySlot : MonoBehaviour
         {
             // Here we'll be picking up the item (it will follow the mouse) and slots under it will highlight
             // red or green depending on whether or not you can place the item in the slots below the icon
+
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
 
             // Determine the parent slot & item (in case we select the item from one of the children slots)
             if (parentSlot == null)

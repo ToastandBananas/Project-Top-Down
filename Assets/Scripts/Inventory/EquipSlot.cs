@@ -25,6 +25,7 @@ public class EquipSlot : MonoBehaviour
 
     InventoryUI invUI;
     Inventory inv;
+    AudioManager audioManager;
     EquipmentManager equipmentManager;
     HoverHighlight hoverHighlightScript;
 
@@ -48,6 +49,7 @@ public class EquipSlot : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
+        audioManager = AudioManager.instance;
         equipmentManager = PlayerMovement.instance.GetComponent<EquipmentManager>();
     }
 
@@ -60,6 +62,8 @@ public class EquipSlot : MonoBehaviour
     {
         if (isEmpty == false && invUI.currentlySelectedItemData == null) // If we don't have an item selected and this slot has an item in it (select item so we can move it)
         {
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
+
             iconImage.transform.SetParent(invUI.menusParent);
 
             // Set our currently selected item info

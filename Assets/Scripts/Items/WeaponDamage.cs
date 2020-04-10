@@ -12,6 +12,7 @@ public class WeaponDamage : MonoBehaviour
 
     int blockStaminaUse = 10;
 
+    AudioManager audioManager;
     AnimTimeManager animTimeManager;
     PlayerMovement playerMovement;
     PlayerAttack playerAttack;
@@ -31,6 +32,7 @@ public class WeaponDamage : MonoBehaviour
         weaponOwner = transform.parent.parent.parent.parent.parent.parent;
         weaponOwnerHeadReset = weaponOwner.Find("Head Reset");
 
+        audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         playerAttack = weaponOwner.GetComponent<PlayerAttack>();
         playerSpecialAttack = weaponOwner.GetComponent<PlayerSpecialAttack>();
@@ -106,6 +108,22 @@ public class WeaponDamage : MonoBehaviour
             {
                 if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
                 {
+                    if (equipment.weaponType == WeaponType.Sword)
+                    {
+                        if ((playerAttack != null && playerAttack.leftArmHeavyAttacking) || (npcAttacks != null && npcAttacks.leftArmHeavyAttacking))
+                        {
+                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds);
+                        }
+                        else if ((playerAttack != null && playerAttack.leftQuickAttacking) || (npcAttacks != null && npcAttacks.leftQuickAttacking))
+                        {
+                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds);
+                        }
+                    }
+                    else if (equipment.weaponType == WeaponType.Mace || equipment.weaponType == WeaponType.Staff)
+                    {
+                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds);
+                    }
+
                     BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();
                     collisionBasicStats.TakeDamage(itemData.damage);
                     canDoDamage = false;
@@ -186,6 +204,22 @@ public class WeaponDamage : MonoBehaviour
             {
                 if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
                 {
+                    if (equipment.weaponType == WeaponType.Sword)
+                    {
+                        if ((playerAttack != null && playerAttack.rightArmHeavyAttacking) || (npcAttacks != null && npcAttacks.rightArmHeavyAttacking))
+                        {
+                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds);
+                        }
+                        else if ((playerAttack != null && playerAttack.rightQuickAttacking) || (npcAttacks != null && npcAttacks.rightQuickAttacking))
+                        {
+                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds);
+                        }
+                    }
+                    else if (equipment.weaponType == WeaponType.Mace || equipment.weaponType == WeaponType.Staff)
+                    {
+                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds);
+                    }
+
                     BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();
                     collisionBasicStats.TakeDamage(itemData.damage);
                     canDoDamage = false;

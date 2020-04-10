@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     InventoryUI invUI;
+    AudioManager audioManager;
     PlayerMovement playerMovement;
     BasicStats playerBasicStats;
 
@@ -37,6 +38,7 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         invUI = InventoryUI.instance;
+        audioManager = AudioManager.instance;
         playerMovement = PlayerMovement.instance;
         playerBasicStats = playerMovement.GetComponent<BasicStats>();
     }
@@ -90,19 +92,27 @@ public class Inventory : MonoBehaviour
             if (CalculateItemInvPositionFromPickup(itemToAdd, itemData, invUI.horseBagSlots, horseBagItems) == true)
                 return true;
         }
-
-        // We should never get here...if we do there's an error in our code
+        
         return false;
     }
 
     public bool AddToInventory(Item itemToAdd, ItemData itemData)
     {
         if (AddToPockets(itemToAdd, itemData))
+        {
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
             return true;
+        }
         else if (AddToBag(itemToAdd, itemData))
+        {
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
             return true;
+        }
         else if (playerMovement.isMounted && AddToHorseBag(itemToAdd, itemData))
+        {
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
             return true;
+        }
 
         return false;
     }
@@ -253,6 +263,7 @@ public class Inventory : MonoBehaviour
                 invUI.currentlyActiveContainer.containerObjects.Add(itemData.gameObject);
             }
 
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
             return true;
         }
 
@@ -434,6 +445,7 @@ public class Inventory : MonoBehaviour
 
                                         itemsTryingToReplaceCount = 0;
                                         invUI.StopDraggingInvItem();
+                                        audioManager.PlayRandomSound(audioManager.inventorySounds);
                                         return true;
                                     }
                                 }
@@ -617,6 +629,7 @@ public class Inventory : MonoBehaviour
             startSlot.itemData = newObj.GetComponent<ItemData>();
         }
 
+        audioManager.PlayRandomSound(audioManager.inventorySounds);
         return true;
     }
 
@@ -780,6 +793,7 @@ public class Inventory : MonoBehaviour
 
     public void TakeGold()
     {
+        audioManager.PlayPickUpGoldSound(invUI.currentlyActiveContainer.gold);
         playerBasicStats.gold += invUI.currentlyActiveContainer.gold;
         invUI.playerGoldText.text = playerBasicStats.gold.ToString();
         invUI.currentlyActiveContainer.gold = 0;
@@ -788,7 +802,8 @@ public class Inventory : MonoBehaviour
 
     public void TakeAll()
     {
-        TakeGold();
+        if (invUI.currentlyActiveContainer.gold > 0)
+            TakeGold();
 
         ItemData[] itemsTaken = new ItemData[invUI.currentlyActiveContainer.containerObjects.Count];
         for (int i = 0; i < invUI.currentlyActiveContainer.containerObjects.Count; i++)

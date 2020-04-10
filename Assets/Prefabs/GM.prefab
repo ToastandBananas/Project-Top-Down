@@ -68,6 +68,8 @@ MonoBehaviour:
     type: 2}
   rightArmAnimController: {fileID: 9100000, guid: 9c00119d1c4c3b646aa44457f7011dad,
     type: 2}
+  legsAnimController: {fileID: 9100000, guid: f0555476147ef7f4e966c51535a27072, type: 2}
+  footstepTime: 0
   leftQuickAttackTime: 0
   rightQuickAttackTime: 0
   leftChargeAttackTime: 0

@@ -45,6 +45,7 @@ public class EquipmentManager : MonoBehaviour
     [Header("Quiver Slot")]
     public EquipSlot quiverSlot;
 
+    AudioManager audioManager;
     GameManager GM;
     Inventory inv;
     InventoryUI invUI;
@@ -57,6 +58,7 @@ public class EquipmentManager : MonoBehaviour
 
     void Start()
     {
+        audioManager = AudioManager.instance;
         GM = GameManager.instance;
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
@@ -110,6 +112,8 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
+        audioManager.PlayRandomSound(audioManager.inventorySounds);
+
         if (weaponSlot != WeaponSlot.None) // If the item is a weapon
         {
             slotIndex = (int)weaponSlot; // Grab the index number of this weaponSlot
@@ -152,6 +156,7 @@ public class EquipmentManager : MonoBehaviour
                     break;
             }
 
+            audioManager.PlayRandomSound(audioManager.inventorySounds);
             quiverSlot.SetQuiverAmmoSprites();
 
             currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;

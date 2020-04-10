@@ -29,6 +29,11 @@ public class Consumable : Item
 
     public void Consume(BasicStats userStats, InventorySlot invSlot)
     {
+        if (consumableType == ConsumableType.Food)
+            AudioManager.instance.PlayRandomSound(AudioManager.instance.eatFoodSounds);
+        else if (consumableType == ConsumableType.Potion)
+            AudioManager.instance.PlayRandomSound(AudioManager.instance.drinkSounds);
+
         if (nourishment > 0)
             Debug.Log("Mmm tasty...TODO: Implement hunger");
         if (healAmount > 0)

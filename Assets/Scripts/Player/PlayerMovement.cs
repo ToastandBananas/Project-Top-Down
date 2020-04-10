@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isStaggered;
     public bool isMounted;
 
+    AudioManager audioManager;
     AnimTimeManager animTimeManager;
     Animator bodyAnim, legsAnim;
     Arms arms;
@@ -59,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         stats = GetComponent<BasicStats>();
         headReset = transform.Find("Head Reset");
+        audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         arms = transform.Find("Arms").GetComponent<Arms>();
         bodyAnim = GetComponent<Animator>();
@@ -66,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
         CalculateMoveSpeeds();
+
+        StartCoroutine(UpdateFootstepSounds());
     }
 
     void Update()
@@ -133,6 +137,20 @@ public class PlayerMovement : MonoBehaviour
         }
         else
             ResetAnims();
+    }
+
+    IEnumerator UpdateFootstepSounds()
+    {
+        while (true)
+        {
+            if (isMoving)
+            {
+                yield return new WaitForSeconds(animTimeManager.footstepTime);
+                audioManager.PlayRandomSound(audioManager.footstepsStandard);
+            }
+            else
+                yield return null;
+        }
     }
 
     void Update_Dodge()

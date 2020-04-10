@@ -17,9 +17,11 @@ public class NPCMovement : MonoBehaviour
     public float walkSpeed = 2f;
     public float runSpeed = 3f;
 
+    public bool isMoving;
     public bool isDodging;
     public bool isStaggered;
 
+    AudioManager audioManager;
     AnimTimeManager animTimeManager;
     FieldOfView fov;
     AstarPath AstarPath;
@@ -44,6 +46,7 @@ public class NPCMovement : MonoBehaviour
         stats = GetComponent<BasicStats>();
         arms = transform.Find("Arms").GetComponent<Arms>();
 
+        audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         fov = GetComponent<FieldOfView>();
         AstarPath = FindObjectOfType<AstarPath>();
@@ -60,6 +63,8 @@ public class NPCMovement : MonoBehaviour
         }
         else if (targetPos != null)
             AIDestSetter.target = targetPos;
+
+        StartCoroutine(UpdateFootstepSounds());
     }
     
     void FixedUpdate()
@@ -163,12 +168,27 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    void SetIsMoving(bool isMoving)
+    void SetIsMoving(bool _isMoving)
     {
-        bodyAnim.SetBool("isMoving", isMoving);
-        legsAnim.SetBool("isMoving", isMoving);
-        arms.leftArmAnim.SetBool("isMoving", isMoving);
-        arms.rightArmAnim.SetBool("isMoving", isMoving);
+        isMoving = _isMoving;
+        bodyAnim.SetBool("isMoving", _isMoving);
+        legsAnim.SetBool("isMoving", _isMoving);
+        arms.leftArmAnim.SetBool("isMoving", _isMoving);
+        arms.rightArmAnim.SetBool("isMoving", _isMoving);
+    }
+
+    IEnumerator UpdateFootstepSounds()
+    {
+        while (true)
+        {
+            if (isMoving)
+            {
+                yield return new WaitForSeconds(animTimeManager.footstepTime);
+                audioManager.PlayRandomSound(audioManager.footstepsStandard);
+            }
+            else
+                yield return null;
+        }
     }
 
     public IEnumerator Stagger()
@@ -179,7 +199,7 @@ public class NPCMovement : MonoBehaviour
         arms.rightArmAnim.SetBool("doStagger", true);
         bodyAnim.SetBool("doStagger", true);
         legsAnim.SetBool("doStagger", true);
-        legsAnim.SetBool("isMoving", false);
+        SetIsMoving(false);
 
         yield return new WaitForSeconds(animTimeManager.staggerTime);
 

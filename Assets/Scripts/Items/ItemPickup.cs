@@ -4,13 +4,15 @@ public class ItemPickup : Interactable
 {
     public Item item;
     ItemData itemData;
-    
+
+    AudioManager audioManager;
     ItemDrop itemDropScript;
     WeaponDamage weaponDamageScript;
     BoxCollider2D boxCollider;
 
     void Awake()
     {
+        audioManager = AudioManager.instance;
         itemDropScript = GetComponent<ItemDrop>();
         weaponDamageScript = GetComponent<WeaponDamage>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -43,9 +45,7 @@ public class ItemPickup : Interactable
 
     void PickUp()
     {
-        bool wasPickedUp = Inventory.instance.AddToPockets(item, itemData); // If this returns true, it will add the item to the appropriate bag
-        if (wasPickedUp == false)
-            wasPickedUp = Inventory.instance.AddToBag(item, itemData);
+        bool wasPickedUp = Inventory.instance.AddToInventory(item, itemData); // If this returns true, it will add the item to the appropriate bag
 
         if (wasPickedUp || itemData.currentStackSize <= 0)
             Destroy(gameObject); // Then we'll destroy the actual gameobject, since it will only exist in our inventory system until we use/equip it

@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class AnimTimeManager : MonoBehaviour
 {
-    public RuntimeAnimatorController leftArmAnimController, rightArmAnimController;
+    public RuntimeAnimatorController leftArmAnimController, rightArmAnimController, legsAnimController;
 
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
+    AnimationClip[] legAnimClips;
 
+    [HideInInspector] public float footstepTime;
     [HideInInspector] public float leftQuickAttackTime, rightQuickAttackTime;
     [HideInInspector] public float leftChargeAttackTime, rightChargeAttackTime;
     [HideInInspector] public float leftHeavyAttackTime, rightHeavyAttackTime;
@@ -26,6 +28,7 @@ public class AnimTimeManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         leftArmAnimClips = leftArmAnimController.animationClips;
         rightArmAnimClips = rightArmAnimController.animationClips;
+        legAnimClips = legsAnimController.animationClips;
 
         foreach (AnimationClip clip in leftArmAnimClips)
         {
@@ -85,6 +88,16 @@ public class AnimTimeManager : MonoBehaviour
                     break;
                 case "Stagger_R":
                     staggerTime = clip.length;
+                    break;
+            }
+        }
+
+        foreach (AnimationClip clip in legAnimClips)
+        {
+            switch (clip.name)
+            {
+                case "Walk_Straight":
+                    footstepTime = clip.length / 2;
                     break;
             }
         }

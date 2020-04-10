@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NPCAttacks : MonoBehaviour
 {
+    AudioManager audioManager;
     AnimTimeManager animTimeManager;
     Arms arms;
     Animator bodyAnim;
@@ -34,6 +35,7 @@ public class NPCAttacks : MonoBehaviour
         npcCombat = GetComponent<NPCCombat>();
         npcMovement = GetComponent<NPCMovement>();
         lockOnScript = GetComponent<LockOn>();
+        audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         equipmentManager = GetComponent<EquipmentManager>();
         stats = GetComponent<BasicStats>();
@@ -60,6 +62,7 @@ public class NPCAttacks : MonoBehaviour
             {
                 if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
                 {
+                    audioManager.PlayRandomSound(audioManager.swordStabSounds);
                     leftQuickAttacking = true;
                     arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
                     StartCoroutine(ResetLeftQuickAttack());
@@ -71,6 +74,7 @@ public class NPCAttacks : MonoBehaviour
             {
                 if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
                 {
+                    audioManager.PlayRandomSound(audioManager.swordStabSounds);
                     rightQuickAttacking = true;
                     arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
                     StartCoroutine(ResetRightQuickAttack());
@@ -83,6 +87,7 @@ public class NPCAttacks : MonoBehaviour
         {
             if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
             {
+                audioManager.PlayRandomSound(audioManager.swordStabSounds);
                 leftQuickAttacking = true;
                 arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
                 StartCoroutine(ResetLeftQuickAttack());
@@ -94,6 +99,7 @@ public class NPCAttacks : MonoBehaviour
         {
             if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
             {
+                audioManager.PlayRandomSound(audioManager.swordStabSounds);
                 rightQuickAttacking = true;
                 arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
                 StartCoroutine(ResetRightQuickAttack());
@@ -205,9 +211,12 @@ public class NPCAttacks : MonoBehaviour
             if (arms.leftEquippedWeapon == null)
                 arms.GetWeaponTransforms();
 
+            // Spawn an arrow
             GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
             arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
 
+            // Draw the bow string
+            audioManager.PlayRandomSound(audioManager.bowDrawSounds);
             arms.rightArmAnim.SetBool("doReleaseArrow", false);
             arms.leftArmAnim.SetBool("doDrawArrow", true);
             arms.rightArmAnim.SetBool("doDrawArrow", true);
@@ -221,6 +230,7 @@ public class NPCAttacks : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0f, 2.5f));
 
             // Fire the arrow
+            audioManager.PlayRandomSound(audioManager.bowReleaseSounds);
             arms.rightArmAnim.SetBool("doReleaseArrow", true);
             arms.rightArmAnim.SetBool("doDrawArrow", false);
 
@@ -263,6 +273,8 @@ public class NPCAttacks : MonoBehaviour
     IEnumerator AttackDash(float waitTime, float dashDistance)
     {
         yield return new WaitForSeconds(waitTime);
+
+        audioManager.PlayRandomSound(audioManager.swordSlashSounds);
 
         if (arms.leftArmAnim.GetBool("doHeavyAttack") == true)
             bodyAnim.SetBool("powerAttackLeft", true);
