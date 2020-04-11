@@ -146,7 +146,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    audioManager.PlayRandomSound(audioManager.swordSlashSounds);
+                    audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
                     leftArmHeavyAttacking = true;
                     arms.leftArmAnim.SetBool("doAttack", true);
                     arms.bodyAnim.SetBool("powerAttackLeft", true);
@@ -160,7 +160,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
                 {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds);
+                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
                     leftQuickAttacking = true;
                     arms.leftArmAnim.SetBool("doQuickAttack", true);
                     StartCoroutine(ResetLeftQuickAttack(animTimeManager.leftQuickAttackTime));
@@ -199,7 +199,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                 {
-                    audioManager.PlayRandomSound(audioManager.swordSlashSounds);
+                    audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
                     rightArmHeavyAttacking = true;
                     arms.rightArmAnim.SetBool("doAttack", true);
                     arms.bodyAnim.SetBool("powerAttackRight", true);
@@ -213,7 +213,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
                 {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds);
+                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
                     rightQuickAttacking = true;
                     arms.rightArmAnim.SetBool("doQuickAttack", true);
                     StartCoroutine(ResetRightQuickAttack(animTimeManager.rightQuickAttackTime));
@@ -260,7 +260,7 @@ public class PlayerAttack : MonoBehaviour
                         arrowSpawned = true;
                     }
 
-                    audioManager.PlayRandomSound(audioManager.bowDrawSounds);
+                    audioManager.PlayRandomSound(audioManager.bowDrawSounds, transform.position);
 
                     // Draw the bow string
                     arms.bodyAnim.SetBool("doDrawArrow", true);
@@ -329,7 +329,7 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator ShootArrow()
     {
-        audioManager.PlayRandomSound(audioManager.bowReleaseSounds);
+        audioManager.PlayRandomSound(audioManager.bowReleaseSounds, transform.position);
 
         equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount--;
         equipmentManager.quiverSlot.quiverText.text = equipmentManager.currentEquipment[(int)EquipmentSlot.Quiver].currentAmmoCount.ToString();

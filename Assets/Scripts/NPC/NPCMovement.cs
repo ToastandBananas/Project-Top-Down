@@ -20,6 +20,7 @@ public class NPCMovement : MonoBehaviour
     public bool isMoving;
     public bool isDodging;
     public bool isStaggered;
+    public bool isEvading;
 
     AudioManager audioManager;
     AnimTimeManager animTimeManager;
@@ -56,7 +57,7 @@ public class NPCMovement : MonoBehaviour
         AIPath.maxSpeed = walkSpeed;
         AIPath.endReachedDistance = npcCombat.attackDistance;
 
-        if (attackTarget != null)
+        if (attackTarget != null && isEvading == false)
         {
             AIDestSetter.target = attackTarget;
             currentState = STATE.PURSUE;
@@ -118,12 +119,16 @@ public class NPCMovement : MonoBehaviour
             // Move away from target if too close
             if (Vector2.Distance(attackTarget.position, transform.position) < npcCombat.rangedCombatDistance - 2)
             {
+                isEvading = true;
                 Vector3 dir = (transform.position - attackTarget.position).normalized;
-                patrolPoint.position = dir * 2;
+                patrolPoint.position = dir * 5;
                 AIDestSetter.target = patrolPoint;
             }
             else
+            {
+                isEvading = false;
                 AIDestSetter.target = null;
+            }
         }
 
         if (attackTarget != null 
@@ -184,7 +189,7 @@ public class NPCMovement : MonoBehaviour
             if (isMoving)
             {
                 yield return new WaitForSeconds(animTimeManager.footstepTime);
-                audioManager.PlayRandomSound(audioManager.footstepsStandard);
+                audioManager.PlayRandomSound(audioManager.footstepsStandard, transform.position);
             }
             else
                 yield return null;

@@ -146,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
             if (isMoving)
             {
                 yield return new WaitForSeconds(animTimeManager.footstepTime);
-                audioManager.PlayRandomSound(audioManager.footstepsStandard);
+                audioManager.PlayRandomSound(audioManager.footstepsStandard, transform.position);
             }
             else
                 yield return null;

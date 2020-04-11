@@ -112,16 +112,16 @@ public class WeaponDamage : MonoBehaviour
                     {
                         if ((playerAttack != null && playerAttack.leftArmHeavyAttacking) || (npcAttacks != null && npcAttacks.leftArmHeavyAttacking))
                         {
-                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds);
+                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds, collision.transform.position);
                         }
                         else if ((playerAttack != null && playerAttack.leftQuickAttacking) || (npcAttacks != null && npcAttacks.leftQuickAttacking))
                         {
-                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds);
+                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds, collision.transform.position);
                         }
                     }
                     else if (equipment.weaponType == WeaponType.Mace || equipment.weaponType == WeaponType.Staff)
                     {
-                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds);
+                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds, collision.transform.position);
                     }
 
                     BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();
@@ -208,16 +208,16 @@ public class WeaponDamage : MonoBehaviour
                     {
                         if ((playerAttack != null && playerAttack.rightArmHeavyAttacking) || (npcAttacks != null && npcAttacks.rightArmHeavyAttacking))
                         {
-                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds);
+                            audioManager.PlayRandomSound(audioManager.swordSlashFleshSounds, collision.transform.position);
                         }
                         else if ((playerAttack != null && playerAttack.rightQuickAttacking) || (npcAttacks != null && npcAttacks.rightQuickAttacking))
                         {
-                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds);
+                            audioManager.PlayRandomSound(audioManager.swordStabFleshSounds, collision.transform.position);
                         }
                     }
                     else if (equipment.weaponType == WeaponType.Mace || equipment.weaponType == WeaponType.Staff)
                     {
-                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds);
+                        audioManager.PlayRandomSound(audioManager.bluntHitFleshSounds, collision.transform.position);
                     }
 
                     BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();

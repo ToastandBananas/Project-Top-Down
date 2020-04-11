@@ -51,12 +51,14 @@ public class BasicStats : MonoBehaviour
     NPCMovement npcMovement;
     NPCAttacks npcAttacks;
 
+    AudioManager audioManager;
     BloodParticleSystemHandler bloodSystem;
     Arms arms;
     EquipmentManager equipmentManager;
 
     void Start()
     {
+        audioManager = AudioManager.instance;
         bloodSystem = BloodParticleSystemHandler.Instance;
         arms = GetComponentInChildren<Arms>();
         equipmentManager = GetComponent<EquipmentManager>();
@@ -93,6 +95,7 @@ public class BasicStats : MonoBehaviour
     
     public void TakeDamage(int damageAmount)
     {
+
         health -= damageAmount;
 
         if (isPlayer)
@@ -100,6 +103,8 @@ public class BasicStats : MonoBehaviour
 
         if (health <= 0)
             StartCoroutine(Die());
+        else
+            audioManager.PlayRandomSound(audioManager.humanMaleGruntSounds, transform.position);
     }
 
     public void Heal(int healAmount)
@@ -124,6 +129,7 @@ public class BasicStats : MonoBehaviour
     public IEnumerator Die()
     {
         isDead = true;
+        audioManager.PlayRandomSound(audioManager.humanMaleDeathSounds, transform.position);
 
         // Get ItemDrop scripts of carried weapons/shields
         if (transform.Find("Arms").Find("Left Arm").Find("Left Forearm").Find("Left Weapon").childCount > 0 &&

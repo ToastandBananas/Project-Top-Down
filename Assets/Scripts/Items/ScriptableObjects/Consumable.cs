@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum ConsumableType { Food, Potion }
+public enum ConsumableType { Food, Drink }
 
 [CreateAssetMenu(fileName = "New Consumable", menuName = "Inventory/Consumable")]
 public class Consumable : Item
@@ -30,9 +30,9 @@ public class Consumable : Item
     public void Consume(BasicStats userStats, InventorySlot invSlot)
     {
         if (consumableType == ConsumableType.Food)
-            AudioManager.instance.PlayRandomSound(AudioManager.instance.eatFoodSounds);
-        else if (consumableType == ConsumableType.Potion)
-            AudioManager.instance.PlayRandomSound(AudioManager.instance.drinkSounds);
+            AudioManager.instance.PlayRandomSound(AudioManager.instance.eatFoodSounds, userStats.transform.position);
+        else if (consumableType == ConsumableType.Drink)
+            AudioManager.instance.PlayRandomSound(AudioManager.instance.drinkSounds, userStats.transform.position);
 
         if (nourishment > 0)
             Debug.Log("Mmm tasty...TODO: Implement hunger");

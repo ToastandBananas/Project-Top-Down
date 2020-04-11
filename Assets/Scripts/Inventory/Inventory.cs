@@ -100,17 +100,17 @@ public class Inventory : MonoBehaviour
     {
         if (AddToPockets(itemToAdd, itemData))
         {
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
+            audioManager.PlayPickUpItemSound(itemToAdd);
             return true;
         }
         else if (AddToBag(itemToAdd, itemData))
         {
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
+            audioManager.PlayPickUpItemSound(itemToAdd);
             return true;
         }
         else if (playerMovement.isMounted && AddToHorseBag(itemToAdd, itemData))
         {
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
+            audioManager.PlayPickUpItemSound(itemToAdd);
             return true;
         }
 
@@ -263,7 +263,7 @@ public class Inventory : MonoBehaviour
                 invUI.currentlyActiveContainer.containerObjects.Add(itemData.gameObject);
             }
 
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
+            audioManager.PlayPickUpItemSound(itemToAdd);
             return true;
         }
 
@@ -445,7 +445,7 @@ public class Inventory : MonoBehaviour
 
                                         itemsTryingToReplaceCount = 0;
                                         invUI.StopDraggingInvItem();
-                                        audioManager.PlayRandomSound(audioManager.inventorySounds);
+                                        audioManager.PlayPickUpItemSound(itemToAdd);
                                         return true;
                                     }
                                 }
@@ -629,7 +629,7 @@ public class Inventory : MonoBehaviour
             startSlot.itemData = newObj.GetComponent<ItemData>();
         }
 
-        audioManager.PlayRandomSound(audioManager.inventorySounds);
+        audioManager.PlayPickUpItemSound(itemToAdd);
         return true;
     }
 

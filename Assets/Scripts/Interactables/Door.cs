@@ -11,12 +11,14 @@ public class Door : MonoBehaviour
 
     Quaternion newRotation;
 
+    AudioManager audioManager;
     PlayerAttack player;
 
     List<GameObject> NPCGameObjectsInRange;
 
     void Start()
     {
+        audioManager = AudioManager.instance;
         NPCGameObjectsInRange = new List<GameObject>();
         player = FindObjectOfType<PlayerAttack>();
     }
@@ -28,9 +30,15 @@ public class Door : MonoBehaviour
             if (GameControls.gamePlayActions.playerInteract.WasPressed)
             {
                 if (isOpen == false)
+                {
                     isOpen = true;
+                    audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
+                }
                 else
+                {
                     isOpen = false;
+                    audioManager.PlayRandomSound(audioManager.closeDoorSounds, transform.position);
+                }
             }
         }
 

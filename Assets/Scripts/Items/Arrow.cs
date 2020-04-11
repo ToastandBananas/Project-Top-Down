@@ -59,7 +59,7 @@ public class Arrow : MonoBehaviour
         {
             if (collision.tag == "NPC Body" || collision.tag == "Player Body")
             {
-                AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitFleshSounds);
+                AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitFleshSounds, collision.transform.position);
                 BasicStats basicStats = collision.GetComponentInParent<BasicStats>();
                 basicStats.TakeDamage(bowShotFrom.damage);
 
@@ -70,7 +70,7 @@ public class Arrow : MonoBehaviour
             }
             else if (collision.tag != "Weapon")
             {
-                AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitWallSounds);
+                AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitWallSounds, collision.transform.position);
 
                 if (collision.GetComponent<ItemData>() != null)
                     collision.GetComponent<ItemData>().durability -= bowShotFrom.damage;

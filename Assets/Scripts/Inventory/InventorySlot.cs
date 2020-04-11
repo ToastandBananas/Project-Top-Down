@@ -151,8 +151,6 @@ public class InventorySlot : MonoBehaviour
             // Here we'll be picking up the item (it will follow the mouse) and slots under it will highlight
             // red or green depending on whether or not you can place the item in the slots below the icon
 
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
-
             // Determine the parent slot & item (in case we select the item from one of the children slots)
             if (parentSlot == null)
             {
@@ -184,6 +182,8 @@ public class InventorySlot : MonoBehaviour
                         SoftClearSlot(childSlot);
                 }
             }
+
+            audioManager.PlayPickUpItemSound(invUI.currentlySelectedItem);
 
             if (slotParent.name == "Pockets")
                 inv.pocketItems.Remove(invUI.currentlySelectedItemData);

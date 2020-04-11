@@ -78,9 +78,9 @@ public class EquipmentManager : MonoBehaviour
 
     void Update()
     {
-        if (basicStats != null && basicStats.isPlayer)
+        if (GameControls.gamePlayActions.playerSwapWeapon.WasPressed)
         {
-            if (GameControls.gamePlayActions.playerSwapWeapon.WasPressed)
+            if (basicStats != null && basicStats.isPlayer)
             {
                 // Swap weapons if the player has both melee and ranged weapons equipped
                 if (currentWeapons[(int)WeaponSlot.Ranged] != null && (currentWeapons[(int)WeaponSlot.WeaponLeft] != null || currentWeapons[(int)WeaponSlot.WeaponRight] != null))
@@ -90,10 +90,16 @@ public class EquipmentManager : MonoBehaviour
                         Unequip(currentWeapons[(int)WeaponSlot.Ranged].equipment, currentWeapons[(int)WeaponSlot.Ranged], WeaponSlot.Ranged, EquipmentSlot.None, false);
 
                         if (currentWeapons[(int)WeaponSlot.WeaponLeft] != null)
+                        {
                             EquipToCharacter(currentWeapons[(int)WeaponSlot.WeaponLeft].equipment, currentWeapons[(int)WeaponSlot.WeaponLeft], WeaponSlot.WeaponLeft, EquipmentSlot.None);
+                            audioManager.PlayPickUpItemSound(currentWeapons[(int)WeaponSlot.WeaponLeft].equipment);
+                        }
 
                         if (currentWeapons[(int)WeaponSlot.WeaponRight] != null)
+                        {
                             EquipToCharacter(currentWeapons[(int)WeaponSlot.WeaponRight].equipment, currentWeapons[(int)WeaponSlot.WeaponRight], WeaponSlot.WeaponRight, EquipmentSlot.None);
+                            audioManager.PlayPickUpItemSound(currentWeapons[(int)WeaponSlot.WeaponRight].equipment);
+                        }
                     }
                     else
                     {
@@ -104,6 +110,7 @@ public class EquipmentManager : MonoBehaviour
                             Unequip(currentWeapons[(int)WeaponSlot.WeaponRight].equipment, currentWeapons[(int)WeaponSlot.WeaponRight], WeaponSlot.WeaponRight, EquipmentSlot.None, false);
 
                         EquipToCharacter(currentWeapons[(int)WeaponSlot.Ranged].equipment, currentWeapons[(int)WeaponSlot.Ranged], WeaponSlot.Ranged, EquipmentSlot.None);
+                        audioManager.PlayPickUpItemSound(currentWeapons[(int)WeaponSlot.Ranged].equipment);
                     }
                 }
             }
@@ -112,7 +119,7 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipItem(Equipment newItem, ItemData itemData, WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
     {
-        audioManager.PlayRandomSound(audioManager.inventorySounds);
+        audioManager.PlayPickUpItemSound(newItem);
 
         if (weaponSlot != WeaponSlot.None) // If the item is a weapon
         {
@@ -156,7 +163,7 @@ public class EquipmentManager : MonoBehaviour
                     break;
             }
 
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
+            audioManager.PlayPickUpItemSound(newItem);
             quiverSlot.SetQuiverAmmoSprites();
 
             currentEquipment[(int)EquipmentSlot.Quiver].ammoTypePrefab = itemData.equipment.prefab;

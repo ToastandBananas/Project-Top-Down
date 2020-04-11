@@ -62,14 +62,14 @@ public class EquipSlot : MonoBehaviour
     {
         if (isEmpty == false && invUI.currentlySelectedItemData == null) // If we don't have an item selected and this slot has an item in it (select item so we can move it)
         {
-            audioManager.PlayRandomSound(audioManager.inventorySounds);
-
             iconImage.transform.SetParent(invUI.menusParent);
 
             // Set our currently selected item info
             invUI.currentlySelectedItem = equipment;
             invUI.currentlySelectedItemData = itemData;
             invUI.equipSlotMovingFrom = this;
+
+            audioManager.PlayPickUpItemSound(invUI.currentlySelectedItem);
 
             // Set this slot to appear empty
             isEmpty = true;

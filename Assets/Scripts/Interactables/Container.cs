@@ -25,6 +25,7 @@ public class Container : MonoBehaviour
 
     InventoryUI invUI;
     Inventory inv;
+    AudioManager audioManager;
 
     Item itemToAdd;
     bool inContainerRange;
@@ -33,6 +34,7 @@ public class Container : MonoBehaviour
     {
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
+        audioManager = AudioManager.instance;
         itemsParent = transform.Find("Items");
 
         InitializeData();
@@ -69,6 +71,11 @@ public class Container : MonoBehaviour
                     // Set this container to be the currently active container so we can easily reference it in other scripts
                     invUI.currentlyActiveContainer = this;
                 }
+
+                if (transform.parent.name == "Containers")
+                    audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
+                else if (transform.parent.name == "NPCs")
+                    audioManager.PlayRandomSound(audioManager.searchBodySounds, transform.position);
 
                 OpenMenus();
             }
