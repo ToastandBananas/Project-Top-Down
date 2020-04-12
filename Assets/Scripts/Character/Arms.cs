@@ -18,6 +18,12 @@ public class Arms : MonoBehaviour
     public bool twoHanderEquipped;
     public bool rangedWeaponEquipped;
 
+    [Header("Attacking")]
+    public bool isAttacking;
+    public AttackType currentAttackType;
+    public float currentAttackTime;
+    public bool currentAttackShouldKnockback;
+
     public Transform leftArm, rightArm;
     public Transform leftEquippedWeapon, rightEquippedWeapon;
     public Equipment leftWeapon, rightWeapon;
@@ -181,5 +187,16 @@ public class Arms : MonoBehaviour
             leftArmAnim.SetBool("isBlocking", false);
         if (rightShieldEquipped)
             rightArmAnim.SetBool("isBlocking", false);
+    }
+
+    public void DoAttack(Animator armAnim, string animationName, string bodyAnimationName, AttackType attackType, float attackTime, bool shouldKnockback)
+    {
+        isAttacking = true;
+        currentAttackType = attackType;
+        currentAttackTime = attackTime;
+        currentAttackShouldKnockback = shouldKnockback;
+        armAnim.SetBool(animationName, true);
+        if (bodyAnimationName != null)
+            bodyAnim.SetBool(bodyAnimationName, true);
     }
 }

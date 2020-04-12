@@ -3,13 +3,22 @@ using UnityEngine;
 
 public class AnimTimeManager : MonoBehaviour
 {
-    public RuntimeAnimatorController leftArmAnimController, rightArmAnimController, legsAnimController;
+    public RuntimeAnimatorController leftArmAnimController, rightArmAnimController, legsAnimController, bodyAnimController;
 
     AnimationClip[] leftArmAnimClips;
     AnimationClip[] rightArmAnimClips;
     AnimationClip[] legAnimClips;
+    AnimationClip[] bodyAnimClips;
 
+    // Legs
     [HideInInspector] public float footstepTime;
+
+    // Body
+    [HideInInspector] public float bodyThrustLeftTime, bodyThrustRightTime;
+
+    // Arms
+    [HideInInspector] public float comboAttack1HLeft1Time, comboAttack1HLeft2Time, comboAttack1HLeft3Time;
+    [HideInInspector] public float comboAttack1HRight1Time, comboAttack1HRight2Time, comboAttack1HRight3Time;
     [HideInInspector] public float leftQuickAttackTime, rightQuickAttackTime;
     [HideInInspector] public float leftChargeAttackTime, rightChargeAttackTime;
     [HideInInspector] public float leftHeavyAttackTime, rightHeavyAttackTime;
@@ -29,11 +38,21 @@ public class AnimTimeManager : MonoBehaviour
         leftArmAnimClips = leftArmAnimController.animationClips;
         rightArmAnimClips = rightArmAnimController.animationClips;
         legAnimClips = legsAnimController.animationClips;
+        bodyAnimClips = bodyAnimController.animationClips;
 
         foreach (AnimationClip clip in leftArmAnimClips)
         {
             switch (clip.name)
             {
+                case "Combo_Attack_1H_L_1":
+                    comboAttack1HLeft1Time = clip.length;
+                    break;
+                case "Combo_Attack_1H_L_2":
+                    comboAttack1HLeft2Time = clip.length;
+                    break;
+                case "Combo_Attack_1H_L_3":
+                    comboAttack1HLeft3Time = clip.length;
+                    break;
                 case "Quick_Attack_1H_L":
                     leftQuickAttackTime = clip.length;
                     break;
@@ -62,6 +81,15 @@ public class AnimTimeManager : MonoBehaviour
         {
             switch (clip.name)
             {
+                case "Combo_Attack_1H_R_1":
+                    comboAttack1HRight1Time = clip.length;
+                    break;
+                case "Combo_Attack_1H_R_2":
+                    comboAttack1HRight2Time = clip.length;
+                    break;
+                case "Combo_Attack_1H_R_3":
+                    comboAttack1HRight3Time = clip.length;
+                    break;
                 case "Quick_Attack_1H_R":
                     rightQuickAttackTime = clip.length;
                     break;
@@ -98,6 +126,22 @@ public class AnimTimeManager : MonoBehaviour
             {
                 case "Walk_Straight":
                     footstepTime = clip.length / 2;
+                    break;
+            }
+        }
+
+        foreach (AnimationClip clip in legAnimClips)
+        {
+            switch (clip.name)
+            {
+                case "Walk_Straight":
+                    footstepTime = clip.length / 2;
+                    break;
+                case "Body_Thrust_Attack_L":
+                    bodyThrustLeftTime = clip.length;
+                    break;
+                case "Body_Thrust_Attack_R":
+                    bodyThrustRightTime = clip.length;
                     break;
             }
         }

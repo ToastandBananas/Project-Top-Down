@@ -44,7 +44,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     {
         if (GameControls.gamePlayActions.playerLeftSpecialAttack.WasPressed 
             && playerAttack.leftArmHeavyAttacking == false 
-            && playerAttack.attackTimerLeftArm == 0 
+            && playerAttack.attackTimer == 0 
             && (arms.leftWeaponEquipped || arms.leftShieldEquipped))
         { 
             switch (leftSpecialAttackSlot)
@@ -60,7 +60,7 @@ public class PlayerSpecialAttack : MonoBehaviour
     {
         if (GameControls.gamePlayActions.playerRightSpecialAttack.WasPressed 
             && playerAttack.rightArmHeavyAttacking == false 
-            && playerAttack.attackTimerRightArm == 0 
+            && playerAttack.attackTimer == 0 
             && (arms.rightWeaponEquipped || arms.rightShieldEquipped))
         {
             switch (rightSpecialAttackSlot)

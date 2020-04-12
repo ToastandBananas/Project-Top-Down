@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+public enum AttackType { Slash, Thrust, Blunt };
+
 public class PlayerAttack : MonoBehaviour
 {
     public static PlayerAttack instance;
@@ -15,16 +17,16 @@ public class PlayerAttack : MonoBehaviour
     AnimTimeManager animTimeManager;
     EquipmentManager equipmentManager;
     Arms arms;
+    Animator bodyAnim;
     Transform headReset;
     Transform looseItemsParent;
     
-    [HideInInspector] public float attackTimerLeftArm = 0;
-    [HideInInspector] public float attackTimerRightArm = 0;
+    [HideInInspector] public float attackTimer = 0;
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
     public float minChargeAttackTime = 0.3f;
-    public bool isBlocking;
+    public bool isBlocking, isAttackDashing;
     public bool leftArmHeavyAttacking, rightArmHeavyAttacking;
     public bool leftQuickAttacking, rightQuickAttacking;
     public bool firingArrow, bowStringFullyDrawn, arrowSpawned;
@@ -32,6 +34,13 @@ public class PlayerAttack : MonoBehaviour
 
     bool bowStringNeedsReset;
     float arrowSpeed = 32f;
+    
+    bool comboTimerStarted;
+    bool comboAttackOnCooldown;
+    int leftComboNumber = 1;
+    int rightComboNumber = 1;
+    float comboTimer;
+    float maxComboTimer = 1f;
 
     Vector3 dir;
     LayerMask obstacleMask;
@@ -56,6 +65,7 @@ public class PlayerAttack : MonoBehaviour
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
         arms = transform.Find("Arms").GetComponent<Arms>();
+        bodyAnim = GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
     }
     
@@ -133,107 +143,188 @@ public class PlayerAttack : MonoBehaviour
 
     void Left1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftArmHeavyAttacking == false)
+        if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false)
         {
-            attackTimerLeftArm += Time.smoothDeltaTime;
-            if (attackTimerLeftArm >= minChargeAttackTime)
-                arms.leftArmAnim.SetBool("startAttack", true);
-        }
-
-        if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimerLeftArm > 0)
-        {
-            if (attackTimerLeftArm > minChargeAttackTime)
+            if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && attackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
-                    leftArmHeavyAttacking = true;
-                    arms.leftArmAnim.SetBool("doAttack", true);
-                    arms.bodyAnim.SetBool("powerAttackLeft", true);
-
-                    AttackDash(0.5f);
-                }
-
-                arms.leftArmAnim.SetBool("startAttack", false);
-            }
-            else
-            {
-                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                    leftQuickAttacking = true;
-                    arms.leftArmAnim.SetBool("doQuickAttack", true);
-                    StartCoroutine(ResetLeftQuickAttack(animTimeManager.leftQuickAttackTime));
-                }
-
-                arms.leftArmAnim.SetBool("startAttack", false);
-                attackTimerLeftArm = 0;
+                attackTimer += Time.smoothDeltaTime;
+                if (attackTimer >= minChargeAttackTime && leftComboNumber == 1) // Start charge attack
+                    arms.leftArmAnim.SetBool("startAttack", true);
             }
 
-            StartCoroutine(ResetChargeAttackTimerLeftArm(animTimeManager.leftChargeAttackTime));
-        }
-        else if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false && attackTimerLeftArm == 0)
-        {
-            // Failsafe in case GetButtonUp isn't detected for whatever odd reason
-            leftArmHeavyAttacking = false;
-            arms.leftArmAnim.SetBool("startAttack", false);
-            arms.leftArmAnim.SetBool("doAttack", false);
-            leftQuickAttacking = false;
-            arms.leftArmAnim.SetBool("doQuickAttack", false);
-            arms.bodyAnim.SetBool("powerAttackLeft", false);
+            if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
+            {
+                if (attackTimer > minChargeAttackTime && arms.leftArmAnim.GetBool("doComboAttack1") == false) // Do power attack
+                {
+                    if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
+                    {
+                        audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+                        arms.DoAttack(arms.leftArmAnim, "doAttack", "doPowerAttackLeft", AttackType.Slash, animTimeManager.leftChargeAttackTime, true);
+                        StartCoroutine(ResetAttack(arms.leftArmAnim, "doAttack", "doPowerAttackLeft"));
+
+                        AttackDash(0.5f);
+                    }
+
+                    arms.leftArmAnim.SetBool("startAttack", false);
+                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.leftChargeAttackTime));
+                }
+                else // Do combo attack
+                {
+                    if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
+                    {
+                        StartCoroutine(StartComboTimer());
+
+                        if (comboTimer < maxComboTimer)
+                        {
+                            if (leftComboNumber == 1)
+                            {
+                                audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+                                arms.DoAttack(arms.leftArmAnim, "doComboAttack1", null, AttackType.Slash, animTimeManager.comboAttack1HLeft1Time, false);
+
+                                StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HLeft1Time / 2));
+                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, null));
+                            }
+                            else if (leftComboNumber == 2)
+                            {
+                                audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+                                arms.DoAttack(arms.leftArmAnim, "doComboAttack2", null, AttackType.Slash, animTimeManager.comboAttack1HLeft2Time, false);
+
+                                StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HLeft2Time / 2));
+                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, null));
+                            }
+                            else if (leftComboNumber == 3)
+                            {
+                                // Reset the opposite arm's combo anim bools
+                                arms.rightArmAnim.SetBool("doComboAttack1", false);
+                                arms.rightArmAnim.SetBool("doComboAttack2", false);
+                                arms.rightArmAnim.SetBool("doComboAttack3", false);
+
+                                audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
+                                arms.DoAttack(arms.leftArmAnim, "doComboAttack3", "doThrustAttackLeft", AttackType.Thrust, animTimeManager.comboAttack1HLeft3Time, true);
+
+                                StartCoroutine(DelayedAttackDash(0.5f, animTimeManager.comboAttack1HLeft3Time / 2));
+                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, "doThrustAttackLeft"));
+                                StartCoroutine(ComboCooldown());
+                            }
+
+                            if (leftComboNumber == 3) leftComboNumber = 1; else leftComboNumber++;
+                            comboTimer = 0;
+                        }
+                    }
+
+                    arms.leftArmAnim.SetBool("startAttack", false);
+                    attackTimer = 0;
+                }
+            }
         }
     }
 
     void Right1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightArmHeavyAttacking == false)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
         {
-            attackTimerRightArm += Time.smoothDeltaTime;
-            if (attackTimerRightArm >= minChargeAttackTime)
-                arms.rightArmAnim.SetBool("startAttack", true);
-        }
-
-        if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimerRightArm > 0)
-        {
-            if (attackTimerRightArm > minChargeAttackTime)
+            if (GameControls.gamePlayActions.playerRightAttack.IsPressed && attackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
-                    rightArmHeavyAttacking = true;
-                    arms.rightArmAnim.SetBool("doAttack", true);
-                    arms.bodyAnim.SetBool("powerAttackRight", true);
-
-                    AttackDash(0.5f);
-                }
-
-                arms.rightArmAnim.SetBool("startAttack", false);
-            }
-            else
-            {
-                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                    rightQuickAttacking = true;
-                    arms.rightArmAnim.SetBool("doQuickAttack", true);
-                    StartCoroutine(ResetRightQuickAttack(animTimeManager.rightQuickAttackTime));
-                }
-
-                arms.rightArmAnim.SetBool("startAttack", false);
-                attackTimerRightArm = 0;
+                attackTimer += Time.smoothDeltaTime;
+                if (attackTimer >= minChargeAttackTime && rightComboNumber == 1) // Start charge attack
+                    arms.rightArmAnim.SetBool("startAttack", true);
             }
 
-            StartCoroutine(ResetChargeAttackTimerRightArm(animTimeManager.rightChargeAttackTime));
-        }
-        else if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false && attackTimerRightArm == 0)
-        {
-            // Failsafe in case GetButtonUp isn't detected for whatever odd reason
-            rightArmHeavyAttacking = false;
-            arms.rightArmAnim.SetBool("startAttack", false);
-            arms.rightArmAnim.SetBool("doAttack", false);
-            rightQuickAttacking = false;
-            arms.rightArmAnim.SetBool("doQuickAttack", false);
-            arms.bodyAnim.SetBool("powerAttackRight", false);
+            if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
+            {
+                if (attackTimer > minChargeAttackTime && arms.rightArmAnim.GetBool("doComboAttack1") == false) // Do power attack
+                {
+                    // If we have enough stamina, do the attack
+                    if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
+                    {
+                        // Play attack sound
+                        audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+
+                        // Do the attack (set bools and arm's current attack info)
+                        arms.DoAttack(arms.rightArmAnim, "doAttack", "doPowerAttackRight", AttackType.Slash, animTimeManager.rightChargeAttackTime, true);
+
+                        // Reset attack bools at the appropriate time
+                        StartCoroutine(ResetAttack(arms.rightArmAnim, "doAttack", "doPowerAttackRight"));
+
+                        AttackDash(0.5f); // Dash towards target
+                    }
+
+                    // Turn off startAttack and reset the charge attack timer
+                    arms.rightArmAnim.SetBool("startAttack", false);
+                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.rightChargeAttackTime));
+                }
+                else // Do combo attack
+                {
+                    // If we have enough stamina, do the attack
+                    if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
+                    {
+                        // Start up/reset combo timer (time in which we can continue the combo with another attack)
+                        StartCoroutine(StartComboTimer());
+
+                        if (comboTimer < maxComboTimer)
+                        {
+                            if (rightComboNumber == 1)
+                            {
+                                // Play attack sound
+                                audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+
+                                // Do the attack (set bools and arm's current attack info)
+                                arms.DoAttack(arms.rightArmAnim, "doComboAttack1", null, AttackType.Slash, animTimeManager.comboAttack1HRight1Time, false);
+
+                                // Dash towards target
+                                StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HRight1Time / 2));
+
+                                // Reset attack bools at the appropriate time
+                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, null));
+                            }
+                            else if (rightComboNumber == 2)
+                            {
+                                // Play attack sound
+                                audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+
+                                // Do the attack (set bools and arm's current attack info)
+                                arms.DoAttack(arms.rightArmAnim, "doComboAttack2", null, AttackType.Slash, animTimeManager.comboAttack1HRight2Time, false);
+
+                                // Dash towards target
+                                StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HRight2Time / 2));
+
+                                // Reset attack bools at the appropriate time
+                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, null));
+                            }
+                            else if (rightComboNumber == 3)
+                            {
+                                // Reset the opposite arm's combo anim bools
+                                arms.leftArmAnim.SetBool("doComboAttack1", false);
+                                arms.leftArmAnim.SetBool("doComboAttack2", false);
+                                arms.leftArmAnim.SetBool("doComboAttack3", false);
+
+                                // Play attack sound
+                                audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
+
+                                // Do the attack (set bools and arm's current attack info)
+                                arms.DoAttack(arms.rightArmAnim, "doComboAttack3", "doThrustAttackRight", AttackType.Thrust, animTimeManager.comboAttack1HRight3Time, true);
+
+                                // Dash towards target
+                                StartCoroutine(DelayedAttackDash(0.5f, animTimeManager.comboAttack1HRight3Time / 2));
+
+                                // Reset attack bools at the appropriate time
+                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, "doThrustAttackRight"));
+
+                                // Set a cooldown before we can combo attack again
+                                StartCoroutine(ComboCooldown());
+                            }
+
+                            // Set the current combo index
+                            if (rightComboNumber == 3) rightComboNumber = 1; else rightComboNumber++;
+                            comboTimer = 0;
+                        }
+                    }
+                    
+                    // Reset startAttack and attackTimer
+                    arms.rightArmAnim.SetBool("startAttack", false);
+                    attackTimer = 0;
+                }
+            }
         }
     }
 
@@ -310,11 +401,18 @@ public class PlayerAttack : MonoBehaviour
 
     void AttackDash(float dashDistance)
     {
+        playerMovement.isAttackDashing = true;
         dir = (headReset.position - transform.position).normalized;
         float raycastDistance = Vector3.Distance(transform.position, transform.position + dir * dashDistance);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, raycastDistance, obstacleMask);
         if (hit == false)
             StartCoroutine(playerMovement.SmoothMovement(transform.position + dir * dashDistance));
+    }
+
+    IEnumerator DelayedAttackDash(float dashDistance, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        AttackDash(dashDistance);
     }
 
     IEnumerator DrawBowString()
@@ -376,36 +474,67 @@ public class PlayerAttack : MonoBehaviour
             arms.rightArmAnim.SetBool("doDrawArrow", true);
     }
 
-    IEnumerator ResetLeftQuickAttack(float waitTime)
+    IEnumerator StartComboTimer()
     {
-        yield return new WaitForSeconds(waitTime);
-        leftQuickAttacking = false;
-        arms.leftArmAnim.SetBool("doQuickAttack", false);
+        if (comboTimerStarted == false)
+        {
+            comboTimerStarted = true;
+            comboTimer = 0;
+
+            while (comboTimerStarted)
+            {
+                comboTimer += Time.smoothDeltaTime;
+                if (comboTimer >= maxComboTimer)
+                {
+                    ResetCombo();
+                    break;
+                }
+                yield return null;
+            }
+        }
     }
 
-    IEnumerator ResetRightQuickAttack(float waitTime)
+    IEnumerator ComboCooldown()
     {
-        yield return new WaitForSeconds(waitTime);
-        rightQuickAttacking = false;
-        arms.rightArmAnim.SetBool("doQuickAttack", false);
+        comboAttackOnCooldown = true;
+        yield return new WaitForSeconds(1f + arms.currentAttackTime);
+        comboAttackOnCooldown = false;
+        ResetCombo();
     }
 
-    IEnumerator ResetChargeAttackTimerLeftArm(float waitTime)
+    void ResetCombo()
     {
-        yield return new WaitForSeconds(waitTime);
-        attackTimerLeftArm = 0;
-        leftArmHeavyAttacking = false;
-        arms.leftArmAnim.SetBool("doAttack", false);
-        arms.bodyAnim.SetBool("powerAttackLeft", false);
+        attackTimer = 0;
+        comboTimerStarted = false;
+        leftComboNumber = 1;
+        rightComboNumber = 1;
+        arms.leftArmAnim.SetBool("doComboAttack1", false);
+        arms.leftArmAnim.SetBool("doComboAttack2", false);
+        arms.leftArmAnim.SetBool("doComboAttack3", false);
+        arms.rightArmAnim.SetBool("doComboAttack1", false);
+        arms.rightArmAnim.SetBool("doComboAttack2", false);
+        arms.rightArmAnim.SetBool("doComboAttack3", false);
     }
 
-    IEnumerator ResetChargeAttackTimerRightArm(float waitTime)
+    IEnumerator ResetAttack(Animator anim, string armAnimBoolName, string bodyAnimBoolName)
+    {
+        if (arms.rightArmAnim.GetBool("doComboAttack1") == true || arms.leftArmAnim.GetBool("doComboAttack1") == true)
+            yield return new WaitForSeconds(arms.currentAttackTime - 0.3f);
+        else
+            yield return new WaitForSeconds(arms.currentAttackTime);
+
+        arms.isAttacking = false;
+        if (armAnimBoolName != null)
+            anim.SetBool(armAnimBoolName, false);
+        yield return new WaitForSeconds(0.2f);
+        if (bodyAnimBoolName != null)
+            bodyAnim.SetBool(bodyAnimBoolName, false);
+    }
+
+    IEnumerator ResetChargeAttackTimer(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        attackTimerRightArm = 0;
-        rightArmHeavyAttacking = false;
-        arms.rightArmAnim.SetBool("doAttack", false);
-        arms.bodyAnim.SetBool("powerAttackRight", false);
+        attackTimer = 0;
     }
 
     public IEnumerator SmoothMovement(Transform objectToMove, Vector3 targetPos)

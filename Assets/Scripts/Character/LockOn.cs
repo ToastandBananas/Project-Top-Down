@@ -39,7 +39,7 @@ public class LockOn : MonoBehaviour
     {
         if ((playerMovement != null && playerMovement.isStaggered == false) || (npcMovement != null && npcMovement.isStaggered == false))
         {
-            if (isLockedOn == false)
+            if (isLockedOn == false || (playerMovement != null && playerMovement.isAttackDashing) || (npcMovement != null && npcMovement.isAttackDashing))
                 FaceForward();
             else
                 FaceLockOnTarget();

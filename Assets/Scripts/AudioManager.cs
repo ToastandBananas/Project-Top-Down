@@ -303,4 +303,14 @@ public class AudioManager : MonoBehaviour {
         else
             PlaySound(goldSounds, goldSounds[4].soundName, player.transform.position);
     }
+
+    public void PlayDamageSound(Arms arms)
+    {
+        if (arms.currentAttackType == AttackType.Slash)
+            PlayRandomSound(swordSlashFleshSounds, arms.transform.position);
+        else if (arms.currentAttackType == AttackType.Slash)
+            PlayRandomSound(swordStabFleshSounds, arms.transform.position);
+        else if (arms.currentAttackType == AttackType.Blunt)
+            PlayRandomSound(bluntHitFleshSounds, arms.transform.position);
+    }
 }

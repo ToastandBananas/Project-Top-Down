@@ -274,6 +274,7 @@ public class NPCAttacks : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
 
+        npcMovement.isAttackDashing = true;
         audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
 
         if (arms.leftArmAnim.GetBool("doHeavyAttack") == true)
