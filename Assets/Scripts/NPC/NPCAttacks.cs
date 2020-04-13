@@ -7,6 +7,7 @@ public class NPCAttacks : MonoBehaviour
     AnimTimeManager animTimeManager;
     Arms arms;
     Animator bodyAnim;
+    BasicStats basicStats;
     NPCCombat npcCombat;
     NPCMovement npcMovement;
     LockOn lockOnScript;
@@ -19,6 +20,15 @@ public class NPCAttacks : MonoBehaviour
 
     bool shouldSetArrowPosition;
     float arrowSpeed = 32f;
+    float minArrowRotation = 6f;
+    float maxArrowRotation = 12f;
+
+    public int leftComboNumber = 1;
+    public int rightComboNumber = 1;
+    public bool comboAttackOnCooldown;
+    bool comboTimerStarted;
+    float comboTimer;
+    float maxComboTimer = 1f;
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
@@ -32,6 +42,7 @@ public class NPCAttacks : MonoBehaviour
     {
         arms = GetComponentInChildren<Arms>();
         bodyAnim = GetComponent<Animator>();
+        basicStats = GetComponent<BasicStats>();
         npcCombat = GetComponent<NPCCombat>();
         npcMovement = GetComponent<NPCMovement>();
         lockOnScript = GetComponent<LockOn>();
@@ -51,6 +62,163 @@ public class NPCAttacks : MonoBehaviour
             arms.leftEquippedWeapon.Find("Middle of String").position = equipmentManager.rightWeaponParent.position;
     }
 
+    #region Combo Attack Functions
+    public void ComboAttack()
+    {
+        StartCoroutine(StartComboTimer());
+
+        if (arms.leftWeaponEquipped && arms.rightWeaponEquipped) // If weapons are equipped in both arms
+        {
+            int randomNum = Random.Range(1, 3); // Randomly choose left or right arm to attack with
+            
+            if (randomNum == 1) // Use left weapon
+            {
+                if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
+                    DoComboAttack(arms.leftArmAnim);
+                else
+                {
+                    npcCombat.determineMoveDirection = true;
+                    ResetCombo();
+                }
+            }
+            else // Use right weapon
+            {
+                if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
+                    DoComboAttack(arms.rightArmAnim);
+                else
+                {
+                    npcCombat.determineMoveDirection = true;
+                    ResetCombo();
+                }
+            }
+        }
+        else if (arms.leftWeaponEquipped)
+        {
+            if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
+                DoComboAttack(arms.leftArmAnim);
+            else
+            {
+                npcCombat.determineMoveDirection = true;
+                ResetCombo();
+            }
+        }
+        else if (arms.rightWeaponEquipped)
+        {
+            if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
+                DoComboAttack(arms.rightArmAnim);
+            else
+            {
+                npcCombat.determineMoveDirection = true;
+                ResetCombo();
+            }
+        }
+    }
+
+    void DoComboAttack(Animator armAnim)
+    {
+        float attackTime;
+        float comboNumber;
+        if (armAnim == arms.leftArmAnim) comboNumber = leftComboNumber; else comboNumber = rightComboNumber;
+
+        if (comboNumber == 1)
+        {
+            if (armAnim == arms.leftArmAnim) attackTime = animTimeManager.comboAttack1HLeft1Time; else attackTime = animTimeManager.comboAttack1HRight1Time;
+
+            audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+            arms.DoAttack(armAnim, "doComboAttack1", null, AttackType.Slash, attackTime, false);
+            StartCoroutine(AttackDash(0.1f, 0.25f));
+            StartCoroutine(arms.ResetAttack(armAnim, null, null));
+        }
+        else if (comboNumber == 2)
+        {
+            if (armAnim == arms.leftArmAnim) attackTime = animTimeManager.comboAttack1HLeft2Time; else attackTime = animTimeManager.comboAttack1HRight2Time;
+
+            audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+            arms.DoAttack(armAnim, "doComboAttack2", null, AttackType.Slash, attackTime, false);
+            StartCoroutine(AttackDash(0.1f, 0.25f));
+            StartCoroutine(arms.ResetAttack(armAnim, null, null));
+        }
+        else if (comboNumber == 3)
+        {
+            string bodyThrustAnimationName = null;
+
+            // Reset the opposite arm's combo anim bools
+            if (armAnim == arms.leftArmAnim)
+            {
+                attackTime = animTimeManager.comboAttack1HLeft3Time;
+                bodyThrustAnimationName = "doThrustAttackLeft";
+                arms.rightArmAnim.SetBool("doComboAttack1", false);
+                arms.rightArmAnim.SetBool("doComboAttack2", false);
+                arms.rightArmAnim.SetBool("doComboAttack3", false);
+            }
+            else
+            {
+                attackTime = animTimeManager.comboAttack1HRight3Time;
+                bodyThrustAnimationName = "doThrustAttackRight";
+                arms.leftArmAnim.SetBool("doComboAttack1", false);
+                arms.leftArmAnim.SetBool("doComboAttack2", false);
+                arms.leftArmAnim.SetBool("doComboAttack3", false);
+            }
+
+            audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
+            arms.DoAttack(armAnim, "doComboAttack3", bodyThrustAnimationName, AttackType.Thrust, attackTime, true);
+            StartCoroutine(AttackDash(attackTime / 2, 0.5f));
+            StartCoroutine(arms.ResetAttack(armAnim, null, bodyThrustAnimationName));
+
+            StartCoroutine(ComboCooldown());
+        }
+        
+        // Set the current combo index and reset the combo timer
+        if (armAnim == arms.leftArmAnim)
+            if (leftComboNumber == 3) leftComboNumber = 1; else leftComboNumber++;
+        else
+            if (rightComboNumber == 3) rightComboNumber = 1; else rightComboNumber++;
+        comboTimer = 0;
+    }
+
+    IEnumerator StartComboTimer()
+    {
+        if (comboTimerStarted == false)
+        {
+            comboTimerStarted = true;
+            comboTimer = 0;
+
+            while (comboTimerStarted)
+            {
+                comboTimer += Time.smoothDeltaTime;
+                if (comboTimer >= maxComboTimer)
+                {
+                    ResetCombo();
+                    break;
+                }
+                yield return null;
+            }
+        }
+    }
+
+    IEnumerator ComboCooldown()
+    {
+        comboAttackOnCooldown = true;
+        yield return new WaitForSeconds(0.25f + arms.currentAttackTime);
+        comboAttackOnCooldown = false;
+        ResetCombo();
+    }
+
+    void ResetCombo()
+    {
+        npcCombat.determineMoveDirection = true;
+        comboTimerStarted = false;
+        leftComboNumber = 1;
+        rightComboNumber = 1;
+        arms.leftArmAnim.SetBool("doComboAttack1", false);
+        arms.leftArmAnim.SetBool("doComboAttack2", false);
+        arms.leftArmAnim.SetBool("doComboAttack3", false);
+        arms.rightArmAnim.SetBool("doComboAttack1", false);
+        arms.rightArmAnim.SetBool("doComboAttack2", false);
+        arms.rightArmAnim.SetBool("doComboAttack3", false);
+    }
+    #endregion
+
     #region Quick Attack Functions
     public void QuickAttack()
     {
@@ -61,24 +229,14 @@ public class NPCAttacks : MonoBehaviour
             if (randomNumber == 1) // Use left weapon
             {
                 if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                    leftQuickAttacking = true;
-                    arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
-                    StartCoroutine(ResetLeftQuickAttack());
-                }
+                    DoQuickAttack(arms.leftArmAnim, animTimeManager.leftQuickAttackTime);
                 else
                     npcCombat.determineMoveDirection = true;
             }
             else // Use right weapon
             {
                 if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
-                {
-                    audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                    rightQuickAttacking = true;
-                    arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
-                    StartCoroutine(ResetRightQuickAttack());
-                }
+                    DoQuickAttack(arms.rightArmAnim, animTimeManager.rightQuickAttackTime);
                 else
                     npcCombat.determineMoveDirection = true;
             }
@@ -86,43 +244,25 @@ public class NPCAttacks : MonoBehaviour
         else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
         {
             if (stats.UseStamina(arms.leftWeapon.baseStaminaUse, false))
-            {
-                audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                leftQuickAttacking = true;
-                arms.leftArmAnim.SetBool("doQuickAttack", true); // Left quick attack
-                StartCoroutine(ResetLeftQuickAttack());
-            }
+                DoQuickAttack(arms.leftArmAnim, animTimeManager.leftQuickAttackTime);
             else
                 npcCombat.determineMoveDirection = true;
         }
         else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
         {
             if (stats.UseStamina(arms.rightWeapon.baseStaminaUse, false))
-            {
-                audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
-                rightQuickAttacking = true;
-                arms.rightArmAnim.SetBool("doQuickAttack", true); // Right quick attack
-                StartCoroutine(ResetRightQuickAttack());
-            }
+                DoQuickAttack(arms.rightArmAnim, animTimeManager.rightQuickAttackTime);
             else
                 npcCombat.determineMoveDirection = true;
         }
     }
 
-    IEnumerator ResetLeftQuickAttack()
+    void DoQuickAttack(Animator armAnim, float attackTime)
     {
-        yield return new WaitForSeconds(animTimeManager.leftQuickAttackTime);
-        leftQuickAttacking = false;
-        arms.leftArmAnim.SetBool("doQuickAttack", false);
-        npcCombat.determineMoveDirection = true;
-    }
-
-    IEnumerator ResetRightQuickAttack()
-    {
-        yield return new WaitForSeconds(animTimeManager.rightQuickAttackTime);
-        rightQuickAttacking = false;
-        arms.rightArmAnim.SetBool("doQuickAttack", false);
-        npcCombat.determineMoveDirection = true;
+        audioManager.PlayRandomSound(audioManager.swordStabSounds, transform.position);
+        arms.DoAttack(armAnim, "doQuickAttack", null, AttackType.Thrust, attackTime, false);
+        StartCoroutine(AttackDash(0.1f, 0.25f));
+        StartCoroutine(arms.ResetAttack(armAnim, "doQuickAttack", null));
     }
     #endregion
 
@@ -136,24 +276,14 @@ public class NPCAttacks : MonoBehaviour
             if (randomNumber == 1) // Use left weapon
             {
                 if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-                {
-                    leftArmHeavyAttacking = true;
-                    arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
-                    StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
-                    StartCoroutine(ResetLeftHeavyAttack());
-                }
+                    DoHeavyAttack(arms.leftArmAnim, "doPowerAttackLeft", animTimeManager.leftHeavyAttackTime);
                 else
                     npcCombat.determineMoveDirection = true;
             }
             else // Use right weapon
             {
                 if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-                {
-                    rightArmHeavyAttacking = true;
-                    arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
-                    StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
-                    StartCoroutine(ResetRightHeavyAttack());
-                }
+                    DoHeavyAttack(arms.rightArmAnim, "doPowerAttackRight", animTimeManager.rightHeavyAttackTime);
                 else
                     npcCombat.determineMoveDirection = true;
             }
@@ -161,45 +291,25 @@ public class NPCAttacks : MonoBehaviour
         else if (arms.leftWeaponEquipped && arms.rightWeaponEquipped == false) // If weapon equipped only in left arm, use left weapon
         {
             if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-            {
-                leftArmHeavyAttacking = true;
-                arms.leftArmAnim.SetBool("doHeavyAttack", true); // Left heavy attack
-                StartCoroutine(AttackDash(animTimeManager.leftHeavyAttackTime * 0.7f, 0.5f));
-                StartCoroutine(ResetLeftHeavyAttack());
-            }
+                DoHeavyAttack(arms.leftArmAnim, "doPowerAttackLeft", animTimeManager.leftHeavyAttackTime);
             else
                 npcCombat.determineMoveDirection = true;
         }
         else if (arms.rightWeaponEquipped && arms.leftWeaponEquipped == false) // If weapon equipped only in right arm, use right weapon
         {
             if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
-            {
-                rightArmHeavyAttacking = true;
-                arms.rightArmAnim.SetBool("doHeavyAttack", true); // Right heavy attack
-                StartCoroutine(AttackDash(animTimeManager.rightHeavyAttackTime * 0.7f, 0.5f));
-                StartCoroutine(ResetRightHeavyAttack());
-            }
+                DoHeavyAttack(arms.rightArmAnim, "doPowerAttackRight", animTimeManager.rightHeavyAttackTime);
             else
                 npcCombat.determineMoveDirection = true;
         }
     }
 
-    IEnumerator ResetLeftHeavyAttack()
+    void DoHeavyAttack(Animator armAnim, string bodyAnimName, float attackTime)
     {
-        yield return new WaitForSeconds(animTimeManager.leftHeavyAttackTime);
-        leftArmHeavyAttacking = false;
-        arms.leftArmAnim.SetBool("doHeavyAttack", false);
-        bodyAnim.SetBool("powerAttackLeft", false);
-        npcCombat.determineMoveDirection = true;
-    }
-
-    IEnumerator ResetRightHeavyAttack()
-    {
-        yield return new WaitForSeconds(animTimeManager.rightHeavyAttackTime);
-        rightArmHeavyAttacking = false;
-        arms.rightArmAnim.SetBool("doHeavyAttack", false);
-        bodyAnim.SetBool("powerAttackRight", false);
-        npcCombat.determineMoveDirection = true;
+        audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
+        arms.DoAttack(armAnim, "doHeavyAttack", bodyAnimName, AttackType.Slash, attackTime, true);
+        StartCoroutine(AttackDash(attackTime * 0.7f, 0.5f));
+        StartCoroutine(arms.ResetAttack(armAnim, "doHeavyAttack", bodyAnimName));
     }
     #endregion
 
@@ -249,7 +359,9 @@ public class NPCAttacks : MonoBehaviour
 
             SpriteRenderer arrowSR = arrow.GetComponent<SpriteRenderer>();
             arrowSR.sortingLayerID = SortingLayer.GetLayerValueFromName("Default");
-            arrowSR.sortingOrder = 10;
+            arrowSR.sortingOrder = 1;
+
+            DetermineShotAccuracy(arrow.transform);
 
             Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
             arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
@@ -267,6 +379,36 @@ public class NPCAttacks : MonoBehaviour
                 yield return null;
             }
         }
+        else // Not enough stamina
+        {
+            arms.rightArmAnim.SetBool("doReleaseArrow", false);
+            arms.leftArmAnim.SetBool("doDrawArrow", false);
+            arms.rightArmAnim.SetBool("doDrawArrow", false);
+            arms.bodyAnim.SetBool("doDrawArrow", false);
+            npcCombat.determineMoveDirection = true;
+        }
+    }
+
+    void DetermineShotAccuracy(Transform arrow)
+    {
+        bool accurateShot = true;
+        int randomNum = Random.Range(1, 101);
+        if (randomNum > basicStats.rangedSkill)
+            accurateShot = false;
+
+        float rotationAmount;
+        if (accurateShot == false)
+        {
+            randomNum = Random.Range(1, 3);
+            if (randomNum == 1) rotationAmount = Random.Range(-maxArrowRotation, -minArrowRotation); else rotationAmount = Random.Range(minArrowRotation, maxArrowRotation);
+            arrow.Rotate(new Vector3(0, 0, rotationAmount), Space.Self);
+        }
+        else
+        {
+            randomNum = Random.Range(1, 3);
+            if (randomNum == 1) rotationAmount = Random.Range(-2f, 0f); else rotationAmount = Random.Range(0f, 2f);
+            arrow.Rotate(new Vector3(0, 0, rotationAmount), Space.Self);
+        }
     }
     #endregion
 
@@ -275,12 +417,11 @@ public class NPCAttacks : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         npcMovement.isAttackDashing = true;
-        audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
 
         if (arms.leftArmAnim.GetBool("doHeavyAttack") == true)
-            bodyAnim.SetBool("powerAttackLeft", true);
+            bodyAnim.SetBool("doPowerAttackLeft", true);
         else if (arms.rightArmAnim.GetBool("doHeavyAttack") == true)
-            bodyAnim.SetBool("powerAttackRight", true);
+            bodyAnim.SetBool("doPowerAttackRight", true);
 
         Vector3 dir = (headReset.position - transform.position).normalized;
         float raycastDistance = Vector3.Distance(transform.position, transform.position + dir * dashDistance);

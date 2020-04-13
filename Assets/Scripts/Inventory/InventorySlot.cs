@@ -58,14 +58,11 @@ public class InventorySlot : MonoBehaviour
         GameObject newIcon;
 
         if ((newItem.iconWidth == 1 && newItem.iconHeight == 1) || this.name == "Temp Slot")
-        {
-            parentSlot = this;
-            newIcon = Instantiate(iconPrefab, transform.transform, true);
-        }
+            newIcon = Instantiate(iconPrefab, transform, true);
         else
         {
-            InventorySlot iconParentSlot = GetBottomRightChildSlot(newItem, this);
-            newIcon = Instantiate(iconPrefab, iconParentSlot.transform, true);
+            InventorySlot iconSlot = GetBottomRightChildSlot(newItem, this);
+            newIcon = Instantiate(iconPrefab, iconSlot.transform, true);
         }
         
         iconImage = newIcon.GetComponent<Image>();
@@ -78,7 +75,14 @@ public class InventorySlot : MonoBehaviour
 
         item = newItem;
         newIcon.name = item.name;
-        iconImage.sprite = newItemData.inventoryIcon;
+
+        if (newItemData.consumable != null && newItemData.consumable.maxUses > 1 || newItemData.uses == 0)
+            iconImage.sprite = newItem.inventoryIcons[newItemData.uses];
+        else if (newItemData.consumable != null && newItemData.consumable.maxUses == 1)
+            iconImage.sprite = newItem.inventoryIcons[0];
+        else
+            iconImage.sprite = newItemData.inventoryIcon;
+
         iconImage.preserveAspect = true;
 
         slotBackgroundImage.sprite = fullSlotSprite;

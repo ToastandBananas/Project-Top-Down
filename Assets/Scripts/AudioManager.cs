@@ -110,8 +110,6 @@ public class AudioManager : MonoBehaviour {
     public Sound[] bluntHitFleshSounds;
     public Sound[] bluntHitArmorSounds;
 
-    PlayerMovement player;
-
     void Awake()
     {
         #region Singleton
@@ -162,8 +160,6 @@ public class AudioManager : MonoBehaviour {
 
     void Start()
     {
-        player = PlayerMovement.instance;
-
         foreach (Sound[] soundArray in allSounds)
         {
             for (int i = 0; i < soundArray.Length; i++)
@@ -228,7 +224,7 @@ public class AudioManager : MonoBehaviour {
         {
             if (windSounds[randomIndex] == windSounds[i])
             {
-                PlaySound(windSounds, windSounds[i].soundName, player.transform.position);
+                PlaySound(windSounds, windSounds[i].soundName, PlayerMovement.instance.transform.position);
                 Invoke("PlayAmbienceSound", windSounds[i].clip.length);
                 return;
             }
@@ -244,12 +240,12 @@ public class AudioManager : MonoBehaviour {
             Equipment equipment = (Equipment)item;
             if (equipment.weaponType == WeaponType.Sword)
             {
-                PlayRandomSound(sharpWeaponPickUpSounds, player.transform.position);
+                PlayRandomSound(sharpWeaponPickUpSounds, PlayerMovement.instance.transform.position);
                 soundFound = true;
             }
             else if (equipment.weaponType == WeaponType.Mace || equipment.weaponType == WeaponType.Staff || equipment.weaponType == WeaponType.Spear || equipment.weaponType == WeaponType.Axe)
             {
-                PlayRandomSound(bluntWeaponPickUpSounds, player.transform.position);
+                PlayRandomSound(bluntWeaponPickUpSounds, PlayerMovement.instance.transform.position);
                 soundFound = true;
             }
         }
@@ -259,12 +255,12 @@ public class AudioManager : MonoBehaviour {
             Equipment equipment = (Equipment)item;
             if (equipment.armorType == ArmorType.Shirt || equipment.armorType == ArmorType.Pants || equipment.armorType == ArmorType.Belt)
             {
-                PlayRandomSound(clothingPickUpSounds, player.transform.position);
+                PlayRandomSound(clothingPickUpSounds, PlayerMovement.instance.transform.position);
                 soundFound = true;
             }
             else
             {
-                PlayRandomSound(armorPickUpSounds, player.transform.position);
+                PlayRandomSound(armorPickUpSounds, PlayerMovement.instance.transform.position);
                 soundFound = true;
             }
         }
@@ -274,14 +270,14 @@ public class AudioManager : MonoBehaviour {
             Consumable consumable = (Consumable)item;
             if (consumable.consumableType == ConsumableType.Drink)
             {
-                PlayRandomSound(drinkSounds, player.transform.position);
+                PlayRandomSound(drinkSounds, PlayerMovement.instance.transform.position);
                 soundFound = true;
             }
         }
 
         if (soundFound == false)
         {
-            PlayRandomSound(defaultPickUpSounds, player.transform.position);
+            PlayRandomSound(defaultPickUpSounds, PlayerMovement.instance.transform.position);
             soundFound = true;
         }
     }
@@ -289,26 +285,26 @@ public class AudioManager : MonoBehaviour {
     public void PlayPickUpGoldSound(int goldAmount)
     {
         if (goldAmount <= 10)
-            PlaySound(goldSounds, goldSounds[0].soundName, player.transform.position);
+            PlaySound(goldSounds, goldSounds[0].soundName, PlayerMovement.instance.transform.position);
         else if (goldAmount > 10 && goldAmount <= 50)
         {
             int randomNum = Random.Range(1, 3);
             if (randomNum == 1)
-                PlaySound(goldSounds, goldSounds[1].soundName, player.transform.position);
+                PlaySound(goldSounds, goldSounds[1].soundName, PlayerMovement.instance.transform.position);
             else
-                PlaySound(goldSounds, goldSounds[2].soundName, player.transform.position);
+                PlaySound(goldSounds, goldSounds[2].soundName, PlayerMovement.instance.transform.position);
         }
         else if (goldAmount > 50 && goldAmount <= 100)
-            PlaySound(goldSounds, goldSounds[3].soundName, player.transform.position);
+            PlaySound(goldSounds, goldSounds[3].soundName, PlayerMovement.instance.transform.position);
         else
-            PlaySound(goldSounds, goldSounds[4].soundName, player.transform.position);
+            PlaySound(goldSounds, goldSounds[4].soundName, PlayerMovement.instance.transform.position);
     }
 
     public void PlayDamageSound(Arms arms)
     {
         if (arms.currentAttackType == AttackType.Slash)
             PlayRandomSound(swordSlashFleshSounds, arms.transform.position);
-        else if (arms.currentAttackType == AttackType.Slash)
+        else if (arms.currentAttackType == AttackType.Thrust)
             PlayRandomSound(swordStabFleshSounds, arms.transform.position);
         else if (arms.currentAttackType == AttackType.Blunt)
             PlayRandomSound(bluntHitFleshSounds, arms.transform.position);

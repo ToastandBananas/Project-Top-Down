@@ -257,7 +257,8 @@ public class Container : MonoBehaviour
                 invUI.StopDraggingInvItem();
             }
 
-            StartCoroutine(CloseMenus());
+            if (invUI.containerMenu.activeSelf == true)
+                StartCoroutine(CloseMenus());
         }
     }
 }

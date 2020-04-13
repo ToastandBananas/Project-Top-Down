@@ -104,19 +104,22 @@ public class WeaponDamage : MonoBehaviour
         {
             if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
             {
-                audioManager.PlayDamageSound(weaponOwnerArms);
-
                 BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();
-                collisionBasicStats.TakeDamage(itemData.damage);
-                canDoDamage = false;
+                if (collisionBasicStats.isDead == false)
+                {
+                    audioManager.PlayDamageSound(weaponOwnerArms);
 
-                float percentDamage = itemData.damage / collisionBasicStats.maxHealth;
-                collisionBasicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
+                    collisionBasicStats.TakeDamage(itemData.damage);
+                    canDoDamage = false;
 
-                if (weaponOwnerArms.currentAttackShouldKnockback)
-                    Knockback(collision.transform.parent, equipment.knockbackPower);
+                    float percentDamage = itemData.damage / collisionBasicStats.maxHealth;
+                    collisionBasicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
 
-                StartCoroutine(DamageCooldown(weaponOwnerArms.currentAttackTime));
+                    if (weaponOwnerArms.currentAttackShouldKnockback)
+                        Knockback(collision.transform.parent, equipment.knockbackPower);
+
+                    StartCoroutine(DamageCooldown(weaponOwnerArms.currentAttackTime));
+                }
             }
             else if (collision.tag == "Shield" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
             {
@@ -147,90 +150,6 @@ public class WeaponDamage : MonoBehaviour
                 StartCoroutine(DamageCooldown(weaponOwnerArms.currentAttackTime));
                 currentArmAnim.SetBool("doQuickAttack", false);
             }
-            /*else if (thisWeapon.name == "Right Weapon" && weaponOwnerArms.isAttacking)
-            {
-                if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
-                {
-                    audioManager.PlayDamageSound(weaponOwnerArms);
-
-                    BasicStats collisionBasicStats = collision.GetComponentInParent<BasicStats>();
-                    collisionBasicStats.TakeDamage(itemData.damage);
-                    canDoDamage = false;
-
-                    float percentDamage = itemData.damage / collisionBasicStats.maxHealth;
-                    collisionBasicStats.SpawnBlood(collision.transform, weaponOwner, percentDamage, obstacleMask);
-
-                    if (weaponOwnerArms.currentAttackShouldKnockback)
-                        Knockback(collision.transform.parent, equipment.knockbackPower);
-
-                    StartCoroutine(DamageCooldown(weaponOwnerArms.currentAttackTime));
-
-                    if (playerAttack != null)
-                    {
-                        if (playerAttack.rightArmHeavyAttacking)
-                        {
-                            Knockback(collision.transform.parent, equipment.knockbackPower);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightChargeAttackTime));
-                        }
-                        else if (playerAttack.rightQuickAttacking)
-                            StartCoroutine(DamageCooldown(animTimeManager.rightQuickAttackTime));
-                    }
-                    else if (npcAttacks != null)
-                    {
-                        if (npcAttacks.rightArmHeavyAttacking)
-                        {
-                            Knockback(collision.transform.parent, equipment.knockbackPower);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightHeavyAttackTime));
-                        }
-                        else if (npcAttacks.rightQuickAttacking)
-                            StartCoroutine(DamageCooldown(animTimeManager.rightQuickAttackTime));
-                    }
-                }
-                else if (collision.tag == "Shield" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
-                {
-                    BasicStats shieldOwnerBasicStats = collision.transform.parent.parent.parent.parent.parent.parent.GetComponent<BasicStats>();
-
-                    if (shieldOwnerBasicStats.UseStamina(blockStaminaUse, true))
-                    {
-                        Animator shieldOwnersArmAnim = collision.transform.parent.parent.parent.parent.GetComponent<Animator>();
-                        StartCoroutine(ShieldRecoil(shieldOwnersArmAnim, animTimeManager.shieldRecoilTime));
-                    }
-                    
-                    canDoDamage = false;
-                    collision.GetComponent<ItemData>().durability -= itemData.damage;
-
-                    if (playerAttack != null)
-                    {
-                        if (playerAttack.rightArmHeavyAttacking)
-                        {
-                            basicStats.UseStamina(Mathf.RoundToInt(blockStaminaUse * 1.5f), true);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightChargeAttackTime));
-                            StartCoroutine(WeaponDeflect(weaponOwnerArms.rightArmAnim, animTimeManager.deflectWeaponTime));
-                        }
-                        else if (playerAttack.rightQuickAttacking)
-                        {
-                            basicStats.UseStamina(blockStaminaUse, true);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightQuickAttackTime));
-                            weaponOwnerArms.rightArmAnim.SetBool("doQuickAttack", false);
-                        }
-                    }
-                    else if (npcAttacks != null)
-                    {
-                        if (npcAttacks.rightArmHeavyAttacking)
-                        {
-                            basicStats.UseStamina(Mathf.RoundToInt(blockStaminaUse * 1.5f), true);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightHeavyAttackTime));
-                            StartCoroutine(WeaponDeflect(weaponOwnerArms.rightArmAnim, animTimeManager.deflectWeaponTime));
-                        }
-                        else if (npcAttacks.rightQuickAttacking)
-                        {
-                            basicStats.UseStamina(blockStaminaUse, true);
-                            StartCoroutine(DamageCooldown(animTimeManager.rightQuickAttackTime));
-                            weaponOwnerArms.rightArmAnim.SetBool("doQuickAttack", false);
-                        }
-                    }
-                }
-            }*/
         }
     }
 }

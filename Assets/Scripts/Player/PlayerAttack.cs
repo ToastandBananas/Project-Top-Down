@@ -15,13 +15,15 @@ public class PlayerAttack : MonoBehaviour
     LockOn lockOnScript;
     BasicStats stats;
     AnimTimeManager animTimeManager;
+    BasicStats basicStats;
     EquipmentManager equipmentManager;
     Arms arms;
     Animator bodyAnim;
     Transform headReset;
     Transform looseItemsParent;
-    
-    [HideInInspector] public float attackTimer = 0;
+
+    [HideInInspector] public float leftAttackTimer = 0;
+    [HideInInspector] public float rightAttackTimer = 0;
 
     float heavyAttackStaminaMultiplier = 1.75f;
 
@@ -34,6 +36,8 @@ public class PlayerAttack : MonoBehaviour
 
     bool bowStringNeedsReset;
     float arrowSpeed = 32f;
+    float minArrowRotation = 6f;
+    float maxArrowRotation = 12f;
     
     bool comboTimerStarted;
     bool comboAttackOnCooldown;
@@ -61,6 +65,7 @@ public class PlayerAttack : MonoBehaviour
         lockOnScript = GetComponent<LockOn>();
         stats = GetComponent<BasicStats>();
         animTimeManager = gm.GetComponent<AnimTimeManager>();
+        basicStats = GetComponent<BasicStats>();
         equipmentManager = GetComponent<EquipmentManager>();
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
@@ -143,30 +148,31 @@ public class PlayerAttack : MonoBehaviour
 
     void Left1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false)
+        if (GameControls.gamePlayActions.playerRightAttack.IsPressed == false 
+            || (GameControls.gamePlayActions.playerRightAttack.IsPressed && (arms.rightArmAnim.GetBool("isBlocking") == true || rightAttackTimer > 0)))
         {
-            if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && attackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
+            if (GameControls.gamePlayActions.playerLeftAttack.IsPressed && leftAttackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                attackTimer += Time.smoothDeltaTime;
-                if (attackTimer >= minChargeAttackTime && leftComboNumber == 1) // Start charge attack
+                leftAttackTimer += Time.smoothDeltaTime;
+                if (leftAttackTimer >= minChargeAttackTime && leftComboNumber == 1) // Start charge attack
                     arms.leftArmAnim.SetBool("startAttack", true);
             }
 
-            if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && attackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
+            if (GameControls.gamePlayActions.playerLeftAttack.WasReleased && leftAttackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                if (attackTimer > minChargeAttackTime && arms.leftArmAnim.GetBool("doComboAttack1") == false) // Do power attack
+                if (leftAttackTimer > minChargeAttackTime && arms.leftArmAnim.GetBool("doComboAttack1") == false) // Do power attack
                 {
                     if (stats.UseStamina(Mathf.RoundToInt(arms.leftWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
                     {
                         audioManager.PlayRandomSound(audioManager.swordSlashSounds, transform.position);
                         arms.DoAttack(arms.leftArmAnim, "doAttack", "doPowerAttackLeft", AttackType.Slash, animTimeManager.leftChargeAttackTime, true);
-                        StartCoroutine(ResetAttack(arms.leftArmAnim, "doAttack", "doPowerAttackLeft"));
+                        StartCoroutine(arms.ResetAttack(arms.leftArmAnim, "doAttack", "doPowerAttackLeft"));
 
                         AttackDash(0.5f);
                     }
 
                     arms.leftArmAnim.SetBool("startAttack", false);
-                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.leftChargeAttackTime));
+                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.leftChargeAttackTime, true));
                 }
                 else // Do combo attack
                 {
@@ -182,7 +188,7 @@ public class PlayerAttack : MonoBehaviour
                                 arms.DoAttack(arms.leftArmAnim, "doComboAttack1", null, AttackType.Slash, animTimeManager.comboAttack1HLeft1Time, false);
 
                                 StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HLeft1Time / 2));
-                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, null));
+                                StartCoroutine(arms.ResetAttack(arms.leftArmAnim, null, null));
                             }
                             else if (leftComboNumber == 2)
                             {
@@ -190,7 +196,7 @@ public class PlayerAttack : MonoBehaviour
                                 arms.DoAttack(arms.leftArmAnim, "doComboAttack2", null, AttackType.Slash, animTimeManager.comboAttack1HLeft2Time, false);
 
                                 StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HLeft2Time / 2));
-                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, null));
+                                StartCoroutine(arms.ResetAttack(arms.leftArmAnim, null, null));
                             }
                             else if (leftComboNumber == 3)
                             {
@@ -203,7 +209,7 @@ public class PlayerAttack : MonoBehaviour
                                 arms.DoAttack(arms.leftArmAnim, "doComboAttack3", "doThrustAttackLeft", AttackType.Thrust, animTimeManager.comboAttack1HLeft3Time, true);
 
                                 StartCoroutine(DelayedAttackDash(0.5f, animTimeManager.comboAttack1HLeft3Time / 2));
-                                StartCoroutine(ResetAttack(arms.leftArmAnim, null, "doThrustAttackLeft"));
+                                StartCoroutine(arms.ResetAttack(arms.leftArmAnim, null, "doThrustAttackLeft"));
                                 StartCoroutine(ComboCooldown());
                             }
 
@@ -213,7 +219,7 @@ public class PlayerAttack : MonoBehaviour
                     }
 
                     arms.leftArmAnim.SetBool("startAttack", false);
-                    attackTimer = 0;
+                    leftAttackTimer = 0;
                 }
             }
         }
@@ -221,18 +227,19 @@ public class PlayerAttack : MonoBehaviour
 
     void Right1H_Attack()
     {
-        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
+        if (GameControls.gamePlayActions.playerLeftAttack.IsPressed == false 
+            || (GameControls.gamePlayActions.playerLeftAttack.IsPressed && (arms.leftArmAnim.GetBool("isBlocking") == true || leftAttackTimer > 0)))
         {
-            if (GameControls.gamePlayActions.playerRightAttack.IsPressed && attackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
+            if (GameControls.gamePlayActions.playerRightAttack.IsPressed && rightAttackTimer <= minChargeAttackTime && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                attackTimer += Time.smoothDeltaTime;
-                if (attackTimer >= minChargeAttackTime && rightComboNumber == 1) // Start charge attack
+                rightAttackTimer += Time.smoothDeltaTime;
+                if (rightAttackTimer >= minChargeAttackTime && rightComboNumber == 1) // Start charge attack
                     arms.rightArmAnim.SetBool("startAttack", true);
             }
 
-            if (GameControls.gamePlayActions.playerRightAttack.WasReleased && attackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
+            if (GameControls.gamePlayActions.playerRightAttack.WasReleased && rightAttackTimer > 0 && arms.isAttacking == false && comboAttackOnCooldown == false)
             {
-                if (attackTimer > minChargeAttackTime && arms.rightArmAnim.GetBool("doComboAttack1") == false) // Do power attack
+                if (rightAttackTimer > minChargeAttackTime && arms.rightArmAnim.GetBool("doComboAttack1") == false) // Do power attack
                 {
                     // If we have enough stamina, do the attack
                     if (stats.UseStamina(Mathf.RoundToInt(arms.rightWeapon.baseStaminaUse * heavyAttackStaminaMultiplier), false))
@@ -244,14 +251,14 @@ public class PlayerAttack : MonoBehaviour
                         arms.DoAttack(arms.rightArmAnim, "doAttack", "doPowerAttackRight", AttackType.Slash, animTimeManager.rightChargeAttackTime, true);
 
                         // Reset attack bools at the appropriate time
-                        StartCoroutine(ResetAttack(arms.rightArmAnim, "doAttack", "doPowerAttackRight"));
+                        StartCoroutine(arms.ResetAttack(arms.rightArmAnim, "doAttack", "doPowerAttackRight"));
 
                         AttackDash(0.5f); // Dash towards target
                     }
 
                     // Turn off startAttack and reset the charge attack timer
                     arms.rightArmAnim.SetBool("startAttack", false);
-                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.rightChargeAttackTime));
+                    StartCoroutine(ResetChargeAttackTimer(animTimeManager.rightChargeAttackTime, false));
                 }
                 else // Do combo attack
                 {
@@ -275,7 +282,7 @@ public class PlayerAttack : MonoBehaviour
                                 StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HRight1Time / 2));
 
                                 // Reset attack bools at the appropriate time
-                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, null));
+                                StartCoroutine(arms.ResetAttack(arms.rightArmAnim, null, null));
                             }
                             else if (rightComboNumber == 2)
                             {
@@ -289,7 +296,7 @@ public class PlayerAttack : MonoBehaviour
                                 StartCoroutine(DelayedAttackDash(0.25f, animTimeManager.comboAttack1HRight2Time / 2));
 
                                 // Reset attack bools at the appropriate time
-                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, null));
+                                StartCoroutine(arms.ResetAttack(arms.rightArmAnim, null, null));
                             }
                             else if (rightComboNumber == 3)
                             {
@@ -308,13 +315,13 @@ public class PlayerAttack : MonoBehaviour
                                 StartCoroutine(DelayedAttackDash(0.5f, animTimeManager.comboAttack1HRight3Time / 2));
 
                                 // Reset attack bools at the appropriate time
-                                StartCoroutine(ResetAttack(arms.rightArmAnim, null, "doThrustAttackRight"));
+                                StartCoroutine(arms.ResetAttack(arms.rightArmAnim, null, "doThrustAttackRight"));
 
                                 // Set a cooldown before we can combo attack again
                                 StartCoroutine(ComboCooldown());
                             }
 
-                            // Set the current combo index
+                            // Set the current combo index and reset the combo timer
                             if (rightComboNumber == 3) rightComboNumber = 1; else rightComboNumber++;
                             comboTimer = 0;
                         }
@@ -322,7 +329,7 @@ public class PlayerAttack : MonoBehaviour
                     
                     // Reset startAttack and attackTimer
                     arms.rightArmAnim.SetBool("startAttack", false);
-                    attackTimer = 0;
+                    rightAttackTimer = 0;
                 }
             }
         }
@@ -443,7 +450,9 @@ public class PlayerAttack : MonoBehaviour
 
         SpriteRenderer arrowSR = arrow.GetComponent<SpriteRenderer>();
         arrowSR.sortingLayerID = SortingLayer.GetLayerValueFromName("Default");
-        arrowSR.sortingOrder = 10;
+        arrowSR.sortingOrder = 1;
+
+        DeterminShotAccuracy(arrow);
 
         Rigidbody2D arrowRigidBody = arrow.GetComponent<Rigidbody2D>();
         arrowRigidBody.bodyType = RigidbodyType2D.Dynamic;
@@ -459,6 +468,28 @@ public class PlayerAttack : MonoBehaviour
                 arrowScript.StopArrow();
 
             yield return null;
+        }
+    }
+
+    void DeterminShotAccuracy(Transform arrow)
+    {
+        bool accurateShot = true;
+        int randomNum = Random.Range(1, 101);
+        if (randomNum > basicStats.rangedSkill)
+            accurateShot = false;
+
+        float rotationAmount;
+        if (accurateShot == false)
+        {
+            randomNum = Random.Range(1, 3);
+            if (randomNum == 1) rotationAmount = Random.Range(-maxArrowRotation, -minArrowRotation); else rotationAmount = Random.Range(minArrowRotation, maxArrowRotation);
+            arrow.Rotate(new Vector3(0, 0, rotationAmount), Space.Self);
+        }
+        else
+        {
+            randomNum = Random.Range(1, 3);
+            if (randomNum == 1) rotationAmount = Random.Range(-2f, 0f); else rotationAmount = Random.Range(0f, 2f);
+            arrow.transform.Rotate(new Vector3(0, 0, rotationAmount), Space.Self);
         }
     }
 
@@ -497,14 +528,15 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator ComboCooldown()
     {
         comboAttackOnCooldown = true;
-        yield return new WaitForSeconds(1f + arms.currentAttackTime);
+        yield return new WaitForSeconds(0.25f + arms.currentAttackTime);
         comboAttackOnCooldown = false;
         ResetCombo();
     }
 
     void ResetCombo()
     {
-        attackTimer = 0;
+        leftAttackTimer = 0;
+        rightAttackTimer = 0;
         comboTimerStarted = false;
         leftComboNumber = 1;
         rightComboNumber = 1;
@@ -516,25 +548,10 @@ public class PlayerAttack : MonoBehaviour
         arms.rightArmAnim.SetBool("doComboAttack3", false);
     }
 
-    IEnumerator ResetAttack(Animator anim, string armAnimBoolName, string bodyAnimBoolName)
-    {
-        if (arms.rightArmAnim.GetBool("doComboAttack1") == true || arms.leftArmAnim.GetBool("doComboAttack1") == true)
-            yield return new WaitForSeconds(arms.currentAttackTime - 0.3f);
-        else
-            yield return new WaitForSeconds(arms.currentAttackTime);
-
-        arms.isAttacking = false;
-        if (armAnimBoolName != null)
-            anim.SetBool(armAnimBoolName, false);
-        yield return new WaitForSeconds(0.2f);
-        if (bodyAnimBoolName != null)
-            bodyAnim.SetBool(bodyAnimBoolName, false);
-    }
-
-    IEnumerator ResetChargeAttackTimer(float waitTime)
+    IEnumerator ResetChargeAttackTimer(float waitTime, bool isLeftAttackTimer)
     {
         yield return new WaitForSeconds(waitTime);
-        attackTimer = 0;
+        if (isLeftAttackTimer) leftAttackTimer = 0; else rightAttackTimer = 0;
     }
 
     public IEnumerator SmoothMovement(Transform objectToMove, Vector3 targetPos)

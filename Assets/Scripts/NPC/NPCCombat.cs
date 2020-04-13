@@ -8,8 +8,8 @@ public class NPCCombat : MonoBehaviour
     public float rangedCombatDistance = 10f;
 
     [HideInInspector] public bool determineMoveDirection = true;
+    [HideInInspector] public bool needsCombatAction = false;
     bool determineShieldState = true;
-    bool needsCombatAction = false;
 
     Arms arms;
     BasicStats basicStats;
@@ -103,7 +103,7 @@ public class NPCCombat : MonoBehaviour
                     arms.rightArmAnim.SetBool("doDrawArrow", false);
                     arms.bodyAnim.SetBool("doDrawArrow", false);
 
-                    StartCoroutine(MovementCooldown());
+                    StartCoroutine(MoveDirectionCooldown());
                 }
             }
 
@@ -115,15 +115,22 @@ public class NPCCombat : MonoBehaviour
     {
         if (needsCombatAction)
         {
-            if ((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && Vector2.Distance(transform.position, npcMovement.attackTarget.position) <= attackDistance)
+            if ((arms.leftWeaponEquipped || arms.rightWeaponEquipped) && npcAttacks.comboAttackOnCooldown == false 
+                && Vector2.Distance(transform.position, npcMovement.attackTarget.position) <= attackDistance)
             {
-                int randomNumber = Random.Range(1, 3);
-
-                if (randomNumber == 1)
-                    npcAttacks.QuickAttack();
-                else if (randomNumber == 2)
-                    npcAttacks.HeavyAttack();
-
+                if (npcAttacks.leftComboNumber > 1 || npcAttacks.rightComboNumber > 1) // If the NPC is in the middle of a combo attack sequence, do the next combo attack in the sequence
+                    npcAttacks.ComboAttack();
+                else // Otherwise, randomly choose an attack
+                {
+                    int randomNumber = Random.Range(1, 10);
+                    if (randomNumber == 1)
+                        npcAttacks.QuickAttack();
+                    else if (randomNumber == 2)
+                        npcAttacks.HeavyAttack();
+                    else
+                        npcAttacks.ComboAttack();
+                }
+                
                 needsCombatAction = false;
             }
             else if (arms.rangedWeaponEquipped && Vector2.Distance(transform.position, npcMovement.attackTarget.position) <= rangedCombatDistance)
@@ -134,7 +141,7 @@ public class NPCCombat : MonoBehaviour
         }
     }
 
-    IEnumerator MovementCooldown()
+    IEnumerator MoveDirectionCooldown()
     {
         yield return new WaitForSeconds(Random.Range(0.1f, 0.75f));
         determineMoveDirection = true;

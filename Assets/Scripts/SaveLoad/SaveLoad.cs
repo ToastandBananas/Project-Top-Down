@@ -16,7 +16,7 @@ public class SaveLoad : MonoBehaviour
     Inventory inv;
     InventoryUI invUI;
     EquipmentManager playerEquipmentManager;
-    MeshParticleSystem meshParticleSystem;
+    MeshParticleSystem bloodParticleSystem;
     GameObject NPCsParent;
     GameObject looseItemsParent;
     GameObject containersParent;
@@ -47,7 +47,7 @@ public class SaveLoad : MonoBehaviour
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
         playerEquipmentManager = GameObject.Find("Player").GetComponent<EquipmentManager>();
-        meshParticleSystem = FindObjectOfType<MeshParticleSystem>();
+        bloodParticleSystem = GameObject.Find("Blood Particle System").GetComponent<MeshParticleSystem>();
         NPCsParent = GameObject.Find("NPCs");
         looseItemsParent = GameObject.Find("Loose Items");
         containersParent = GameObject.Find("Containers");
@@ -117,7 +117,7 @@ public class SaveLoad : MonoBehaviour
         if (autosaveSceneName != SceneManager.GetActiveScene().name)
             SceneManager.LoadScene(autosaveSceneName); // Load the scene that the player was in when they saved
         else
-            meshParticleSystem.SetUpMesh(); // Reset any blood in the scene
+            bloodParticleSystem.SetUpMesh(); // Reset any blood in the scene
 
         // Destroy all inventory slots before loading in the ones from the save file...
         // (We do this because since we Instantiate the slots when starting up the game, the load function won't 

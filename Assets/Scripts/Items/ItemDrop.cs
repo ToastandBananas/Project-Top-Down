@@ -6,6 +6,7 @@ public class ItemDrop : MonoBehaviour
     public Item item;
     public bool isDropped;
 
+    AudioManager audioManager;
     SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
     BoxCollider2D boxCollider;
@@ -30,6 +31,7 @@ public class ItemDrop : MonoBehaviour
     void Start()
     {
         item = GetComponent<ItemData>().item;
+        audioManager = AudioManager.instance;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         itemPickupScript = GetComponent<ItemPickup>();
@@ -60,6 +62,8 @@ public class ItemDrop : MonoBehaviour
         itemPickupScript.enabled = true;
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);
+
+        audioManager.PlayPickUpItemSound(item);
 
         AddForce(tossInAir);
     }

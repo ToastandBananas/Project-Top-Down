@@ -31,6 +31,10 @@ public class BasicStats : MonoBehaviour
     [Header("Defense")]
     public float defense = 0;
 
+    [Header("Skills")]
+    [HideInInspector] public int maxSkillPoints = 100;
+    public int rangedSkill = 20;
+
     [Header("Other")]
     public GameObject deadBodyPrefab;
     public bool isPlayer;
@@ -142,7 +146,7 @@ public class BasicStats : MonoBehaviour
             rightWeaponItemDrop = transform.Find("Arms").Find("Right Arm").Find("Right Forearm").Find("Right Weapon").GetChild(0).GetChild(0).GetComponent<ItemDrop>();
         }
 
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.025f);
 
         GameObject deadBody = Instantiate(deadBodyPrefab, transform.position, transform.rotation, GameObject.Find("NPCs").transform);
         StartCoroutine(equipmentManager.TransferEquippedItemsToBody(deadBody.GetComponent<EquipmentManager>()));
@@ -220,7 +224,7 @@ public class BasicStats : MonoBehaviour
         if (rightWeaponItemDrop != null)
             rightWeaponItemDrop.DropItem(false);
 
-        yield return new WaitForSeconds(0.10f);
+        yield return new WaitForSeconds(0.05f);
         
         Destroy(gameObject);
     }

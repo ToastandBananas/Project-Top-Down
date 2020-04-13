@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
@@ -53,12 +54,26 @@ public class Arrow : MonoBehaviour
         }
     }
 
+    IEnumerator StartAddArrowToInventoryCountdown()
+    {
+        yield return new WaitForSeconds(10f);
+        Inventory.instance.AddToInventory(itemData.equipment, itemData);
+        Destroy(gameObject);
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.isTrigger == false)
         {
             if (collision.tag == "NPC Body" || collision.tag == "Player Body")
             {
+                if (collision.tag == "Player Body")
+                    StartCoroutine(StartAddArrowToInventoryCountdown());
+
+                SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+                spriteRenderer.sortingLayerName = "Character";
+                spriteRenderer.sortingOrder = 14;
+
                 AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitFleshSounds, collision.transform.position);
                 BasicStats basicStats = collision.GetComponentInParent<BasicStats>();
                 basicStats.TakeDamage(bowShotFrom.damage);
@@ -72,8 +87,12 @@ public class Arrow : MonoBehaviour
             {
                 AudioManager.instance.PlayRandomSound(AudioManager.instance.arrowHitWallSounds, collision.transform.position);
 
-                if (collision.GetComponent<ItemData>() != null)
+                if (collision.tag == "Shield")
+                {
                     collision.GetComponent<ItemData>().durability -= bowShotFrom.damage;
+                    if (collision.transform.parent.parent.parent.parent.parent.parent.tag == "Player")
+                        StartCoroutine(StartAddArrowToInventoryCountdown());
+                }
             }
 
             if (collision.tag != "Weapon")

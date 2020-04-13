@@ -10,6 +10,7 @@ public class Consumable : Item
 
     [Header("Consumable Stats")]
     public ConsumableType consumableType;
+    public int maxUses = 1;
     public int nourishment;
     public int healAmount;
     public int staminaRecoveryAmount;
@@ -43,17 +44,29 @@ public class Consumable : Item
         if (manaRecoveryAmount > 0)
             userStats.RestoreMana(manaRecoveryAmount);
 
-        // Clear out the slot's data
-        invSlot.ClearSlot();
-        for (int i = 0; i < invSlot.childrenSlots.Length; i++)
+        InventorySlot parentSlot = invSlot.GetParentSlot(invSlot); // Parent slot that the context menu was brought up on
+        parentSlot.itemData.uses--;
+
+        if (parentSlot.itemData.uses == 0 && parentSlot.itemData.consumable.consumableType == ConsumableType.Food)
         {
-            if (invSlot.childrenSlots[i] != null)
+            // Clear out the slot's data
+            invSlot.ClearSlot();
+            for (int i = 0; i < invSlot.childrenSlots.Length; i++)
             {
-                invSlot.childrenSlots[i].ClearSlot();
-                invSlot.childrenSlots[i].parentSlot = null;
-                invSlot.childrenSlots[i] = null;
+                if (invSlot.childrenSlots[i] != null)
+                {
+                    invSlot.childrenSlots[i].ClearSlot();
+                    invSlot.childrenSlots[i].parentSlot = null;
+                    invSlot.childrenSlots[i] = null;
+                }
             }
+            invSlot.parentSlot = null;
         }
-        invSlot.parentSlot = null;
+        else
+        {
+            // Change the item's sprite
+            InventorySlot slot = invSlot.GetParentSlot(invSlot); // Parent slot that the context menu was brought up on
+            slot.iconImage.sprite = slot.item.inventoryIcons[slot.itemData.uses];
+        }
     }
 }

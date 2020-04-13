@@ -21,7 +21,7 @@ public class ItemPickup : Interactable
 
     void Start()
     {
-        item = itemDropScript.item;
+        item = itemData.item;
 
         if (itemDropScript.isDropped == false)
             enabled = false;

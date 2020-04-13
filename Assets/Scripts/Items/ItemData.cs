@@ -30,6 +30,7 @@ public class ItemData : MonoBehaviour
 
     [Header("Consumable Data")]
     public int freshness = 100;
+    public int uses = 1;
 
     [Header("Quiver Data")]
     public GameObject ammoTypePrefab;
@@ -37,13 +38,10 @@ public class ItemData : MonoBehaviour
 
     void Awake()
     {
-        if (item == null)
-        {
-            if (equipment != null)
-                item = equipment;
-            else if (consumable != null)
-                item = consumable;
-        }
+        if (equipment != null)
+            item = equipment;
+        else if (consumable != null)
+            item = consumable;
     }
 
     void Start()
@@ -75,6 +73,7 @@ public class ItemData : MonoBehaviour
 
         // Consumable Data
         dataReceiver.freshness = dataGiver.freshness;
+        dataReceiver.uses = dataGiver.uses;
 
         // Weapon Data
         dataReceiver.damage = dataGiver.damage;
@@ -107,6 +106,8 @@ public class ItemData : MonoBehaviour
 
     public void RandomizeData()
     {
+        int randomNum;
+
         // Item class data
         itemName = item.name;
 
@@ -131,6 +132,23 @@ public class ItemData : MonoBehaviour
         else if (consumable != null)
         {
             freshness = Random.Range(consumable.minBaseFreshness, consumable.maxBaseFreshness + 1);
+
+            if (consumable.maxUses == 1)
+                inventoryIcon = consumable.inventoryIcons[0];
+            else
+            {
+                randomNum = Random.Range(1, 3);
+                if (randomNum == 1)
+                    uses = consumable.maxUses;
+                else
+                {
+                    // Choose a random use amount
+                    randomNum = Random.Range(1, consumable.maxUses + 1);
+                    uses = randomNum;
+                }
+
+                inventoryIcon = consumable.inventoryIcons[uses];
+            }
         }
 
         // Multiple sprite possiblities item data
@@ -211,6 +229,7 @@ public class ItemData : MonoBehaviour
         damage = 0;
         defense = 0;
         freshness = 0;
+        uses = 0;
 
         currentAmmoCount = 0;
         ammoTypePrefab = null;
@@ -248,6 +267,9 @@ public class ItemData : MonoBehaviour
         {
             if (consumable.consumableType == ConsumableType.Food)
                 totalPointsPossible += (consumable.maxBaseFreshness - consumable.minBaseFreshness);
+
+            if (consumable.maxUses > 1)
+                totalPointsPossible += (consumable.maxUses);
         }
         
         return totalPointsPossible;
@@ -276,6 +298,9 @@ public class ItemData : MonoBehaviour
         {
             if (consumable.consumableType == ConsumableType.Food)
                 pointIncrease += (freshness - consumable.minBaseFreshness);
+
+            if (consumable.maxUses > 1)
+                pointIncrease += (uses);
         }
 
         percent = pointIncrease / GetTotalPointValue();
@@ -323,6 +348,11 @@ public class ItemData : MonoBehaviour
                     freshness = consumable.maxBaseFreshness;
                 else if (freshness < consumable.minBaseFreshness)
                     freshness = consumable.minBaseFreshness;
+
+                if (uses > consumable.maxUses)
+                    uses = consumable.maxUses;
+                else if (uses < 0)
+                    uses = 0;
             }
         }
     }

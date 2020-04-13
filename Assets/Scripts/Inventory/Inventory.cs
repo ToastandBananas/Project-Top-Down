@@ -195,6 +195,8 @@ public class Inventory : MonoBehaviour
                             
                             if (invSlots[i] != slotsToFill[j])
                                 slotsToFill[j].parentSlot = invSlots[i]; // Set each child slot's parent slot
+                            else if (itemToAdd.iconWidth == 1 && itemToAdd.iconHeight == 1)
+                                slotsToFill[j].parentSlot = slotsToFill[j];
                         }
                     }
 
@@ -253,6 +255,13 @@ public class Inventory : MonoBehaviour
             startSlot.iconImage.transform.localPosition = GetItemInvPositionOffset(startSlot.item);
 
             startSlot.SetAmmoSprites();
+            
+            if (itemData.consumable != null && itemData.consumable.maxUses > 1 || itemData.uses == 0)
+                startSlot.iconImage.sprite = itemToAdd.inventoryIcons[itemData.uses];
+            else if (itemData.consumable != null && itemData.consumable.maxUses == 1)
+                startSlot.iconImage.sprite = itemToAdd.inventoryIcons[0];
+            else
+                startSlot.iconImage.sprite = itemData.inventoryIcon;
 
             // Add ItemDatas/GameObjects to the appropriate lists
             if (invUI.currentlyActiveContainer == null || itemsList != invUI.currentlyActiveContainer.containerItems)
@@ -271,7 +280,7 @@ public class Inventory : MonoBehaviour
         InventorySlot[] slotsToFill = new InventorySlot[totalSlotsToCheck];
 
         itemsTryingToReplaceCount = GetOverlappingItemCount(itemToAdd, startSlot, slotsToFill, invSlots);
-
+        
         if (itemsTryingToReplaceCount == 2)
             return false;
 
@@ -318,12 +327,10 @@ public class Inventory : MonoBehaviour
             {
                 // Only will be used if this container is a dead body
                 EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
-                if (deadBodyEquipmentManager != null && itemData.equipment != null)
-                    deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] = null;
-
-                Destroy(itemData.gameObject);
+                if (deadBodyEquipmentManager != null && itemData.equipment != null && deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] != null)
+                    Destroy(deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot].gameObject);
             }
-
+            
             // We no longer have an item selected, so set the appropriate variables to null
             invUI.StopDraggingInvItem();
         }
@@ -358,7 +365,8 @@ public class Inventory : MonoBehaviour
 
             foreach (InventorySlot slot in slotsToFill) // For each slot we're trying to fill
             {
-                if (slot.isEmpty == false && slot.parentSlot != null) // If slot isn't empty and is a child slot
+                if (slot.isEmpty == false && slot.parentSlot != null 
+                    && ((slot.parentSlot.item.iconWidth != 1 || slot.parentSlot.item.iconHeight != 1) || (invUI.currentlySelectedItem.iconWidth == 1 && invUI.currentlySelectedItem.iconHeight == 1))) // If slot isn't empty and is a child slot
                 {
                     foreach (InventorySlot childSlot in slot.parentSlot.childrenSlots) // For each of this child slot's related child slot's
                     {
@@ -382,10 +390,10 @@ public class Inventory : MonoBehaviour
                                 slot.AddItem(itemToAdd, itemData);
                                 itemData.TransferData(itemData, startSlot.itemData);
 
-                                if (startSlot.item.itemType == ItemType.Ammunition && startSlot.itemData.currentStackSize > 1)
-                                    slot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
-                                else if (startSlot.item.itemType == ItemType.Quiver && startSlot.itemData.currentAmmoCount > 0)
+                                if (startSlot.item.itemType == ItemType.Quiver && startSlot.itemData.currentAmmoCount > 0)
                                     slot.stackSizeText.text = startSlot.itemData.currentAmmoCount.ToString();
+                                else if (startSlot.itemData.currentStackSize > 1)
+                                    slot.stackSizeText.text = startSlot.itemData.currentStackSize.ToString();
                                 else
                                     startSlot.stackSizeText.text = "";
 
@@ -479,7 +487,7 @@ public class Inventory : MonoBehaviour
                             invUI.invSlotMovingFrom = invUI.tempSlot;
                             movingFromSlotSet = true;
                         }
-
+                        
                         slot.AddItem(itemToAdd, invUI.currentlySelectedItemData);
                         itemAdded = true;
                         itemData.TransferData(invUI.currentlySelectedItemData, slot.itemData);
@@ -568,15 +576,13 @@ public class Inventory : MonoBehaviour
                 if (childSlot != null)
                     childSlot.stackSizeText.text = "";
             }
-
+            
             if (invUI.currentlyActiveContainer != null && oldInvSlotMovingFrom != null && oldInvSlotMovingFrom.slotParent == invUI.containerParent)
             {
                 // Only will be used if this container is a dead body
                 EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
-                if (deadBodyEquipmentManager != null && itemData.equipment != null)
-                    deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] = null;
-
-                Destroy(itemData.gameObject);
+                if (deadBodyEquipmentManager != null && itemData.equipment != null && deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot] != null)
+                    Destroy(deadBodyEquipmentManager.currentEquipment[(int)itemData.equipment.equipmentSlot].gameObject);
             }
         }
 
@@ -671,6 +677,12 @@ public class Inventory : MonoBehaviour
                 // Get each slot, starting with the startSlot and soft fill them (not empty and has fullSlotSprite)
                 inventorySlots[invSlotCount] = GetSlotByCoordinates(new Vector2(startSlot.slotCoordinate.x + x, startSlot.slotCoordinate.y + y), invSlots);
                 inventorySlots[invSlotCount].SoftFillSlot(inventorySlots[invSlotCount]);
+
+                if (itemToAdd.iconWidth == 1 && itemToAdd.iconHeight == 1)
+                {
+                    inventorySlots[0].parentSlot = inventorySlots[0];
+                    return;
+                }
 
                 if (inventorySlots[invSlotCount] != startSlot) // The startSlot is our parent, so add all other slots as children of the startSlot
                 {
@@ -804,7 +816,7 @@ public class Inventory : MonoBehaviour
     {
         if (invUI.currentlyActiveContainer.gold > 0)
             TakeGold();
-
+        
         ItemData[] itemsTaken = new ItemData[invUI.currentlyActiveContainer.containerObjects.Count];
         for (int i = 0; i < invUI.currentlyActiveContainer.containerObjects.Count; i++)
         {
@@ -829,6 +841,14 @@ public class Inventory : MonoBehaviour
                     {
                         if (invSlot.itemData == objItemData)
                         {
+                            if (invSlot.slotParent == invUI.containerParent)
+                            {
+                                // Only will be used if this container is a dead body
+                                EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
+                                if (deadBodyEquipmentManager != null && invSlot.itemData.equipment != null && deadBodyEquipmentManager.currentEquipment[(int)invSlot.itemData.equipment.equipmentSlot] != null)
+                                    Destroy(deadBodyEquipmentManager.currentEquipment[(int)invSlot.itemData.equipment.equipmentSlot].gameObject);
+                            }
+
                             invSlot.ClearSlot();
                             break;
                         }
@@ -838,6 +858,7 @@ public class Inventory : MonoBehaviour
                     {
                         invUI.currentlyActiveContainer.containerItems.Remove(objItemData);
                         invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                        Destroy(obj);
                         break;
                     }
                 }

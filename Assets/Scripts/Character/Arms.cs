@@ -28,10 +28,15 @@ public class Arms : MonoBehaviour
     public Transform leftEquippedWeapon, rightEquippedWeapon;
     public Equipment leftWeapon, rightWeapon;
     public Animator leftArmAnim, rightArmAnim, bodyAnim;
+
+    NPCCombat npcCombat;
+    NPCAttacks npcAttacks;
     
     void Awake()
     {
         StartCoroutine(SetArmAnims(0.05f));
+        npcCombat = transform.parent.GetComponent<NPCCombat>();
+        npcAttacks = transform.parent.GetComponent<NPCAttacks>();
     }
 
     public void GetWeaponTransforms()
@@ -189,14 +194,37 @@ public class Arms : MonoBehaviour
             rightArmAnim.SetBool("isBlocking", false);
     }
 
-    public void DoAttack(Animator armAnim, string animationName, string bodyAnimationName, AttackType attackType, float attackTime, bool shouldKnockback)
+    public void DoAttack(Animator armAnim, string armAnimationName, string bodyAnimationName, AttackType attackType, float attackTime, bool shouldKnockback)
     {
         isAttacking = true;
         currentAttackType = attackType;
         currentAttackTime = attackTime;
         currentAttackShouldKnockback = shouldKnockback;
-        armAnim.SetBool(animationName, true);
+        armAnim.SetBool(armAnimationName, true);
         if (bodyAnimationName != null)
             bodyAnim.SetBool(bodyAnimationName, true);
+    }
+
+    public IEnumerator ResetAttack(Animator anim, string armAnimBoolName, string bodyAnimBoolName)
+    {
+        if (rightArmAnim.GetBool("doComboAttack1") == true || leftArmAnim.GetBool("doComboAttack1") == true)
+            yield return new WaitForSeconds(currentAttackTime - 0.3f);
+        else
+            yield return new WaitForSeconds(currentAttackTime);
+
+        isAttacking = false;
+        if (npcCombat != null)
+        {
+            if (npcAttacks.leftComboNumber == 1 && npcAttacks.rightComboNumber == 1)
+                npcCombat.determineMoveDirection = true;
+            else
+                npcCombat.needsCombatAction = true;
+        }
+
+        if (armAnimBoolName != null)
+            anim.SetBool(armAnimBoolName, false);
+        yield return new WaitForSeconds(0.2f);
+        if (bodyAnimBoolName != null)
+            bodyAnim.SetBool(bodyAnimBoolName, false);
     }
 }

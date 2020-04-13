@@ -174,8 +174,24 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             }
             else if (parentSlot.item.itemType == ItemType.Consumable)
             {
-                menuButton.name = "Consume";
-                menuButton.GetComponentInChildren<Text>().text = "Consume";
+                if (parentSlot.itemData.uses >= 1)
+                {
+                    if (parentSlot.itemData.consumable.consumableType == ConsumableType.Food)
+                    {
+                        menuButton.name = "Consume";
+                        menuButton.GetComponentInChildren<Text>().text = "Consume";
+                    }
+                    else if (parentSlot.itemData.consumable.consumableType == ConsumableType.Drink)
+                    {
+                        menuButton.name = "Drink";
+                        menuButton.GetComponentInChildren<Text>().text = "Drink";
+                    }
+                }
+                else
+                {
+                    Destroy(menuButton);
+                    return;
+                }
             }
             else if (parentSlot.item.itemType == ItemType.Ammunition)
             {
@@ -185,7 +201,10 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                     menuButton.GetComponentInChildren<Text>().text = "Add to Quiver";
                 }
                 else
+                {
                     Destroy(menuButton.gameObject);
+                    return;
+                }
             }
             else
             {
@@ -218,30 +237,40 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 
         if (inv.AddToInventory(parentSlot.item, parentSlot.itemData) == false)
-                Debug.Log("Not enough room in inventory.");
-
-        if (parentSlot.itemData.currentStackSize <= 0)
-        {
-            invUI.currentlyActiveContainer.containerItems.Remove(parentSlot.itemData);
-
-            foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
-            {
-                if (obj.GetComponent<ItemData>() == parentSlot.itemData)
-                {
-                    invUI.currentlyActiveContainer.containerObjects.Remove(obj);
-                    Destroy(obj);
-                    break;
-                }
-            }
-
-            parentSlot.ClearSlot();
-        }
+            Debug.Log("Not enough room in inventory.");
         else
         {
-            if (parentSlot.itemData.currentStackSize > 1)
-                parentSlot.stackSizeText.text = parentSlot.itemData.currentStackSize.ToString();
+            if (parentSlot.slotParent == invUI.containerParent && parentSlot.itemData.equipment != null)
+            {
+                // Only will be used if this container is a dead body
+                EquipmentManager deadBodyEquipmentManager = invUI.currentlyActiveContainer.GetComponent<EquipmentManager>();
+                if (deadBodyEquipmentManager != null && parentSlot.itemData.equipment != null && deadBodyEquipmentManager.currentEquipment[(int)parentSlot.itemData.equipment.equipmentSlot] != null)
+                    Destroy(deadBodyEquipmentManager.currentEquipment[(int)parentSlot.itemData.equipment.equipmentSlot].gameObject);
+            }
+
+            if (parentSlot.itemData.currentStackSize <= 0)
+            {
+                invUI.currentlyActiveContainer.containerItems.Remove(parentSlot.itemData);
+
+                foreach (GameObject obj in invUI.currentlyActiveContainer.containerObjects)
+                {
+                    if (obj.GetComponent<ItemData>() == parentSlot.itemData)
+                    {
+                        invUI.currentlyActiveContainer.containerObjects.Remove(obj);
+                        Destroy(obj);
+                        break;
+                    }
+                }
+
+                parentSlot.ClearSlot();
+            }
             else
-                parentSlot.stackSizeText.text = "";
+            {
+                if (parentSlot.itemData.currentStackSize > 1)
+                    parentSlot.stackSizeText.text = parentSlot.itemData.currentStackSize.ToString();
+                else
+                    parentSlot.stackSizeText.text = "";
+            }
         }
 
         DisableContextMenu();

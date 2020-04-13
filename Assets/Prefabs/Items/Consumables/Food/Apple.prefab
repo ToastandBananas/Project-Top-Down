@@ -151,6 +151,8 @@ MonoBehaviour:
   item: {fileID: 11400000, guid: 25c259f1f6c7d2d4ab76fbf7580ff6ba, type: 2}
   equipment: {fileID: 0}
   consumable: {fileID: 11400000, guid: 25c259f1f6c7d2d4ab76fbf7580ff6ba, type: 2}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: Apple
   value: 3
   currentStackSize: 1
@@ -203,8 +205,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId: 8581174448409499650
   localRefs:
-    _Keys: []
-    _Values: 
+    _Keys:
+    - {fileID: 5474431354769912416}
+    - {fileID: 5474431354769912447}
+    - {fileID: 5474431354769912444}
+    - {fileID: 6007463617900547621}
+    - {fileID: 8089636680066937328}
+    - {fileID: -9058958525889427172}
+    - {fileID: 7361386747976559446}
+    - {fileID: 2583632880563720389}
+    - {fileID: -8405726418261599943}
+    - {fileID: 3359087415959552522}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 21300000, guid: 934b4508812624e44ada9d803e068348, type: 3}
+    - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
+    - {fileID: 11400000, guid: 25c259f1f6c7d2d4ab76fbf7580ff6ba, type: 2}
+    - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
+    - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
+    _Values: 277ed184932a4801893207562297162d73313d20df47e137a74880a32371043c09a21ae446103200086ff60b3e46432027d2f202aa7e0a6e6109dd4aaaa5dd17d1349f3b4e048b6202c3d8b1c1138960055f7d517e0291785377bab01182546192dedd73e67e6e2a5f5500e7a559ac4d817c454a288c992b3be8723a41c38b7e
 --- !u!114 &3359087415959552522
 MonoBehaviour:
   m_ObjectHideFlags: 0
