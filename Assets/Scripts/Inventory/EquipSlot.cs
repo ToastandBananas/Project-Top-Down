@@ -23,6 +23,12 @@ public class EquipSlot : MonoBehaviour
     public Equipment equipment;
     public ItemData itemData;
 
+    [Header("Controller Navigation")]
+    public EquipSlot leftSlot;
+    public EquipSlot rightSlot;
+    public EquipSlot upSlot;
+    public EquipSlot downSlot;
+
     InventoryUI invUI;
     Inventory inv;
     AudioManager audioManager;

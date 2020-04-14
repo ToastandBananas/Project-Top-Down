@@ -286,74 +286,37 @@ public class InventorySlot : MonoBehaviour
 
     public void SetAmmoSprites()
     {
-        if (itemData.equipment != null)
+        if (itemData != null && itemData.equipment != null)
         {
-            if (itemData.equipment.itemType == ItemType.Ammunition)
+            if (itemData.equipment.itemType == ItemType.Ammunition && itemData.currentStackSize > 0)
             {
-                switch (itemData.currentStackSize)
+                if (itemData.currentStackSize < itemData.item.possibleSprites.Length)
                 {
-                    case 1:
-                        itemData.gameSprite = itemData.item.possibleSprites[0]; // 1 arrow
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[0];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 2:
-                        itemData.gameSprite = itemData.item.possibleSprites[1]; // 2 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[1];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 3:
-                        itemData.gameSprite = itemData.item.possibleSprites[2]; // 3 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[2];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 4:
-                        itemData.gameSprite = itemData.item.possibleSprites[3]; // 4 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[3];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    default:
-                        itemData.gameSprite = itemData.item.possibleSprites[4]; // 5 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[4];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
+                    itemData.gameSprite = itemData.item.possibleSprites[itemData.currentStackSize - 1];
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[itemData.currentStackSize - 1];
                 }
+                else
+                {
+                    itemData.gameSprite = itemData.item.possibleSprites[itemData.item.possibleSprites.Length - 1];
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[itemData.item.possibleSprites.Length - 1];
+                }
+
+                iconImage.sprite = itemData.inventoryIcon;
             }
             else if (itemData.equipment.itemType == ItemType.Quiver)
             {
-                switch (itemData.currentAmmoCount)
+                if (itemData.currentAmmoCount < itemData.item.possibleSprites.Length)
                 {
-                    case 0:
-                        itemData.gameSprite = itemData.item.possibleSprites[0]; // 0 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[0];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 1:
-                        itemData.gameSprite = itemData.item.possibleSprites[1]; // 1 arrow
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[1];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 2:
-                        itemData.gameSprite = itemData.item.possibleSprites[2]; // 2 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[2];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 3:
-                        itemData.gameSprite = itemData.item.possibleSprites[3]; // 3 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[3];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    case 4:
-                        itemData.gameSprite = itemData.item.possibleSprites[4]; // 4 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[4];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
-                    default:
-                        itemData.gameSprite = itemData.item.possibleSprites[5]; // 5 arrows
-                        itemData.inventoryIcon = itemData.item.inventoryIcons[5];
-                        iconImage.sprite = itemData.inventoryIcon;
-                        break;
+                    itemData.gameSprite = itemData.item.possibleSprites[itemData.currentAmmoCount];
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[itemData.currentAmmoCount];
                 }
+                else
+                {
+                    itemData.gameSprite = itemData.item.possibleSprites[itemData.item.possibleSprites.Length - 1];
+                    itemData.inventoryIcon = itemData.item.inventoryIcons[itemData.item.possibleSprites.Length - 1];
+                }
+
+                iconImage.sprite = itemData.inventoryIcon;
             }
         }
     }

@@ -22,7 +22,6 @@ public class Inventory : MonoBehaviour
 
     #region Singleton
     public static Inventory instance;
-
     void Awake()
     {
         if (instance == null)
@@ -646,8 +645,30 @@ public class Inventory : MonoBehaviour
             if (slot.slotCoordinate == coordinate)
                 return slot;
         }
-
+        
         return null; // We should never get to this line.
+    }
+
+    public EquipSlot GetEquipSlot(WeaponSlot weaponSlot, EquipmentSlot equipmentSlot)
+    {
+        if (weaponSlot != WeaponSlot.None)
+        {
+            foreach (EquipSlot slot in InventoryUI.instance.weaponSlots)
+            {
+                if (slot.thisWeaponSlot == weaponSlot)
+                    return slot;
+            }
+        }
+        else if (equipmentSlot != EquipmentSlot.None)
+        {
+            foreach (EquipSlot slot in InventoryUI.instance.equipSlots)
+            {
+                if (slot.thisEquipmentSlot == equipmentSlot)
+                    return slot;
+            }
+        }
+
+        return null;
     }
 
     public void ClearParentAndChildSlots(InventorySlot slot)

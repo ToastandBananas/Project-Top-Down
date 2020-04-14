@@ -26,6 +26,7 @@ public class Container : MonoBehaviour
     InventoryUI invUI;
     Inventory inv;
     AudioManager audioManager;
+    GameManager gm;
 
     Item itemToAdd;
     bool inContainerRange;
@@ -35,6 +36,7 @@ public class Container : MonoBehaviour
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
         audioManager = AudioManager.instance;
+        gm = GameManager.instance;
         itemsParent = transform.Find("Items");
 
         InitializeData();
@@ -156,6 +158,12 @@ public class Container : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         AddContainerItems();
+
+        if (gm.isUsingController)
+        {
+            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0);
+            UIControllerNavigation.instance.currentOverallYCoord = 1;
+        }
     }
 
     IEnumerator SetupContainerObjects(GameObject hierarchyObj, GameObject containerObj, ItemData hierarchyObjItemData, ItemData containerObjItemData)
@@ -205,28 +213,34 @@ public class Container : MonoBehaviour
             invUI.ToggleInventory();
         if (invUI.playerEquipmentMenu.activeSelf == false)
             invUI.ToggleEquipmentMenu();
+
+        if (gm.isUsingController)
+            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0);
     }
 
     IEnumerator CloseMenus()
     {
         if (invUI.pocketsParent.childCount > 0)
             invUI.weaponSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
-        if (invUI.equipTooltip1.gameObject.activeSelf == true)
+        if (invUI.equipTooltip1.gameObject.activeSelf)
             invUI.equipTooltip1.ClearTooltip();
-        if (invUI.equipTooltip2.gameObject.activeSelf == true)
+        if (invUI.equipTooltip2.gameObject.activeSelf)
             invUI.equipTooltip2.ClearTooltip();
-        if (invUI.invTooltip.gameObject.activeSelf == true)
+        if (invUI.invTooltip.gameObject.activeSelf)
             invUI.invTooltip.ClearTooltip();
 
         yield return new WaitForSeconds(0.15f);
 
         invUI.TurnOffHighlighting();
-        if (invUI.containerMenu.activeSelf == true)
+        if (invUI.containerMenu.activeSelf)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryMenu.activeSelf == true)
+        if (invUI.inventoryMenu.activeSelf)
             invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenu.activeSelf == true)
+        if (invUI.playerEquipmentMenu.activeSelf)
             invUI.ToggleEquipmentMenu();
+
+        if (gm.isUsingController)
+            UIControllerNavigation.instance.ClearCurrentlySelected();
     }
 
     void OnTriggerStay2D(Collider2D collision)

@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     AudioManager audioManager;
     AnimTimeManager animTimeManager;
+    GameManager gm;
     Animator bodyAnim, legsAnim;
     Arms arms;
     Rigidbody2D rb;
@@ -63,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
         headReset = transform.Find("Head Reset");
         audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
+        gm = GameManager.instance;
         arms = transform.Find("Arms").GetComponent<Arms>();
         bodyAnim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
@@ -156,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update_Dodge()
     {
-        if (canDodge && GameControls.gamePlayActions.playerDodge.WasPressed)
+        if (GameControls.gamePlayActions.playerDodge.WasPressed && canDodge && gm.menuOpen == false)
         {
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 

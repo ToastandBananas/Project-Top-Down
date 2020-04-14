@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
+  - component: {fileID: 186433817257015334}
   - component: {fileID: 6193931194439165326}
   - component: {fileID: 3661388085602504287}
   - component: {fileID: 68740533560211229}
@@ -52,6 +53,18 @@ MonoBehaviour:
   menuOpen: 0
   pauseMenu: {fileID: 0}
   isUsingController: 0
+--- !u!114 &186433817257015334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6193931194439165326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,6 +86,9 @@ MonoBehaviour:
   footstepTime: 0
   bodyThrustLeftTime: 0
   bodyThrustRightTime: 0
+  comboAttack1HLeft1Time: 0
+  comboAttack1HLeft2Time: 0
+  comboAttack1HLeft3Time: 0
   comboAttack1HRight1Time: 0
   comboAttack1HRight2Time: 0
   comboAttack1HRight3Time: 0
@@ -116,8 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 30
-  bagSlotCount: 42
+  pocketsSlotCount: 32
+  bagSlotCount: 0
   horseBagSlotCount: 10
   pocketItems: []
   bagItems: []

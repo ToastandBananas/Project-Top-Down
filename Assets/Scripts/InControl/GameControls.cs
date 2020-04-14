@@ -62,7 +62,7 @@ public class GameControls : MonoBehaviour
 
         // UI Actions
         gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
-        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.DPadUp);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action2);
 
         gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
         gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);

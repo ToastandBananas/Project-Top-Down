@@ -44,6 +44,10 @@ public class InventoryUI : MonoBehaviour
     [HideInInspector] public int maxContainerWidth = 6;
     [HideInInspector] public int overallInventoryHeight = 0;
     [HideInInspector] public int maxOverallInventoryHeight = 12;
+    [HideInInspector] public int pocketsHeight;
+    [HideInInspector] public int bagHeight;
+    [HideInInspector] public int horseBagHeight;
+    [HideInInspector] public int containerHeight;
 
     [Header("Equip Slots")]
     [HideInInspector] public EquipSlot[] weaponSlots = new EquipSlot[3];
@@ -64,8 +68,8 @@ public class InventoryUI : MonoBehaviour
     public Tooltip equipTooltip1;
     public Tooltip equipTooltip2;
 
-    Inventory inventory;
-    PlayerMovement player;
+    Inventory inv;
+    PlayerMovement playerMovement;
     GameManager gm;
 
     void Awake()
@@ -83,13 +87,13 @@ public class InventoryUI : MonoBehaviour
         inventoryMenu.SetActive(true);
         playerEquipmentMenu.SetActive(true);
 
-        inventory = Inventory.instance;
+        inv = Inventory.instance;
 
         if (GameManager.instance != null && GameManager.instance.GetComponent<SaveLoad>().isLoading == false)
         {
-            CreateSlots(inventory.pocketsSlotCount, pocketsParent, pocketsSlots, false);
-            CreateSlots(inventory.bagSlotCount, bagParent, bagSlots, false);
-            CreateSlots(inventory.horseBagSlotCount, horseBagParent, horseBagSlots, false);
+            CreateSlots(inv.pocketsSlotCount, pocketsParent, pocketsSlots, false);
+            CreateSlots(inv.bagSlotCount, bagParent, bagSlots, false);
+            CreateSlots(inv.horseBagSlotCount, horseBagParent, horseBagSlots, false);
 
             CreateTempSlot();
 
@@ -105,8 +109,8 @@ public class InventoryUI : MonoBehaviour
     void Start()
     {
         gm = GameManager.instance;
-        player = PlayerMovement.instance;
-        if (player.isMounted == false)
+        playerMovement = PlayerMovement.instance;
+        if (playerMovement.isMounted == false)
             ShowHorseSlots(false);
     }
 
@@ -166,6 +170,15 @@ public class InventoryUI : MonoBehaviour
 
     public void CreateSlots(int slotCount, Transform slotsParent, List<InventorySlot> slots, bool isContainer)
     {
+        if (slotsParent == pocketsParent)
+            pocketsHeight = 0;
+        else if (slotsParent == bagParent)
+            bagHeight = 0;
+        else if (slotsParent == horseBagParent)
+            horseBagHeight = 0;
+        else if (slotsParent == containerParent)
+            containerHeight = 0;
+
         int currentXCoord = 1;
         int currentYCoord = 1;
         overallInventoryHeight++;
@@ -180,6 +193,16 @@ public class InventoryUI : MonoBehaviour
             {
                 currentXCoord = 1;
                 currentYCoord++;
+
+                if (slotsParent == pocketsParent)
+                    pocketsHeight = currentYCoord;
+                else if (slotsParent == bagParent)
+                    bagHeight = currentYCoord;
+                else if (slotsParent == horseBagParent)
+                    horseBagHeight = currentYCoord;
+                else if (slotsParent == containerParent)
+                    containerHeight = currentYCoord;
+
                 overallInventoryHeight++;
             }
 
@@ -192,6 +215,27 @@ public class InventoryUI : MonoBehaviour
                 slot.name = "Horse Bag Slot " + i;
             else if (slotsParent == containerParent)
                 slot.name = "Container Slot " + i;
+        }
+
+        if (slotsParent == pocketsParent)
+        {
+            if (slotCount % maxInventoryWidth == 0)
+                pocketsHeight--;
+        }
+        else if (slotsParent == bagParent)
+        {
+            if (slotCount % maxInventoryWidth == 0)
+                bagHeight--;
+        }
+        else if (slotsParent == horseBagParent)
+        {
+            if (slotCount % maxInventoryWidth == 0)
+                horseBagHeight--;
+        }
+        else if (slotsParent == containerParent)
+        {
+            if (slotCount % maxInventoryWidth == 0)
+                containerHeight--;
         }
 
         if (isContainer)
@@ -304,14 +348,22 @@ public class InventoryUI : MonoBehaviour
     IEnumerator ToggleMenus()
     {
         yield return new WaitForSeconds(0.15f);
-        if (inventoryMenu.activeSelf == true)
+        if (inventoryMenu.activeSelf)
             TurnOffHighlighting();
         ToggleInventory();
         ToggleEquipmentMenu();
-        if (containerMenu.activeSelf == true)
+        if (containerMenu.activeSelf)
             ToggleContainerMenu();
-        if (quantityMenu.gameObject.activeSelf == true)
+        if (quantityMenu.gameObject.activeSelf)
             quantityMenu.CloseQuantityMenu();
+
+        if (gm.isUsingController)
+        {
+            if (inventoryMenu.activeSelf)
+                UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, pocketsSlots), 0);
+            else
+                UIControllerNavigation.instance.ClearCurrentlySelected();
+        }
     }
 
     IEnumerator CalculateItemsParentHeight(Transform itemsParent)

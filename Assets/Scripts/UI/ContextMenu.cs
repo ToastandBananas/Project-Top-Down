@@ -319,12 +319,11 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             invUI.currentlySelectedItem = tempSlotItemData.item;
             invUI.currentlySelectedItemData = tempSlotItemData;
             invUI.invSlotMovingFrom = invUI.tempSlot;
-
-            if (thisInvSlot != null)
+            if (parentSlot != null)
             {
                 parentSlot.itemData.currentAmmoCount = 0;
                 parentSlot.stackSizeText.text = "";
-                thisInvSlot.SetAmmoSprites();
+                parentSlot.SetAmmoSprites();
             }
             else if (thisEquipSlot != null)
             {
