@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,11 +8,18 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int floatingTextIndex = 0;
     
     public bool menuOpen;
+
+    [Header("Pause Menu")]
     public GameObject pauseMenu;
+    public Button resumeButton;
+    public Button loadButton;
+    public Button saveButton;
+    public Button saveAndQuitButton;
 
     public bool isUsingController;
 
     InventoryUI invUI;
+    UIControllerNavigation UIControllerNav;
 
     #region Singleton
     public static GameManager instance;
@@ -32,6 +40,7 @@ public class GameManager : MonoBehaviour
     {
         floatingTexts = GameObject.Find("Floating Texts").GetComponentsInChildren<TextFade>();
         invUI = InventoryUI.instance;
+        UIControllerNav = UIControllerNavigation.instance;
 
         if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();
@@ -59,9 +68,19 @@ public class GameManager : MonoBehaviour
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         if (pauseMenu.activeSelf)
+        {
             menuOpen = true;
+            UIControllerNav.ClearCurrentlySelected();
+            UIControllerNav.currentlySelectedObject = resumeButton.gameObject;
+            UIControllerNav.currentlySelectedButton = resumeButton;
+            resumeButton.OnSelect(null);
+            resumeButton.Select();
+        }
         else
+        {
             menuOpen = false;
+            UIControllerNav.ClearCurrentlySelected();
+        }
     }
 
     public void TurnOffMenus()

@@ -15,6 +15,7 @@ public class InventoryUI : MonoBehaviour
     public Text playerGoldText;
     public Text containerMenuGoldText;
     public QuantityMenu quantityMenu;
+    public Transform contextMenu;
 
     [Header("Prefabs")]
     public GameObject slotPrefab;

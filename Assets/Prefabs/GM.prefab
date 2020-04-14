@@ -52,7 +52,11 @@ MonoBehaviour:
   floatingTextIndex: 0
   menuOpen: 0
   pauseMenu: {fileID: 0}
-  isUsingController: 0
+  resumeButton: {fileID: 0}
+  loadButton: {fileID: 0}
+  saveButton: {fileID: 0}
+  saveAndQuitButton: {fileID: 0}
+  isUsingController: 1
 --- !u!114 &186433817257015334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentOverallYCoord: 1
 --- !u!114 &6193931194439165326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,8 +138,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pocketsSlotCount: 32
-  bagSlotCount: 0
-  horseBagSlotCount: 10
+  bagSlotCount: 75
+  horseBagSlotCount: 35
   pocketItems: []
   bagItems: []
   horseBagItems: []
