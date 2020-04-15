@@ -66,12 +66,15 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
         gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);
+        gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Options);
 
         gamePlayActions.menuSelect.AddDefaultBinding(Mouse.LeftButton);
         gamePlayActions.menuSelect.AddDefaultBinding(InputControlType.Action1);
 
         gamePlayActions.menuContext.AddDefaultBinding(Mouse.RightButton);
         gamePlayActions.menuContext.AddDefaultBinding(InputControlType.Action3);
+
+        gamePlayActions.menuDropItem.AddDefaultBinding(InputControlType.Action4);
 
         gamePlayActions.menuUp.AddDefaultBinding(Key.UpArrow);
         gamePlayActions.menuUp.AddDefaultBinding(InputControlType.DPadUp);

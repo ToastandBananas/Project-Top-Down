@@ -10,6 +10,7 @@ public class Interactable : MonoBehaviour
     
     Transform player;
     PlayerMovement playerMovement;
+    GameManager gm;
     
     //bool hasInteracted = false; // Have we already interacted with this object?
 
@@ -19,16 +20,17 @@ public class Interactable : MonoBehaviour
         // Debug.Log("Interacting with " + transform.name);
     }
 
-    void Awake()
+    void Start()
     {
         interactionTransform = transform;
         playerMovement = PlayerMovement.instance;
         player = playerMovement.gameObject.transform;
+        gm = GameManager.instance;
     }
     
     void Update()
     {
-        if (GameControls.gamePlayActions.playerInteract.WasPressed)
+        if (GameControls.gamePlayActions.playerInteract.WasPressed && GameManager.instance.menuOpen == false)
         {
             if (player == null)
             {
@@ -45,7 +47,6 @@ public class Interactable : MonoBehaviour
 
                 // Interact with the object
                 Interact();
-                //hasInteracted = true;
 
                 playerMovement.StartPickUpCooldown();
             }

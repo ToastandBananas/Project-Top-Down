@@ -4,6 +4,7 @@ using UnityEngine;
 public class ItemDrop : MonoBehaviour
 {
     public Item item;
+    public ItemData itemData;
     public bool isDropped;
 
     AudioManager audioManager;
@@ -30,7 +31,8 @@ public class ItemDrop : MonoBehaviour
 
     void Start()
     {
-        item = GetComponent<ItemData>().item;
+        itemData = GetComponent<ItemData>();
+        item = itemData.item;
         audioManager = AudioManager.instance;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -52,7 +54,10 @@ public class ItemDrop : MonoBehaviour
         if (arrowScript != null)
             arrowScript.enabled = false;
 
-        spriteRenderer.sprite = GetComponent<ItemData>().gameSprite;
+        if (item.itemType == ItemType.Consumable && itemData.consumable.consumableType == ConsumableType.Drink && item.possibleSprites.Length > 1)
+            spriteRenderer.sprite = item.possibleSprites[itemData.uses];
+        else
+            spriteRenderer.sprite = itemData.gameSprite;
 
         if (item.droppedSprite != null)
             spriteRenderer.sprite = item.droppedSprite;

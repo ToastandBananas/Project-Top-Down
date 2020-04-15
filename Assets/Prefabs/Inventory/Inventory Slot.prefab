@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6beb9716100323d438984b0ece38081f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemButton: {fileID: 2043610099251720912}
   isEmpty: 1
   slotCoordinate: {x: 0, y: 0}
   iconPrefab: {fileID: 1861349985597137972, guid: 802b9230d795aaa42b5243a22b6fffbf,

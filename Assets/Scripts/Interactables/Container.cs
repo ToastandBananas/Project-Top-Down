@@ -81,8 +81,6 @@ public class Container : MonoBehaviour
 
                 OpenMenus();
             }
-            else // If the container menu is already open, close it
-                StartCoroutine(CloseMenus());
         }
     }
 
@@ -161,7 +159,8 @@ public class Container : MonoBehaviour
 
         if (gm.isUsingController)
         {
-            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0);
+            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
+            UIControllerNavigation.instance.currentXCoord = 1;
             UIControllerNavigation.instance.currentOverallYCoord = 1;
         }
     }
@@ -215,29 +214,19 @@ public class Container : MonoBehaviour
             invUI.ToggleEquipmentMenu();
 
         if (gm.isUsingController)
-            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0);
+            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
     }
 
-    IEnumerator CloseMenus()
+    IEnumerator CloseMenu()
     {
-        if (invUI.pocketsParent.childCount > 0)
-            invUI.weaponSlots[0].GetComponentInChildren<ContextMenu>().DisableContextMenu();
-        if (invUI.equipTooltip1.gameObject.activeSelf)
-            invUI.equipTooltip1.ClearTooltip();
-        if (invUI.equipTooltip2.gameObject.activeSelf)
-            invUI.equipTooltip2.ClearTooltip();
-        if (invUI.invTooltip.gameObject.activeSelf)
-            invUI.invTooltip.ClearTooltip();
+        UIControllerNavigation.instance.DisableContextMenu();
+        invUI.ClearAllTooltips();
 
         yield return new WaitForSeconds(0.15f);
 
         invUI.TurnOffHighlighting();
         if (invUI.containerMenu.activeSelf)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryMenu.activeSelf)
-            invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenu.activeSelf)
-            invUI.ToggleEquipmentMenu();
 
         if (gm.isUsingController)
             UIControllerNavigation.instance.ClearCurrentlySelected();
@@ -272,7 +261,7 @@ public class Container : MonoBehaviour
             }
 
             if (invUI.containerMenu.activeSelf == true)
-                StartCoroutine(CloseMenus());
+                StartCoroutine(CloseMenu());
         }
     }
 }

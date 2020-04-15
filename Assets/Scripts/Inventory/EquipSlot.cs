@@ -6,6 +6,7 @@ public class EquipSlot : MonoBehaviour
     [Header("Slot")]
     public WeaponSlot thisWeaponSlot;
     public EquipmentSlot thisEquipmentSlot;
+    public Button itemButton;
     public bool isEmpty = true;
 
     [Header("Icon")]
@@ -33,6 +34,7 @@ public class EquipSlot : MonoBehaviour
     Inventory inv;
     AudioManager audioManager;
     EquipmentManager equipmentManager;
+    ContextMenu contextMenu;
     HoverHighlight hoverHighlightScript;
 
     Vector3 mousePos;
@@ -42,6 +44,7 @@ public class EquipSlot : MonoBehaviour
     void Awake()
     {
         hoverHighlightScript = GetComponent<HoverHighlight>();
+        contextMenu = GetComponentInChildren<ContextMenu>();
         slotText = transform.Find("Text").GetComponent<Text>();
 
         if (thisEquipmentSlot == EquipmentSlot.Quiver)
@@ -330,6 +333,11 @@ public class EquipSlot : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void DropItem()
+    {
+        contextMenu.DropItem();
     }
 
     void FollowMouse()

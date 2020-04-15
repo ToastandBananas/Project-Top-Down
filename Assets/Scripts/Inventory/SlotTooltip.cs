@@ -43,14 +43,7 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData eventData)
     {
         // Clear and disable all tooltips
-        if (invUI.invTooltip.gameObject.activeSelf == true)
-            invUI.invTooltip.ClearTooltip();
-
-        if (invUI.equipTooltip1.gameObject.activeSelf == true)
-            invUI.equipTooltip1.ClearTooltip();
-
-        if (invUI.equipTooltip2.gameObject.activeSelf == true)
-            invUI.equipTooltip2.ClearTooltip();
+        invUI.ClearAllTooltips();
     }
 
     void GetInvSlotTooltip()

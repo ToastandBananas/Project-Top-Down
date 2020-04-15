@@ -13,8 +13,11 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
     EquipmentManager equipmentManager;
     Inventory inv;
     InventoryUI invUI;
+    UIControllerNavigation UIControllerNav;
     InventorySlot thisInvSlot;
     EquipSlot thisEquipSlot;
+
+    bool onCooldown;
 
     void Start()
     {
@@ -24,6 +27,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         equipmentManager = player.GetComponent<EquipmentManager>();
         inv = Inventory.instance;
         invUI = InventoryUI.instance;
+        UIControllerNav = UIControllerNavigation.instance;
         thisInvSlot = GetComponentInParent<InventorySlot>();
         thisEquipSlot = GetComponentInParent<EquipSlot>();
     }
@@ -32,7 +36,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
     {
         if (contextMenu.transform.childCount > 0
             && (GameControls.gamePlayActions.menuSelect.WasPressed || GameControls.gamePlayActions.menuContext.WasPressed || Input.GetMouseButtonDown(2))
-            && EventSystem.current.currentSelectedGameObject == null)
+            && EventSystem.current.currentSelectedGameObject == null && UIControllerNav.currentlySelectedObject == null)
         {
             DisableContextMenu();
         }
@@ -46,42 +50,83 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 DisableContextMenu();
             // If the context menu is not open and needs built and the slot has an item in it
             else if ((thisInvSlot != null && thisInvSlot.isEmpty == false) || (thisEquipSlot != null && thisEquipSlot.isEmpty == false))
-            {
-                // Set our context menu's position
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-                contextMenu.transform.position = canvas.transform.TransformPoint(pos) + new Vector3(1, -0.5f, 0);
-
-                // If this slot is on the far right of the inventory menu
-                if (thisInvSlot != null && thisInvSlot.slotCoordinate.x == invUI.maxInventoryWidth)
-                    contextMenu.transform.position += new Vector3(-2, 0, 0);
-
-                // If this slot is on the very bottom of the screen
-                if (pos.y < -420f)
-                    contextMenu.transform.position += new Vector3(0, 1.5f, 0);
-
-                CreateTakeItemButton();
-                CreateUseItemButton();
-                CreateSplitStackButton();
-                CreateRemoveAmmunitionButton();
-                CreateDropItemButton();
-            }
+                BuildContextMenu(true);
         }
 
-        if (eventData.button == PointerEventData.InputButton.Left || eventData.button == PointerEventData.InputButton.Middle)
+        if ((eventData.button == PointerEventData.InputButton.Left || eventData.button == PointerEventData.InputButton.Middle))
         {
             if (contextMenu.transform.childCount > 0)
                 DisableContextMenu();
         }
     }
 
+    public void BuildContextMenu(bool setToMousePos)
+    {
+        if (onCooldown == false && invUI.quantityMenu.gameObject.activeSelf == false)
+        {
+            StartCoroutine(BuildContextMenuCooldown());
+
+            invUI.ClearAllTooltips();
+
+            // Set our context menu's position
+            if (setToMousePos)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+                contextMenu.transform.position = canvas.transform.TransformPoint(pos) + new Vector3(1, -0.5f, 0);
+
+                // If this slot is on the very bottom of the screen
+                if (pos.y < -420f)
+                    contextMenu.transform.position += new Vector3(0, 1.5f, 0);
+            }
+            else
+            {
+                contextMenu.transform.position = transform.position + new Vector3(1, -0.5f, 0);
+                if (UIControllerNav.currentlySelectedInventorySlot != null && UIControllerNav.currentOverallYCoord >= invUI.maxOverallInventoryHeight)
+                    contextMenu.transform.position += new Vector3(0, 1.5f, 0);
+            }
+
+            // If this slot is on the far right of the inventory menu
+            if (thisInvSlot != null && thisInvSlot.slotCoordinate.x == invUI.maxInventoryWidth)
+                contextMenu.transform.position += new Vector3(-2, 0, 0);
+
+            CreateTakeItemButton();
+            CreateUseItemButton();
+            CreateSplitStackButton();
+            CreateRemoveAmmunitionButton();
+            CreateDropItemButton();
+
+            if (contextMenu.transform.childCount > 0)
+                StartCoroutine(SelectContextButton());
+        }
+    }
+
+    IEnumerator BuildContextMenuCooldown()
+    {
+        if (onCooldown == false)
+        {
+            onCooldown = true;
+            yield return new WaitForSeconds(0.2f);
+            onCooldown = false;
+        }
+    }
+
+    IEnumerator SelectContextButton()
+    {
+        yield return new WaitForSeconds(0.05f);
+        if (contextMenu.transform.childCount > 0)
+            StartCoroutine(UIControllerNav.SelectButton(contextMenu.transform.GetChild(0).GetComponent<Button>()));
+    }
+
     public void DisableContextMenu()
     {
-        if (contextMenu != null)
+        if (contextMenu != null && onCooldown == false)
         {
             for (int i = 0; i < contextMenu.transform.childCount; i++)
             {
                 Destroy(contextMenu.transform.GetChild(i).gameObject);
             }
+
+            UIControllerNav.ClearSelectedButton();
         }
     }
 
@@ -284,6 +329,9 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         invUI.quantityMenu.gameObject.SetActive(true);
         invUI.quantityMenu.currentParentSlot = parentSlot;
         invUI.quantityMenu.currentItemData = parentSlot.itemData;
+
+        UIControllerNav.currentlySelectedObject = invUI.quantityMenu.submitButton.gameObject;
+        UIControllerNav.currentlySelectedButton = invUI.quantityMenu.submitButton;
 
         DisableContextMenu();
     }

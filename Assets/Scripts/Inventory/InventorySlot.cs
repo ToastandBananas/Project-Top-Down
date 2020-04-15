@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
+    [Header("Slot")]
+    public Button itemButton;
     public bool isEmpty = true;
 
     [Header("Slot Coordinate")]
@@ -30,11 +32,11 @@ public class InventorySlot : MonoBehaviour
     InventoryUI invUI;
     AudioManager audioManager;
     HoverHighlight hoverHighlightScript;
+    ContextMenu contextMenu;
     
     Vector3 mousePos;
     float xPosOffset = 0;
     float yPosOffset = 0;
-
 
     void Awake()
     {
@@ -42,6 +44,7 @@ public class InventorySlot : MonoBehaviour
         invUI = InventoryUI.instance;
         audioManager = AudioManager.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
+        contextMenu = GetComponentInChildren<ContextMenu>();
         stackSizeText = GetComponentInChildren<Text>();
 
         if (name == "Temp Slot")
@@ -50,7 +53,8 @@ public class InventorySlot : MonoBehaviour
 
     void Update()
     {
-        FollowMouse();
+        if (GameManager.instance.isUsingController == false)
+            FollowMouse();
     }
 
     public void AddItem(Item newItem, ItemData newItemData)
@@ -319,6 +323,11 @@ public class InventorySlot : MonoBehaviour
                 iconImage.sprite = itemData.inventoryIcon;
             }
         }
+    }
+
+    public void DropItem()
+    {
+        contextMenu.DropItem();
     }
 
     public InventorySlot GetParentSlot(InventorySlot slot)

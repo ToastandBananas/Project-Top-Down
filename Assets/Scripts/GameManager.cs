@@ -91,5 +91,10 @@ public class GameManager : MonoBehaviour
             invUI.ToggleInventory();
         if (invUI.playerEquipmentMenu.activeSelf == true)
             invUI.ToggleEquipmentMenu();
+
+        invUI.TurnOffHighlighting();
+        invUI.ClearAllTooltips();
+        UIControllerNav.DisableContextMenu();
+        UIControllerNav.ClearCurrentlySelected();
     }
 }

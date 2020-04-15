@@ -18,7 +18,7 @@ public class GamePlayActions : PlayerActionSet
 
     // UI Actions
     public PlayerAction playerInventory;
-    public PlayerAction menuPause, menuSelect, menuContext;
+    public PlayerAction menuPause, menuSelect, menuContext, menuDropItem;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
 
     public GamePlayActions()
@@ -56,6 +56,7 @@ public class GamePlayActions : PlayerActionSet
         menuPause = CreatePlayerAction("MenuPause");
         menuSelect = CreatePlayerAction("MenuSelect");
         menuContext = CreatePlayerAction("MenuContext");
+        menuDropItem = CreatePlayerAction("MenuDropItem");
         menuLeft = CreatePlayerAction("MenuLeft");
         menuRight = CreatePlayerAction("MenuRight");
         menuUp = CreatePlayerAction("MenuUp");

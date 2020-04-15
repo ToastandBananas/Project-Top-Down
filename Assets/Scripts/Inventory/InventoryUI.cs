@@ -143,7 +143,7 @@ public class InventoryUI : MonoBehaviour
         }
 
         // If we have a selected item and we click outside of a menu, drop the item
-        if (GameControls.gamePlayActions.menuSelect.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
+        if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
         {
             if (invSlotMovingFrom != null)
             {
@@ -172,13 +172,13 @@ public class InventoryUI : MonoBehaviour
     public void CreateSlots(int slotCount, Transform slotsParent, List<InventorySlot> slots, bool isContainer)
     {
         if (slotsParent == pocketsParent)
-            pocketsHeight = 0;
+            pocketsHeight = 1;
         else if (slotsParent == bagParent)
-            bagHeight = 0;
+            bagHeight = 1;
         else if (slotsParent == horseBagParent)
-            horseBagHeight = 0;
+            horseBagHeight = 1;
         else if (slotsParent == containerParent)
-            containerHeight = 0;
+            containerHeight = 1;
 
         int currentXCoord = 1;
         int currentYCoord = 1;
@@ -305,12 +305,19 @@ public class InventoryUI : MonoBehaviour
         if (inventoryMenu.activeSelf)
             gm.menuOpen = true;
         else
+        {
+            ClearAllTooltips();
             gm.menuOpen = false;
+        }
     }
 
     public void ToggleEquipmentMenu()
     {
         playerEquipmentMenu.SetActive(!playerEquipmentMenu.activeSelf);
+        if (playerEquipmentMenu.activeSelf)
+            gm.menuOpen = true;
+        else
+            ClearAllTooltips();
     }
 
     public void ToggleContainerMenu()
@@ -349,22 +356,41 @@ public class InventoryUI : MonoBehaviour
     IEnumerator ToggleMenus()
     {
         yield return new WaitForSeconds(0.15f);
+
         if (inventoryMenu.activeSelf)
+        {
             TurnOffHighlighting();
+            UIControllerNavigation.instance.ClearCurrentlySelected();
+            UIControllerNavigation.instance.DisableContextMenu();
+        }
+
         ToggleInventory();
         ToggleEquipmentMenu();
+
         if (containerMenu.activeSelf)
             ToggleContainerMenu();
+
         if (quantityMenu.gameObject.activeSelf)
             quantityMenu.CloseQuantityMenu();
 
         if (gm.isUsingController)
         {
             if (inventoryMenu.activeSelf)
-                UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, pocketsSlots), 0);
-            else
-                UIControllerNavigation.instance.ClearCurrentlySelected();
+                UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, pocketsSlots), 0, 0);
         }
+    }
+
+    public void ClearAllTooltips()
+    {
+        // Clear and disable all tooltips
+        if (invTooltip.gameObject.activeSelf == true)
+            invTooltip.ClearTooltip();
+
+        if (equipTooltip1.gameObject.activeSelf == true)
+            equipTooltip1.ClearTooltip();
+
+        if (equipTooltip2.gameObject.activeSelf == true)
+            equipTooltip2.ClearTooltip();
     }
 
     IEnumerator CalculateItemsParentHeight(Transform itemsParent)

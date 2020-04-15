@@ -8,13 +8,18 @@ public class QuantityMenu : MonoBehaviour
     public ItemData currentItemData;
     public int currentQuantity = 1;
 
+    public Button submitButton;
+    public Button cancelButton;
+
     Text quantityText;
     InventoryUI invUI;
+    UIControllerNavigation UIControllerNav;
 
     void Awake()
     {
         quantityText = transform.Find("Quantity Text").GetComponent<Text>();
         invUI = InventoryUI.instance;
+        UIControllerNav = UIControllerNavigation.instance;
     }
 
     void OnEnable()
@@ -89,5 +94,7 @@ public class QuantityMenu : MonoBehaviour
         gameObject.SetActive(false);
         currentItemData = null;
         currentParentSlot = null;
+
+        UIControllerNav.ClearSelectedButton();
     }
 }
