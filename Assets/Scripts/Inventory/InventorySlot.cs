@@ -7,6 +7,7 @@ public class InventorySlot : MonoBehaviour
     [Header("Slot")]
     public Button itemButton;
     public bool isEmpty = true;
+    public List<InventorySlot> invSlots;
 
     [Header("Slot Coordinate")]
     public Vector2 slotCoordinate = Vector2.zero;
@@ -26,13 +27,15 @@ public class InventorySlot : MonoBehaviour
     public InventorySlot parentSlot;
     public InventorySlot[] childrenSlots = new InventorySlot[7];
 
-    public Transform slotParent;
+    [HideInInspector] public ContextMenu contextMenu;
+    [HideInInspector] public HoverHighlight hoverHighlightScript;
+    [HideInInspector] public SlotTooltip slotTooltip;
     [HideInInspector] public Text stackSizeText;
+    [HideInInspector] public Transform slotParent;
+
     Inventory inv;
     InventoryUI invUI;
     AudioManager audioManager;
-    HoverHighlight hoverHighlightScript;
-    ContextMenu contextMenu;
     
     Vector3 mousePos;
     float xPosOffset = 0;
@@ -44,6 +47,7 @@ public class InventorySlot : MonoBehaviour
         invUI = InventoryUI.instance;
         audioManager = AudioManager.instance;
         hoverHighlightScript = GetComponent<HoverHighlight>();
+        slotTooltip = GetComponent<SlotTooltip>();
         contextMenu = GetComponentInChildren<ContextMenu>();
         stackSizeText = GetComponentInChildren<Text>();
 
@@ -94,6 +98,9 @@ public class InventorySlot : MonoBehaviour
         isEmpty = false;
         
         iconImage.transform.localPosition = inv.GetItemInvPositionOffset(newItem);
+
+        if (this.name == "Temp Slot")
+            iconImage.transform.SetParent(invUI.menusParent);
     }
 
     /// <summary> Only use when intending to destroy an icon object. </summary>
@@ -191,6 +198,8 @@ public class InventorySlot : MonoBehaviour
                 }
             }
 
+            invUI.ClearAllTooltips();
+
             audioManager.PlayPickUpItemSound(invUI.currentlySelectedItem);
 
             if (slotParent.name == "Pockets")
@@ -214,7 +223,7 @@ public class InventorySlot : MonoBehaviour
 
             hoverHighlightScript.HighlightInvSlots();
         }
-        else if (invUI.currentlySelectedItem != null) // If we've selected an item to move (currently will be following cursor if using mouse)
+        else if (invUI.currentlySelectedItem != null && slotParent != null) // If we've selected an item to move (currently will be following cursor if using mouse)
         {
             if (slotParent.name == "Pockets")
             {

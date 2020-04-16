@@ -30,12 +30,14 @@ public class EquipSlot : MonoBehaviour
     public EquipSlot upSlot;
     public EquipSlot downSlot;
 
+    [HideInInspector] public ContextMenu contextMenu;
+    [HideInInspector] public HoverHighlight hoverHighlightScript;
+    [HideInInspector] public SlotTooltip slotTooltip;
+
     InventoryUI invUI;
     Inventory inv;
     AudioManager audioManager;
     EquipmentManager equipmentManager;
-    ContextMenu contextMenu;
-    HoverHighlight hoverHighlightScript;
 
     Vector3 mousePos;
     float xPosOffset = 0;
@@ -44,6 +46,7 @@ public class EquipSlot : MonoBehaviour
     void Awake()
     {
         hoverHighlightScript = GetComponent<HoverHighlight>();
+        slotTooltip = GetComponent<SlotTooltip>();
         contextMenu = GetComponentInChildren<ContextMenu>();
         slotText = transform.Find("Text").GetComponent<Text>();
 
@@ -64,7 +67,8 @@ public class EquipSlot : MonoBehaviour
 
     void Update()
     {
-        FollowMouse();
+        if (GameManager.instance.isUsingController == false)
+            FollowMouse();
     }
 
     public void MoveEquipment()
@@ -220,6 +224,10 @@ public class EquipSlot : MonoBehaviour
                             invUI.StopDraggingInvItem();
                         }
                     }
+
+                    invUI.ClearAllTooltips();
+
+                    audioManager.PlayRandomSound(audioManager.defaultPickUpSounds, transform.position);
 
                     SetQuiverAmmoSprites();
                     SetQuiverStackSizeText();

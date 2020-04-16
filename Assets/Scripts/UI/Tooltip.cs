@@ -37,7 +37,7 @@ public class Tooltip : MonoBehaviour
                 stringBuilder.Append(tooltipSlot.itemData.currentStackSize + " ");
 
             // Description
-            stringBuilder.Append(tooltipSlot.item.description + "\n");
+            stringBuilder.Append(tooltipSlot.item.description + "\n\n");
 
             // Weapon specific info
             if (tooltipSlot.item.itemType == ItemType.Weapon)
@@ -59,8 +59,6 @@ public class Tooltip : MonoBehaviour
             // Consumable info
             if (tooltipSlot.item.itemType == ItemType.Consumable)
             {
-                stringBuilder.Append("\n");
-
                 if (tooltipSlot.itemData.consumable.consumableType == ConsumableType.Food)
                     stringBuilder.Append("Freshness: " + tooltipSlot.itemData.freshness + "%\n");
 
@@ -98,7 +96,7 @@ public class Tooltip : MonoBehaviour
             stringBuilder.Append("<b><size=24>" + equipSlot.itemData.itemName + "</size></b>\n");
 
             // Description
-            stringBuilder.Append(equipSlot.equipment.description + "\n");
+            stringBuilder.Append(equipSlot.equipment.description + "\n\n");
 
             // Weapon specific info
             if (equipSlot.equipment.itemType == ItemType.Weapon)
@@ -135,7 +133,6 @@ public class Tooltip : MonoBehaviour
     public void ClearTooltip()
     {
         stringBuilder.Clear();
-        //tooltipText.text = "";
         gameObject.SetActive(false);
     }
 

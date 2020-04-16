@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIControllerNavigation : MonoBehaviour
@@ -8,6 +9,14 @@ public class UIControllerNavigation : MonoBehaviour
     GameManager gm;
     InventoryUI invUI;
     Inventory inv;
+    RectTransform canvasRectTransform;
+
+    Vector2 uiOffset;
+    Vector2 viewportPos;
+    Vector2 proportionalPos;
+
+    InventorySlot[] selectedInvSlots;
+    int totalSlotsToCheck;
 
     public GameObject currentlySelectedObject;
     public InventorySlot currentlySelectedInventorySlot;
@@ -41,6 +50,8 @@ public class UIControllerNavigation : MonoBehaviour
         gm = GameManager.instance;
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
+        canvasRectTransform = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        uiOffset = new Vector2(canvasRectTransform.sizeDelta.x / 2f, canvasRectTransform.sizeDelta.y / 2f);
     }
     
     void Update()
@@ -130,9 +141,9 @@ public class UIControllerNavigation : MonoBehaviour
                 if (GameControls.gamePlayActions.menuContext.WasPressed)
                 {
                     if (currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.isEmpty == false)
-                        currentlySelectedInventorySlot.transform.Find("Item Button").GetComponent<ContextMenu>().BuildContextMenu(false);
+                        currentlySelectedInventorySlot.contextMenu.BuildContextMenu(false);
                     else if (currentlySelectedEquipSlot != null && currentlySelectedEquipSlot.isEmpty == false)
-                        currentlySelectedEquipSlot.transform.Find("Item Button").GetComponent<ContextMenu>().BuildContextMenu(false);
+                        currentlySelectedEquipSlot.contextMenu.BuildContextMenu(false);
                 }
 
                 if (GameControls.gamePlayActions.menuSelect.WasPressed)
@@ -146,28 +157,15 @@ public class UIControllerNavigation : MonoBehaviour
                     // If an item was selected
                     if (invUI.currentlySelectedItem != null)
                     {
-                        if (invUI.invSlotMovingFrom != null)
-                        {
-                            Debug.Log(invUI.invSlotMovingFrom.iconImage.transform.localPosition);
-                            if (currentlySelectedInventorySlot != null)
-                                StartCoroutine(SetIconPosition(currentlySelectedInventorySlot.transform.localPosition, invUI.invSlotMovingFrom, null));
-                            //invUI.invSlotMovingFrom.iconImage.transform.position = currentlySelectedInventorySlot.transform.position + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-                            else if (currentlySelectedEquipSlot != null)
-                                StartCoroutine(SetIconPosition(currentlySelectedEquipSlot.transform.localPosition, null, invUI.equipSlotMovingFrom));
-                            //invUI.invSlotMovingFrom.iconImage.transform.position = currentlySelectedEquipSlot.transform.position + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-                            
-                        }
-                        else if (invUI.equipSlotMovingFrom != null)
-                        {
-                            Debug.Log(invUI.equipSlotMovingFrom.iconImage.transform.localPosition);
-                            if (currentlySelectedInventorySlot != null)
-                                StartCoroutine(SetIconPosition(currentlySelectedInventorySlot.transform.localPosition, invUI.invSlotMovingFrom, null));
-                            //invUI.equipSlotMovingFrom.iconImage.transform.position = currentlySelectedInventorySlot.transform.position + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-                            else if (currentlySelectedEquipSlot != null)
-                                StartCoroutine(SetIconPosition(currentlySelectedEquipSlot.transform.localPosition, null, invUI.equipSlotMovingFrom));
-                            //invUI.equipSlotMovingFrom.iconImage.transform.position = currentlySelectedEquipSlot.transform.position + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-                            
-                        }
+                        SetIconPosition();
+                        HighlightItem();
+                    }
+                    else
+                    {
+                        if (currentlySelectedInventorySlot != null)
+                            HighlightSlot(currentlySelectedInventorySlot, null);
+                        else if (currentlySelectedEquipSlot != null)
+                            HighlightSlot(null, currentlySelectedEquipSlot);
                     }
                 }
 
@@ -180,6 +178,14 @@ public class UIControllerNavigation : MonoBehaviour
                     }
                     else if (currentlySelectedEquipSlot != null && currentlySelectedEquipSlot.isEmpty == false)
                         currentlySelectedEquipSlot.DropItem();
+                }
+
+                if (currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                {
+                    if (GameControls.gamePlayActions.menuContainerTakeAll.WasPressed)
+                        inv.TakeAll();
+                    else if (GameControls.gamePlayActions.menuContainerTakeGold.WasPressed)
+                        inv.TakeGold();
                 }
 
                 if (canNavigate)
@@ -197,19 +203,26 @@ public class UIControllerNavigation : MonoBehaviour
         }
     }
 
-    IEnumerator SetIconPosition(Vector3 pos, InventorySlot invSlotMovingFrom, EquipSlot equipSlotMovingFrom)
+    public void SetIconPosition()
     {
-        yield return new WaitForSeconds(1f);
-        Debug.Log("Offset: " + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem));
-        if (invSlotMovingFrom != null)
+        if (currentlySelectedInventorySlot != null)
+            viewportPos = Camera.main.WorldToViewportPoint(currentlySelectedInventorySlot.transform.position);
+        else if (currentlySelectedEquipSlot != null)
+            viewportPos = Camera.main.WorldToViewportPoint(currentlySelectedEquipSlot.transform.position);
+
+        proportionalPos = new Vector2(viewportPos.x * canvasRectTransform.sizeDelta.x, viewportPos.y * canvasRectTransform.sizeDelta.y);
+
+        if (invUI.invSlotMovingFrom != null)
         {
-            invSlotMovingFrom.iconImage.transform.localPosition = pos + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-            Debug.Log(invUI.invSlotMovingFrom.iconImage.transform.localPosition);
+            invUI.invSlotMovingFrom.iconImage.rectTransform.localPosition = proportionalPos - uiOffset;
+            if (currentlySelectedInventorySlot != null)
+                invUI.invSlotMovingFrom.iconImage.rectTransform.localPosition -= inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
         }
-        else if (equipSlotMovingFrom != null)
+        else if (invUI.equipSlotMovingFrom != null)
         {
-            equipSlotMovingFrom.iconImage.transform.localPosition = pos + inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
-            Debug.Log(invUI.equipSlotMovingFrom.iconImage.transform.localPosition);
+            invUI.equipSlotMovingFrom.iconImage.rectTransform.localPosition = proportionalPos - uiOffset;
+            if (currentlySelectedInventorySlot != null)
+                invUI.equipSlotMovingFrom.iconImage.rectTransform.localPosition -= inv.GetItemInvPositionOffset(invUI.currentlySelectedItem);
         }
     }
 
@@ -224,6 +237,8 @@ public class UIControllerNavigation : MonoBehaviour
     {
         if (currentlySelectedInventorySlot != null)
         {
+            RemoveHighlightFromItem();
+
             if (currentlySelectedInventorySlot.slotCoordinate.x == 1) // If a left most inv or container slot is selected
             {
                 // If equipment menu is active and a container slot is selected, select right weapon slot
@@ -233,7 +248,8 @@ public class UIControllerNavigation : MonoBehaviour
                 {
                     if (invUI.containerMenu.activeSelf) // If container is active, select right most slot in container
                     {
-                        FocusOnInvSlot(inv.GetSlotByCoordinates(new Vector2(invUI.maxContainerWidth, 1), invUI.containerSlots), -1, 0);
+                        FocusOnInvSlot(inv.GetSlotByCoordinates(new Vector2(invUI.maxContainerWidth, 1), invUI.containerSlots), 0, 0);
+                        currentXCoord = invUI.maxContainerWidth;
                         currentOverallYCoord = 1;
                         invUI.containerItemsParent.localPosition = new Vector3(0, 240, 0);
                     }
@@ -248,16 +264,26 @@ public class UIControllerNavigation : MonoBehaviour
             FocusOnEquipSlot(currentlySelectedEquipSlot.leftSlot);
 
         StartCoroutine(NavigateCooldown());
+        
+        // If an item is selected
+        if (invUI.currentlySelectedItem != null)
+        {
+            SetIconPosition();
+            HighlightItem();
+        }
     }
 
     void NavigateRight()
     {
+        RemoveHighlightFromItem();
+
         if (currentlySelectedInventorySlot != null)
         {
             // If right most container slot is selected
             if (currentlySelectedInventorySlot.slotParent == invUI.containerParent && currentlySelectedInventorySlot.slotCoordinate.x == invUI.maxContainerWidth)
             {
                 FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.pocketsSlots), 1, 0);
+                currentXCoord = 1;
                 currentOverallYCoord = 1;
                 invUI.invItemsParent.localPosition = new Vector3(0, 510, 0);
             }
@@ -291,10 +317,19 @@ public class UIControllerNavigation : MonoBehaviour
         }
 
         StartCoroutine(NavigateCooldown());
+
+        // If an item is selected
+        if (invUI.currentlySelectedItem != null)
+        {
+            SetIconPosition();
+            HighlightItem();
+        }
     }
 
     void NavigateUp()
     {
+        RemoveHighlightFromItem();
+
         if (currentlySelectedInventorySlot != null)
         {
             if (currentlySelectedInventorySlot.slotCoordinate.y == 1) // If top most inv slot is selected
@@ -317,10 +352,19 @@ public class UIControllerNavigation : MonoBehaviour
             FocusOnEquipSlot(currentlySelectedEquipSlot.upSlot);
 
         StartCoroutine(NavigateCooldown());
+
+        // If an item is selected
+        if (invUI.currentlySelectedItem != null)
+        {
+            SetIconPosition();
+            HighlightItem();
+        }
     }
 
     void NavigateDown()
     {
+        RemoveHighlightFromItem();
+
         if (currentlySelectedInventorySlot != null)
         {
             if ((currentlySelectedInventorySlot.slotParent == invUI.pocketsParent && currentlySelectedInventorySlot.slotCoordinate.y == invUI.pocketsHeight - 1 && inv.GetSlotByCoordinates(new Vector2(currentXCoord, currentlySelectedInventorySlot.slotCoordinate.y + 1), invUI.pocketsSlots) == null)
@@ -357,6 +401,13 @@ public class UIControllerNavigation : MonoBehaviour
             FocusOnEquipSlot(currentlySelectedEquipSlot.downSlot);
 
         StartCoroutine(NavigateCooldown());
+
+        // If an item is selected
+        if (invUI.currentlySelectedItem != null)
+        {
+            SetIconPosition();
+            HighlightItem();
+        }
     }
 
     void NavigateToRowBelow(int bagHeight, List<InventorySlot> slotsList)
@@ -409,16 +460,18 @@ public class UIControllerNavigation : MonoBehaviour
 
         if (currentlySelectedInventorySlot.slotParent == invUI.containerParent)
         {
-            if (addY == 1 && currentOverallYCoord > 6)
+            Debug.Log(currentOverallYCoord);
+            if (addY == 1 && currentOverallYCoord > 3)
                 invUI.containerItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= 6)
+            else if (addY == -1 && currentOverallYCoord >= 3 && currentOverallYCoord < invUI.containerHeight)
                 invUI.containerItemsParent.localPosition += new Vector3(0, -75, 0);
         }
         else
         {
-            if (addY == 1 && currentOverallYCoord > invUI.maxOverallInventoryHeight)
+            Debug.Log(currentOverallYCoord);
+            if (addY == 1 && currentOverallYCoord > invUI.maxInventoryViewHeight / 2)
                 invUI.invItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= invUI.maxOverallInventoryHeight)
+            else if (addY == -1 && currentOverallYCoord >= invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight)
                 invUI.invItemsParent.localPosition += new Vector3(0, -75, 0);
         }
     }
@@ -435,9 +488,13 @@ public class UIControllerNavigation : MonoBehaviour
             if (currentlySelectedInventorySlot != null)
                 RemoveHighlight(currentlySelectedInventorySlot, null);
 
+            invUI.ClearAllTooltips();
+            EventSystem.current.SetSelectedGameObject(null);
             currentlySelectedEquipSlot = slotToFocusOn;
             currentlySelectedObject = slotToFocusOn.gameObject;
             currentlySelectedInventorySlot = null;
+            
+            currentlySelectedEquipSlot.slotTooltip.GetTooltips();
 
             HighlightSlot(null, slotToFocusOn);
         }
@@ -459,9 +516,13 @@ public class UIControllerNavigation : MonoBehaviour
             if (currentlySelectedInventorySlot != null)
                 RemoveHighlight(currentlySelectedInventorySlot, null);
 
+            invUI.ClearAllTooltips();
+            EventSystem.current.SetSelectedGameObject(null);
             currentlySelectedEquipSlot = null;
             currentlySelectedObject = slotToFocusOn.gameObject;
             currentlySelectedInventorySlot = slotToFocusOn;
+
+            currentlySelectedInventorySlot.slotTooltip.GetTooltips();
 
             HighlightSlot(slotToFocusOn, null);
         }
@@ -480,6 +541,9 @@ public class UIControllerNavigation : MonoBehaviour
         currentlySelectedEquipSlot = null;
         currentlySelectedObject = null;
         currentlySelectedInventorySlot = null;
+
+        invUI.containerItemsParent.localPosition = new Vector3(0, 240, 0);
+        invUI.invItemsParent.localPosition = new Vector3(0, 510, 0);
     }
 
     public void ClearSelectedButton()
@@ -493,7 +557,32 @@ public class UIControllerNavigation : MonoBehaviour
             ClearCurrentlySelected();
     }
 
-    void HighlightSlot(InventorySlot invSlot, EquipSlot equipSlot)
+    public void HighlightItem()
+    {
+        if (currentlySelectedInventorySlot != null)
+            currentlySelectedInventorySlot.hoverHighlightScript.Highlight();
+        else if (currentlySelectedEquipSlot != null)
+            currentlySelectedEquipSlot.hoverHighlightScript.Highlight();
+    }
+
+    public void RemoveHighlightFromItem()
+    {
+        if (invUI.currentlySelectedItem != null)
+        {
+            if (currentlySelectedInventorySlot != null)
+            {
+                totalSlotsToCheck = invUI.currentlySelectedItem.iconWidth * invUI.currentlySelectedItem.iconHeight;
+                selectedInvSlots = new InventorySlot[totalSlotsToCheck];
+                inv.GetOverlappingItemCount(invUI.currentlySelectedItem, currentlySelectedInventorySlot, selectedInvSlots, currentlySelectedInventorySlot.invSlots);
+
+                currentlySelectedInventorySlot.hoverHighlightScript.RemoveHighlight(selectedInvSlots);
+            }
+            else if (currentlySelectedEquipSlot != null)
+                currentlySelectedEquipSlot.hoverHighlightScript.RemoveHighlight(null);
+        }
+    }
+
+    public void HighlightSlot(InventorySlot invSlot, EquipSlot equipSlot)
     {
         if (invSlot != null)
         {

@@ -13,6 +13,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     List<InventorySlot> invSlots = new List<InventorySlot>();
     
     int itemsOverlappingCount;
+    int totalSlotsToCheck;
 
     void Start()
     {
@@ -28,7 +29,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 invSlots = invUI.pocketsSlots;
             else if (thisInvSlot.slotParent.name == "Bag")
                 invSlots = invUI.bagSlots;
-            else if (thisInvSlot.slotParent.name == "Horse Bag")
+            else if (thisInvSlot.slotParent.name == "Horse Bags")
                 invSlots = invUI.horseBagSlots;
             else if (thisInvSlot.slotParent.name == "Container")
                 invSlots = invUI.containerSlots;
@@ -38,19 +39,27 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (invUI.currentlySelectedItem != null)
-        {
-            if (thisInvSlot != null)
-                HighlightInvSlots();
-            else if (thisEquipSlot != null)
-                HighlightEquipSlots();
-        }
+            Highlight();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (thisInvSlot != null && slotsToFill != null && slotsToFill.Length > 0)
+        RemoveHighlight(slotsToFill);
+    }
+
+    public void Highlight()
+    {
+        if (thisInvSlot != null)
+            HighlightInvSlots();
+        else if (thisEquipSlot != null)
+            HighlightEquipSlots();
+    }
+
+    public void RemoveHighlight(InventorySlot[] inventorySlots)
+    {
+        if (thisInvSlot != null && inventorySlots != null && inventorySlots.Length > 0)
         {
-            foreach (InventorySlot slot in slotsToFill)
+            foreach (InventorySlot slot in inventorySlots)
             {
                 if (slot != null)
                     TurnSlotWhite(slot, null);
@@ -62,10 +71,11 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void HighlightInvSlots()
     {
-        int totalSlotsToCheck = invUI.currentlySelectedItem.iconWidth * invUI.currentlySelectedItem.iconHeight;
+        totalSlotsToCheck = invUI.currentlySelectedItem.iconWidth * invUI.currentlySelectedItem.iconHeight;
         slotsToFill = new InventorySlot[totalSlotsToCheck];
 
         itemsOverlappingCount = inv.GetOverlappingItemCount(invUI.currentlySelectedItem, thisInvSlot, slotsToFill, invSlots);
+        Debug.Log(invSlots[0].name);
         
         if (itemsOverlappingCount < 2)
         {
@@ -88,7 +98,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void HighlightEquipSlots()
     {
         // If this item goes in this slot
-        if ((invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipSlot.thisEquipmentSlot
+        if ((invUI.currentlySelectedItemData.equipment != null && invUI.currentlySelectedItemData.equipment.equipmentSlot == thisEquipSlot.thisEquipmentSlot
             && invUI.currentlySelectedItemData.equipment.weaponSlot == thisEquipSlot.thisWeaponSlot) 
             || (invUI.currentlySelectedItem.itemType == ItemType.Ammunition && thisEquipSlot.thisEquipmentSlot == EquipmentSlot.Quiver && thisEquipSlot.isEmpty == false))
         {

@@ -81,7 +81,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             else
             {
                 contextMenu.transform.position = transform.position + new Vector3(1, -0.5f, 0);
-                if (UIControllerNav.currentlySelectedInventorySlot != null && UIControllerNav.currentOverallYCoord >= invUI.maxOverallInventoryHeight)
+                if (UIControllerNav.currentlySelectedInventorySlot != null && UIControllerNav.currentOverallYCoord >= invUI.maxInventoryViewHeight)
                     contextMenu.transform.position += new Vector3(0, 1.5f, 0);
             }
 
@@ -379,6 +379,9 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
                 thisEquipSlot.quiverText.text = "";
                 thisEquipSlot.SetQuiverAmmoSprites();
             }
+            
+            UIControllerNav.SetIconPosition();
+            UIControllerNav.HighlightItem();
 
             DisableContextMenu();
         }

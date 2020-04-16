@@ -27,6 +27,7 @@ public class Container : MonoBehaviour
     Inventory inv;
     AudioManager audioManager;
     GameManager gm;
+    UIControllerNavigation UIControllerNav;
 
     Item itemToAdd;
     bool inContainerRange;
@@ -37,6 +38,7 @@ public class Container : MonoBehaviour
         inv = Inventory.instance;
         audioManager = AudioManager.instance;
         gm = GameManager.instance;
+        UIControllerNav = UIControllerNavigation.instance;
         itemsParent = transform.Find("Items");
 
         InitializeData();
@@ -44,7 +46,7 @@ public class Container : MonoBehaviour
 
     void Update()
     {
-        if (inContainerRange && GameControls.gamePlayActions.playerInteract.WasPressed)
+        if (inContainerRange && GameControls.gamePlayActions.playerInteract.WasPressed && gm.menuOpen == false)
         {
             if (invUI.containerMenu.activeSelf == false) // If the container menu is not open
             {
@@ -157,11 +159,11 @@ public class Container : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         AddContainerItems();
 
-        if (gm.isUsingController)
+        if (gm.isUsingController && invUI.currentlySelectedItem == null)
         {
-            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
-            UIControllerNavigation.instance.currentXCoord = 1;
-            UIControllerNavigation.instance.currentOverallYCoord = 1;
+            UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
+            UIControllerNav.currentXCoord = 1;
+            UIControllerNav.currentOverallYCoord = 1;
         }
     }
 
@@ -213,23 +215,29 @@ public class Container : MonoBehaviour
         if (invUI.playerEquipmentMenu.activeSelf == false)
             invUI.ToggleEquipmentMenu();
 
-        if (gm.isUsingController)
-            UIControllerNavigation.instance.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
+        if (gm.isUsingController && invUI.currentlySelectedItem == null)
+        {
+            UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.containerSlots), 0, 0);
+            UIControllerNav.currentXCoord = 1;
+            UIControllerNav.currentOverallYCoord = 1;
+        }
     }
 
     IEnumerator CloseMenu()
     {
-        UIControllerNavigation.instance.DisableContextMenu();
+        UIControllerNav.DisableContextMenu();
         invUI.ClearAllTooltips();
 
         yield return new WaitForSeconds(0.15f);
 
-        invUI.TurnOffHighlighting();
+        if (invUI.invSlotMovingFrom != null && invUI.invSlotMovingFrom.slotParent == invUI.containerParent)
+            invUI.TurnOffHighlighting();
+
         if (invUI.containerMenu.activeSelf)
             invUI.ToggleContainerMenu();
 
-        if (gm.isUsingController)
-            UIControllerNavigation.instance.ClearCurrentlySelected();
+        if (gm.isUsingController && UIControllerNav.currentlySelectedInventorySlot == null && UIControllerNav.currentlySelectedEquipSlot == null)
+            UIControllerNav.ClearCurrentlySelected();
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -243,21 +251,65 @@ public class Container : MonoBehaviour
         if (collision.tag == "Player")
         {
             inContainerRange = false;
-
+            
             if (invUI.currentlySelectedItem != null)
             {
-                if (invUI.invSlotMovingFrom != null)
+                if (invUI.invSlotMovingFrom != null && invUI.invSlotMovingFrom.slotParent == invUI.containerParent)
                 {
-                    invUI.invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
-                    invUI.invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
-                }
-                else if (invUI.equipSlotMovingFrom != null)
-                {
-                    invUI.equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
-                    invUI.equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
-                }
+                    if (UIControllerNav.currentlySelectedInventorySlot != null)
+                    {
+                        invUI.invSlotMovingFrom.contextMenu.DropItem();
+                        if (UIControllerNav.currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                        {
+                            UIControllerNav.ClearCurrentlySelected();
+                            UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.pocketsSlots), 0, 0);
+                        }
 
-                invUI.StopDraggingInvItem();
+                        invUI.TurnOffHighlighting();
+                        UIControllerNav.HighlightSlot(UIControllerNav.currentlySelectedInventorySlot, null);
+                    }
+                    else if (UIControllerNav.currentlySelectedEquipSlot != null)
+                    {
+                        invUI.invSlotMovingFrom.contextMenu.DropItem();
+                        UIControllerNav.HighlightSlot(null, UIControllerNav.currentlySelectedEquipSlot);
+                    }
+
+                    invUI.invSlotMovingFrom.contextMenu.DisableContextMenu();
+                    invUI.StopDraggingInvItem();
+                }
+                else if (UIControllerNav.currentlySelectedInventorySlot != null && UIControllerNav.currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                {
+                    if (invUI.invSlotMovingFrom != null)
+                    {
+                        invUI.invSlotMovingFrom.contextMenu.DisableContextMenu();
+                        invUI.invSlotMovingFrom.contextMenu.DropItem();
+                    }
+                    else if (invUI.equipSlotMovingFrom != null)
+                    {
+                        invUI.equipSlotMovingFrom.contextMenu.DisableContextMenu();
+                        invUI.equipSlotMovingFrom.contextMenu.DropItem();
+                    }
+
+                    UIControllerNav.ClearCurrentlySelected();
+                    UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.pocketsSlots), 0, 0);
+
+                    invUI.TurnOffHighlighting();
+                    UIControllerNav.HighlightSlot(UIControllerNav.currentlySelectedInventorySlot, null);
+
+                    invUI.StopDraggingInvItem();
+                }
+            }
+            else
+            {
+                if (UIControllerNav.currentlySelectedInventorySlot != null && UIControllerNav.currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                {
+                    UIControllerNav.currentlySelectedInventorySlot.contextMenu.DisableContextMenu();
+                    UIControllerNav.ClearCurrentlySelected();
+                    UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.pocketsSlots), 0, 0);
+
+                    invUI.TurnOffHighlighting();
+                    UIControllerNav.HighlightSlot(UIControllerNav.currentlySelectedInventorySlot, null);
+                }
             }
 
             if (invUI.containerMenu.activeSelf == true)

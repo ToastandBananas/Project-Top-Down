@@ -20,6 +20,17 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        GetTooltips();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Clear and disable all tooltips
+        invUI.ClearAllTooltips();
+    }
+
+    public void GetTooltips()
+    {
         if (thisInvSlot != null && thisInvSlot.isEmpty == false && invUI.currentlySelectedItem == null) // If this is an invSlot
         {
             // Get the tooltip for the slot we're hovering over, regardless of its ItemType
@@ -38,12 +49,6 @@ public class SlotTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             // Get the tooltip for the equipped item we're hovering over
             GetEquipSlotTooltips();
         }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // Clear and disable all tooltips
-        invUI.ClearAllTooltips();
     }
 
     void GetInvSlotTooltip()

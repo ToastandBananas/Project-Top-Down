@@ -56,6 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemButton: {fileID: 2043610099251720912}
   isEmpty: 1
+  invSlots: []
   slotCoordinate: {x: 0, y: 0}
   iconPrefab: {fileID: 1861349985597137972, guid: 802b9230d795aaa42b5243a22b6fffbf,
     type: 3}
@@ -74,8 +75,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  slotParent: {fileID: 0}
+  contextMenu: {fileID: 0}
+  hoverHighlightScript: {fileID: 0}
   stackSizeText: {fileID: 0}
+  slotParent: {fileID: 0}
 --- !u!114 &600804387262474614
 MonoBehaviour:
   m_ObjectHideFlags: 0

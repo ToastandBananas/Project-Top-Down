@@ -20,6 +20,7 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerInventory;
     public PlayerAction menuPause, menuSelect, menuContext, menuDropItem;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
+    public PlayerAction menuContainerTakeAll, menuContainerTakeGold;
 
     public GamePlayActions()
     {
@@ -61,5 +62,7 @@ public class GamePlayActions : PlayerActionSet
         menuRight = CreatePlayerAction("MenuRight");
         menuUp = CreatePlayerAction("MenuUp");
         menuDown = CreatePlayerAction("MenuDown");
+        menuContainerTakeAll = CreatePlayerAction("MenuContainerTakeAll");
+        menuContainerTakeGold = CreatePlayerAction("MenuContainerTakeGold");
     }
 }

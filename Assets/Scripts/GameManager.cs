@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public bool isUsingController;
 
     InventoryUI invUI;
+    Inventory inv;
     UIControllerNavigation UIControllerNav;
 
     #region Singleton
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     {
         floatingTexts = GameObject.Find("Floating Texts").GetComponentsInChildren<TextFade>();
         invUI = InventoryUI.instance;
+        inv = Inventory.instance;
         UIControllerNav = UIControllerNavigation.instance;
 
         if (invUI.inventoryMenu.activeSelf == true)
@@ -62,6 +64,49 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // Detect if using controller or mouse/keyboard
+        if (isUsingController
+            && (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0 || GameControls.gamePlayActions.ActiveDevice.Name == "None"))
+        {
+            isUsingController = false;
+
+            Cursor.visible = true;
+
+            if (invUI.currentlySelectedItem != null)
+                UIControllerNav.RemoveHighlightFromItem();
+
+            UIControllerNav.ClearCurrentlySelected();
+        }
+        else if (isUsingController == false
+            && GameControls.gamePlayActions.ActiveDevice.Name != "None" && (GameControls.gamePlayActions.ActiveDevice.AnyButton.IsPressed
+            || GameControls.gamePlayActions.ActiveDevice.Direction.HasChanged || GameControls.gamePlayActions.ActiveDevice.LeftTrigger.IsPressed
+            || GameControls.gamePlayActions.ActiveDevice.RightTrigger.IsPressed || GameControls.gamePlayActions.ActiveDevice.LeftBumper.IsPressed
+            || GameControls.gamePlayActions.ActiveDevice.RightBumper.IsPressed || GameControls.gamePlayActions.ActiveDevice.CommandIsPressed
+            || GameControls.gamePlayActions.ActiveDevice.LeftStickButton.IsPressed || GameControls.gamePlayActions.ActiveDevice.RightStickButton.IsPressed))
+        {
+            isUsingController = true;
+
+            Cursor.visible = false;
+            
+            if (invUI.currentlySelectedItem != null)
+                invUI.TurnOffHighlighting();
+
+            if (invUI.contextMenu.transform.childCount > 0)
+                StartCoroutine(UIControllerNav.SelectButton(invUI.contextMenu.GetChild(0).GetComponent<Button>()));
+            else if (invUI.inventoryMenu.activeSelf)
+                UIControllerNav.FocusOnInvSlot(inv.GetSlotByCoordinates(Vector2.one, invUI.pocketsSlots), 0, 0);
+            else if (invUI.playerEquipmentMenu.activeSelf)
+                UIControllerNav.FocusOnEquipSlot(invUI.weaponSlots[(int)WeaponSlot.WeaponRight]);
+            else if (pauseMenu.activeSelf)
+                StartCoroutine(UIControllerNav.SelectButton(resumeButton));
+
+            if (invUI.currentlySelectedItem != null)
+            {
+                UIControllerNav.SetIconPosition();
+                UIControllerNav.HighlightItem();
+            }
+        }
     }
 
     public void TogglePauseMenu()

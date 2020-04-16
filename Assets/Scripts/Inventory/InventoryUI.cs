@@ -43,12 +43,12 @@ public class InventoryUI : MonoBehaviour
     public List<InventorySlot> containerSlots = new List<InventorySlot>();
     [HideInInspector] public int maxInventoryWidth = 8;
     [HideInInspector] public int maxContainerWidth = 6;
-    [HideInInspector] public int overallInventoryHeight = 0;
-    [HideInInspector] public int maxOverallInventoryHeight = 12;
-    [HideInInspector] public int pocketsHeight;
-    [HideInInspector] public int bagHeight;
-    [HideInInspector] public int horseBagHeight;
-    [HideInInspector] public int containerHeight;
+    public int overallInventoryHeight = 0;
+    [HideInInspector] public int maxInventoryViewHeight = 12;
+    public int pocketsHeight;
+    public int bagHeight;
+    public int horseBagHeight;
+    public int containerHeight;
 
     [Header("Equip Slots")]
     [HideInInspector] public EquipSlot[] weaponSlots = new EquipSlot[3];
@@ -187,7 +187,8 @@ public class InventoryUI : MonoBehaviour
         for (int i = 1; i < slotCount + 1; i++)
         {
             GameObject slot = Instantiate(slotPrefab, slotsParent);
-            slot.GetComponent<InventorySlot>().slotCoordinate = new Vector2(currentXCoord, currentYCoord);
+            InventorySlot invSlot = slot.GetComponent<InventorySlot>();
+            invSlot.slotCoordinate = new Vector2(currentXCoord, currentYCoord);
             currentXCoord++;
 
             if ((isContainer == false && currentXCoord == maxInventoryWidth + 1) || (isContainer && currentXCoord == maxContainerWidth + 1))
@@ -207,15 +208,27 @@ public class InventoryUI : MonoBehaviour
                 overallInventoryHeight++;
             }
 
-            slot.GetComponent<InventorySlot>().slotParent = slotsParent;
+            invSlot.slotParent = slotsParent;
             if (slotsParent == pocketsParent)
+            {
                 slot.name = "Pocket Slot " + i;
+                invSlot.invSlots = pocketsSlots;
+            }
             else if (slotsParent == bagParent)
+            {
                 slot.name = "Bag Slot " + i;
+                invSlot.invSlots = bagSlots;
+            }
             else if (slotsParent == horseBagParent)
+            {
                 slot.name = "Horse Bag Slot " + i;
+                invSlot.invSlots = horseBagSlots;
+            }
             else if (slotsParent == containerParent)
+            {
                 slot.name = "Container Slot " + i;
+                invSlot.invSlots = containerSlots;
+            }
         }
 
         if (slotsParent == pocketsParent)
@@ -235,7 +248,7 @@ public class InventoryUI : MonoBehaviour
         }
         else if (slotsParent == containerParent)
         {
-            if (slotCount % maxInventoryWidth == 0)
+            if (slotCount % maxContainerWidth == 0)
                 containerHeight--;
         }
 
@@ -290,7 +303,8 @@ public class InventoryUI : MonoBehaviour
         currentlySelectedItemData = null;
         invSlotMovingFrom = null;
         equipSlotMovingFrom = null;
-        Cursor.visible = true;
+        if (gm.isUsingController == false)
+            Cursor.visible = true;
     }
 
     public void ShowHorseSlots(bool showSlots)

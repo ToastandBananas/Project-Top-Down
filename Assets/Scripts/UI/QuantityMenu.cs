@@ -86,6 +86,9 @@ public class QuantityMenu : MonoBehaviour
         currentParentSlot.SetAmmoSprites();
         invUI.tempSlot.SetAmmoSprites();
 
+        UIControllerNav.SetIconPosition();
+        UIControllerNav.HighlightItem();
+
         CloseQuantityMenu();
     }
 
