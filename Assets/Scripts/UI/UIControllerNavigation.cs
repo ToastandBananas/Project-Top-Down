@@ -412,6 +412,7 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateToRowBelow(int bagHeight, List<InventorySlot> slotsList)
     {
+        Debug.Log("Navigating to row below");
         xOffset = 0;
         for (int i = currentXCoord; i > 0; i--)
         {
@@ -429,6 +430,7 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateToNextBag(int xAddOn, int yAddOn, int bagHeight, List<InventorySlot> slotsList)
     {
+        Debug.Log("Navigating to next bag");
         xOffset = 0;
         for (int i = currentXCoord; i > 0; i--)
         {
@@ -449,6 +451,7 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateInventory(int addX, int addY)
     {
+        Debug.Log("Navigating inventory");
         if (currentlySelectedInventorySlot.slotParent == invUI.containerParent)
             FocusOnInvSlot(inv.GetSlotByCoordinates(new Vector2(currentlySelectedInventorySlot.slotCoordinate.x + addX, currentlySelectedInventorySlot.slotCoordinate.y + addY), invUI.containerSlots), addX, addY);
         else if (currentlySelectedInventorySlot.slotParent == invUI.pocketsParent)
@@ -460,18 +463,16 @@ public class UIControllerNavigation : MonoBehaviour
 
         if (currentlySelectedInventorySlot.slotParent == invUI.containerParent)
         {
-            Debug.Log(currentOverallYCoord);
-            if (addY == 1 && currentOverallYCoord > 3)
+            if (addY == 1 && currentOverallYCoord > 3 && currentOverallYCoord < invUI.containerHeight)
                 invUI.containerItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= 3 && currentOverallYCoord < invUI.containerHeight)
+            else if (addY == -1 && currentOverallYCoord >= 3)
                 invUI.containerItemsParent.localPosition += new Vector3(0, -75, 0);
         }
         else
         {
-            Debug.Log(currentOverallYCoord);
-            if (addY == 1 && currentOverallYCoord > invUI.maxInventoryViewHeight / 2)
+            if (addY == 1 && currentOverallYCoord > invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight)
                 invUI.invItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight)
+            else if (addY == -1 && currentOverallYCoord >= invUI.maxInventoryViewHeight / 2)
                 invUI.invItemsParent.localPosition += new Vector3(0, -75, 0);
         }
     }

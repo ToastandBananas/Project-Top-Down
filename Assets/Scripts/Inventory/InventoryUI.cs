@@ -52,10 +52,10 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Equip Slots")]
     [HideInInspector] public EquipSlot[] weaponSlots = new EquipSlot[3];
-    public EquipSlot leftWeaponSlot = null;
-    public EquipSlot rightWeaponSlot = null;
-    public EquipSlot rangedWeaponSlot = null;
-    public EquipSlot[] equipSlots;
+    [HideInInspector] public EquipSlot leftWeaponSlot = null;
+    [HideInInspector] public EquipSlot rightWeaponSlot = null;
+    [HideInInspector] public EquipSlot rangedWeaponSlot = null;
+    [HideInInspector] public EquipSlot[] equipSlots;
 
     [Header("Selected Item Info")]
     [HideInInspector] public Item currentlySelectedItem;
