@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
+  - component: {fileID: 6165176568979638920}
   - component: {fileID: 186433817257015334}
   - component: {fileID: 6193931194439165326}
   - component: {fileID: 3661388085602504287}
@@ -57,6 +58,61 @@ MonoBehaviour:
   saveButton: {fileID: 0}
   saveAndQuitButton: {fileID: 0}
   isUsingController: 1
+--- !u!114 &6165176568979638920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9e110519f076d24b84b67623efa43ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftClick: {fileID: 21300000, guid: 8e3e470b6b5a3e04e9f263419629c111, type: 3}
+  rightClick: {fileID: 21300000, guid: e5e27e3e360112549b34e5ff3d0856b8, type: 3}
+  middleClick: {fileID: 21300000, guid: 0e5967354d13eec4988959e879c9b911, type: 3}
+  c: {fileID: 21300000, guid: dedc505e3ee1b0e44abe7212e13c3842, type: 3}
+  i: {fileID: 21300000, guid: 2d225c086df81fc4999440d3be51817c, type: 3}
+  g: {fileID: 21300000, guid: 48afb7957698d184bac5a3ffb2544fc3, type: 3}
+  enter: {fileID: 21300000, guid: 81a17f8ffbbaa2847968c52953415423, type: 3}
+  backspace: {fileID: 21300000, guid: b167f33025ff2204284768e85903b526, type: 3}
+  pcLeftArrow: {fileID: 21300000, guid: 009828810e3e3c5428d09491a0246474, type: 3}
+  pcRightArrow: {fileID: 21300000, guid: 3de6ceb838ac7774880186306fa702ef, type: 3}
+  PS4Arrows: {fileID: 21300000, guid: 3b2283f18c0845549bfd8f40f0f6dc17, type: 3}
+  r1: {fileID: 21300000, guid: a9572d303c7f01b4ea2157d2f6af0d47, type: 3}
+  r2: {fileID: 21300000, guid: efcd42d1609aee34d97c2dd75dfcea04, type: 3}
+  PS4LeftThumbstick: {fileID: 21300000, guid: 47921642f7b6bfa4c99dedb480b43439, type: 3}
+  cross: {fileID: 21300000, guid: 3711fd506366f294c9ae627d138accf6, type: 3}
+  triangle: {fileID: 21300000, guid: bf0cd977cfd5a044bac8221e58438bbc, type: 3}
+  square: {fileID: 21300000, guid: 78ec5fad78f74554d9865676c1a2c80b, type: 3}
+  circle: {fileID: 21300000, guid: 8977b5316f91d834bb9da4b2e332fa57, type: 3}
+  PS4LeftArrow: {fileID: 21300000, guid: b9d7941ed657471469ef1768f2613642, type: 3}
+  PS4RightArrow: {fileID: 21300000, guid: fc7d319e8671c994ea3dd3abde2f2761, type: 3}
+  xboxArrows: {fileID: 21300000, guid: 93e6f74d1ec7c9f42bb21e9385a8ce5c, type: 3}
+  rb: {fileID: 21300000, guid: 7af8b6b7131f2ac4ab1f3fbe1e77d1fc, type: 3}
+  rt: {fileID: 21300000, guid: 62a4ab69ae76b1f408f0b5973b76fd39, type: 3}
+  xboxLeftThumbstick: {fileID: 21300000, guid: 5c0a67abff43b9f41bd641456f4fde65, type: 3}
+  y: {fileID: 21300000, guid: aaf051374ab3467438d9130eb6ccca69, type: 3}
+  b: {fileID: 21300000, guid: 5b15218e2fb93334fad464481670fb6f, type: 3}
+  a: {fileID: 21300000, guid: 8c02d87896cfa4745bebb6e7cfc29c17, type: 3}
+  x: {fileID: 21300000, guid: bfbb9cbcc748a054ca713edd6ef890f6, type: 3}
+  xboxLeftArrow: {fileID: 21300000, guid: f0c1be3c3349a0746ab2b442ee8268b3, type: 3}
+  xboxRightArrow: {fileID: 21300000, guid: d0315ce33ea44ff4c8d81255eb7d5e38, type: 3}
+  moveItem: {fileID: 0}
+  use: {fileID: 0}
+  context: {fileID: 0}
+  drop: {fileID: 0}
+  closeMenus: {fileID: 0}
+  takeItem: {fileID: 0}
+  takeAll: {fileID: 0}
+  takeGold: {fileID: 0}
+  closeEquipmentMenu: {fileID: 0}
+  decrease: {fileID: 0}
+  increase: {fileID: 0}
+  submit: {fileID: 0}
+  cancel: {fileID: 0}
 --- !u!114 &186433817257015334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentlySelectedObject: {fileID: 0}
+  currentlySelectedInventorySlot: {fileID: 0}
+  currentlySelectedEquipSlot: {fileID: 0}
+  currentlySelectedButton: {fileID: 0}
+  currentXCoord: 1
   currentOverallYCoord: 1
 --- !u!114 &6193931194439165326
 MonoBehaviour:
@@ -137,9 +198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 32
-  bagSlotCount: 75
-  horseBagSlotCount: 35
+  pocketsSlotCount: 25
+  bagSlotCount: 67
+  horseBagSlotCount: 25
   pocketItems: []
   bagItems: []
   horseBagItems: []
@@ -161,11 +222,18 @@ MonoBehaviour:
     - {fileID: 68740533560211216}
     - {fileID: 68740533560211219}
     - {fileID: 68740533560211218}
+    - {fileID: 186433817257015334}
+    - {fileID: 6193931194439165326}
     - {fileID: 3661388085602504287}
     - {fileID: 68740533560211229}
     - {fileID: 3723423186980164384}
-    - {fileID: 0}
     - {fileID: 11500000, guid: 2951d86273371f344b5726f815f45e95, type: 3}
+    - {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
+    - {fileID: 11500000, guid: c3119b4f8c7097346900a800294ddb5d, type: 3}
+    - {fileID: 9100000, guid: 11ee1d063b261be45a756bf1304927f0, type: 2}
+    - {fileID: 9100000, guid: 9c00119d1c4c3b646aa44457f7011dad, type: 2}
+    - {fileID: 9100000, guid: f0555476147ef7f4e966c51535a27072, type: 2}
+    - {fileID: 9100000, guid: 1161dc15587ef9a4ca969c136e58fa9a, type: 2}
     - {fileID: 11500000, guid: f4c009db833256048bdbcb2afb8f57ce, type: 3}
     - {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
-    _Values: 7efbedd51c9e3a05a5df6efafdc05b0fe0742d099cf5d62027472eb6bccd8854b5c27a77b7d810659b2468475a90256dffbde175c6454b695959e2592097227725ccfc63ccf1c228a8e64f3fc42c3807
+    _Values: 7efbedd51c9e3a05a5df6efafdc05b0fe0742d099cf5d62081f1602776f7a93051358ae5439ce73827472eb6bccd8854b5c27a77b7d810659b2468475a90256d5959e25920972277025f36203eff4a3d7af8ca5357bfed793e240f8143d61558183fa671c316503cde99ea548d25537ea722a16ec2fd886d25ccfc63ccf1c228a8e64f3fc42c3807

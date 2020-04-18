@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7165941655890951051}
   m_Layer: 0
   m_Name: Shield_L
-  m_TagString: Untagged
+  m_TagString: Weapon Base
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,5 +49,4 @@ MonoBehaviour:
     - {fileID: 7546036934525236802}
     - {fileID: 7905472170715924743}
     - {fileID: 7165941655890951051}
-    - {fileID: 0}
-    _Values: bf595c1602bb637b3e7a3bb0dead320eb94ee9d7885383716f20d167c332b072
+    _Values: bf595c1602bb637b3e7a3bb0dead320eb94ee9d788538371

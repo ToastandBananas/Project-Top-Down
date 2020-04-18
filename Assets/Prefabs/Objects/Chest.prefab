@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1297395775
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -5281422124547630143, guid: 116fbded4ec452f46a925eb44c9b918d,
     type: 3}
@@ -142,13 +142,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sr: {fileID: 0}
+  originalMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+  radius: 1
   containerName: Container
-  shouldRandomizeItems: 1
+  randomizeItems: 1
   itemsParent: {fileID: 0}
-  containerObjects: []
+  randomizeGold: 1
+  percentChanceNoGold: 20
+  minGoldPossible: 1
+  maxGoldPossible: 10
+  gold: 0
+  containerObjects:
+  - {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
+  - {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
   containerItems: []
   slotsParent: {fileID: 0}
-  slotCount: 120
+  slotCount: 40
 --- !u!114 &4014021300959433072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,9 +186,12 @@ MonoBehaviour:
     - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - {fileID: -5281422124547630143, guid: 116fbded4ec452f46a925eb44c9b918d, type: 3}
     - {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
+    - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+    - {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
+    - {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
     - {fileID: 4801581109557126842}
     - {fileID: 5647672348409781241}
-    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907af6e7a72b0d9ec27e6fda52d26b2d347d6e7cc359968694a2e2fa7f00ebb4a428fd9d100714c763738b466b5d9f3db0c2fb9afbb172c8f4c10daf1c6e6fa307c
+    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907af6e7a72b0d9ec27e6fda52d26b2d347d6e7cc359968694a2e2fa7f00ebb4a428fd9d100714c763738b466b5d9f3db0c4811a61f8c66f428758e09ff58d97a6e480774bed598ec192fb9afbb172c8f4c10daf1c6e6fa307c
 --- !u!114 &2352943764263382968
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -324,6 +324,9 @@ public class NPCAttacks : MonoBehaviour
             // Spawn an arrow
             GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
             arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
+            SpriteRenderer arrowSR = arrow.GetComponent<SpriteRenderer>();
+            arrow.GetComponent<ItemData>().hasBeenRandomized = true;
+            arrowSR.sprite = arrow.GetComponent<ItemData>().item.possibleSprites[0];
 
             // Draw the bow string
             audioManager.PlayRandomSound(audioManager.bowDrawSounds, transform.position);
@@ -357,7 +360,6 @@ public class NPCAttacks : MonoBehaviour
 
             arrow.GetComponent<BoxCollider2D>().enabled = true;
 
-            SpriteRenderer arrowSR = arrow.GetComponent<SpriteRenderer>();
             arrowSR.sortingLayerID = SortingLayer.GetLayerValueFromName("Default");
             arrowSR.sortingOrder = 1;
 

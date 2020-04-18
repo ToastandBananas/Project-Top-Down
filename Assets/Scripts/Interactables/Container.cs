@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Container : MonoBehaviour
+public class Container : Interactable
 {
+    [Header("General Info")]
     public string containerName = "Container";
     public bool randomizeItems = true;
     public Transform itemsParent;
@@ -40,6 +41,11 @@ public class Container : MonoBehaviour
         gm = GameManager.instance;
         UIControllerNav = UIControllerNavigation.instance;
         itemsParent = transform.Find("Items");
+
+        // For Highlighting (from Interactable script)
+        TryGetComponent<SpriteRenderer>(out sr);
+        if (sr != null)
+            originalMaterial = sr.material;
 
         InitializeData();
     }
@@ -240,14 +246,18 @@ public class Container : MonoBehaviour
             UIControllerNav.ClearCurrentlySelected();
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    public override void OnTriggerStay2D(Collider2D collision)
     {
+        base.OnTriggerStay2D(collision);
+
         if (collision.tag == "Player")
             inContainerRange = true;
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    public override void OnTriggerExit2D(Collider2D collision)
     {
+        base.OnTriggerExit2D(collision);
+
         if (collision.tag == "Player")
         {
             inContainerRange = false;

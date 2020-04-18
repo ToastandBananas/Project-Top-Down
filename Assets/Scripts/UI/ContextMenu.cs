@@ -277,7 +277,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         menuButton.GetComponent<Button>().onClick.AddListener(DropItem);
     }
 
-    void TakeItem()
+    public void TakeItem()
     {
         InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
 

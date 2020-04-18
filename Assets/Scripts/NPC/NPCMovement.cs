@@ -237,7 +237,7 @@ public class NPCMovement : MonoBehaviour
             yield return null; // Pause for one frame
         }
 
-        while (isDodging)
+        while (stats.isDead == false && isDodging)
         {
             if (Vector2.Distance(transform.position, targetPos) <= 0.1f)
             {

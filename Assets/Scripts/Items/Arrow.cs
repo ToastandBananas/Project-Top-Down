@@ -10,7 +10,7 @@ public class Arrow : MonoBehaviour
     ItemDrop itemDrop;
     ItemPickup itemPickup;
     Rigidbody2D rigidBody;
-    BoxCollider2D circleCollider;
+    BoxCollider2D boxCollider;
 
     LayerMask obstacleMask;
 
@@ -18,9 +18,9 @@ public class Arrow : MonoBehaviour
     {
         itemData = GetComponent<ItemData>();
         itemDrop = GetComponent<ItemDrop>();
-        itemPickup = GetComponent<ItemPickup>();
+        itemPickup = GetComponentInChildren<ItemPickup>();
         rigidBody = GetComponent<Rigidbody2D>();
-        circleCollider = GetComponent<BoxCollider2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
 
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
     }
@@ -33,9 +33,11 @@ public class Arrow : MonoBehaviour
 
         itemData.currentStackSize = 1;
         itemDrop.isDropped = true;
+       
         itemPickup.enabled = true;
+        itemPickup.pickUpRadiusCollider.enabled = true;
 
-        circleCollider.enabled = false;
+        boxCollider.enabled = false;
         this.enabled = false;
     }
 
@@ -63,7 +65,7 @@ public class Arrow : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.isTrigger == false)
+        if (this.enabled && collision.isTrigger == false)
         {
             if (collision.tag == "NPC Body" || collision.tag == "Player Body")
             {
@@ -108,6 +110,12 @@ public class Arrow : MonoBehaviour
                 }
 
                 StopArrow();
+
+                if (collision.tag == "NPC Body" || collision.tag == "Player Body" || collision.tag == "Shield")
+                {
+                    itemPickup.enabled = false;
+                    itemPickup.pickUpRadiusCollider.enabled = false;
+                }
             }
         }
     }

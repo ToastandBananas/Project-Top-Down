@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5851638940386840420}
   - component: {fileID: 5851638940386840422}
   - component: {fileID: 5851638940386840418}
-  - component: {fileID: 5851638940386840419}
   - component: {fileID: -5781935362417890595}
   m_Layer: 13
   m_Name: Door_Horizontal
@@ -74,16 +73,16 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1297395775
+  m_SortingLayer: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 5213229242370633579, guid: d02f5c14b5da3014ba2669480253995a,
     type: 3}
-  m_Color: {r: 0.3679245, g: 0.18543395, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 0.1875}
+  m_Size: {x: 1.5, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -123,18 +122,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.5, y: 0}
+  m_Offset: {x: 0.0014556646, y: -0.21862233}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0.5}
-    oldSize: {x: 1, y: 0.25}
-    newSize: {x: 1, y: 0.1875}
+    pivot: {x: 0.1665, y: 0.28}
+    oldSize: {x: 1.5, y: 1}
+    newSize: {x: 1.5, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.1875}
+  m_Size: {x: 1.0000348, y: 0.18103814}
   m_EdgeRadius: 0
 --- !u!58 &5851638940386840420
 CircleCollider2D:
@@ -164,6 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb2ceee7cb8c4c49abaf66708c5a07b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sr: {fileID: 0}
+  originalMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+  radius: 1
   isVerticalDoorway: 0
   isOpen: 0
   playerInRange: 0
@@ -193,19 +196,7 @@ MonoBehaviour:
   - {x: 0, y: 0.09375, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 20268
---- !u!114 &5851638940386840419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5851638940386840443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22a0a57c59c2b5f4ab80c078c46d202a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_InstanceId: 29862
 --- !u!114 &-5781935362417890595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,11 +220,12 @@ MonoBehaviour:
     - {fileID: 5851638940386840420}
     - {fileID: 5851638940386840422}
     - {fileID: 5851638940386840418}
-    - {fileID: 5851638940386840419}
+    - {fileID: 0}
     - {fileID: -5781935362417890595}
     - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - {fileID: 5213229242370633579, guid: d02f5c14b5da3014ba2669480253995a, type: 3}
     - {fileID: 11500000, guid: 1fb2ceee7cb8c4c49abaf66708c5a07b, type: 3}
     - {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
     - {fileID: 11500000, guid: 22a0a57c59c2b5f4ab80c078c46d202a, type: 3}
-    _Values: f0735f675214c34ccdc9321ce3ec9d133816b9fec1918e68357f607f75183f66c728104f5407f744b20abdcca0e2162d22bb903e82757f5e1b09632d8bbc3d1a0a9955bbdb4dbf30e08bb2492c3e37176a715ece56821751a9b16a5d6a24d06db7273cf873a5ae2cfd601e0d27c88b23d14b97fd1b0c7179
+    - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+    _Values: f0735f675214c34ccdc9321ce3ec9d133816b9fec1918e68357f607f75183f66c728104f5407f744b20abdcca0e2162d22bb903e82757f5e1b09632d8bbc3d1a0a9955bbdb4dbf30e08bb2492c3e37176a715ece56821751a9b16a5d6a24d06db7273cf873a5ae2cfd601e0d27c88b23d14b97fd1b0c71795fc6d1e8f5560414

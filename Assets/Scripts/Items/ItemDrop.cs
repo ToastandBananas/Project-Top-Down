@@ -36,7 +36,7 @@ public class ItemDrop : MonoBehaviour
         audioManager = AudioManager.instance;
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        itemPickupScript = GetComponent<ItemPickup>();
+        itemPickupScript = GetComponentInChildren<ItemPickup>();
         weaponDamageScript = GetComponent<WeaponDamage>();
         arrowScript = GetComponent<Arrow>();
         looseItemsContainer = GameObject.Find("Loose Items").transform;
@@ -63,8 +63,10 @@ public class ItemDrop : MonoBehaviour
             spriteRenderer.sprite = item.droppedSprite;
 
         spriteRenderer.sortingOrder = -5;
-        
+
+        itemPickupScript.pickUpRadiusCollider.enabled = true;
         itemPickupScript.enabled = true;
+        
         isDropped = true;
         transform.SetParent(looseItemsContainer, true);
 

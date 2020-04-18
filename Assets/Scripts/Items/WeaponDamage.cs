@@ -100,7 +100,7 @@ public class WeaponDamage : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (canDoDamage && weaponOwnerArms.isAttacking)
+        if (canDoDamage && weaponOwnerArms != null && weaponOwnerArms.isAttacking)
         {
             if (collision.transform.parent != null && collision.transform.parent != weaponOwner && (collision.tag == "NPC Body" || collision.tag == "Player Body"))
             {

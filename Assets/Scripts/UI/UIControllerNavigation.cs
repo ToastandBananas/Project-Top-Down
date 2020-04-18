@@ -138,6 +138,12 @@ public class UIControllerNavigation : MonoBehaviour
             // Inventory Menu
             else if (invUI.inventoryMenu.activeSelf || invUI.playerEquipmentMenu.activeSelf || invUI.containerMenu.activeSelf)
             {
+                if (invUI.inventoryMenu.activeSelf && currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                {
+                    if (GameControls.gamePlayActions.menuTakeItem.WasPressed)
+                        currentlySelectedInventorySlot.contextMenu.TakeItem();
+                }
+
                 if (GameControls.gamePlayActions.menuContext.WasPressed)
                 {
                     if (currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.isEmpty == false)

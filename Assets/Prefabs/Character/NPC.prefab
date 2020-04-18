@@ -51,6 +51,10 @@ MonoBehaviour:
   rightShieldEquipped: 0
   twoHanderEquipped: 0
   rangedWeaponEquipped: 0
+  isAttacking: 0
+  currentAttackType: 0
+  currentAttackTime: 0
+  currentAttackShouldKnockback: 0
   leftArm: {fileID: 0}
   rightArm: {fileID: 0}
   leftEquippedWeapon: {fileID: 0}
@@ -157,6 +161,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -164,6 +171,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &662128985819724801
@@ -591,6 +600,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -598,6 +610,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &2977968909088004981
@@ -845,6 +859,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -852,6 +869,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &3992615731657799242
@@ -1030,6 +1049,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -1037,6 +1059,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &4180017548675058185
@@ -1136,6 +1160,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -1143,6 +1170,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &4303919997903045342
@@ -1242,6 +1271,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -1249,6 +1281,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &4490644662189381521
@@ -1811,6 +1845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 10
+  gold: 0
   maxHealth: 20
   health: 20
   healthCanRegen: 1
@@ -1824,6 +1859,8 @@ MonoBehaviour:
   maxEncumbrance: 200
   encumbrance: 50
   defense: 20
+  maxSkillPoints: 100
+  rangedSkill: 20
   deadBodyPrefab: {fileID: 449104977835760739, guid: ccf64c0a726e1804eacc8a4bd31a0835,
     type: 3}
   isPlayer: 0
@@ -1887,6 +1924,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomizeItems: 0
+  randomizeGold: 1
+  percentChangeNoGold: 20
+  minGoldPossible: 1
+  maxGoldPossible: 10
+  gold: 0
   carriedItems: []
 --- !u!114 &4490644663598777807
 MonoBehaviour:
@@ -1908,8 +1950,11 @@ MonoBehaviour:
   patrolPoint: {fileID: 0}
   walkSpeed: 2
   runSpeed: 3
+  isMoving: 0
   isDodging: 0
+  isAttackDashing: 0
   isStaggered: 0
+  isEvading: 0
 --- !u!114 &7217126290731098577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1926,6 +1971,7 @@ MonoBehaviour:
   meleeCombatDistance: 5
   rangedCombatDistance: 10
   determineMoveDirection: 1
+  needsCombatAction: 0
 --- !u!114 &8683012622843688016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,6 +1984,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6eb05d4f207d894fa4feaa7cc8acf35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftComboNumber: 1
+  rightComboNumber: 1
+  comboAttackOnCooldown: 0
+  isBlocking: 0
   leftArmHeavyAttacking: 0
   rightArmHeavyAttacking: 0
   leftQuickAttacking: 0
@@ -2131,6 +2181,7 @@ MonoBehaviour:
     - {fileID: 11500000, guid: 6414f18020a308249b63aa07e15588cc, type: 3}
     - {fileID: 11500000, guid: 38e6704fbb2e6bd4e9345b6b839da02f, type: 3}
     - {fileID: 11500000, guid: b6eb05d4f207d894fa4feaa7cc8acf35, type: 3}
+    - {fileID: 5474431354769912416, guid: b577e7f6e767cc64eb824315acf38227, type: 3}
     - {fileID: 11500000, guid: 93d0e6eaec1ea2242b5fd08b555366b1, type: 3}
     - {fileID: 1026329605875622702}
     - {fileID: 11500000, guid: 78c72e92a708aae47b02223691d41330, type: 3}
@@ -2175,10 +2226,11 @@ MonoBehaviour:
     - {fileID: 404170035247258339}
     - {fileID: 8375587196981127673}
     - {fileID: 11500000, guid: 639b6764cee57f94cb7184c4d3b26697, type: 3}
+    - {fileID: 8375587197795844188}
+    - {fileID: 8375587198701085382}
     - {fileID: 4490644663610915088}
     - {fileID: 4490644663610915089}
     - {fileID: 4490644663610915090}
-    - {fileID: 8375587197795844188}
     - {fileID: 7504531616598907320, guid: b81d7aa3c6913ce4c81d169409387069, type: 3}
     - {fileID: 9100000, guid: 11ee1d063b261be45a756bf1304927f0, type: 2}
     - {fileID: 2368871971495932986}
@@ -2196,7 +2248,6 @@ MonoBehaviour:
     - {fileID: 4490644662585460315}
     - {fileID: 4490644662585460308}
     - {fileID: 4490644662585460309}
-    - {fileID: 8375587198701085382}
     - {fileID: 9100000, guid: 9c00119d1c4c3b646aa44457f7011dad, type: 2}
     - {fileID: 6298228616316539585}
     - {fileID: 3378741443797710548}
@@ -2248,7 +2299,7 @@ MonoBehaviour:
     - {fileID: 5648107955365151489}
     - {fileID: 5149056465742222839}
     - {fileID: 4547638591663953982}
-    _Values: b2ad74d05df27537711eb5264ff3fc16031c6f913811e6197ea4b368c89d3b28e97f2773ba1cc61d7394a7b81d8f9a2aa622c32f3376a31fb88bf54b0af0541cf57cbc3197659a5f27d12aa387b11b4aa814e76d2940141c39a5ac46c0f3900ee085316d70dff8161d73e15c96d104110a885e45596dbf7b1b38c6ea9080a365da49ed043395086c20db1324833dc9676065afb7ad299738634714fbb0b98e611646824ce4ffde607aa8d60c09e0b82e968af1c344837c5e441026e3c362b67eb843077dd29c6f01fe7e6bbf9863b76ae83f9ff7f23c137f4ed3183e3a2bc743241a3d990360f832060c3e3c10c40859c891fb84c3bf8b0aaa79d1007bcf382cb628e2b3a0516e78486cfdff7b4f90753641f934d9b4f9639032f0898ef8b62abb9479171eaa461800743c56c28b8f5916a335c52afbac6adfb9bd2cbe08f84e492cbb192987a974fbe1346577a2a104ce6d7d2de545fb5cc15211b775da82434259a0070d7cc3448a6eafa7b35ddc50324c092d397e7f3aa4797a3a9aac4f6a92ca653481e4ff582b8841d866205b578f92b64a1a57c633fdd274d42e14480420da988456fce3266458c435d46a5e255c685fcdd284aa49be1bc69b12e5a5097ceea0ef46a98370063f40f3cfee1e3c19b9892668c5213a81715a0dc00e611f78c21677fe4d4206152f2ded3b61e6538f6fa8cf64d3ff57cd6670b803913113963f45f46a0c2d5256c648ab0b5cef6277c08529d1550a3ed9da957c2592a84aa2606c9104953a65fc8f12389833fe1d6f573ef2a3d0bb3d7b5cd77236d32e32804659a34dd6861449841b8f76b12d17a9522c42a4694f5350cb4364befa097cff194cdbf4544e303d19c7ffdea9e26668530fb164ee6e37916dc34be203405a9a8f3a7fe62328530648af757d97085209c7fc6bec4b9767d1293c27eb4bb42b7611fc5c6885eb7c87b39e052611961f8c6d85aeb5c22a45d55b1c0c3f6745459484eb8f9365bb7bdc7ff1a0ea9d8d40941db459d063e04be6b6870c68df3d11fae471a225068b0d2901d236d08a5a37322360a3e360e930a4a0764aedc8e30342e099ce0f3066736e597c2dc9e9e45c5b4f3e8c3fe0f567fb41ff859041200d1c290c100e73d761762ceec322e805737b2d59c2f890bc6116ce36afd014fc508775b60c0a0b953027a01513f132451cb88dff41651cf954e76dfb403c279175d8c0b66860ed81793e7564a785569047ecad97a2ecc24a5c91f5d962efab0c4ecf74154d175283590e787fda81a1d970224cd21540cc9e66f4ec05a9381b97177e4c26efbebdcf3ed00e6c8cbd90240f1c6940a3d8f60d65147c4204582d920de1675c347ae9b165846b1ab0c7d4dc7aefea7231240cc1783ec0033bffd4965d83a092db12a775324824d8bbef41d23ea1c7156dba60e812d72b0a4519899a57fd88cc979948726a60a4e9003305897f6ebe243816fbe71b89a4b13db1ba4b42767f4688f1962817c580f1e98818202ea28ad85a656241069117f10b68ca471af02b76b24c12710319c40269122e5b707d7d20c36d59582740b2e6f678cc806fc70bd9b48ed37b70e62b8bd69b54e6408c9d7014557c5369d44f73992b7a8b1abc8d5df9aa581e4f076f56671ad13d6c67d87ceac36b3a4ab86f87de46159b614a5a6dd74d20141abbbf0ce626eb4e5b8edf0003f775dd27c9a8b11ae0fc950d2d0a4e8ac1ea46781469d1fca0abdb32212c6b25169f582b7d460ea56ef93947551a12313ad91c5d9a88f08ea3e1861d3381c4f29844db3464790e7adca00919d076ad4542f392470f0dbf9e8fe6ce64400e270f42d31f113edd94b3e79739078129a1e67133a03f12831d757bc25a4a4972bbeac8195c03569b06645edf5f78
+    _Values: b2ad74d05df27537711eb5264ff3fc16031c6f913811e6197ea4b368c89d3b28e97f2773ba1cc61d7394a7b81d8f9a2aa622c32f3376a31fb88bf54b0af0541cf57cbc3197659a5f27d12aa387b11b4aa814e76d2940141c39a5ac46c0f3900ee085316d70dff8161d73e15c96d104110a885e45596dbf7b1b38c6ea9080a365da49ed043395086c20db1324833dc9676065afb7ad299738634714fbb0b98e611646824ce4ffde607aa8d60c09e0b82e968af1c344837c5e441026e3c362b67eb843077dd29c6f01fe7e6bbf9863b76ae83f9ff7f23c137f4ed3183e3a2bc743241a3d990360f832060c3e3c10c40859c891fb84c3bf8b0aaa79d1007bcf382cb628e2b3a0516e78486cfdff7b4f90753641f934d9b4f9639032f0898ef8b62abb9479171eaa461800743c56c28b8f5916a335c52afbac6adfb9bd2cbe08f84e492cbb192987a974fbe1346577a2a104ce6d7d2de545fb5cc15211b775da82434259a0070d7cc3448a6eafa7b35ddc50324c092d397e7f3aa4797a3a9aac4f6a92ca653481e4ff582b8841d866205b578f92b64a1a57c633bfb63747771b8f46fdd274d42e14480420da988456fce3266458c435d46a5e255c685fcdd284aa49be1bc69b12e5a5097ceea0ef46a98370063f40f3cfee1e3c19b9892668c5213a81715a0dc00e611f78c21677fe4d4206152f2ded3b61e6538f6fa8cf64d3ff57cd6670b803913113963f45f46a0c2d5256c648ab0b5cef6277c08529d1550a3ed9da957c2592a84aa2606c9104953a65fc8f12389833fe1d6f573ef2a3d0bb3d7b5cd77236d32e32804659a34dd6861449841b8f76b12d17a9522c42a4694f5350cb4364befa097cff194cdbf4544e303d19c7ffdea9e26668530fb164ee6e37916dc34be203405a9a8f3a7fe62328530648af757d97085209c7fc6bec4b9767d1293c27eb4bb42b7611fc5c6885eb7c87b39e052611961f8c6d85aeb5c22a45d55b1c0c3f6745459484eb8f9365bb7bdc7ff1a0ea9d8d40941db459d063e04be6b6870c68df3d11fae471a225068b0d2901d236d08a5a37322360a3e360e9305b4f3e8c3fe0f5677e4c26efbebdcf3ea4a0764aedc8e30342e099ce0f3066736e597c2dc9e9e45cfb41ff859041200d1c290c100e73d761762ceec322e805737b2d59c2f890bc6116ce36afd014fc508775b60c0a0b953027a01513f132451cb88dff41651cf954e76dfb403c279175d8c0b66860ed81793e7564a785569047ecad97a2ecc24a5c91f5d962efab0c4ecf74154d175283590e787fda81a1d970224cd21540cc9e66f4ec05a9381b9717d00e6c8cbd90240f1c6940a3d8f60d65147c4204582d920de1675c347ae9b165846b1ab0c7d4dc7aefea7231240cc1783ec0033bffd4965d83a092db12a775324824d8bbef41d23ea1c7156dba60e812d72b0a4519899a57fd88cc979948726a60a4e9003305897f6ebe243816fbe71b89a4b13db1ba4b42767f4688f1962817c580f1e98818202ea28ad85a656241069117f10b68ca471af02b76b24c12710319c40269122e5b707d7d20c36d59582740b2e6f678cc806fc70bd9b48ed37b70e62b8bd69b54e6408c9d7014557c5369d44f73992b7a8b1abc8d5df9aa581e4f076f56671ad13d6c67d87ceac36b3a4ab86f87de46159b614a5a6dd74d20141abbbf0ce626eb4e5b8edf0003f775dd27c9a8b11ae0fc950d2d0a4e8ac1ea46781469d1fca0abdb32212c6b25169f582b7d460ea56ef93947551a12313ad91c5d9a88f08ea3e1861d3381c4f29844db3464790e7adca00919d076ad4542f392470f0dbf9e8fe6ce64400e270f42d31f113edd94b3e79739078129a1e67133a03f12831d757bc25a4a4972bbeac8195c03569b06645edf5f78
 --- !u!114 &7945119611021997752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2576,6 +2627,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2583,6 +2637,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &6298228616316539585
@@ -2793,6 +2849,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2800,6 +2859,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &6706678030829609292
@@ -3014,6 +3075,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -3021,6 +3085,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &7644760644358109063
@@ -3069,6 +3135,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -3076,6 +3145,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &7760882337186087398
@@ -3316,6 +3387,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -3323,6 +3397,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &9061193347856921879
@@ -3422,6 +3498,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -3429,5 +3508,7 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0

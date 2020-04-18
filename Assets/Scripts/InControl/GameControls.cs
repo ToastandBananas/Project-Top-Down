@@ -88,10 +88,14 @@ public class GameControls : MonoBehaviour
         gamePlayActions.menuRight.AddDefaultBinding(Key.RightArrow);
         gamePlayActions.menuRight.AddDefaultBinding(InputControlType.DPadRight);
 
-        gamePlayActions.menuContainerTakeAll.AddDefaultBinding(Key.G);
+        gamePlayActions.menuContainerTakeAll.AddDefaultBinding(Key.Return);
         gamePlayActions.menuContainerTakeAll.AddDefaultBinding(InputControlType.LeftStickButton);
 
-        gamePlayActions.menuContainerTakeGold.AddDefaultBinding(Key.Return);
-        gamePlayActions.menuContainerTakeGold.AddDefaultBinding(InputControlType.RightBumper);
+        gamePlayActions.menuContainerTakeGold.AddDefaultBinding(Key.G);
+        gamePlayActions.menuContainerTakeGold.AddDefaultBinding(InputControlType.RightTrigger);
+
+        gamePlayActions.menuTakeItem.AddDefaultBinding(InputControlType.Action4);
+
+        gamePlayActions.menuCharacter.AddDefaultBinding(Key.C);
     }
 }

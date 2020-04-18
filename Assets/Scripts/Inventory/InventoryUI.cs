@@ -142,6 +142,9 @@ public class InventoryUI : MonoBehaviour
             StartCoroutine(ToggleMenus());
         }
 
+        if (GameControls.gamePlayActions.menuCharacter.WasPressed)
+            ToggleEquipmentMenu();
+
         // If we have a selected item and we click outside of a menu, drop the item
         if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
         {

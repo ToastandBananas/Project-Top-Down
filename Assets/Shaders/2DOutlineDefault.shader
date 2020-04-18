@@ -6,7 +6,7 @@ Shader "Metkis/2DSprite Outline Default"
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Outline Color", Color) = (1,1,1,1)
-		_OutlineOffSet ("Outline OffSet", Range(0,3)) = 1
+		_OutlineOffSet ("Outline OffSet", Range(0,10)) = 1
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         _Color2 ("Tint Inner", Color) = (1,1,1,1)
         _Color3 ("Tint Overall", Color) = (1,1,1,1)

@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class Door : Interactable
 {
     public bool isVerticalDoorway;
     public bool isOpen;
@@ -21,6 +20,10 @@ public class Door : MonoBehaviour
         audioManager = AudioManager.instance;
         NPCGameObjectsInRange = new List<GameObject>();
         player = FindObjectOfType<PlayerAttack>();
+        
+        // For Highlighting
+        sr = GetComponent<SpriteRenderer>();
+        originalMaterial = sr.material;
     }
     
     void Update()
@@ -79,8 +82,10 @@ public class Door : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    public override void OnTriggerStay2D(Collider2D collision)
     {
+        base.OnTriggerStay2D(collision);
+
         if (collision.tag == "Player")
             playerInRange = true;
         else if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
@@ -92,8 +97,10 @@ public class Door : MonoBehaviour
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    public override void OnTriggerExit2D(Collider2D collision)
     {
+        base.OnTriggerExit2D(collision);
+
         if (collision.tag == "Player")
             playerInRange = false;
         else if (collision.tag == "NPC" /* TODO: && canOpenDoors */)

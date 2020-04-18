@@ -4,20 +4,14 @@ public class Highlight : MonoBehaviour
 {
     SpriteRenderer sr;
     Material originalMaterial;
-    Material highlightMaterial;
+    public Material highlightMaterial;
     
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         originalMaterial = sr.material;
-        highlightMaterial = Resources.Load<Material>("Materials/Sprite-Default");
+        //highlightMaterial = Resources.Load<Material>("Materials/Sprite-Default");
     }
-
-    /*void FixedUpdate()
-    {
-        if (sr.material != originalMaterial)
-            sr.material = originalMaterial;
-    }*/
 
     private void OnTriggerStay2D(Collider2D collision)
     {

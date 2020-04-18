@@ -356,6 +356,8 @@ public class PlayerAttack : MonoBehaviour
                         GameObject arrow = Instantiate(arrowPrefab, arms.leftEquippedWeapon.Find("Middle of String").position, Quaternion.identity, arms.leftEquippedWeapon.Find("Middle of String"));
                         arrow.transform.localRotation = Quaternion.Euler(0, 0, -90);
                         arrowSpawned = true;
+                        arrow.GetComponent<ItemData>().hasBeenRandomized = true;
+                        arrow.GetComponent<SpriteRenderer>().sprite = arrow.GetComponent<ItemData>().item.possibleSprites[0];
                     }
 
                     audioManager.PlayRandomSound(audioManager.bowDrawSounds, transform.position);
