@@ -28,7 +28,7 @@ public class UIControllerNavigation : MonoBehaviour
 
     int xOffset = 0;
     bool canNavigate = true;
-    float navigationWaitTime = 0.15f;
+    float navigationWaitTime = 0.2f;
 
     #region Singleton
     public static UIControllerNavigation instance;
@@ -138,10 +138,18 @@ public class UIControllerNavigation : MonoBehaviour
             // Inventory Menu
             else if (invUI.inventoryMenu.activeSelf || invUI.playerEquipmentMenu.activeSelf || invUI.containerMenu.activeSelf)
             {
-                if (invUI.inventoryMenu.activeSelf && currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.slotParent == invUI.containerParent)
+                if (GameControls.gamePlayActions.menuTakeItem.WasPressed)
                 {
-                    if (GameControls.gamePlayActions.menuTakeItem.WasPressed)
+                    if (invUI.inventoryMenu.activeSelf && currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.slotParent == invUI.containerParent)
                         currentlySelectedInventorySlot.contextMenu.TakeItem();
+                }
+
+                if (GameControls.gamePlayActions.menuUseItem.WasPressed)
+                {
+                    if (currentlySelectedInventorySlot != null)
+                        currentlySelectedInventorySlot.contextMenu.UseItem();
+                    else if (currentlySelectedEquipSlot != null)
+                        currentlySelectedEquipSlot.contextMenu.UnequipItem();
                 }
 
                 if (GameControls.gamePlayActions.menuContext.WasPressed)
@@ -184,14 +192,6 @@ public class UIControllerNavigation : MonoBehaviour
                     }
                     else if (currentlySelectedEquipSlot != null && currentlySelectedEquipSlot.isEmpty == false)
                         currentlySelectedEquipSlot.DropItem();
-                }
-
-                if (currentlySelectedInventorySlot != null && currentlySelectedInventorySlot.slotParent == invUI.containerParent)
-                {
-                    if (GameControls.gamePlayActions.menuContainerTakeAll.WasPressed)
-                        inv.TakeAll();
-                    else if (GameControls.gamePlayActions.menuContainerTakeGold.WasPressed)
-                        inv.TakeGold();
                 }
 
                 if (canNavigate)
@@ -418,7 +418,6 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateToRowBelow(int bagHeight, List<InventorySlot> slotsList)
     {
-        Debug.Log("Navigating to row below");
         xOffset = 0;
         for (int i = currentXCoord; i > 0; i--)
         {
@@ -436,7 +435,6 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateToNextBag(int xAddOn, int yAddOn, int bagHeight, List<InventorySlot> slotsList)
     {
-        Debug.Log("Navigating to next bag");
         xOffset = 0;
         for (int i = currentXCoord; i > 0; i--)
         {
@@ -457,7 +455,6 @@ public class UIControllerNavigation : MonoBehaviour
 
     void NavigateInventory(int addX, int addY)
     {
-        Debug.Log("Navigating inventory");
         if (currentlySelectedInventorySlot.slotParent == invUI.containerParent)
             FocusOnInvSlot(inv.GetSlotByCoordinates(new Vector2(currentlySelectedInventorySlot.slotCoordinate.x + addX, currentlySelectedInventorySlot.slotCoordinate.y + addY), invUI.containerSlots), addX, addY);
         else if (currentlySelectedInventorySlot.slotParent == invUI.pocketsParent)
@@ -469,17 +466,27 @@ public class UIControllerNavigation : MonoBehaviour
 
         if (currentlySelectedInventorySlot.slotParent == invUI.containerParent)
         {
-            if (addY == 1 && currentOverallYCoord > 3 && currentOverallYCoord < invUI.containerHeight)
+            if (addY == 1 && currentOverallYCoord > 3 && invUI.containerScrollbar.value > 0.05)
                 invUI.containerItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= 3)
+            else if (addY == -1 && currentOverallYCoord > 3 && currentOverallYCoord < invUI.containerHeight - 1 && invUI.containerScrollbar.value < 0.95)
                 invUI.containerItemsParent.localPosition += new Vector3(0, -75, 0);
+
+            if (invUI.containerScrollbar.value < 0)
+                invUI.containerScrollbar.value = 0;
+            else if (invUI.containerScrollbar.value > 1)
+                invUI.containerScrollbar.value = 1;
         }
         else
         {
-            if (addY == 1 && currentOverallYCoord > invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight)
+            if (addY == 1 && currentOverallYCoord > invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight - 4 && invUI.containerScrollbar.value > 0.05)
                 invUI.invItemsParent.localPosition += new Vector3(0, 75, 0);
-            else if (addY == -1 && currentOverallYCoord >= invUI.maxInventoryViewHeight / 2)
+            else if (addY == -1 && currentOverallYCoord >= invUI.maxInventoryViewHeight / 2 && currentOverallYCoord < invUI.overallInventoryHeight - 4 && invUI.containerScrollbar.value < 0.95)
                 invUI.invItemsParent.localPosition += new Vector3(0, -75, 0);
+
+            if (invUI.invScrollbar.value < 0)
+                invUI.invScrollbar.value = 0;
+            else if (invUI.invScrollbar.value > 1)
+                invUI.invScrollbar.value = 1;
         }
     }
 

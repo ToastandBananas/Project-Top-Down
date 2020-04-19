@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6895534102078215317}
   m_Layer: 0
   m_Name: Dead Human
-  m_TagString: Untagged
+  m_TagString: Dead Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,7 +183,6 @@ MonoBehaviour:
     type: 3}
   prefabShieldBase_R: {fileID: 1557083814658589624, guid: e4d366a5cc2097c46971834d9b3dc7eb,
     type: 3}
-  prefabRangedWeaponBase: {fileID: 0}
   currentWeapons: []
   currentEquipment: []
   leftWeaponParent: {fileID: 0}
@@ -222,9 +221,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sr: {fileID: 0}
+  originalMaterial: {fileID: 0}
+  thisInteractable: {fileID: 0}
+  highlightMaterial: {fileID: 0}
+  interactRadius: 1
+  distanceToPlayer: 0
+  playerInRange: 0
+  gm: {fileID: 0}
   containerName: Container
-  shouldRandomizeItems: 1
+  randomizeItems: 1
   itemsParent: {fileID: 0}
+  randomizeGold: 1
+  percentChanceNoGold: 20
+  minGoldPossible: 1
+  maxGoldPossible: 10
+  gold: 0
   containerObjects: []
   containerItems: []
   slotsParent: {fileID: 0}
@@ -814,6 +826,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -821,6 +836,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104978467792240
@@ -920,6 +937,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -927,6 +947,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104978537946715
@@ -1192,6 +1214,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -1199,6 +1224,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104978584069594
@@ -1772,6 +1799,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -1779,6 +1809,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104978981670881
@@ -2047,6 +2079,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2054,6 +2089,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104979086170140
@@ -2234,6 +2271,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2241,6 +2281,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &449104979643966460
@@ -2509,6 +2551,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2516,6 +2561,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &1023911740494965565
@@ -2594,6 +2641,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2601,6 +2651,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &2345915737305171356
@@ -2649,6 +2701,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2656,6 +2711,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &5290045435243778247
@@ -2704,6 +2761,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2711,6 +2771,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &5367708142869515743
@@ -2759,6 +2821,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2766,6 +2831,8 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0
 --- !u!1 &6165781550389356523
@@ -2814,6 +2881,9 @@ MonoBehaviour:
   hasBeenRandomized: 0
   item: {fileID: 0}
   equipment: {fileID: 0}
+  consumable: {fileID: 0}
+  inventoryIcon: {fileID: 0}
+  gameSprite: {fileID: 0}
   itemName: 
   value: 0
   currentStackSize: 1
@@ -2821,5 +2891,7 @@ MonoBehaviour:
   durability: 0
   damage: 0
   defense: 0
+  freshness: 100
+  uses: 1
   ammoTypePrefab: {fileID: 0}
   currentAmmoCount: 0

@@ -9,25 +9,23 @@ public class Interactable : MonoBehaviour
     [HideInInspector] public Material originalMaterial;
 
     [Header("Interactable")]
+    public Interactable thisInteractable;
     public Material highlightMaterial;
 
-    public float radius = 1f; // How close we need to be to interact
-    Transform interactionTransform; // The transform from where we interact
+    public float interactRadius = 0.5f; // How close we need to be to interact
+    public float distanceToPlayer;    // How close the object is to the player
+    public bool playerInRange;
+    Transform interactionTransform;   // The transform from where we interact
     
     Transform player;
     PlayerMovement playerMovement;
-    GameManager gm;
+    [HideInInspector] public GameManager gm;
 
     //bool hasInteracted = false; // Have we already interacted with this object?
 
-    public virtual void Interact()
+    public virtual void Start()
     {
-        // This method is meant to be overwritten
-        // Debug.Log("Interacting with " + transform.name);
-    }
-
-    void Start()
-    {
+        thisInteractable = this;
         interactionTransform = transform;
         playerMovement = PlayerMovement.instance;
         player = playerMovement.gameObject.transform;
@@ -35,76 +33,73 @@ public class Interactable : MonoBehaviour
 
         // For Highlighting
         sr = GetComponent<SpriteRenderer>();
-        originalMaterial = sr.material;
+        if (sr != null) originalMaterial = sr.material;
+    }
+
+    public virtual void Update()
+    {
+        if (GameControls.gamePlayActions.playerInteract.WasPressed)
+        {
+            if (playerInRange && gm.currentlySelectedInteractable == this)
+                Interact();
+        }
     }
     
-    void Update()
+    void OnMouseEnter()
     {
-        if (GameControls.gamePlayActions.playerInteract.WasPressed && GameManager.instance.menuOpen == false)
+        if (sr != null && gm.currentlySelectedInteractable == null)
         {
-            if (player == null)
-            {
-                interactionTransform = transform;
-                playerMovement = PlayerMovement.instance;
-                player = playerMovement.gameObject.transform;
-            }
-
-            // If we're close enough
-            float distance = Vector3.Distance(player.position, interactionTransform.position);
-            if (distance <= radius && playerMovement.itemsToBePickedUpCount == 0)
-            {
-                playerMovement.itemsToBePickedUpCount++;
-
-                // Interact with the object
-                Interact();
-
-                playerMovement.StartPickUpCooldown();
-            }
+            gm.currentlySelectedInteractable = this;
+            sr.material = highlightMaterial;
         }
+    }
+
+    void OnMouseExit()
+    {
+        if (sr != null && gm.currentlySelectedInteractable == this)
+        {
+            gm.currentlySelectedInteractable = null;
+            sr.material = originalMaterial;
+        }
+    }
+
+    void OnMouseUp()
+    {
+        if (GameControls.gamePlayActions.leftCtrl.IsPressed && gm.currentlySelectedInteractable == thisInteractable)
+            Interact();
+    }
+
+    public virtual void Interact()
+    {
+        // This method is meant to be overwritten
+        // Debug.Log("Interacting with " + transform.name);
+        
+        distanceToPlayer = Vector2.Distance(player.transform.position, transform.position);
     }
 
     // Draw our radius in the editor
     private void OnDrawGizmosSelected()
     {
-        if (interactionTransform == null)
-            interactionTransform = transform;
-
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(interactionTransform.position, radius);
+        Gizmos.DrawWireSphere(interactionTransform.position, interactRadius);
     }
 
     public virtual void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && sr != null)
+        if (collision.tag == "Player" && sr != null && gm.currentlySelectedInteractable == null)
         {
+            playerInRange = true;
+            gm.currentlySelectedInteractable = this;
             sr.material = highlightMaterial;
-        }
-
-        if (GameControls.gamePlayActions.playerInteract.WasPressed && GameManager.instance.menuOpen == false)
-        {
-            if (player == null)
-            {
-                interactionTransform = transform;
-                playerMovement = PlayerMovement.instance;
-                player = playerMovement.gameObject.transform;
-            }
-            
-            if (playerMovement.itemsToBePickedUpCount == 0)
-            {
-                playerMovement.itemsToBePickedUpCount++;
-
-                // Interact with the object
-                Interact();
-
-                playerMovement.StartPickUpCooldown();
-            }
         }
     }
 
     public virtual void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && sr != null)
+        if (collision.tag == "Player" && sr != null && gm.currentlySelectedInteractable == this)
         {
+            playerInRange = false;
+            gm.currentlySelectedInteractable = null;
             sr.material = originalMaterial;
         }
     }

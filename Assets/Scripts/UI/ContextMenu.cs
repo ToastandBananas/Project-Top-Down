@@ -58,6 +58,14 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             if (contextMenu.transform.childCount > 0)
                 DisableContextMenu();
         }
+
+        if (eventData.button == PointerEventData.InputButton.Middle)
+        {
+            if (thisInvSlot != null)
+                UseItem();
+            else if (thisEquipSlot != null)
+                UnequipItem();
+        }
     }
 
     public void BuildContextMenu(bool setToMousePos)
@@ -387,7 +395,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    void UseItem()
+    public void UseItem()
     {
         InventorySlot parentSlot = thisInvSlot.GetParentSlot(thisInvSlot);
         
@@ -396,7 +404,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
         DisableContextMenu();
     }
 
-    void UnequipItem()
+    public void UnequipItem()
     {
         if (equipmentManager.Unequip(thisEquipSlot.equipment, thisEquipSlot.itemData, thisEquipSlot.thisWeaponSlot, thisEquipSlot.thisEquipmentSlot, true))
             thisEquipSlot.ClearSlot(thisEquipSlot);

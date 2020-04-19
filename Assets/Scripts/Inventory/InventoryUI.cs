@@ -10,8 +10,10 @@ public class InventoryUI : MonoBehaviour
     
     [Header("GameObject References")]
     public GameObject inventoryMenu;
+    public Scrollbar invScrollbar;
     public GameObject playerEquipmentMenu;
     public GameObject containerMenu;
+    public Scrollbar containerScrollbar;
     public Text playerGoldText;
     public Text containerMenuGoldText;
     public QuantityMenu quantityMenu;
@@ -43,7 +45,7 @@ public class InventoryUI : MonoBehaviour
     public List<InventorySlot> containerSlots = new List<InventorySlot>();
     [HideInInspector] public int maxInventoryWidth = 8;
     [HideInInspector] public int maxContainerWidth = 6;
-    public int overallInventoryHeight = 0;
+    public int overallInventoryHeight = -1;
     [HideInInspector] public int maxInventoryViewHeight = 12;
     public int pocketsHeight;
     public int bagHeight;
@@ -105,11 +107,11 @@ public class InventoryUI : MonoBehaviour
 
         inventoryMenu.SetActive(false);
         playerEquipmentMenu.SetActive(false);
+        gm = GameManager.instance;
     }
 
     void Start()
     {
-        gm = GameManager.instance;
         playerMovement = PlayerMovement.instance;
         if (playerMovement.isMounted == false)
             ShowHorseSlots(false);
@@ -144,6 +146,18 @@ public class InventoryUI : MonoBehaviour
 
         if (GameControls.gamePlayActions.menuCharacter.WasPressed)
             ToggleEquipmentMenu();
+
+        if (GameControls.gamePlayActions.menuContainerTakeGold.WasPressed)
+        {
+            if (containerParent.gameObject.activeSelf)
+                inv.TakeGold();
+        }
+
+        if (GameControls.gamePlayActions.menuContainerTakeAll.WasPressed)
+        {
+            if (containerParent.gameObject.activeSelf)
+                inv.TakeAll();
+        }
 
         // If we have a selected item and we click outside of a menu, drop the item
         if (GameControls.gamePlayActions.playerLeftAttack.WasPressed && currentlySelectedItem != null && EventSystem.current.currentSelectedGameObject == null)
@@ -208,7 +222,8 @@ public class InventoryUI : MonoBehaviour
                 else if (slotsParent == containerParent)
                     containerHeight = currentYCoord;
 
-                overallInventoryHeight++;
+                if (slotsParent != containerParent)
+                    overallInventoryHeight++;
             }
 
             invSlot.slotParent = slotsParent;
@@ -319,27 +334,39 @@ public class InventoryUI : MonoBehaviour
     public void ToggleInventory()
     {
         inventoryMenu.SetActive(!inventoryMenu.activeSelf);
-        if (inventoryMenu.activeSelf)
+        if (inventoryMenu.activeSelf == false)
+            ClearAllTooltips();
+
+        DetermineIfMenuOpen();
+    }
+
+    public void DetermineIfMenuOpen()
+    {
+        //if (inventoryMenu == null || playerEquipmentMenu == null || containerMenu == null || gm == null || gm.pauseMenu == null)
+            //return;
+
+        if (inventoryMenu.activeSelf || playerEquipmentMenu.activeSelf || containerMenu.activeSelf || gm.pauseMenu.activeSelf)
             gm.menuOpen = true;
         else
-        {
-            ClearAllTooltips();
             gm.menuOpen = false;
-        }
     }
 
     public void ToggleEquipmentMenu()
     {
         playerEquipmentMenu.SetActive(!playerEquipmentMenu.activeSelf);
-        if (playerEquipmentMenu.activeSelf)
-            gm.menuOpen = true;
-        else
+        if (playerEquipmentMenu.activeSelf == false)
             ClearAllTooltips();
+
+        DetermineIfMenuOpen();
     }
 
     public void ToggleContainerMenu()
     {
         containerMenu.SetActive(!containerMenu.activeSelf);
+        if (containerMenu.activeSelf == false)
+            ClearAllTooltips();
+
+        DetermineIfMenuOpen();
     }
 
     public void TurnOffHighlighting()
@@ -422,6 +449,7 @@ public class InventoryUI : MonoBehaviour
             if ((containerSlots.Count % maxContainerWidth) > 0)
                 heightAddOn += 75;
             heightAddOn += ((containerSlots.Count / maxContainerWidth) * 75);
+            heightAddOn += 25;
             itemsParent.GetComponent<RectTransform>().sizeDelta = new Vector2(itemsParent.GetComponent<RectTransform>().sizeDelta.x, heightAddOn);
         }
         else // if itemsParent == invItemsParent

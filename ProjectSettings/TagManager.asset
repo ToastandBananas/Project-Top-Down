@@ -11,6 +11,8 @@ TagManager:
   - Ammunition
   - NPC Body
   - Player Body
+  - Weapon Base
+  - Dead Body
   layers:
   - Default
   - TransparentFX

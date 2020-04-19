@@ -38,7 +38,7 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (invUI.currentlySelectedItem != null)
+        if (invUI.currentlySelectedItem != null && GameManager.instance.isUsingController == false)
             Highlight();
     }
 
@@ -75,7 +75,6 @@ public class HoverHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         slotsToFill = new InventorySlot[totalSlotsToCheck];
 
         itemsOverlappingCount = inv.GetOverlappingItemCount(invUI.currentlySelectedItem, thisInvSlot, slotsToFill, invSlots);
-        Debug.Log(invSlots[0].name);
         
         if (itemsOverlappingCount < 2)
         {

@@ -5,45 +5,27 @@ public class Door : Interactable
 {
     public bool isVerticalDoorway;
     public bool isOpen;
-    public bool playerInRange;
     public bool NPCInRange;
 
     Quaternion newRotation;
 
     AudioManager audioManager;
-    PlayerAttack player;
+    PlayerAttack playerAttack;
 
     List<GameObject> NPCGameObjectsInRange;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         audioManager = AudioManager.instance;
         NPCGameObjectsInRange = new List<GameObject>();
-        player = FindObjectOfType<PlayerAttack>();
-        
-        // For Highlighting
-        sr = GetComponent<SpriteRenderer>();
-        originalMaterial = sr.material;
+        playerAttack = FindObjectOfType<PlayerAttack>();
     }
     
-    void Update()
+    public override void Update()
     {
-        if (playerInRange)
-        {
-            if (GameControls.gamePlayActions.playerInteract.WasPressed)
-            {
-                if (isOpen == false)
-                {
-                    isOpen = true;
-                    audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
-                }
-                else
-                {
-                    isOpen = false;
-                    audioManager.PlayRandomSound(audioManager.closeDoorSounds, transform.position);
-                }
-            }
-        }
+        base.Update();
 
         if (NPCInRange && isOpen == false)
             isOpen = true;
@@ -52,6 +34,25 @@ public class Door : Interactable
             OpenDoor();
         else
             CloseDoor();
+    }
+
+    public override void Interact()
+    {
+        base.Interact();
+        
+        if (playerInRange)
+        {
+            if (isOpen == false)
+            {
+                isOpen = true;
+                audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
+            }
+            else
+            {
+                isOpen = false;
+                audioManager.PlayRandomSound(audioManager.closeDoorSounds, transform.position);
+            }
+        }
     }
 
     void OpenDoor()
@@ -86,9 +87,7 @@ public class Door : Interactable
     {
         base.OnTriggerStay2D(collision);
 
-        if (collision.tag == "Player")
-            playerInRange = true;
-        else if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
+        if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
         {
             if (NPCGameObjectsInRange.Contains(collision.gameObject) == false)
                 NPCGameObjectsInRange.Add(collision.gameObject);
@@ -101,9 +100,7 @@ public class Door : Interactable
     {
         base.OnTriggerExit2D(collision);
 
-        if (collision.tag == "Player")
-            playerInRange = false;
-        else if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
+        if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
         {
             if (NPCGameObjectsInRange.Contains(collision.gameObject))
                 NPCGameObjectsInRange.Remove(collision.gameObject);

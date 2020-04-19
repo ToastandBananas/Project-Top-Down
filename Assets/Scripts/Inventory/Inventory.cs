@@ -756,8 +756,6 @@ public class Inventory : MonoBehaviour
         if (invalidPosition)
             return 2;
 
-        Debug.Log("Here");
-
         int itemsTryingToReplaceCount = 0; // Index of parentSlotsTryingToReplace array...will increase every time an item is pushed to the array
         parentSlotsTryingToReplace = new InventorySlot[2]; // Max array size of 2 because we can only replace 1 item
 
@@ -827,7 +825,7 @@ public class Inventory : MonoBehaviour
 
     public void TakeGold()
     {
-        if (invUI.currentlyActiveContainer.gold > 0)
+        if (invUI.currentlyActiveContainer != null && invUI.currentlyActiveContainer.gold > 0)
         {
             audioManager.PlayPickUpGoldSound(invUI.currentlyActiveContainer.gold);
             playerBasicStats.gold += invUI.currentlyActiveContainer.gold;
@@ -889,6 +887,8 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
+
+        GameManager.instance.TurnOffMenus();
     }
 
     public Vector3 GetItemInvPositionOffset(Item item)

@@ -96,6 +96,12 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.menuTakeItem.AddDefaultBinding(InputControlType.Action4);
 
+        gamePlayActions.menuUseItem.AddDefaultBinding(Mouse.MiddleButton);
+        gamePlayActions.menuUseItem.AddDefaultBinding(InputControlType.RightBumper);
+
         gamePlayActions.menuCharacter.AddDefaultBinding(Key.C);
+
+        // Specific Key Actions
+        gamePlayActions.leftCtrl.AddDefaultBinding(Key.LeftControl);
     }
 }

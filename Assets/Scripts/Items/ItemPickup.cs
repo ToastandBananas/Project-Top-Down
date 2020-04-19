@@ -14,22 +14,20 @@ public class ItemPickup : Interactable
     void Awake()
     {
         audioManager = AudioManager.instance;
-        itemDropScript = GetComponentInParent<ItemDrop>();
-        weaponDamageScript = GetComponentInParent<WeaponDamage>();
-        boxCollider = GetComponentInParent<BoxCollider2D>();
-        itemData = GetComponentInParent<ItemData>();
-        
-        // For Highlighting
-        sr = GetComponentInParent<SpriteRenderer>();
-        originalMaterial = sr.material;
+        itemDropScript = GetComponent<ItemDrop>();
+        weaponDamageScript = GetComponent<WeaponDamage>();
+        boxCollider = GetComponent<BoxCollider2D>();
+        itemData = GetComponent<ItemData>();
     }
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         item = itemData.item;
         
         pickUpRadiusCollider = GetComponent<CircleCollider2D>();
-        pickUpRadiusCollider.radius = radius;
+        pickUpRadiusCollider.radius = interactRadius;
 
         if (itemDropScript.isDropped == false)
         {
@@ -47,7 +45,7 @@ public class ItemPickup : Interactable
 
     public override void Interact()
     {
-        if (itemDropScript.isDropped)
+        if (itemDropScript.isDropped && playerInRange)
         {
             base.Interact();
             PickUp();
@@ -56,10 +54,14 @@ public class ItemPickup : Interactable
 
     void PickUp()
     {
+        Debug.Log(gm.currentlySelectedInteractable);
         bool wasPickedUp = Inventory.instance.AddToInventory(item, itemData); // If this returns true, it will add the item to the appropriate bag
-        
+
         if (wasPickedUp || itemData.currentStackSize <= 0)
-            Destroy(transform.parent.gameObject); // Then we'll destroy the actual gameobject, since it will only exist in our inventory system until we use/equip it
+        {
+            gm.currentlySelectedInteractable = null;
+            Destroy(gameObject); // Then we'll destroy the actual gameobject, since it will only exist in our inventory system until we use/equip it
+        }
         else
             Debug.Log("Not enough room in your inventory to pick up " + item.name + ".");
     }

@@ -38,9 +38,9 @@ public class PlayerMovement : MonoBehaviour
     Vector3 lastMoveDir;
     bool canDodge = true;
 
-    LayerMask obstacleMask;
+    Ray ray;
 
-    [HideInInspector] public int itemsToBePickedUpCount = 0;
+    LayerMask obstacleMask;
 
     #region Singleton
     void Awake()
@@ -204,17 +204,6 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         Destroy(effect.gameObject);
-    }
-
-    public void StartPickUpCooldown()
-    {
-        StartCoroutine(PickUpCooldown());
-    }
-
-    IEnumerator PickUpCooldown()
-    {
-        yield return new WaitForSeconds(0.1f);
-        itemsToBePickedUpCount = 0;
     }
 
     IEnumerator DodgeCooldown(float cooldownTime)

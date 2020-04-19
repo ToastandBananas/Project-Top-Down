@@ -121,7 +121,7 @@ public class WeaponDamage : MonoBehaviour
                     StartCoroutine(DamageCooldown(weaponOwnerArms.currentAttackTime));
                 }
             }
-            else if (collision.tag == "Shield" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
+            else if (collision.tag == "Shield" && collision.transform.parent.name != "Loose Items" && collision.transform.parent.parent.parent.parent.parent.parent != weaponOwner)
             {
                 BasicStats shieldOwnerBasicStats = collision.transform.parent.parent.parent.parent.parent.parent.GetComponent<BasicStats>();
                 Animator currentArmAnim;

@@ -16,7 +16,11 @@ public class GameManager : MonoBehaviour
     public Button saveButton;
     public Button saveAndQuitButton;
 
+    [Header("Controller")]
     public bool isUsingController;
+
+    [Header("Interactable")]
+    public Interactable currentlySelectedInteractable;
 
     InventoryUI invUI;
     Inventory inv;
@@ -76,7 +80,6 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         if (pauseMenu.activeSelf)
         {
-            menuOpen = true;
             UIControllerNav.ClearCurrentlySelected();
             UIControllerNav.currentlySelectedObject = resumeButton.gameObject;
             UIControllerNav.currentlySelectedButton = resumeButton;
@@ -84,10 +87,9 @@ public class GameManager : MonoBehaviour
             resumeButton.Select();
         }
         else
-        {
-            menuOpen = false;
             UIControllerNav.ClearCurrentlySelected();
-        }
+
+        invUI.DetermineIfMenuOpen();
     }
 
     public void TurnOffMenus()

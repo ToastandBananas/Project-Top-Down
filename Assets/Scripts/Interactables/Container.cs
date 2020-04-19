@@ -27,69 +27,69 @@ public class Container : Interactable
     InventoryUI invUI;
     Inventory inv;
     AudioManager audioManager;
-    GameManager gm;
     UIControllerNavigation UIControllerNav;
 
     Item itemToAdd;
-    bool inContainerRange;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         invUI = InventoryUI.instance;
         inv = Inventory.instance;
         audioManager = AudioManager.instance;
-        gm = GameManager.instance;
         UIControllerNav = UIControllerNavigation.instance;
         itemsParent = transform.Find("Items");
-
-        // For Highlighting (from Interactable script)
-        TryGetComponent<SpriteRenderer>(out sr);
-        if (sr != null)
-            originalMaterial = sr.material;
 
         InitializeData();
     }
 
-    void Update()
+    public override void Update()
     {
-        if (inContainerRange && GameControls.gamePlayActions.playerInteract.WasPressed && gm.menuOpen == false)
+        base.Update();
+    }
+
+    public override void Interact()
+    {
+        if (invUI.containerMenu.activeSelf == false) // If the container menu is not open
         {
-            if (invUI.containerMenu.activeSelf == false) // If the container menu is not open
+            base.Interact();
+
+            if (invUI.currentlyActiveContainer == null || invUI.currentlyActiveContainer != this)
             {
-                if (invUI.currentlyActiveContainer == null || invUI.currentlyActiveContainer != this)
+                // Create the container's slots if need be
+                if (slotCount != invUI.containerSlots.Count)
                 {
-                    // Create the container's slots if need be
-                    if (slotCount != invUI.containerSlots.Count)
+                    invUI.containerSlots.Clear();
+
+                    foreach (InventorySlot slot in invUI.containerMenu.GetComponentsInChildren<InventorySlot>())
                     {
-                        invUI.containerSlots.Clear();
-
-                        foreach (InventorySlot slot in invUI.containerMenu.GetComponentsInChildren<InventorySlot>())
-                        {
-                            Destroy(slot.gameObject);
-                        }
-
-                        StartCoroutine(CreateSlots());
-
-                        // Delay adding the items so that each slot has time to run its Awake()
-                        StartCoroutine(DelayAddContainerItems());
+                        Destroy(slot.gameObject);
                     }
-                    else // Otherwise, don't create any slots and add the items without a delay
-                        AddContainerItems();
 
-                    invUI.containerMenuGoldText.text = gold.ToString();
+                    StartCoroutine(CreateSlots());
 
-                    // Set this container to be the currently active container so we can easily reference it in other scripts
-                    invUI.currentlyActiveContainer = this;
+                    // Delay adding the items so that each slot has time to run its Awake()
+                    StartCoroutine(DelayAddContainerItems());
                 }
+                else // Otherwise, don't create any slots and add the items without a delay
+                    AddContainerItems();
 
-                if (transform.parent.name == "Containers")
-                    audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
-                else if (transform.parent.name == "NPCs")
-                    audioManager.PlayRandomSound(audioManager.searchBodySounds, transform.position);
+                invUI.containerMenuGoldText.text = gold.ToString();
 
-                OpenMenus();
+                // Set this container to be the currently active container so we can easily reference it in other scripts
+                invUI.currentlyActiveContainer = this;
             }
+
+            if (transform.parent.name == "Containers")
+                audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
+            else if (transform.parent.name == "NPCs")
+                audioManager.PlayRandomSound(audioManager.searchBodySounds, transform.position);
+
+            OpenMenus();
         }
+        else
+            gm.TurnOffMenus();
     }
 
     void RandomizeGold()
@@ -246,21 +246,13 @@ public class Container : Interactable
             UIControllerNav.ClearCurrentlySelected();
     }
 
-    public override void OnTriggerStay2D(Collider2D collision)
-    {
-        base.OnTriggerStay2D(collision);
-
-        if (collision.tag == "Player")
-            inContainerRange = true;
-    }
-
     public override void OnTriggerExit2D(Collider2D collision)
     {
         base.OnTriggerExit2D(collision);
 
         if (collision.tag == "Player")
         {
-            inContainerRange = false;
+            //playerInRange = false;
             
             if (invUI.currentlySelectedItem != null)
             {
@@ -322,8 +314,7 @@ public class Container : Interactable
                 }
             }
 
-            if (invUI.containerMenu.activeSelf == true)
-                StartCoroutine(CloseMenu());
+            gm.TurnOffMenus();
         }
     }
 }

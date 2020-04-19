@@ -76,7 +76,7 @@ public class PlayerAttack : MonoBehaviour
     
     void Update()
     {
-        if (gm.menuOpen == false && playerMovement.isStaggered == false)
+        if (gm.menuOpen == false && playerMovement.isStaggered == false && GameControls.gamePlayActions.leftCtrl.IsPressed == false)
         {
             Update_LeftArmAnims();
             Update_RightArmAnims();
