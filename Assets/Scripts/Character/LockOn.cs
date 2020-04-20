@@ -157,9 +157,7 @@ public class LockOn : MonoBehaviour
         }
         else
             dir = headReset.position - transform.position;
-
-
-        Debug.Log("here");
+        
         angleToRotateTowards = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(angleToRotateTowards, Vector3.forward), 300f * Time.fixedDeltaTime);
     }

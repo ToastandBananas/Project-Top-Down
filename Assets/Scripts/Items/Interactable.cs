@@ -12,6 +12,10 @@ public class Interactable : MonoBehaviour
     public Interactable thisInteractable;
     public Material highlightMaterial;
 
+    [HideInInspector] public ItemPickup thisItemPickup;
+    [HideInInspector] public Container thisContainer;
+    [HideInInspector] public Door thisDoor;
+
     public float interactRadius = 0.5f; // How close we need to be to interact
     public float distanceToPlayer;    // How close the object is to the player
     public bool playerInRange;
@@ -31,9 +35,15 @@ public class Interactable : MonoBehaviour
         player = playerMovement.gameObject.transform;
         gm = GameManager.instance;
 
+        TryGetComponent(out thisItemPickup);
+        TryGetComponent(out thisContainer);
+        TryGetComponent(out thisDoor);
+
         // For Highlighting
-        if (transform.tag == "Dead Body")
+        if (tag == "Dead Body")
             sr = transform.Find("Body").GetComponent<SpriteRenderer>();
+        else if (tag == "Container" || tag == "Door")
+            sr = GetComponentInParent<SpriteRenderer>();
         else
             sr = GetComponent<SpriteRenderer>();
 
@@ -42,11 +52,8 @@ public class Interactable : MonoBehaviour
 
     public virtual void Update()
     {
-        if (GameControls.gamePlayActions.playerInteract.WasPressed)
-        {
-            if (playerInRange && gm.currentlySelectedInteractable == this)
-                Interact();
-        }
+        if (GameControls.gamePlayActions.playerInteract.WasPressed && playerInRange && gm.currentlySelectedInteractable == this)
+            Interact();
     }
 
     void OnMouseExit()
@@ -68,7 +75,7 @@ public class Interactable : MonoBehaviour
 
     public virtual void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && sr != null)
+        if (collision.tag == "Player")
         {
             playerInRange = true;
             if (sr != null && gm.currentlySelectedInteractable == null)

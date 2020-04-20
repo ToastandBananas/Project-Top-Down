@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
         arms = transform.Find("Arms").GetComponent<Arms>();
         bodyAnim = GetComponent<Animator>();
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
-        obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
 
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
         AIPath = GetComponent<Pathfinding.AIPath>();

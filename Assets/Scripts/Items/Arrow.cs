@@ -22,7 +22,7 @@ public class Arrow : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
 
-        obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
     }
 
     public void StopArrow()

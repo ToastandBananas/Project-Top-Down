@@ -13,6 +13,8 @@ TagManager:
   - Player Body
   - Weapon Base
   - Dead Body
+  - Container
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -27,13 +29,13 @@ TagManager:
   - Character
   - Lighting
   - Player
-  - Doors
+  - 
   - Interactables
   - 
-  - 
-  - 
-  - 
-  - 
+  - Obstacles
+  - OpenDoors
+  - ClosedDoors
+  - LockedDoors
   - 
   - 
   - 

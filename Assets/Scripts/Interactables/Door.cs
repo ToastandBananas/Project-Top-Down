@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
+using System.Collections;
 
 public class Door : Interactable
 {
+    public float doorOpenTime = 0.35f;
     public bool isVerticalDoorway;
     public bool isOpen;
     public bool NPCInRange;
@@ -14,6 +17,11 @@ public class Door : Interactable
 
     List<GameObject> NPCGameObjectsInRange;
 
+    LayerMask openDoorLayer, closedDoorLayer;
+
+    Bounds bounds;
+    GraphUpdateObject graphUpdateObject;
+
     public override void Start()
     {
         base.Start();
@@ -21,6 +29,14 @@ public class Door : Interactable
         audioManager = AudioManager.instance;
         NPCGameObjectsInRange = new List<GameObject>();
         playerAttack = FindObjectOfType<PlayerAttack>();
+
+        openDoorLayer   = LayerMask.NameToLayer("OpenDoors");
+        closedDoorLayer = LayerMask.NameToLayer("ClosedDoors");
+
+        // Set up variables for recalculating pathfinding around open doors
+        bounds = GetComponent<CircleCollider2D>().bounds;
+        bounds.Expand(Vector3.forward * 1000);
+        graphUpdateObject = new GraphUpdateObject(bounds);
     }
     
     public override void Update()
@@ -39,48 +55,55 @@ public class Door : Interactable
     public override void Interact()
     {
         base.Interact();
-        
-        if (playerInRange)
+
+        if (isOpen == false)
         {
-            if (isOpen == false)
-            {
-                isOpen = true;
-                audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
-            }
-            else
-            {
-                isOpen = false;
-                audioManager.PlayRandomSound(audioManager.closeDoorSounds, transform.position);
-            }
+            isOpen = true;
+            transform.parent.gameObject.layer = openDoorLayer;
+            audioManager.PlayRandomSound(audioManager.openDoorSounds, transform.position);
         }
+        else
+        {
+            isOpen = false;
+            transform.parent.gameObject.layer = closedDoorLayer;
+            audioManager.PlayRandomSound(audioManager.closeDoorSounds, transform.position);
+        }
+
+        StartCoroutine(UpdateGraph());
     }
 
     void OpenDoor()
     {
-        if (isVerticalDoorway == false && Mathf.Abs(transform.rotation.z) != 90)
+        if (isVerticalDoorway == false && Mathf.Abs(transform.parent.rotation.z) != 90)
         {
             newRotation = Quaternion.AngleAxis(90, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
+            transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
         }
-        else if (isVerticalDoorway && Mathf.Abs(transform.rotation.z) != 180)
+        else if (isVerticalDoorway && Mathf.Abs(transform.parent.rotation.z) != 180)
         {
             newRotation = Quaternion.AngleAxis(-180, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
+            transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
         }
     }
 
     void CloseDoor()
     {
-        if (isVerticalDoorway == false && transform.rotation.z != 0)
+        if (isVerticalDoorway == false && transform.parent.rotation.z != 0)
         {
             newRotation = Quaternion.AngleAxis(0, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
+            transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
         }
-        else if (isVerticalDoorway && Mathf.Abs(transform.rotation.z) != 90)
+        else if (isVerticalDoorway && Mathf.Abs(transform.parent.rotation.z) != 90)
         {
             newRotation = Quaternion.AngleAxis(-90, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, 10f * Time.deltaTime);
+            transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
         }
+    }
+
+    IEnumerator UpdateGraph()
+    {
+        yield return new WaitForSeconds(doorOpenTime);
+        AstarPath.active.UpdateGraphs(graphUpdateObject);
     }
 
     public override void OnTriggerStay2D(Collider2D collision)

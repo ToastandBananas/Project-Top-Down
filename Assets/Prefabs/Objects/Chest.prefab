@@ -11,11 +11,9 @@ GameObject:
   - component: {fileID: 2821440556542958414}
   - component: {fileID: 2821440556542958415}
   - component: {fileID: 2821440556542958412}
-  - component: {fileID: 2821440556542958413}
-  - component: {fileID: 2821440556542958419}
   - component: {fileID: 4014021300959433072}
   - component: {fileID: 2352943764263382968}
-  m_Layer: 14
+  m_Layer: 16
   m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,7 +31,7 @@ Transform:
   m_LocalPosition: {x: -3.91, y: 4.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 5647672348409781241}
+  - {fileID: 3435118925429011295}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,56 +112,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1145484, y: 0.81720066}
   m_EdgeRadius: 0
---- !u!58 &2821440556542958413
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2821440556542958408}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.15
---- !u!114 &2821440556542958419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2821440556542958408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sr: {fileID: 0}
-  originalMaterial: {fileID: 0}
-  thisInteractable: {fileID: 0}
-  highlightMaterial: {fileID: 2100000, guid: a6862573d6cb0cb42909ddb02f949585, type: 2}
-  interactRadius: 0.5
-  distanceToPlayer: 0
-  playerInRange: 0
-  gm: {fileID: 0}
-  containerName: Container
-  randomizeItems: 1
-  itemsParent: {fileID: 0}
-  randomizeGold: 1
-  percentChanceNoGold: 20
-  minGoldPossible: 1
-  maxGoldPossible: 10
-  gold: 0
-  containerObjects:
-  - {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
-  - {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
-  containerItems: []
-  slotsParent: {fileID: 0}
-  slotCount: 40
 --- !u!114 &4014021300959433072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,19 +131,8 @@ MonoBehaviour:
     - {fileID: 2821440556542958414}
     - {fileID: 2821440556542958415}
     - {fileID: 2821440556542958412}
-    - {fileID: 2821440556542958413}
-    - {fileID: 2821440556542958419}
-    - {fileID: 4014021300959433072}
-    - {fileID: 2352943764263382968}
-    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-    - {fileID: -5281422124547630143, guid: 116fbded4ec452f46a925eb44c9b918d, type: 3}
-    - {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
-    - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
-    - {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
-    - {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
-    - {fileID: 4801581109557126842}
-    - {fileID: 5647672348409781241}
-    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907af6e7a72b0d9ec27e6fda52d26b2d347d6e7cc359968694a2e2fa7f00ebb4a428fd9d100714c763738b466b5d9f3db0c4811a61f8c66f428758e09ff58d97a6e480774bed598ec192fb9afbb172c8f4c10daf1c6e6fa307c
+    - {fileID: 0}
+    _Values: 64c7a3c05e1d7a6add3fa19c15d0cb4de5f252ebdbac9974196e0fbf1f9bcd7b6d154117c41c2907
 --- !u!114 &2352943764263382968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,10 +169,96 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4801581109557126842}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
+  m_Father: {fileID: 3435118925429011295}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8749221606742971120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3435118925429011295}
+  - component: {fileID: 3875806778858360783}
+  - component: {fileID: 4235083767139065202}
+  m_Layer: 14
+  m_Name: Container
+  m_TagString: Container
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3435118925429011295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8749221606742971120}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5647672348409781241}
   m_Father: {fileID: 2821440556542958414}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &3875806778858360783
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8749221606742971120}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.15
+--- !u!114 &4235083767139065202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8749221606742971120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0c31d76d5edaa4b9a83750e00a5dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sr: {fileID: 0}
+  originalMaterial: {fileID: 0}
+  thisInteractable: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: a6862573d6cb0cb42909ddb02f949585, type: 2}
+  thisItemPickup: {fileID: 0}
+  thisContainer: {fileID: 0}
+  thisDoor: {fileID: 0}
+  interactRadius: 0.5
+  distanceToPlayer: 0
+  playerInRange: 0
+  gm: {fileID: 0}
+  containerName: Container
+  randomizeItems: 1
+  itemsParent: {fileID: 0}
+  randomizeGold: 1
+  percentChanceNoGold: 20
+  minGoldPossible: 1
+  maxGoldPossible: 10
+  gold: 0
+  containerObjects:
+  - {fileID: 5474431354769912416, guid: 0c6cda23f5720d64bae45c7353e3e3dc, type: 3}
+  - {fileID: 6368744644473137523, guid: 7def1510d55664c44a69274d443c8bb1, type: 3}
+  containerItems: []
+  slotsParent: {fileID: 0}
+  slotCount: 40

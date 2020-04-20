@@ -71,7 +71,7 @@ public class PlayerAttack : MonoBehaviour
         looseItemsParent = GameObject.Find("Loose Items").transform;
         arms = transform.Find("Arms").GetComponent<Arms>();
         bodyAnim = GetComponent<Animator>();
-        obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
     }
     
     void Update()

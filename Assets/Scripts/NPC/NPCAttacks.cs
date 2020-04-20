@@ -53,7 +53,7 @@ public class NPCAttacks : MonoBehaviour
         headReset = transform.Find("Head Reset");
         looseItemsParent = GameObject.Find("Loose Items").transform;
 
-        obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
     }
 
     void Update()

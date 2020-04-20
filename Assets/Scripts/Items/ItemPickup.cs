@@ -54,7 +54,6 @@ public class ItemPickup : Interactable
 
     void PickUp()
     {
-        Debug.Log(gm.currentlySelectedInteractable);
         bool wasPickedUp = Inventory.instance.AddToInventory(item, itemData); // If this returns true, it will add the item to the appropriate bag
 
         if (wasPickedUp || itemData.currentStackSize <= 0)

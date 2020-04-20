@@ -40,7 +40,7 @@ public class WeaponDamage : MonoBehaviour
         playerMovement = PlayerMovement.instance;
         npcAttacks = weaponOwner.GetComponent<NPCAttacks>();
         weaponOwnerArms = weaponOwner.Find("Arms").GetComponent<Arms>();
-        obstacleMask = LayerMask.GetMask("Walls", "Doors");
+        obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
         itemData = GetComponent<ItemData>();
         equipment = itemData.equipment;
 
