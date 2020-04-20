@@ -39,7 +39,8 @@ public class LockOn : MonoBehaviour
     {
         if ((playerMovement != null && playerMovement.isStaggered == false) || (npcMovement != null && npcMovement.isStaggered == false))
         {
-            if (isLockedOn == false || (playerMovement != null && playerMovement.isAttackDashing) || (npcMovement != null && npcMovement.isAttackDashing))
+            if (isLockedOn == false || (playerMovement != null && (playerMovement.isAttackDashing || playerMovement.AIDestSetter.target != null)) 
+                || (npcMovement != null && npcMovement.isAttackDashing))
                 FaceForward();
             else
                 FaceLockOnTarget();
@@ -128,28 +129,37 @@ public class LockOn : MonoBehaviour
 
     void FaceForward()
     {
-        if (playerMovement != null && playerMovement.isMoving) // Only used for the player
+        if (playerMovement != null)
         {
-            if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
-                dir = playerMovement.movementInput;
-            else if (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f)
-                dir = playerMovement.lookInput;
-            else
-                dir = headReset.position - transform.position;
-        }
-        else if (playerMovement != null && playerMovement.isMoving == false)
-        {
-            if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
-                dir = headReset.position - transform.position;
-            else if (arms.rangedWeaponEquipped && GameControls.gamePlayActions.playerLeftAttack.IsPressed
-                && (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f))
+            if (playerMovement.AIDestSetter.target != null)
             {
-                dir = playerMovement.lookInput;
+                dir = playerMovement.AIDestSetter.target.position - transform.position;
+            }
+            else if (playerMovement != null && playerMovement.isMoving) // Only used for the player
+            {
+                if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
+                    dir = playerMovement.movementInput;
+                else if (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f)
+                    dir = playerMovement.lookInput;
+                else
+                    dir = headReset.position - transform.position;
+            }
+            else if (playerMovement != null && playerMovement.isMoving == false)
+            {
+                if (arms.rangedWeaponEquipped == false || GameControls.gamePlayActions.playerLeftAttack.IsPressed == false)
+                    dir = headReset.position - transform.position;
+                else if (arms.rangedWeaponEquipped && GameControls.gamePlayActions.playerLeftAttack.IsPressed
+                    && (playerMovement.lookInput.x > 0.3f || playerMovement.lookInput.x < -0.3f || playerMovement.lookInput.y > 0.3f || playerMovement.lookInput.y < -0.3f))
+                {
+                    dir = playerMovement.lookInput;
+                }
             }
         }
         else
             dir = headReset.position - transform.position;
 
+
+        Debug.Log("here");
         angleToRotateTowards = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(angleToRotateTowards, Vector3.forward), 300f * Time.fixedDeltaTime);
     }

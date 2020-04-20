@@ -72,7 +72,7 @@ public class WeaponDamage : MonoBehaviour
         if (hit == false)
         {
             if (whoToKnockback.tag == "NPC")
-                StartCoroutine(whoToKnockback.GetComponent<NPCMovement>().SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
+                StartCoroutine(whoToKnockback.GetComponent<NPCMovement>().SmoothDodge(whoToKnockback.position + dir * knockbackDistance));
             else if (whoToKnockback.tag == "Player")
                 StartCoroutine(playerMovement.SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
         }

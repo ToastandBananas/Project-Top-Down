@@ -218,6 +218,7 @@ public class BasicStats : MonoBehaviour
         {
             if (arms.rangedWeaponEquipped && arms.leftEquippedWeapon.transform.Find("Middle of String").childCount > 0) // If an arrow is attached to the bow string, drop it
                 arms.leftEquippedWeapon.transform.Find("Middle of String").GetChild(0).GetComponent<ItemDrop>().DropItem(false);
+
             leftWeaponItemDrop.DropItem(false);
         }
 

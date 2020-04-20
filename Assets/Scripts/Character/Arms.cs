@@ -31,12 +31,16 @@ public class Arms : MonoBehaviour
 
     NPCCombat npcCombat;
     NPCAttacks npcAttacks;
+
+    LayerMask defaultMask;
     
     void Awake()
     {
         StartCoroutine(SetArmAnims(0.05f));
         npcCombat = transform.parent.GetComponent<NPCCombat>();
         npcAttacks = transform.parent.GetComponent<NPCAttacks>();
+
+        defaultMask = LayerMask.NameToLayer("Default");
     }
 
     public void GetWeaponTransforms()
@@ -60,7 +64,10 @@ public class Arms : MonoBehaviour
             GetWeaponTransforms();
 
         if (leftEquippedWeapon != null)
+        {
             leftWeapon = leftEquippedWeapon.GetComponent<ItemData>().equipment;
+            leftEquippedWeapon.gameObject.layer = defaultMask;
+        }
 
         if (leftWeapon != null)
         {
@@ -131,7 +138,10 @@ public class Arms : MonoBehaviour
             GetWeaponTransforms();
 
         if (rightEquippedWeapon != null)
+        {
             rightWeapon = rightEquippedWeapon.GetComponent<ItemData>().equipment;
+            rightEquippedWeapon.gameObject.layer = defaultMask;
+        }
         
         if (rightWeapon != null)
         {

@@ -429,6 +429,6 @@ public class NPCAttacks : MonoBehaviour
         float raycastDistance = Vector3.Distance(transform.position, transform.position + dir * dashDistance);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, raycastDistance, obstacleMask);
         if (hit == false)
-            StartCoroutine(npcMovement.SmoothMovement(transform.position + dir * dashDistance));
+            StartCoroutine(npcMovement.SmoothDodge(transform.position + dir * dashDistance));
     }
 }

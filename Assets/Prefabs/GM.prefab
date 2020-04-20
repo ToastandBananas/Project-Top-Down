@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
+  - component: {fileID: 8272007597543859390}
   - component: {fileID: 6165176568979638920}
   - component: {fileID: 186433817257015334}
   - component: {fileID: 6193931194439165326}
@@ -58,6 +59,19 @@ MonoBehaviour:
   saveButton: {fileID: 0}
   saveAndQuitButton: {fileID: 0}
   isUsingController: 1
+  currentlySelectedInteractable: {fileID: 0}
+--- !u!114 &8272007597543859390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef31845ce9ce96e489a2477901eecc71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6165176568979638920
 MonoBehaviour:
   m_ObjectHideFlags: 0

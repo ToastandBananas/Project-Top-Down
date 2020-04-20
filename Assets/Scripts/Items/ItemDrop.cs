@@ -17,6 +17,7 @@ public class ItemDrop : MonoBehaviour
     Transform looseItemsContainer;
 
     LayerMask obstacleMask;
+    LayerMask interactableMask;
 
     void Awake()
     {
@@ -41,10 +42,13 @@ public class ItemDrop : MonoBehaviour
         arrowScript = GetComponent<Arrow>();
         looseItemsContainer = GameObject.Find("Loose Items").transform;
         obstacleMask = LayerMask.GetMask("Walls", "Floors");
+        interactableMask = LayerMask.NameToLayer("Interactables");
     }
 
     public void DropItem(bool tossInAir)
     {
+        gameObject.layer = interactableMask;
+
         if (boxCollider != null)
             boxCollider.enabled = false;
 

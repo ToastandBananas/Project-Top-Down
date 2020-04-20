@@ -32,6 +32,9 @@ public class PlayerMovement : MonoBehaviour
     BasicStats stats;
     Transform headReset;
 
+    [HideInInspector] public Pathfinding.AIDestinationSetter AIDestSetter;
+    [HideInInspector] public Pathfinding.AIPath AIPath;
+
     float angleToRotateTowards;
     Vector3 dir;
     Vector3 move;
@@ -70,6 +73,9 @@ public class PlayerMovement : MonoBehaviour
         legsAnim = transform.Find("Legs").GetComponent<Animator>();
         obstacleMask = LayerMask.GetMask("Walls", "Doors");
 
+        AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
+        AIPath = GetComponent<Pathfinding.AIPath>();
+
         CalculateMoveSpeeds();
 
         StartCoroutine(UpdateFootstepSounds());
@@ -86,6 +92,40 @@ public class PlayerMovement : MonoBehaviour
             Update_Movement();
     }
 
+    public IEnumerator MoveToInteractable(Transform target, float speed)
+    {
+        Interactable interactable = target.GetComponent<Interactable>();
+
+        // Set pathfinding variables and player movement anims
+        AIDestSetter.target = target;
+        AIPath.canMove = true;
+        AIPath.maxSpeed = speed;
+        SetIsMoving(true);
+
+        while (true)
+        {
+            if (interactable.playerInRange)
+            {
+                if (interactable.TryGetComponent(out ItemPickup itemPickup) != false)
+                    itemPickup.Interact();
+                else if (interactable.TryGetComponent(out Container container) != false)
+                    container.Interact();
+                else if (interactable.TryGetComponent(out Door door) != false)
+                    door.Interact();
+
+                StopPathfinding();
+                break;
+            }
+            else if (AIDestSetter.target == null)
+            {
+                StopPathfinding();
+                break;
+            }
+
+            yield return null;
+        }
+    }
+
     void Update_Movement()
     {
         movementInput = GameControls.gamePlayActions.playerMovementAxis.Value;
@@ -98,11 +138,11 @@ public class PlayerMovement : MonoBehaviour
         
         if (movementInput.x > 0.3f || movementInput.x < -0.3f || movementInput.y > 0.3f || movementInput.y < -0.3f)
         {
-            isMoving = true;
-            bodyAnim.SetBool("isMoving", true);
-            legsAnim.SetBool("isMoving", true);
-            arms.rightArmAnim.SetBool("isMoving", true);
-            arms.leftArmAnim.SetBool("isMoving", true);
+            if (AIDestSetter.target != null)
+                StopPathfinding();
+
+            SetIsMoving(true);
+
             move = Vector3.zero;
 
             if (movementInput.y > 0.3f)
@@ -138,8 +178,24 @@ public class PlayerMovement : MonoBehaviour
             move = move.normalized * moveSpeed * Time.fixedDeltaTime;
             transform.position += move;
         }
-        else
-            ResetAnims();
+        else if (AIDestSetter.target == null)
+            SetIsMoving(false);
+    }
+
+    void SetIsMoving(bool moving)
+    {
+        isMoving = moving;
+        bodyAnim.SetBool("isMoving", moving);
+        legsAnim.SetBool("isMoving", moving);
+        arms.rightArmAnim.SetBool("isMoving", moving);
+        arms.leftArmAnim.SetBool("isMoving", moving);
+    }
+
+    public void StopPathfinding()
+    {
+        AIDestSetter.target = null;
+        AIPath.canMove = false;
+        SetIsMoving(false);
     }
 
     IEnumerator UpdateFootstepSounds()

@@ -26,7 +26,6 @@ public class NPCMovement : MonoBehaviour
     AudioManager audioManager;
     AnimTimeManager animTimeManager;
     FieldOfView fov;
-    AstarPath AstarPath;
     Pathfinding.AIPath AIPath;
     Pathfinding.AIDestinationSetter AIDestSetter;
     Animator bodyAnim, legsAnim;
@@ -51,7 +50,6 @@ public class NPCMovement : MonoBehaviour
         audioManager = AudioManager.instance;
         animTimeManager = GameManager.instance.GetComponent<AnimTimeManager>();
         fov = GetComponent<FieldOfView>();
-        AstarPath = FindObjectOfType<AstarPath>();
         AIPath = GetComponent<Pathfinding.AIPath>();
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
 
@@ -216,7 +214,7 @@ public class NPCMovement : MonoBehaviour
         legsAnim.SetBool("doStagger", false);
     }
 
-    public IEnumerator SmoothMovement(Vector3 targetPos)
+    public IEnumerator SmoothDodge(Vector3 targetPos)
     {
         isDodging = true;
         float timer = 0;

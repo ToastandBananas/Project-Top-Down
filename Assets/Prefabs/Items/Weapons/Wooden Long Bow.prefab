@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 5253951774169712253}
   - component: {fileID: 9121319957065134262}
   - component: {fileID: 9121319957065134257}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Wooden Long Bow
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -486,9 +486,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sr: {fileID: 0}
   originalMaterial: {fileID: 0}
+  thisInteractable: {fileID: 0}
   highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
   interactRadius: 0.5
   distanceToPlayer: 0
+  playerInRange: 0
   gm: {fileID: 0}
   item: {fileID: 0}
   pickUpRadiusCollider: {fileID: 0}

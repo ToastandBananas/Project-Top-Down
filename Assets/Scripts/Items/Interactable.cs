@@ -32,7 +32,11 @@ public class Interactable : MonoBehaviour
         gm = GameManager.instance;
 
         // For Highlighting
-        sr = GetComponent<SpriteRenderer>();
+        if (transform.tag == "Dead Body")
+            sr = transform.Find("Body").GetComponent<SpriteRenderer>();
+        else
+            sr = GetComponent<SpriteRenderer>();
+
         if (sr != null) originalMaterial = sr.material;
     }
 
@@ -42,15 +46,6 @@ public class Interactable : MonoBehaviour
         {
             if (playerInRange && gm.currentlySelectedInteractable == this)
                 Interact();
-        }
-    }
-    
-    void OnMouseEnter()
-    {
-        if (sr != null && gm.currentlySelectedInteractable == null)
-        {
-            gm.currentlySelectedInteractable = this;
-            sr.material = highlightMaterial;
         }
     }
 
@@ -63,12 +58,6 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    void OnMouseUp()
-    {
-        if (GameControls.gamePlayActions.leftCtrl.IsPressed && gm.currentlySelectedInteractable == thisInteractable)
-            Interact();
-    }
-
     public virtual void Interact()
     {
         // This method is meant to be overwritten
@@ -77,30 +66,29 @@ public class Interactable : MonoBehaviour
         distanceToPlayer = Vector2.Distance(player.transform.position, transform.position);
     }
 
-    // Draw our radius in the editor
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(interactionTransform.position, interactRadius);
-    }
-
     public virtual void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && sr != null && gm.currentlySelectedInteractable == null)
+        if (collision.tag == "Player" && sr != null)
         {
             playerInRange = true;
-            gm.currentlySelectedInteractable = this;
-            sr.material = highlightMaterial;
+            if (sr != null && gm.currentlySelectedInteractable == null)
+            {
+                gm.currentlySelectedInteractable = this;
+                sr.material = highlightMaterial;
+            }
         }
     }
 
     public virtual void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && sr != null && gm.currentlySelectedInteractable == this)
+        if (collision.tag == "Player")
         {
             playerInRange = false;
-            gm.currentlySelectedInteractable = null;
-            sr.material = originalMaterial;
+            if (sr != null && gm.currentlySelectedInteractable == this)
+            {
+                gm.currentlySelectedInteractable = null;
+                sr.material = originalMaterial;
+            }
         }
     }
 }

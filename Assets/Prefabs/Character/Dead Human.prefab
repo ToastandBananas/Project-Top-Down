@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 449104977835760736}
   - component: {fileID: -4907967679143864517}
   - component: {fileID: 6895534102078215317}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Dead Human
   m_TagString: Dead Body
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.1}
   serializedVersion: 2
-  m_Radius: 1.3
+  m_Radius: 1
 --- !u!114 &817151874452559603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,7 +224,7 @@ MonoBehaviour:
   sr: {fileID: 0}
   originalMaterial: {fileID: 0}
   thisInteractable: {fileID: 0}
-  highlightMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
   interactRadius: 1
   distanceToPlayer: 0
   playerInRange: 0

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2821440556542958419}
   - component: {fileID: 4014021300959433072}
   - component: {fileID: 2352943764263382968}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.25, y: 1.015625}
+    oldSize: {x: 1.5, y: 1.265625}
     newSize: {x: 1.25, y: 1.015625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -144,8 +144,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sr: {fileID: 0}
   originalMaterial: {fileID: 0}
-  highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
-  radius: 1
+  thisInteractable: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: a6862573d6cb0cb42909ddb02f949585, type: 2}
+  interactRadius: 0.5
+  distanceToPlayer: 0
+  playerInRange: 0
+  gm: {fileID: 0}
   containerName: Container
   randomizeItems: 1
   itemsParent: {fileID: 0}

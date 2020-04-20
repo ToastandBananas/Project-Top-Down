@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 746400458985791305}
   - component: {fileID: 8282957160912538562}
   - component: {fileID: 1027100065519748423}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Wooden Shield
   m_TagString: Shield
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ MonoBehaviour:
   originalMaterial: {fileID: 0}
   thisInteractable: {fileID: 0}
   highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
-  interactRadius: 0.75
+  interactRadius: 0.5
   distanceToPlayer: 0
   playerInRange: 0
   gm: {fileID: 0}
