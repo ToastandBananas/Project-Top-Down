@@ -66,13 +66,13 @@ public class NPCMovement : MonoBehaviour
 
         StartCoroutine(UpdateFootstepSounds());
     }
-    
+
     void FixedUpdate()
     {
         // AstarPath.Scan(AstarPath.graphs);
         DetermineState();
         Movement();
-        
+
         if (AIDestSetter.target == null || isDodging || isStaggered)
         {
             AIPath.canMove = false;
@@ -214,11 +214,11 @@ public class NPCMovement : MonoBehaviour
         legsAnim.SetBool("doStagger", false);
     }
 
-    public IEnumerator SmoothDodge(Vector3 targetPos)
+    public IEnumerator SmoothMovement(Vector3 targetPos)
     {
         isDodging = true;
         float timer = 0;
-        
+
         while (stats.isDead == false && Vector2.Distance(transform.position, targetPos) > 0.1f)
         {
             if (timer < 1f)
@@ -231,7 +231,7 @@ public class NPCMovement : MonoBehaviour
             }
 
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * 4 * Time.deltaTime);
-
+            
             yield return null; // Pause for one frame
         }
 

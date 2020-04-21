@@ -75,7 +75,7 @@ public class Interactable : MonoBehaviour
 
     public virtual void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.tag == "Player" && (thisItemPickup == null || thisItemPickup.enabled))
         {
             playerInRange = true;
             if (sr != null && gm.currentlySelectedInteractable == null)

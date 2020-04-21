@@ -10,6 +10,8 @@ public class Door : Interactable
     public bool isOpen;
     public bool NPCInRange;
 
+    bool doorFinishedRotating = true;
+
     Quaternion newRotation;
 
     AudioManager audioManager;
@@ -44,18 +46,26 @@ public class Door : Interactable
         base.Update();
 
         if (NPCInRange && isOpen == false)
+        {
             isOpen = true;
+            doorFinishedRotating = false;
+            StartCoroutine(UpdateGraph());
+        }
 
-        if (isOpen)
-            OpenDoor();
-        else
-            CloseDoor();
+        if (doorFinishedRotating == false)
+        {
+            if (isOpen)
+                OpenDoor();
+            else
+                CloseDoor();
+        }
     }
 
     public override void Interact()
     {
         base.Interact();
 
+        doorFinishedRotating = false;
         if (isOpen == false)
         {
             isOpen = true;
@@ -74,29 +84,41 @@ public class Door : Interactable
 
     void OpenDoor()
     {
-        if (isVerticalDoorway == false && Mathf.Abs(transform.parent.rotation.z) != 90)
+        if (isVerticalDoorway == false)
         {
             newRotation = Quaternion.AngleAxis(90, Vector3.forward);
             transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
+
+            if (Mathf.Abs(transform.parent.rotation.z) == 90)
+                doorFinishedRotating = true;
         }
-        else if (isVerticalDoorway && Mathf.Abs(transform.parent.rotation.z) != 180)
+        else // Vertical doorway
         {
             newRotation = Quaternion.AngleAxis(-180, Vector3.forward);
             transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
+
+            if (Mathf.Abs(transform.parent.rotation.z) == 180)
+                doorFinishedRotating = true;
         }
     }
 
     void CloseDoor()
     {
-        if (isVerticalDoorway == false && transform.parent.rotation.z != 0)
+        if (isVerticalDoorway == false)
         {
             newRotation = Quaternion.AngleAxis(0, Vector3.forward);
             transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
+
+            if (Mathf.Abs(transform.parent.rotation.z) == 0)
+                doorFinishedRotating = true;
         }
-        else if (isVerticalDoorway && Mathf.Abs(transform.parent.rotation.z) != 90)
+        else // Vertical doorway
         {
             newRotation = Quaternion.AngleAxis(-90, Vector3.forward);
             transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, newRotation, 10f * Time.deltaTime);
+            
+            if (Mathf.Abs(transform.parent.rotation.z) == 90)
+                doorFinishedRotating = true;
         }
     }
 
@@ -110,7 +132,7 @@ public class Door : Interactable
     {
         base.OnTriggerStay2D(collision);
 
-        if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
+        if (collision.tag == "NPC Body" /* TODO: && canOpenDoors */)
         {
             if (NPCGameObjectsInRange.Contains(collision.gameObject) == false)
                 NPCGameObjectsInRange.Add(collision.gameObject);
@@ -123,7 +145,7 @@ public class Door : Interactable
     {
         base.OnTriggerExit2D(collision);
 
-        if (collision.tag == "NPC" /* TODO: && canOpenDoors */)
+        if (collision.tag == "NPC Body" /* TODO: && canOpenDoors */)
         {
             if (NPCGameObjectsInRange.Contains(collision.gameObject))
                 NPCGameObjectsInRange.Remove(collision.gameObject);

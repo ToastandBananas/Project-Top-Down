@@ -49,9 +49,9 @@ public class Arrow : MonoBehaviour
 
         if (hit == false)
         {
-            if (whoToKnockback.tag == "NPC")
-                StartCoroutine(whoToKnockback.GetComponent<NPCMovement>().SmoothDodge(whoToKnockback.position + dir * knockbackDistance));
-            else if (whoToKnockback.tag == "Player")
+            if (whoToKnockback.tag == "NPC Body")
+                StartCoroutine(whoToKnockback.GetComponent<NPCMovement>().SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
+            else if (whoToKnockback.tag == "Player Body")
                 StartCoroutine(PlayerMovement.instance.SmoothMovement(whoToKnockback.position + dir * knockbackDistance));
         }
     }

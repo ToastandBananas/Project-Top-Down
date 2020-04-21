@@ -225,9 +225,8 @@ public class BasicStats : MonoBehaviour
         if (rightWeaponItemDrop != null)
             rightWeaponItemDrop.DropItem(false);
 
-        yield return new WaitForSeconds(0.05f);
-        
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        Destroy(gameObject, 1f);
     }
 
     public void UseMana(int manaAmount)
