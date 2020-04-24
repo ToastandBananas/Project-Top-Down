@@ -556,8 +556,10 @@ public class UIControllerNavigation : MonoBehaviour
         currentlySelectedObject = null;
         currentlySelectedInventorySlot = null;
 
-        invUI.containerItemsParent.localPosition = new Vector3(0, 240, 0);
-        invUI.invItemsParent.localPosition = new Vector3(0, 510, 0);
+        if (invUI.containerItemsParent != null)
+            invUI.containerItemsParent.localPosition = new Vector3(0, 240, 0);
+        if (invUI.invItemsParent != null)
+            invUI.invItemsParent.localPosition = new Vector3(0, 510, 0);
     }
 
     public void ClearSelectedButton()

@@ -172,6 +172,13 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
+    public void StopMovement()
+    {
+        AIDestSetter.target = null;
+        AIPath.canMove = false;
+        SetIsMoving(false);
+    }
+
     void SetIsMoving(bool _isMoving)
     {
         isMoving = _isMoving;

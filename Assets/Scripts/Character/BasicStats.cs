@@ -10,17 +10,20 @@ public class BasicStats : MonoBehaviour
     [Header("Health")]
     public float maxHealth = 50;
     public float health = 50;
+    public float healthRegenRate;
     public bool healthCanRegen = true;
 
     [Header("Mana")]
     public float maxMana = 50;
     public float mana = 50;
+    public float manaRegenRate;
     public bool manaCanRegen = true;
 
     [Header("Stamina")]
     public float maxStamina = 50;
     public float stamina = 50;
-    public int staminaRegenRate = 5;
+    public float staminaRegenRate = 5;
+    public float staminaRegenEfficiency = 1f;
     public bool staminaCanRegen = true;
     float staminaRegenTimer = 0;
 
@@ -97,9 +100,8 @@ public class BasicStats : MonoBehaviour
             bloodSystem.SpawnBlood(victim.position + dir * 0.5f, dir, percentDamage, true);
     }
     
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(float damageAmount)
     {
-
         health -= damageAmount;
 
         if (isPlayer)
@@ -111,7 +113,7 @@ public class BasicStats : MonoBehaviour
             audioManager.PlayRandomSound(audioManager.humanMaleGruntSounds, transform.position);
     }
 
-    public void Heal(int healAmount)
+    public void Heal(float healAmount)
     {
         health += healAmount;
         if (health > maxHealth)
@@ -127,6 +129,28 @@ public class BasicStats : MonoBehaviour
         {
             yield return new WaitForSeconds(0.2f);
             Heal(regenRate / 5);
+        }
+    }
+
+    public IEnumerator HealthDrain(float duration, float drainRate)
+    {
+        if (duration > 0)
+        {
+            float timer = 0;
+            while (timer < duration && isDead == false)
+            {
+                TakeDamage(drainRate / 5);
+                yield return new WaitForSeconds(0.2f);
+                timer += 0.2f;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                TakeDamage(drainRate / 5);
+                yield return new WaitForSeconds(0.2f);
+            }
         }
     }
 
@@ -229,7 +253,7 @@ public class BasicStats : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    public void UseMana(int manaAmount)
+    public void UseMana(float manaAmount)
     {
         if (mana - manaAmount >= 0)
             mana -= manaAmount;
@@ -240,7 +264,7 @@ public class BasicStats : MonoBehaviour
             playerManaStatBar.ChangeBar();
     }
 
-    public void RestoreMana(int manaAmount)
+    public void RestoreMana(float manaAmount)
     {
         mana += manaAmount;
         if (mana > maxMana)
@@ -259,7 +283,29 @@ public class BasicStats : MonoBehaviour
         }
     }
 
-    public bool UseStamina(int staminaAmount, bool forceStaminaUse)
+    public IEnumerator ManaDrain(float duration, float drainRate)
+    {
+        if (duration > 0)
+        {
+            float timer = 0;
+            while (timer < duration && isDead == false)
+            {
+                UseMana(drainRate / 5);
+                yield return new WaitForSeconds(0.2f);
+                timer += 0.2f;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                UseMana(drainRate / 5);
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+    }
+
+    public bool UseStamina(float staminaAmount, bool forceStaminaUse)
     {
         if (stamina - staminaAmount >= 0 || forceStaminaUse)
         {
@@ -296,7 +342,7 @@ public class BasicStats : MonoBehaviour
         return true;
     }
 
-    public void RestoreStamina(int staminaAmount)
+    public void RestoreStamina(float staminaAmount)
     {
         stamina += staminaAmount;
         if (stamina > maxStamina)
@@ -310,12 +356,12 @@ public class BasicStats : MonoBehaviour
     {
         while (true)
         {
-            if (staminaCanRegen && stamina < maxStamina)
+            if (staminaCanRegen && stamina < maxStamina && staminaRegenRate > 0 && staminaRegenEfficiency > 0)
             {
                 if ((isPlayer && playerAttack.isBlocking == false) || (isPlayer == false && npcAttacks.isBlocking == false))
                 {
                     yield return new WaitForSeconds(0.2f);
-                    RestoreStamina(staminaRegenRate / 5);
+                    RestoreStamina((staminaRegenRate * staminaRegenEfficiency) / 5);
                 }
             }
 
@@ -326,10 +372,10 @@ public class BasicStats : MonoBehaviour
     IEnumerator PauseStaminaRegen()
     {
         staminaRegenTimer = 0;
+        staminaCanRegen = false;
 
         while (staminaRegenTimer < 2f)
         {
-            staminaCanRegen = false;
             staminaRegenTimer += Time.smoothDeltaTime;
 
             if (staminaRegenTimer >= 2f)
@@ -339,6 +385,28 @@ public class BasicStats : MonoBehaviour
             }
 
             yield return null;
+        }
+    }
+
+    public IEnumerator StaminaDrain(float duration, float drainRate)
+    {
+        if (duration > 0)
+        {
+            float timer = 0;
+            while (timer < duration && isDead == false)
+            {
+                UseStamina(drainRate / 5, true);
+                yield return new WaitForSeconds(0.2f);
+                timer += 0.2f;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                UseStamina(drainRate / 5, true);
+                yield return new WaitForSeconds(0.2f);
+            }
         }
     }
 }

@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 68740533560211219}
   - component: {fileID: 68740533560211218}
-  - component: {fileID: 8272007597543859390}
+  - component: {fileID: 4178373178057486886}
+  - component: {fileID: 68740533560211229}
   - component: {fileID: 6165176568979638920}
-  - component: {fileID: 186433817257015334}
   - component: {fileID: 6193931194439165326}
   - component: {fileID: 3661388085602504287}
-  - component: {fileID: 68740533560211229}
+  - component: {fileID: 7956334492738251730}
+  - component: {fileID: 8272007597543859390}
   - component: {fileID: 3723423186980164384}
   m_Layer: 0
   m_Name: GM
@@ -60,7 +61,7 @@ MonoBehaviour:
   saveAndQuitButton: {fileID: 0}
   isUsingController: 1
   currentlySelectedInteractable: {fileID: 0}
---- !u!114 &8272007597543859390
+--- !u!114 &4178373178057486886
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,9 +70,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 68740533560211216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef31845ce9ce96e489a2477901eecc71, type: 3}
+  m_Script: {fileID: 11500000, guid: 3059c49503cda1a488eafe74c7948414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hungerStatusEffects:
+  - {fileID: 11400000, guid: 16e4bafdbd14681479a7dc05cbba419f, type: 2}
+  - {fileID: 11400000, guid: 41514567903cfc84fb120878c1da35ec, type: 2}
+  - {fileID: 11400000, guid: 311e88544dac79d48aa1002bffc15de0, type: 2}
+  - {fileID: 11400000, guid: 3f7e258a246f9e64cb52bb0a3922cf7a, type: 2}
+  thirstStatusEffects:
+  - {fileID: 11400000, guid: 8ee8d0cf45af22a49a2ee70711af3b47, type: 2}
+  - {fileID: 11400000, guid: 999f29bbd8f93d74c8933d0974672950, type: 2}
+  - {fileID: 11400000, guid: c6a05f4fe4cf54c459979814eb2bbafd, type: 2}
+  - {fileID: 11400000, guid: c70924a6e3ccf5a43896d5439f96c0ce, type: 2}
+  tirednessStatusEffects:
+  - {fileID: 11400000, guid: 55a852e2798aa544d8d7463357b20c7e, type: 2}
+  - {fileID: 11400000, guid: 1d82e5615a2bb8e4fbbb6d548b8361e1, type: 2}
+  - {fileID: 11400000, guid: 0532a017a132d2d49b38bb6acfa37a54, type: 2}
+  - {fileID: 11400000, guid: d40a3067dba8a8344b96ddef10ae5e0e, type: 2}
+--- !u!114 &68740533560211229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pocketsSlotCount: 25
+  bagSlotCount: 67
+  horseBagSlotCount: 25
+  pocketItems: []
+  bagItems: []
+  horseBagItems: []
 --- !u!114 &6165176568979638920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,24 +161,6 @@ MonoBehaviour:
   increase: {fileID: 0}
   submit: {fileID: 0}
   cancel: {fileID: 0}
---- !u!114 &186433817257015334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68740533560211216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentlySelectedObject: {fileID: 0}
-  currentlySelectedInventorySlot: {fileID: 0}
-  currentlySelectedEquipSlot: {fileID: 0}
-  currentlySelectedButton: {fileID: 0}
-  currentXCoord: 1
-  currentOverallYCoord: 1
 --- !u!114 &6193931194439165326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +216,7 @@ MonoBehaviour:
   weaponsParent: {fileID: 0}
   equipmentParent: {fileID: 0}
   charactersSaveFileName: Player
---- !u!114 &68740533560211229
+--- !u!114 &7956334492738251730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,15 +225,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 68740533560211216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42390e3b4521ff14982fc288993b7040, type: 3}
+  m_Script: {fileID: 11500000, guid: f2194ea1b0b83344e836f0d3cc5d039b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketsSlotCount: 25
-  bagSlotCount: 67
-  horseBagSlotCount: 25
-  pocketItems: []
-  bagItems: []
-  horseBagItems: []
+  currentlySelectedObject: {fileID: 0}
+  currentlySelectedInventorySlot: {fileID: 0}
+  currentlySelectedEquipSlot: {fileID: 0}
+  currentlySelectedButton: {fileID: 0}
+  currentXCoord: 1
+  currentOverallYCoord: 1
+--- !u!114 &8272007597543859390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68740533560211216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef31845ce9ce96e489a2477901eecc71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3723423186980164384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +265,7 @@ MonoBehaviour:
     - {fileID: 68740533560211219}
     - {fileID: 68740533560211218}
     - {fileID: 6165176568979638920}
-    - {fileID: 186433817257015334}
+    - {fileID: 0}
     - {fileID: 6193931194439165326}
     - {fileID: 3661388085602504287}
     - {fileID: 68740533560211229}

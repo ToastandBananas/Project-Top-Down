@@ -133,9 +133,7 @@ public class ItemData : MonoBehaviour
         {
             freshness = Random.Range(consumable.minBaseFreshness, consumable.maxBaseFreshness + 1);
 
-            if (consumable.maxUses == 1)
-                inventoryIcon = consumable.inventoryIcons[0];
-            else
+            if (consumable.maxUses > 1)
             {
                 randomNum = Random.Range(1, 3);
                 if (randomNum == 1)
@@ -146,23 +144,28 @@ public class ItemData : MonoBehaviour
                     randomNum = Random.Range(1, consumable.maxUses + 1);
                     uses = randomNum;
                 }
-
-                inventoryIcon = consumable.inventoryIcons[uses];
             }
         }
 
-        // Multiple sprite possiblities item data
-        if (item.inventoryIcons.Length > 1 && item.itemType != ItemType.Ammunition)
-            inventoryIcon = item.inventoryIcons[Random.Range(0, item.inventoryIcons.Length - 1)];
-        else if (item.itemType == ItemType.Ammunition)
+        // Multiple sprite possiblities for some items
+        if (item.itemType == ItemType.Ammunition)
             SetAmmoSprites();
+        else if (consumable != null && consumable.maxUses > 1)
+            inventoryIcon = consumable.inventoryIcons[uses];
+        else if(item.inventoryIcons.Length > 1 && item.itemType != ItemType.Ammunition)
+            inventoryIcon = item.inventoryIcons[Random.Range(0, item.inventoryIcons.Length - 1)];
         else
             inventoryIcon = item.inventoryIcons[0];
 
         for (int i = 0; i < item.inventoryIcons.Length; i++)
         {
             if (inventoryIcon == item.inventoryIcons[i])
+            {
                 gameSprite = item.possibleSprites[i];
+                if (TryGetComponent(out SpriteRenderer sr))
+                    sr.sprite = gameSprite;
+                break;
+            }
         }
 
         value = CalculateItemValue();

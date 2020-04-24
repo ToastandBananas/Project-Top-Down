@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ES3Types
 {
 	[UnityEngine.Scripting.Preserve]
-	[ES3PropertiesAttribute("hasBeenRandomized", "item", "equipment", "itemName", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense", "ammoType", "currentAmmoCount")]
+	[ES3PropertiesAttribute("hasBeenRandomized", "item", "equipment", "consumable", "inventoryIcon", "gameSprite", "itemName", "value", "currentStackSize", "maxDurability", "durability", "damage", "defense", "freshness", "uses", "ammoTypePrefab", "currentAmmoCount")]
 	public class ES3Type_ItemData : ES3ComponentType
 	{
 		public static ES3Type Instance = null;
@@ -21,6 +21,9 @@ namespace ES3Types
 			writer.WriteProperty("hasBeenRandomized", instance.hasBeenRandomized, ES3Type_bool.Instance);
 			writer.WritePropertyByRef("item", instance.item);
 			writer.WritePropertyByRef("equipment", instance.equipment);
+			writer.WritePropertyByRef("consumable", instance.consumable);
+			writer.WritePropertyByRef("inventoryIcon", instance.inventoryIcon);
+			writer.WritePropertyByRef("gameSprite", instance.gameSprite);
 			writer.WriteProperty("itemName", instance.itemName, ES3Type_string.Instance);
 			writer.WriteProperty("value", instance.value, ES3Type_int.Instance);
 			writer.WriteProperty("currentStackSize", instance.currentStackSize, ES3Type_int.Instance);
@@ -28,7 +31,9 @@ namespace ES3Types
 			writer.WriteProperty("durability", instance.durability, ES3Type_float.Instance);
 			writer.WriteProperty("damage", instance.damage, ES3Type_int.Instance);
 			writer.WriteProperty("defense", instance.defense, ES3Type_int.Instance);
-			writer.WritePropertyByRef("ammoType", instance.ammoTypePrefab);
+			writer.WriteProperty("freshness", instance.freshness, ES3Type_int.Instance);
+			writer.WriteProperty("uses", instance.uses, ES3Type_int.Instance);
+			writer.WritePropertyByRef("ammoTypePrefab", instance.ammoTypePrefab);
 			writer.WriteProperty("currentAmmoCount", instance.currentAmmoCount, ES3Type_int.Instance);
 		}
 
@@ -48,6 +53,15 @@ namespace ES3Types
 						break;
 					case "equipment":
 						instance.equipment = reader.Read<Equipment>();
+						break;
+					case "consumable":
+						instance.consumable = reader.Read<Consumable>();
+						break;
+					case "inventoryIcon":
+						instance.inventoryIcon = reader.Read<UnityEngine.Sprite>(ES3Type_Sprite.Instance);
+						break;
+					case "gameSprite":
+						instance.gameSprite = reader.Read<UnityEngine.Sprite>(ES3Type_Sprite.Instance);
 						break;
 					case "itemName":
 						instance.itemName = reader.Read<System.String>(ES3Type_string.Instance);
@@ -70,8 +84,14 @@ namespace ES3Types
 					case "defense":
 						instance.defense = reader.Read<System.Int32>(ES3Type_int.Instance);
 						break;
-					case "ammoType":
-						instance.ammoTypePrefab = reader.Read<GameObject>();
+					case "freshness":
+						instance.freshness = reader.Read<System.Int32>(ES3Type_int.Instance);
+						break;
+					case "uses":
+						instance.uses = reader.Read<System.Int32>(ES3Type_int.Instance);
+						break;
+					case "ammoTypePrefab":
+						instance.ammoTypePrefab = reader.Read<UnityEngine.GameObject>(ES3Type_GameObject.Instance);
 						break;
 					case "currentAmmoCount":
 						instance.currentAmmoCount = reader.Read<System.Int32>(ES3Type_int.Instance);

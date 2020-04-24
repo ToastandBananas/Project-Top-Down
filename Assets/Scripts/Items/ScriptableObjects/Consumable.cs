@@ -12,6 +12,8 @@ public class Consumable : Item
     public ConsumableType consumableType;
     public int maxUses = 1;
     public int nourishment;
+    public int thirstQuench;
+    public int energyRestoration;
     public int healAmount;
     public int staminaRecoveryAmount;
     public int manaRecoveryAmount;
@@ -38,7 +40,11 @@ public class Consumable : Item
                 AudioManager.instance.PlayRandomSound(AudioManager.instance.drinkSounds, userStats.transform.position);
 
             if (nourishment > 0)
-                Debug.Log("Mmm tasty...TODO: Implement hunger");
+                Needs.instance.ReplenishNourishment(nourishment);
+            if (thirstQuench > 0)
+                Needs.instance.ReplenishHydration(thirstQuench);
+            if (energyRestoration > 0)
+                Needs.instance.ReplenishEnergy(energyRestoration);
             if (healAmount > 0)
                 userStats.Heal(healAmount);
             if (staminaRecoveryAmount > 0)
