@@ -1878,9 +1878,9 @@ MonoBehaviour:
   nourishment: 100
   hydration: 100
   energy: 100
-  nourishmentDrainRate: 2.5
-  hydrationDrainRate: 1.5
-  energyDrainRate: 5
+  nourishmentDrainRate: 0.4
+  hydrationDrainRate: 0.3
+  energyDrainRate: 1
 --- !u!114 &5498091333407413291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2578,7 +2578,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 24452
+  m_InstanceId: 24518
 --- !u!1 &5638075717431976091
 GameObject:
   m_ObjectHideFlags: 0

@@ -60,6 +60,6 @@ MonoBehaviour:
   minBaseDefense: 0
   maxBaseDefense: 0
   armorModifier: 0
-  maxAmmo: 10
+  maxAmmo: 15
   minBaseDurability: 0
   maxBaseDurability: 0

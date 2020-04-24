@@ -125,6 +125,15 @@ public class ItemData : MonoBehaviour
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
                 defense = Random.Range(equipment.minBaseDefense, equipment.maxBaseDefense + 1);
 
+            if (equipment.itemType == ItemType.Quiver)
+            {
+                randomNum = Random.Range(1, 11);
+                if (randomNum <= 4) // 40% chance for the quiver to have no ammo
+                    currentAmmoCount = 0;
+                else
+                    currentAmmoCount = Random.Range(1, equipment.maxAmmo + 1);
+            }
+
             if (equipment.isStackable)
                 currentStackSize = Random.Range(1, equipment.maxStackSize + 1);
         }
@@ -149,10 +158,12 @@ public class ItemData : MonoBehaviour
 
         // Multiple sprite possiblities for some items
         if (item.itemType == ItemType.Ammunition)
-            SetAmmoSprites();
+            SetAmmoSprites(false);
+        else if (item.itemType == ItemType.Quiver)
+            SetAmmoSprites(true);
         else if (consumable != null && consumable.maxUses > 1)
             inventoryIcon = consumable.inventoryIcons[uses];
-        else if(item.inventoryIcons.Length > 1 && item.itemType != ItemType.Ammunition)
+        else if (item.inventoryIcons.Length > 1)
             inventoryIcon = item.inventoryIcons[Random.Range(0, item.inventoryIcons.Length - 1)];
         else
             inventoryIcon = item.inventoryIcons[0];
@@ -179,37 +190,76 @@ public class ItemData : MonoBehaviour
         RandomizeData();
     }
 
-    public void SetAmmoSprites()
+    void SetAmmoSprites(bool isQuiver)
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        switch (currentStackSize)
+        if (isQuiver)
         {
-            case 1:
-                gameSprite = item.possibleSprites[0]; // 1 arrow
-                inventoryIcon = item.inventoryIcons[0];
-                spriteRenderer.sprite = gameSprite;
-                break;
-            case 2:
-                gameSprite = item.possibleSprites[1]; // 2 arrows
-                inventoryIcon = item.inventoryIcons[1];
-                spriteRenderer.sprite = gameSprite;
-                break;
-            case 3:
-                gameSprite = item.possibleSprites[2]; // 3 arrows
-                inventoryIcon = item.inventoryIcons[2];
-                spriteRenderer.sprite = gameSprite;
-                break;
-            case 4:
-                gameSprite = item.possibleSprites[3]; // 4 arrows
-                inventoryIcon = item.inventoryIcons[3];
-                spriteRenderer.sprite = gameSprite;
-                break;
-            default:
-                gameSprite = item.possibleSprites[4]; // 5 arrows
-                inventoryIcon = item.inventoryIcons[4];
-                spriteRenderer.sprite = gameSprite;
-                break;
+            switch (currentAmmoCount)
+            {
+                case 0:
+                    gameSprite = item.possibleSprites[0]; // 1 arrow
+                    inventoryIcon = item.inventoryIcons[0];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 1:
+                    gameSprite = item.possibleSprites[1]; // 1 arrow
+                    inventoryIcon = item.inventoryIcons[1];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 2:
+                    gameSprite = item.possibleSprites[2]; // 2 arrows
+                    inventoryIcon = item.inventoryIcons[2];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 3:
+                    gameSprite = item.possibleSprites[3]; // 3 arrows
+                    inventoryIcon = item.inventoryIcons[3];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 4:
+                    gameSprite = item.possibleSprites[4]; // 4 arrows
+                    inventoryIcon = item.inventoryIcons[4];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                default:
+                    gameSprite = item.possibleSprites[5]; // 5 arrows
+                    inventoryIcon = item.inventoryIcons[5];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+            }
+        }
+        else // is a bundle of arrows
+        {
+            switch (currentStackSize)
+            {
+                case 1:
+                    gameSprite = item.possibleSprites[0]; // 1 arrow
+                    inventoryIcon = item.inventoryIcons[0];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 2:
+                    gameSprite = item.possibleSprites[1]; // 2 arrows
+                    inventoryIcon = item.inventoryIcons[1];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 3:
+                    gameSprite = item.possibleSprites[2]; // 3 arrows
+                    inventoryIcon = item.inventoryIcons[2];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                case 4:
+                    gameSprite = item.possibleSprites[3]; // 4 arrows
+                    inventoryIcon = item.inventoryIcons[3];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+                default:
+                    gameSprite = item.possibleSprites[4]; // 5 arrows
+                    inventoryIcon = item.inventoryIcons[4];
+                    spriteRenderer.sprite = gameSprite;
+                    break;
+            }
         }
     }
 
@@ -291,7 +341,7 @@ public class ItemData : MonoBehaviour
             if (equipment.maxBaseDurability > 0)
                 pointIncrease += (maxDurability - equipment.minBaseDurability);
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
                 pointIncrease += (damage - equipment.minBaseDamage) * 2; // Damage contributes to value twice as much
 
             if (equipment.itemType == ItemType.Armor || equipment.itemType == ItemType.Shield)
@@ -327,7 +377,7 @@ public class ItemData : MonoBehaviour
                 durability = maxDurability;
             }
 
-            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield || equipment.itemType == ItemType.Ammunition)
+            if (equipment.itemType == ItemType.Weapon || equipment.itemType == ItemType.Shield)
             {
                 if (damage > equipment.maxBaseDamage)
                     damage = equipment.maxBaseDamage;

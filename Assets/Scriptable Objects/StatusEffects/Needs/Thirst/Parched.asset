@@ -18,7 +18,7 @@ MonoBehaviour:
   effectIcon: {fileID: 0}
   nourishmentDrainRateChange: 0
   hydrationDrainRateChange: 0
-  energyDrainRateChange: -0.5
+  energyDrainRateChange: -0.1
   staminaRegenEfficiencyChange: -0.08
   staminaDrainRate: 0
   healthDrainRate: 0
