@@ -201,32 +201,38 @@ public class ItemData : MonoBehaviour
                 case 0:
                     gameSprite = item.possibleSprites[0]; // 1 arrow
                     inventoryIcon = item.inventoryIcons[0];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 1:
                     gameSprite = item.possibleSprites[1]; // 1 arrow
                     inventoryIcon = item.inventoryIcons[1];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 2:
                     gameSprite = item.possibleSprites[2]; // 2 arrows
                     inventoryIcon = item.inventoryIcons[2];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 3:
                     gameSprite = item.possibleSprites[3]; // 3 arrows
                     inventoryIcon = item.inventoryIcons[3];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 4:
                     gameSprite = item.possibleSprites[4]; // 4 arrows
                     inventoryIcon = item.inventoryIcons[4];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 default:
                     gameSprite = item.possibleSprites[5]; // 5 arrows
                     inventoryIcon = item.inventoryIcons[5];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
             }
         }
@@ -237,27 +243,32 @@ public class ItemData : MonoBehaviour
                 case 1:
                     gameSprite = item.possibleSprites[0]; // 1 arrow
                     inventoryIcon = item.inventoryIcons[0];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 2:
                     gameSprite = item.possibleSprites[1]; // 2 arrows
                     inventoryIcon = item.inventoryIcons[1];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 3:
                     gameSprite = item.possibleSprites[2]; // 3 arrows
                     inventoryIcon = item.inventoryIcons[2];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 case 4:
                     gameSprite = item.possibleSprites[3]; // 4 arrows
                     inventoryIcon = item.inventoryIcons[3];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
                 default:
                     gameSprite = item.possibleSprites[4]; // 5 arrows
                     inventoryIcon = item.inventoryIcons[4];
-                    spriteRenderer.sprite = gameSprite;
+                    if (spriteRenderer != null)
+                        spriteRenderer.sprite = gameSprite;
                     break;
             }
         }

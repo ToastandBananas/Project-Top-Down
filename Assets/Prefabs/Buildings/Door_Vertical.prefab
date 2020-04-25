@@ -71,6 +71,7 @@ MonoBehaviour:
   distanceToPlayer: 0
   playerInRange: 0
   gm: {fileID: 0}
+  doorOpenTime: 0.35
   isVerticalDoorway: 1
   isOpen: 0
   NPCInRange: 0
@@ -254,5 +255,15 @@ MonoBehaviour:
     - {fileID: 1851487151280227588}
     - {fileID: 1851487151280227611}
     - {fileID: 1851487151280227610}
-    - {fileID: 0}
-    _Values: 33aa00255748d6772e94d1ca4faf736fa06e6455d588f107bd1447753ae912229d161ec0c15ded1f35dcde3df3a3b25f
+    - {fileID: 1851487151280227590}
+    - {fileID: -2845712087561643993}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 5213229242370633579, guid: d02f5c14b5da3014ba2669480253995a, type: 3}
+    - {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+    - {fileID: 808117729722587326}
+    - {fileID: 7720630819957753816}
+    - {fileID: 3845476073171700925}
+    - {fileID: 5874794173011436258}
+    - {fileID: 11500000, guid: 1fb2ceee7cb8c4c49abaf66708c5a07b, type: 3}
+    - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+    _Values: 33aa00255748d6772e94d1ca4faf736fa06e6455d588f107bd1447753ae912229d161ec0c15ded1fac7042406bc4c42068f287f595302a2a69fc9f8e3a3fa4319036788f6619ab2a05b98a035980157f0d049845e65afb19afc87e99afd7e014eb8b2e5ec3ac797f9fb2fa4eba2e8317e7208036a75e4b353a5fdf9d9a117a2e

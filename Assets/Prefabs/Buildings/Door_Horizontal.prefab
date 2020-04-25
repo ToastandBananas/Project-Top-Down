@@ -180,8 +180,18 @@ MonoBehaviour:
     - {fileID: 5851638940386840440}
     - {fileID: 5851638940386840421}
     - {fileID: 5851638940386840423}
-    - {fileID: 0}
-    _Values: f0735f675214c34ccdc9321ce3ec9d133816b9fec1918e68357f607f75183f66c728104f5407f744b20abdcca0e2162d
+    - {fileID: 5851638940386840418}
+    - {fileID: -5781935362417890595}
+    - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - {fileID: 5213229242370633579, guid: d02f5c14b5da3014ba2669480253995a, type: 3}
+    - {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+    - {fileID: 7154436674581393939}
+    - {fileID: 8771615833973084995}
+    - {fileID: 5578153035104125079}
+    - {fileID: 5385560633010995857}
+    - {fileID: 11500000, guid: 1fb2ceee7cb8c4c49abaf66708c5a07b, type: 3}
+    - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+    _Values: f0735f675214c34ccdc9321ce3ec9d133816b9fec1918e68357f607f75183f66c728104f5407f744d87618cd51b7bc6176e71b67aab52c22b5694d70a955927340f82363ccdbe54fd3d7d8cfb9ae962f9de05471854d1f0f8b0151045eead72ef77472a76ca76b50cd6b3a818dfbdb63017dd3c90021ed72e8cc2835761e0f17
 --- !u!1 &7154436674581393939
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,6 +263,7 @@ MonoBehaviour:
   distanceToPlayer: 0
   playerInRange: 0
   gm: {fileID: 0}
+  doorOpenTime: 0.35
   isVerticalDoorway: 0
   isOpen: 0
   NPCInRange: 0

@@ -112,7 +112,7 @@ namespace PixelCrushers.DialogueSystem
                 var go = Instantiate(barkUISettings.barkUI.gameObject) as GameObject;
                 go.transform.SetParent(transform);
                 go.transform.localPosition = barkUISettings.barkUIOffset;
-                go.transform.localRotation = Quaternion.identity;
+                //go.transform.localRotation = Quaternion.identity;
                 barkUISettings.barkUI = go.GetComponent<AbstractBarkUI>();
             }
         }

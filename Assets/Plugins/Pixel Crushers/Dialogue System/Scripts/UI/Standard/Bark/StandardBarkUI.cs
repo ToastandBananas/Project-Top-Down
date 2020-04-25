@@ -133,7 +133,7 @@ namespace PixelCrushers.DialogueSystem
                 var pos = Camera.main.WorldToViewportPoint(canvas.transform.position);
                 pos.x = Mathf.Clamp01(pos.x);
                 pos.y = Mathf.Clamp01(pos.y);
-                canvas.transform.position = Camera.main.ViewportToWorldPoint(pos);
+                canvas.transform.localPosition = Camera.main.ViewportToWorldPoint(pos);
             }
         }
 
