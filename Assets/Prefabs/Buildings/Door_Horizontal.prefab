@@ -159,7 +159,7 @@ MonoBehaviour:
   - {x: 0, y: 0.09375, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 23360
+  m_InstanceId: 70424
 --- !u!114 &-5781935362417890595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 8771615833973084995}
   - component: {fileID: 5578153035104125079}
   - component: {fileID: 5385560633010995857}
-  m_Layer: 14
+  m_Layer: 20
   m_Name: Door
   m_TagString: Door
   m_Icon: {fileID: 0}

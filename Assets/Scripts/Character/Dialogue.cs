@@ -15,8 +15,8 @@ public class Dialogue : MonoBehaviour
 
     void Update()
     {
-        if (playerInRange && GameControls.gamePlayActions.playerInteract.WasPressed)
-            DialogueManager.StartConversation("Greeting", PlayerMovement.instance.transform, transform);
+        if (playerInRange && GameControls.gamePlayActions.playerInteract.WasPressed && GameManager.instance.currentlySelectedInteractable == null)
+            DialogueManager.StartConversation(dialogue.conversation, PlayerMovement.instance.transform, transform);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

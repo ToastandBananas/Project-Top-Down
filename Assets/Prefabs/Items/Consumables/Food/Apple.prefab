@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: -9058958525889427172}
   - component: {fileID: 7361386747976559446}
   - component: {fileID: 2681808537291671442}
+  - component: {fileID: 6508291571243010818}
   - component: {fileID: 3359087415959552522}
   - component: {fileID: -8405726418261599943}
-  m_Layer: 14
+  m_Layer: 20
   m_Name: Apple
   m_TagString: Ammunition
   m_Icon: {fileID: 0}
@@ -185,12 +186,46 @@ MonoBehaviour:
   originalMaterial: {fileID: 0}
   thisInteractable: {fileID: 0}
   highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+  thisItemPickup: {fileID: 0}
+  thisContainer: {fileID: 0}
+  thisDoor: {fileID: 0}
   interactRadius: 0.5
   distanceToPlayer: 0
   playerInRange: 0
   gm: {fileID: 0}
   item: {fileID: 0}
   pickUpRadiusCollider: {fileID: 0}
+--- !u!114 &6508291571243010818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474431354769912416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b871c74662c23945bf35b97caee462a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  incrementOn: 0
+  variable: ApplesInInventory
+  increment: 1
+  min: 0
+  max: 1000
+  alertMessage: Apple found!
+  alertDuration: 0
+  condition:
+    luaConditions: []
+    questConditions:
+    - questName: Get Apples
+      questState: 2
+    acceptedTags: []
+    acceptedGameObjects: []
+    luaWizardIndex: -1
+    lastEvaluationValue: 0
+  onIncrement:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3359087415959552522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +264,7 @@ MonoBehaviour:
     - {fileID: 2681808537291671442}
     - {fileID: 3359087415959552522}
     - {fileID: -8405726418261599943}
+    - {fileID: 0}
     - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - {fileID: 21300000, guid: 934b4508812624e44ada9d803e068348, type: 3}
     - {fileID: 11500000, guid: 2e715fd8acc9a48469c8d16aefab5a07, type: 3}
@@ -236,4 +272,5 @@ MonoBehaviour:
     - {fileID: 11500000, guid: fced45582b233ee46809044114955f55, type: 3}
     - {fileID: 11500000, guid: b01ded84fdf6e67438ad0e3380e6eaf0, type: 3}
     - {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
-    _Values: 277ed184932a4801893207562297162d73313d20df47e137a74880a32371043ce313ae531b761c3ea4b94b1da6404d1527d2f202aa7e0a6e600f3e55d8de1b03d1349f3b4e048b62e6d6e04ebd0fbd7c271ba26493725022c00b2efd524c2925a08739829fde881ec17991e9c2f91c3e30b27b371880d215f691214d90b49713e619b550a4996348
+    - {fileID: 11500000, guid: 7b871c74662c23945bf35b97caee462a, type: 3}
+    _Values: 277ed184932a4801893207562297162d73313d20df47e137a74880a32371043ce313ae531b761c3ea4b94b1da6404d1527d2f202aa7e0a6e600f3e55d8de1b03d1349f3b4e048b62e6d6e04ebd0fbd7c12c0a741a4216b05271ba26493725022c00b2efd524c2925a08739829fde881ec17991e9c2f91c3e30b27b371880d215f691214d90b49713e619b550a4996348fac3ef5e6d7da37e

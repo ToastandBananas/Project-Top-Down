@@ -149,13 +149,13 @@ public class InventoryUI : MonoBehaviour
 
         if (GameControls.gamePlayActions.menuContainerTakeGold.WasPressed)
         {
-            if (containerParent.gameObject.activeSelf)
+            if (containerParent.gameObject.activeSelf && currentlyActiveContainer != null)
                 inv.TakeGold();
         }
 
         if (GameControls.gamePlayActions.menuContainerTakeAll.WasPressed)
         {
-            if (containerParent.gameObject.activeSelf)
+            if (containerParent.gameObject.activeSelf && currentlyActiveContainer != null)
                 inv.TakeAll();
         }
 

@@ -9,6 +9,7 @@ public class NPCMovement : MonoBehaviour
     public STATE defaultState = STATE.IDLE;
     public STATE currentState = STATE.IDLE;
     public ALLIANCE currentAlliance = ALLIANCE.NEUTRAL;
+    public ALLIANCE[] enemyAlliances;
 
     public Transform targetPos;
     public Transform attackTarget;
@@ -88,31 +89,9 @@ public class NPCMovement : MonoBehaviour
     void DetermineState()
     {
         if (fov.visibleTargets.Count > 0)
-        {
-            closestTarget = null;
-            closestTargetDist = 0;
+            attackTarget = fov.GetClosestEnemy();
 
-            foreach (Transform target in fov.visibleTargets)
-            {
-                float dist = Vector2.Distance(transform.position, target.position);
-                if (closestTarget == null || dist < closestTargetDist)
-                {
-                    closestTargetDist = dist;
-                    closestTarget = target;
-                }
-            }
-
-            if (closestTarget != null)
-            {
-                attackTarget = closestTarget;
-                if (currentState != STATE.COMBAT)
-                {
-                    AIDestSetter.target = attackTarget;
-                    currentState = STATE.PURSUE;
-                }
-            }
-        }
-
+        // If NPC has a ranged weapon equipped
         if (attackTarget != null && arms.rangedWeaponEquipped)
         {
             // Move away from target if too close

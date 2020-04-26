@@ -19,7 +19,7 @@ public class InteractableRaycast : MonoBehaviour
         playerMovement = PlayerMovement.instance;
         wallMask = LayerMask.GetMask("Walls");
         obstacleMask = LayerMask.GetMask("Walls", "OpenDoors", "ClosedDoors");
-        interactableMask = LayerMask.GetMask("Interactables", "OpenDoors", "ClosedDoors");
+        interactableMask = LayerMask.GetMask("Interactables", "OpenDoors", "ClosedDoors", "LockedDoors");
     }
     
     void Update()

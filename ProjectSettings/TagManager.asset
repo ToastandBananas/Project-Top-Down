@@ -30,13 +30,13 @@ TagManager:
   - Lighting
   - Player
   - 
-  - Interactables
+  - 
   - 
   - Obstacles
   - OpenDoors
   - ClosedDoors
   - LockedDoors
-  - 
+  - Interactables
   - 
   - 
   - 

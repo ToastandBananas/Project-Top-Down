@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7720630819957753816}
   - component: {fileID: 3845476073171700925}
   - component: {fileID: 5874794173011436258}
-  m_Layer: 14
+  m_Layer: 20
   m_Name: Door
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -234,7 +234,7 @@ MonoBehaviour:
   - {x: -0.00665925, y: 0.0933118, z: 0}
   m_ShapePathHash: -877815485
   m_Mesh: {fileID: 0}
-  m_InstanceId: 23046
+  m_InstanceId: 70110
 --- !u!114 &-2845712087561643993
 MonoBehaviour:
   m_ObjectHideFlags: 0

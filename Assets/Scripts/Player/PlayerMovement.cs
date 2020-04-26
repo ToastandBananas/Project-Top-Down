@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector] public Pathfinding.AIDestinationSetter AIDestSetter;
     [HideInInspector] public Pathfinding.AIPath AIPath;
+    Pathfinding.RVO.RVOController RVOController;
 
     float angleToRotateTowards;
     Vector3 dir;
@@ -75,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
         AIDestSetter = GetComponent<Pathfinding.AIDestinationSetter>();
         AIPath = GetComponent<Pathfinding.AIPath>();
+        RVOController = GetComponent<Pathfinding.RVO.RVOController>();
 
         CalculateMoveSpeeds();
 
@@ -97,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
         Interactable interactable = target.GetComponent<Interactable>();
 
         // Set pathfinding variables and player movement anims
+        RVOController.enabled = true;
         AIDestSetter.target = target;
         AIPath.canMove = true;
         AIPath.maxSpeed = speed;
@@ -196,6 +199,7 @@ public class PlayerMovement : MonoBehaviour
         AIDestSetter.target = null;
         AIPath.canMove = false;
         SetIsMoving(false);
+        RVOController.enabled = false;
     }
 
     IEnumerator UpdateFootstepSounds()

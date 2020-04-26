@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 746400458985791305}
   - component: {fileID: 8282957160912538562}
   - component: {fileID: 1027100065519748423}
-  m_Layer: 14
+  m_Layer: 20
   m_Name: Wooden Shield
   m_TagString: Shield
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 326582721
   m_SortingLayer: 2
-  m_SortingOrder: 14
+  m_SortingOrder: 0
   m_Sprite: {fileID: -6717884257390833292, guid: 233bc7477966eec4c82606e75ec56266,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -128,7 +128,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.125, y: 0.8125}
+    oldSize: {x: 0.25, y: 0.9375}
     newSize: {x: 0.125, y: 0.8125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -213,6 +213,9 @@ MonoBehaviour:
   originalMaterial: {fileID: 0}
   thisInteractable: {fileID: 0}
   highlightMaterial: {fileID: 2100000, guid: 45c03daaa0e2eba48a0d9160187b1ac7, type: 2}
+  thisItemPickup: {fileID: 0}
+  thisContainer: {fileID: 0}
+  thisDoor: {fileID: 0}
   interactRadius: 0.5
   distanceToPlayer: 0
   playerInRange: 0

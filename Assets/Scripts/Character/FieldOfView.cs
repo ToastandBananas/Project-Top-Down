@@ -22,12 +22,20 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
+    PlayerMovement playerMovement;
+    NPCMovement npcMovement;
+
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
     public List<Transform> nearbyEnemies = new List<Transform>();
 
     void Start()
     {
+        if (gameObject.tag == "Player")
+            playerMovement = PlayerMovement.instance;
+        else
+            npcMovement = GetComponent<NPCMovement>();
+
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         if (viewMeshFilter != null)
@@ -63,7 +71,8 @@ public class FieldOfView : MonoBehaviour
             if (Vector3.Angle(transform.up, dirToTarget) < viewAngle / 2)
             {
                 float distToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics2D.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask);
+                if (hit == false)
                     visibleTargets.Add(target);
             }
         }
@@ -73,16 +82,47 @@ public class FieldOfView : MonoBehaviour
     {
         nearbyEnemies.Clear();
 
-        if (targetsInViewRadius.Length > 0)
+        if (visibleTargets.Count > 0)
         {
-            float distToTarget;
-            foreach (Collider2D target in targetsInViewRadius)
+            foreach (Transform target in visibleTargets)
             {
-                distToTarget = Vector2.Distance(transform.position, target.transform.position);
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position, distToTarget, obstacleMask);
-
-                if (hit == false)
-                    nearbyEnemies.Add(target.transform);
+                NPCMovement targetNPCMovement = target.GetComponentInParent<NPCMovement>();
+                if (npcMovement != null && targetNPCMovement != null) // If this is an NPC and the target is an NPC
+                {
+                    if (npcMovement != targetNPCMovement)
+                    {
+                        foreach (ALLIANCE targetsEnemyAlliance in targetNPCMovement.enemyAlliances)
+                        {
+                            if (npcMovement.currentAlliance == targetsEnemyAlliance)
+                            {
+                                nearbyEnemies.Add(target);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (npcMovement != null && target.tag == "Player Body") // If this is an NPC and the target is the player
+                {
+                    foreach (ALLIANCE enemyAlliance in npcMovement.enemyAlliances)
+                    {
+                        if (enemyAlliance == ALLIANCE.PLAYER)
+                        {
+                            nearbyEnemies.Add(target);
+                            break;
+                        }
+                    }
+                }
+                else if (playerMovement != null && targetNPCMovement != null) // If this is the player and the target is an NPC
+                {
+                    foreach (ALLIANCE enemyAlliance in targetNPCMovement.enemyAlliances)
+                    {
+                        if (enemyAlliance == ALLIANCE.BANDITS)
+                        {
+                            nearbyEnemies.Add(target);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

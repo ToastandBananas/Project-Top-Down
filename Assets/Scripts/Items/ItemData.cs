@@ -194,7 +194,7 @@ public class ItemData : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (isQuiver)
+        if (isQuiver) // Is a quiver
         {
             switch (currentAmmoCount)
             {
@@ -236,7 +236,7 @@ public class ItemData : MonoBehaviour
                     break;
             }
         }
-        else // is a bundle of arrows
+        else // Is a bundle of arrows
         {
             switch (currentStackSize)
             {

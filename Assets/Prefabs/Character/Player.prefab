@@ -1700,9 +1700,9 @@ GameObject:
   - component: {fileID: 641563522233824849}
   - component: {fileID: 8341661255705670473}
   - component: {fileID: 1639530697107931848}
-  - component: {fileID: 3772425138260958579}
   - component: {fileID: 4532041037789619928}
   - component: {fileID: 4037460760862979295}
+  - component: {fileID: 6805387579419752359}
   - component: {fileID: 2848872983160252873}
   - component: {fileID: 5629003213170501291}
   m_Layer: 0
@@ -2190,33 +2190,6 @@ MonoBehaviour:
   slowWhenNotFacingTarget: 0
   whenCloseToDestination: 1
   constrainInsideGraph: 0
---- !u!114 &3772425138260958579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5363199645066194768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radiusBackingField: 0.5
-  heightBackingField: 2
-  centerBackingField: 1
-  locked: 0
-  lockWhenNotMoving: 0
-  agentTimeHorizon: 2
-  obstacleTimeHorizon: 2
-  maxNeighbours: 5
-  layer: 4
-  collidesWith: -1
-  wallAvoidForce: 1
-  wallAvoidFalloff: 1
-  priority: 1
-  debug: 0
 --- !u!114 &4532041037789619928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2259,6 +2232,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   target: {fileID: 0}
+--- !u!114 &6805387579419752359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5363199645066194768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
+  radiusBackingField: 0.5
+  heightBackingField: 2
+  centerBackingField: 1
+  locked: 0
+  lockWhenNotMoving: 0
+  agentTimeHorizon: 2
+  obstacleTimeHorizon: 2
+  maxNeighbours: 10
+  layer: 1
+  collidesWith: -1
+  wallAvoidForce: 1
+  wallAvoidFalloff: 1
+  priority: 0.5
+  debug: 0
 --- !u!114 &2848872983160252873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,7 +2290,7 @@ MonoBehaviour:
     - {fileID: 641563522233824849}
     - {fileID: 8341661255705670473}
     - {fileID: 1639530697107931848}
-    - {fileID: 3772425138260958579}
+    - {fileID: 0}
     - {fileID: 4532041037789619928}
     - {fileID: 4037460760862979295}
     - {fileID: 2848872983160252873}
@@ -2651,7 +2651,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 24518
+  m_InstanceId: 66626
 --- !u!1 &5638075717431976091
 GameObject:
   m_ObjectHideFlags: 0
