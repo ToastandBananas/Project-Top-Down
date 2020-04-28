@@ -59,8 +59,9 @@ MonoBehaviour:
   loadButton: {fileID: 0}
   saveButton: {fileID: 0}
   saveAndQuitButton: {fileID: 0}
-  isUsingController: 1
+  isUsingController: 0
   currentlySelectedInteractable: {fileID: 0}
+  dialogueManager: {fileID: 0}
 --- !u!114 &4178373178057486886
 MonoBehaviour:
   m_ObjectHideFlags: 0

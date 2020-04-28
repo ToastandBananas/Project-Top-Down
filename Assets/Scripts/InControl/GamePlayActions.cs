@@ -17,10 +17,10 @@ public class GamePlayActions : PlayerActionSet
     public PlayerAction playerLeftSpecialAttack, playerRightSpecialAttack;
 
     // UI Actions
-    public PlayerAction playerInventory;
+    public PlayerAction playerInventory, playerJournal;
     public PlayerAction menuPause, menuSelect, menuContext, menuDropItem;
     public PlayerAction menuLeft, menuRight, menuUp, menuDown;
-    public PlayerAction menuContainerTakeAll, menuContainerTakeGold, menuTakeItem, menuUseItem, menuCharacter;
+    public PlayerAction menuContainerTakeAll, menuContainerTakeGold, menuTakeItem, menuUseItem, playerCharacterMenu;
 
     // Specific Key
     public PlayerAction leftCtrl;
@@ -57,19 +57,23 @@ public class GamePlayActions : PlayerActionSet
 
         // UI Actions
         playerInventory = CreatePlayerAction("PlayerInventory");
+        playerJournal = CreatePlayerAction("PlayerJournal");
+        playerCharacterMenu = CreatePlayerAction("PlayerCharacterMenu");
+
         menuPause = CreatePlayerAction("MenuPause");
         menuSelect = CreatePlayerAction("MenuSelect");
         menuContext = CreatePlayerAction("MenuContext");
         menuDropItem = CreatePlayerAction("MenuDropItem");
+
         menuLeft = CreatePlayerAction("MenuLeft");
         menuRight = CreatePlayerAction("MenuRight");
         menuUp = CreatePlayerAction("MenuUp");
         menuDown = CreatePlayerAction("MenuDown");
+
         menuContainerTakeAll = CreatePlayerAction("MenuContainerTakeAll");
         menuContainerTakeGold = CreatePlayerAction("MenuContainerTakeGold");
         menuTakeItem = CreatePlayerAction("MenuTakeItem");
         menuUseItem = CreatePlayerAction("MenuUseItem");
-        menuCharacter = CreatePlayerAction("MenuCharacter");
 
         // Specific Key Actions
         leftCtrl = CreatePlayerAction("LeftCtrl");

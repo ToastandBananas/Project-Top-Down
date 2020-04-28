@@ -14,10 +14,10 @@ public class GameControls : MonoBehaviour
     void BindDefaultControls()
     {
         gamePlayActions.playerInteract.AddDefaultBinding(Key.R);
-        gamePlayActions.playerInteract.AddDefaultBinding(InputControlType.Action3);
+        gamePlayActions.playerInteract.AddDefaultBinding(InputControlType.Action1);
 
         gamePlayActions.playerDodge.AddDefaultBinding(Key.Space);
-        gamePlayActions.playerDodge.AddDefaultBinding(InputControlType.Action1);
+        gamePlayActions.playerDodge.AddDefaultBinding(InputControlType.Action2);
 
         gamePlayActions.playerSprint.AddDefaultBinding(Key.LeftShift);
         gamePlayActions.playerSprint.AddDefaultBinding(InputControlType.LeftStickButton);
@@ -28,7 +28,7 @@ public class GameControls : MonoBehaviour
         gamePlayActions.playerLockOn.AddDefaultBinding(Key.Tab);
         gamePlayActions.playerLockOn.AddDefaultBinding(InputControlType.RightStickButton);
 
-        gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(Key.C);
+        gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(Key.V);
         gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
         gamePlayActions.playerSwitchLockOnTargetRight.AddDefaultBinding(Key.F);
@@ -62,11 +62,16 @@ public class GameControls : MonoBehaviour
 
         // UI Actions
         gamePlayActions.playerInventory.AddDefaultBinding(Key.I);
-        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Action2);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Pause);
+        gamePlayActions.playerInventory.AddDefaultBinding(InputControlType.Options);
+
+        gamePlayActions.playerJournal.AddDefaultBinding(Key.J);
+        gamePlayActions.playerJournal.AddDefaultBinding(InputControlType.Select);
+        gamePlayActions.playerJournal.AddDefaultBinding(InputControlType.TouchPadButton);
+
+        gamePlayActions.playerCharacterMenu.AddDefaultBinding(Key.C);
 
         gamePlayActions.menuPause.AddDefaultBinding(Key.Escape);
-        gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Pause);
-        gamePlayActions.menuPause.AddDefaultBinding(InputControlType.Options);
 
         gamePlayActions.menuSelect.AddDefaultBinding(Mouse.LeftButton);
         gamePlayActions.menuSelect.AddDefaultBinding(InputControlType.Action1);
@@ -98,8 +103,6 @@ public class GameControls : MonoBehaviour
 
         gamePlayActions.menuUseItem.AddDefaultBinding(Mouse.MiddleButton);
         gamePlayActions.menuUseItem.AddDefaultBinding(InputControlType.RightBumper);
-
-        gamePlayActions.menuCharacter.AddDefaultBinding(Key.C);
 
         // Specific Key Actions
         gamePlayActions.leftCtrl.AddDefaultBinding(Key.LeftControl);

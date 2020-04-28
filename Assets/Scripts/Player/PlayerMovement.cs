@@ -218,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update_Dodge()
     {
-        if (GameControls.gamePlayActions.playerDodge.WasPressed && canDodge && gm.menuOpen == false)
+        if (GameControls.gamePlayActions.playerDodge.WasPressed && canDodge && gm.menuOpen == false && gm.dialogueUI.isOpen == false)
         {
             canDodge = CanDodge(lastMoveDir, dodgeDistance);
 

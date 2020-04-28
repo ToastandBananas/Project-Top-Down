@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PixelCrushers.DialogueSystem;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,10 +24,14 @@ public class GameManager : MonoBehaviour
     [Header("Interactable")]
     public Interactable currentlySelectedInteractable;
 
+    [HideInInspector] public StandardUIQuestLogWindow questLog;
+    [HideInInspector] public StandardDialogueUI dialogueUI;
+
     InventoryUI invUI;
     Inventory inv;
     UIControllerNavigation UIControllerNav;
     ButtonHints buttonHints;
+    Transform dialogueManager;
 
     #region Singleton
     public static GameManager instance;
@@ -50,6 +56,10 @@ public class GameManager : MonoBehaviour
         UIControllerNav = UIControllerNavigation.instance;
         buttonHints = ButtonHints.instance;
 
+        dialogueManager = GameObject.Find("Dialogue Manager").transform;
+        dialogueUI = dialogueManager.GetChild(0).GetComponentInChildren<StandardDialogueUI>();
+        questLog = dialogueManager.GetChild(0).GetComponentInChildren<StandardUIQuestLogWindow>();
+
         if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();
 
@@ -63,10 +73,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (GameControls.gamePlayActions.menuPause.WasPressed)
-        {
-            TurnOffMenus();
             TogglePauseMenu();
-        }
+
+        if (GameControls.gamePlayActions.playerJournal.WasPressed && invUI.currentlySelectedItem == null && pauseMenu.activeSelf == false && dialogueUI.isOpen == false)
+            ToggleQuestLog();
 
         if (Input.GetKeyDown(KeyCode.P))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -77,6 +87,30 @@ public class GameManager : MonoBehaviour
 
     public void TogglePauseMenu()
     {
+        StartCoroutine(TogglePauseMenuWithDelay());
+    }
+
+    public IEnumerator TogglePauseMenuWithDelay()
+    {
+        if (invUI.currentlySelectedItem != null && pauseMenu.activeSelf == false)
+        {
+            if (invUI.invSlotMovingFrom != null)
+            {
+                invUI.invSlotMovingFrom.contextMenu.DropItem();
+                invUI.invSlotMovingFrom.contextMenu.DisableContextMenu();
+            }
+            else if (invUI.equipSlotMovingFrom != null)
+            {
+                invUI.equipSlotMovingFrom.contextMenu.DropItem();
+                invUI.equipSlotMovingFrom.contextMenu.DisableContextMenu();
+            }
+
+            invUI.StopDraggingInvItem();
+            yield return new WaitForSeconds(0.15f);
+        }
+
+        TurnOffMenus();
+
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         if (pauseMenu.activeSelf)
         {
@@ -94,17 +128,32 @@ public class GameManager : MonoBehaviour
 
     public void TurnOffMenus()
     {
-        if (invUI.containerMenu.activeSelf == true)
+        if (questLog.isOpen)
+            questLog.Close();
+        if (invUI.containerMenu.activeSelf)
             invUI.ToggleContainerMenu();
-        if (invUI.inventoryMenu.activeSelf == true)
+        if (invUI.inventoryMenu.activeSelf)
             invUI.ToggleInventory();
-        if (invUI.playerEquipmentMenu.activeSelf == true)
+        if (invUI.playerEquipmentMenu.activeSelf)
             invUI.ToggleEquipmentMenu();
 
         invUI.TurnOffHighlighting();
         invUI.ClearAllTooltips();
         UIControllerNav.DisableContextMenu();
         UIControllerNav.ClearCurrentlySelected();
+    }
+
+    public void ToggleQuestLog()
+    {
+        if (invUI.inventoryMenu.activeSelf)
+            invUI.ToggleInventory();
+        if (invUI.playerEquipmentMenu.activeSelf)
+            invUI.ToggleEquipmentMenu();
+        if (invUI.containerMenu.activeSelf)
+            invUI.ToggleContainerMenu();
+
+        questLog.Toggle();
+        invUI.DetermineIfMenuOpen();
     }
 
     void DetectController()

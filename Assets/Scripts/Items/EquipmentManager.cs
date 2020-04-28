@@ -234,7 +234,7 @@ public class EquipmentManager : MonoBehaviour
                     // If there's no room in our inventory, send it to the temp slot so we can manually place or drop the item
                     if (inv.AddToInventory(equipSlot.equipment, equipSlot.itemData) == false)
                     {
-                        invUI.tempSlot.AddItem(equipSlot.equipment, equipSlot.itemData);
+                        invUI.tempSlot.AddItem(equipSlot.equipment, equipSlot.itemData, false);
                         itemData.TransferData(equipSlot.itemData, invUI.tempSlot.itemData);
 
                         invUI.currentlySelectedItem = invUI.tempSlot.item;

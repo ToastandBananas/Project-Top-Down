@@ -120,31 +120,28 @@ public class InventoryUI : MonoBehaviour
     void Update()
     {
         // If the inventory button/key is pressed
-        if (GameControls.gamePlayActions.playerInventory.WasPressed)
+        if (GameControls.gamePlayActions.playerInventory.WasPressed && gm.pauseMenu.activeSelf == false && gm.dialogueUI.isOpen == false)
         {
             if (currentlySelectedItem != null)
             {
                 if (invSlotMovingFrom != null)
                 {
-                    invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
-                    invSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+                    invSlotMovingFrom.contextMenu.DropItem();
+                    invSlotMovingFrom.contextMenu.DisableContextMenu();
                 }
                 else if (equipSlotMovingFrom != null)
                 {
-                    equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DropItem();
-                    equipSlotMovingFrom.GetComponentInChildren<ContextMenu>().DisableContextMenu();
+                    equipSlotMovingFrom.contextMenu.DropItem();
+                    equipSlotMovingFrom.contextMenu.DisableContextMenu();
                 }
 
                 StopDraggingInvItem();
             }
 
-            if (gm.pauseMenu.activeSelf == true)
-                gm.TogglePauseMenu();
-
             StartCoroutine(ToggleMenus());
         }
 
-        if (GameControls.gamePlayActions.menuCharacter.WasPressed)
+        if (GameControls.gamePlayActions.playerCharacterMenu.WasPressed)
             ToggleEquipmentMenu();
 
         if (GameControls.gamePlayActions.menuContainerTakeGold.WasPressed)
@@ -342,10 +339,7 @@ public class InventoryUI : MonoBehaviour
 
     public void DetermineIfMenuOpen()
     {
-        //if (inventoryMenu == null || playerEquipmentMenu == null || containerMenu == null || gm == null || gm.pauseMenu == null)
-            //return;
-
-        if (inventoryMenu.activeSelf || playerEquipmentMenu.activeSelf || containerMenu.activeSelf || gm.pauseMenu.activeSelf)
+        if (inventoryMenu.activeSelf || playerEquipmentMenu.activeSelf || containerMenu.activeSelf || gm.pauseMenu.activeSelf || gm.questLog.isOpen)
             gm.menuOpen = true;
         else
             gm.menuOpen = false;
@@ -408,6 +402,9 @@ public class InventoryUI : MonoBehaviour
             UIControllerNavigation.instance.DisableContextMenu();
         }
 
+        if (gm.questLog.isOpen)
+            gm.questLog.Close();
+
         ToggleInventory();
         ToggleEquipmentMenu();
 
@@ -416,7 +413,7 @@ public class InventoryUI : MonoBehaviour
 
         if (quantityMenu.gameObject.activeSelf)
             quantityMenu.CloseQuantityMenu();
-
+        
         if (gm.isUsingController)
         {
             if (inventoryMenu.activeSelf)

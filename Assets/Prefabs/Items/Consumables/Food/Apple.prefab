@@ -216,13 +216,11 @@ MonoBehaviour:
   alertDuration: 0
   condition:
     luaConditions: []
-    questConditions:
-    - questName: Get Apples
-      questState: 2
+    questConditions: []
     acceptedTags: []
     acceptedGameObjects: []
     luaWizardIndex: -1
-    lastEvaluationValue: 0
+    lastEvaluationValue: 1
   onIncrement:
     m_PersistentCalls:
       m_Calls: []

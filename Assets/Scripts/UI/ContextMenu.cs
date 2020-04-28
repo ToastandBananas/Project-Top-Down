@@ -359,7 +359,7 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler
             else if (thisEquipSlot != null)
                 prefabItemData = thisEquipSlot.itemData.ammoTypePrefab.GetComponent<ItemData>();
 
-            invUI.tempSlot.AddItem(prefabItemData.equipment, prefabItemData);
+            invUI.tempSlot.AddItem(prefabItemData.equipment, prefabItemData, false);
             ItemData tempSlotItemData = invUI.tempSlot.itemData;
             prefabItemData.TransferData(prefabItemData, tempSlotItemData);
             tempSlotItemData.hasBeenRandomized = true;

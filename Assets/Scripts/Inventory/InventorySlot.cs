@@ -61,7 +61,7 @@ public class InventorySlot : MonoBehaviour
             FollowMouse();
     }
 
-    public void AddItem(Item newItem, ItemData newItemData)
+    public void AddItem(Item newItem, ItemData newItemData, bool pickingItemUp)
     {
         GameObject newIcon;
 
@@ -80,6 +80,24 @@ public class InventorySlot : MonoBehaviour
         RectTransform newIconRectTransform = newIcon.GetComponent<RectTransform>();
         newIconRectTransform.sizeDelta = new Vector2(newItem.iconWidth, newItem.iconHeight);
         newIconRectTransform.localScale = new Vector3(67.5f, 67.5f, 67.5f);
+
+        // For quest items
+        if (newItem.prefab.TryGetComponent(out PixelCrushers.DialogueSystem.IncrementOnDestroy prefabIncrementOnDestroy))
+        {
+            PixelCrushers.DialogueSystem.IncrementOnDestroy incrementOnDestroy = newIcon.AddComponent<PixelCrushers.DialogueSystem.IncrementOnDestroy>();
+            incrementOnDestroy.incrementOn = PixelCrushers.DialogueSystem.IncrementOnDestroy.IncrementOn.Destroy;
+            incrementOnDestroy.min = prefabIncrementOnDestroy.min;
+            incrementOnDestroy.max = prefabIncrementOnDestroy.max;
+            incrementOnDestroy.variable = prefabIncrementOnDestroy.variable;
+            incrementOnDestroy.condition = prefabIncrementOnDestroy.condition;
+            incrementOnDestroy.onIncrement = prefabIncrementOnDestroy.onIncrement;
+            incrementOnDestroy.increment = prefabIncrementOnDestroy.increment;
+
+            if (pickingItemUp == false)
+                incrementOnDestroy.TryIncrement();
+
+            incrementOnDestroy.increment *= -1;
+        }
 
         item = newItem;
         newIcon.name = item.name;
@@ -118,6 +136,7 @@ public class InventorySlot : MonoBehaviour
             stackSizeText.text = "";
 
             isEmpty = true;
+            parentSlot = null;
 
             for (int i = 0; i < childrenSlots.Length; i++)
             {

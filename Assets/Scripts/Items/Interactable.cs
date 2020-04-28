@@ -52,8 +52,11 @@ public class Interactable : MonoBehaviour
 
     public virtual void Update()
     {
-        if (GameControls.gamePlayActions.playerInteract.WasPressed && playerInRange && gm.currentlySelectedInteractable == this)
+        if (GameControls.gamePlayActions.playerInteract.WasPressed && playerInRange && gm.currentlySelectedInteractable == this
+            && gm.pauseMenu.activeSelf == false && gm.questLog.isOpen == false && gm.dialogueUI.isOpen == false)
+        {
             Interact();
+        }
     }
 
     void OnMouseExit()

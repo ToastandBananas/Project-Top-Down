@@ -179,7 +179,7 @@ public class EquipSlot : MonoBehaviour
                     equipmentManager.Unequip(equipment, itemData, thisWeaponSlot, thisEquipmentSlot, false); // Unequip the item before we do anything else
 
                     // Add the currently selected item and its data to a temp slot
-                    invUI.tempSlot.AddItem(equipment, itemData);
+                    invUI.tempSlot.AddItem(equipment, itemData, false);
                     itemData.TransferData(itemData, invUI.tempSlot.itemData);
 
                     // Clear this slot out and add the currently selected item

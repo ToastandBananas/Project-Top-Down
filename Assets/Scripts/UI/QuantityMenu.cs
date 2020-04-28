@@ -66,7 +66,7 @@ public class QuantityMenu : MonoBehaviour
     public void Submit()
     {
         // Create a new icon, place it in the temp inv slot and transfer data to it
-        invUI.tempSlot.AddItem(currentItemData.item, currentItemData);
+        invUI.tempSlot.AddItem(currentItemData.item, currentItemData, false);
         ItemData tempSlotItemData = invUI.tempSlot.itemData;
         currentItemData.TransferData(currentItemData, tempSlotItemData);
         tempSlotItemData.currentStackSize = currentQuantity;

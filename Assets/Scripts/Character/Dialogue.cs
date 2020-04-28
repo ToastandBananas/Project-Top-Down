@@ -4,6 +4,7 @@ using PixelCrushers.DialogueSystem;
 public class Dialogue : MonoBehaviour
 {
     PixelCrushers.DialogueSystem.DialogueSystemTrigger dialogue;
+    GameManager gm;
 
     bool playerInRange;
 
@@ -11,11 +12,12 @@ public class Dialogue : MonoBehaviour
     {
         dialogue = GetComponent<DialogueSystemTrigger>();
         dialogue.conversationActor = PlayerMovement.instance.transform;
+        gm = GameManager.instance;
     }
 
     void Update()
     {
-        if (playerInRange && GameControls.gamePlayActions.playerInteract.WasPressed && GameManager.instance.currentlySelectedInteractable == null)
+        if (playerInRange && GameControls.gamePlayActions.playerInteract.WasPressed && gm.menuOpen == false && gm.currentlySelectedInteractable == null)
             DialogueManager.StartConversation(dialogue.conversation, PlayerMovement.instance.transform, transform);
     }
 

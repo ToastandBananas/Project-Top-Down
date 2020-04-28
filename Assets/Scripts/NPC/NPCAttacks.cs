@@ -23,8 +23,8 @@ public class NPCAttacks : MonoBehaviour
     float minArrowRotation = 6f;
     float maxArrowRotation = 12f;
 
-    public int leftComboNumber = 1;
-    public int rightComboNumber = 1;
+    [HideInInspector] public int leftComboNumber = 1;
+    [HideInInspector] public int rightComboNumber = 1;
     public bool comboAttackOnCooldown;
     bool comboTimerStarted;
     float comboTimer;
