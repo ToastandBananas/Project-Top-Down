@@ -28,10 +28,10 @@ public class GameControls : MonoBehaviour
         gamePlayActions.playerLockOn.AddDefaultBinding(Key.Tab);
         gamePlayActions.playerLockOn.AddDefaultBinding(InputControlType.RightStickButton);
 
-        gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(Key.V);
+        gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(Mouse.PositiveScrollWheel);
         gamePlayActions.playerSwitchLockOnTargetLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
-        gamePlayActions.playerSwitchLockOnTargetRight.AddDefaultBinding(Key.F);
+        gamePlayActions.playerSwitchLockOnTargetRight.AddDefaultBinding(Mouse.NegativeScrollWheel);
         gamePlayActions.playerSwitchLockOnTargetRight.AddDefaultBinding(InputControlType.RightStickRight);
 
         gamePlayActions.playerUp.AddDefaultBinding(Key.W);

@@ -2,14 +2,11 @@
 using UnityEngine;
 
 public enum STATE { IDLE, PATROL, PURSUE, COMBAT, FLEE };
-public enum ALLIANCE { NEUTRAL, PLAYER, BANDITS, GUARDS };
 
 public class NPCMovement : MonoBehaviour
 {
     public STATE defaultState = STATE.IDLE;
     public STATE currentState = STATE.IDLE;
-    public ALLIANCE currentAlliance = ALLIANCE.NEUTRAL;
-    public ALLIANCE[] enemyAlliances;
 
     public Transform targetPos;
     public Transform attackTarget;

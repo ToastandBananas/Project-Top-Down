@@ -19,7 +19,6 @@ namespace ES3Types
 			var instance = (NPCMovement)obj;
 			
 			writer.WriteProperty("currentState", instance.currentState);
-			writer.WriteProperty("currentAlliance", instance.currentAlliance);
 			writer.WritePropertyByRef("targetPos", instance.targetPos);
 			writer.WritePropertyByRef("attackTarget", instance.attackTarget);
 			writer.WriteProperty("walkSpeed", instance.walkSpeed, ES3Type_float.Instance);
@@ -36,9 +35,6 @@ namespace ES3Types
 					
 					case "currentState":
 						instance.currentState = reader.Read<STATE>();
-						break;
-					case "currentAlliance":
-						instance.currentAlliance = reader.Read<ALLIANCE>();
 						break;
 					case "targetPos":
 						instance.targetPos = reader.Read<UnityEngine.Transform>(ES3Type_Transform.Instance);

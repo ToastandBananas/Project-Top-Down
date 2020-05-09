@@ -2446,6 +2446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 10
   gold: 0
+  currentAlliance: 0
+  enemyAlliances: 02000000
   maxHealth: 20
   health: 20
   healthRegenRate: 0
@@ -2461,7 +2463,7 @@ MonoBehaviour:
   staminaCanRegen: 1
   maxEncumbrance: 200
   encumbrance: 50
-  defense: 20
+  defense: 0
   maxSkillPoints: 100
   rangedSkill: 60
   deadBodyPrefab: {fileID: 449104977835760739, guid: ccf64c0a726e1804eacc8a4bd31a0835,
@@ -2547,8 +2549,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 0
   currentState: 0
-  currentAlliance: 0
-  enemyAlliances: 02000000
   targetPos: {fileID: 0}
   attackTarget: {fileID: 0}
   patrolPoint: {fileID: 0}
@@ -3174,7 +3174,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 24426
+  m_InstanceId: 24442
 --- !u!1 &6546667260049553376
 GameObject:
   m_ObjectHideFlags: 0

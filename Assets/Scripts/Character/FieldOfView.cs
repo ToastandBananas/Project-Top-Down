@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    [Range(0, 360)]
-    public float viewAngle;
+    public bool isPlayer;
+    [Range(0, 360)] public float viewAngle;
     public float viewRadius;
     public bool showFOV = false;
 
@@ -22,19 +22,19 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
-    PlayerMovement playerMovement;
-    NPCMovement npcMovement;
+    BasicStats basicStats;
 
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
+    //[HideInInspector]
     public List<Transform> nearbyEnemies = new List<Transform>();
 
     void Start()
     {
         if (gameObject.tag == "Player")
-            playerMovement = PlayerMovement.instance;
-        else
-            npcMovement = GetComponent<NPCMovement>();
+            isPlayer = true;
+
+        basicStats = GetComponent<BasicStats>();
 
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
@@ -66,14 +66,17 @@ public class FieldOfView : MonoBehaviour
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.up, dirToTarget) < viewAngle / 2)
+            if (targetsInViewRadius[i].isTrigger == false)
             {
-                float distToTarget = Vector3.Distance(transform.position, target.position);
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask);
-                if (hit == false)
-                    visibleTargets.Add(target);
+                Transform target = targetsInViewRadius[i].transform;
+                Vector3 dirToTarget = (target.position - transform.position).normalized;
+                if (isPlayer || Vector3.Angle(transform.up, dirToTarget) < viewAngle / 2)
+                {
+                    float distToTarget = Vector3.Distance(transform.position, target.position);
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask);
+                    if (hit == false)
+                        visibleTargets.Add(target);
+                }
             }
         }
     }
@@ -86,37 +89,13 @@ public class FieldOfView : MonoBehaviour
         {
             foreach (Transform target in visibleTargets)
             {
-                NPCMovement targetNPCMovement = target.GetComponentInParent<NPCMovement>();
-                if (npcMovement != null && targetNPCMovement != null) // If this is an NPC and the target is an NPC
+                BasicStats targetBasicStats = target.GetComponentInParent<BasicStats>();
+                if (targetBasicStats != null && basicStats != targetBasicStats) // If the target isn't this game object && it has a BasicStats script
                 {
-                    if (npcMovement != targetNPCMovement)
+                    foreach (ALLIANCE enemyAlliance in basicStats.enemyAlliances)
                     {
-                        foreach (ALLIANCE targetsEnemyAlliance in targetNPCMovement.enemyAlliances)
-                        {
-                            if (npcMovement.currentAlliance == targetsEnemyAlliance)
-                            {
-                                nearbyEnemies.Add(target);
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (npcMovement != null && target.tag == "Player Body") // If this is an NPC and the target is the player
-                {
-                    foreach (ALLIANCE enemyAlliance in npcMovement.enemyAlliances)
-                    {
-                        if (enemyAlliance == ALLIANCE.PLAYER)
-                        {
-                            nearbyEnemies.Add(target);
-                            break;
-                        }
-                    }
-                }
-                else if (playerMovement != null && targetNPCMovement != null) // If this is the player and the target is an NPC
-                {
-                    foreach (ALLIANCE enemyAlliance in targetNPCMovement.enemyAlliances)
-                    {
-                        if (enemyAlliance == ALLIANCE.BANDITS)
+                        // If the target is allied to one of this characters enemy alliances, add them to the nearbyEnemies list
+                        if (enemyAlliance == targetBasicStats.currentAlliance)
                         {
                             nearbyEnemies.Add(target);
                             break;

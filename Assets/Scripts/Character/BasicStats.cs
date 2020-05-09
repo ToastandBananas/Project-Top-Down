@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+public enum ALLIANCE { NEUTRAL, PLAYER, BANDITS, GUARDS };
+
 public class BasicStats : MonoBehaviour
 {
     [Header("General")]
     public float level = 1;
     public float gold = 0;
+    public ALLIANCE currentAlliance = ALLIANCE.NEUTRAL;
+    public ALLIANCE[] enemyAlliances;
 
     [Header("Health")]
     public float maxHealth = 50;

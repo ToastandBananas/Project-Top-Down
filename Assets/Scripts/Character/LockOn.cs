@@ -62,7 +62,7 @@ public class LockOn : MonoBehaviour
                     lockOnTarget = fov.closestEnemy;
                 }
             }
-            else if (playerMovement != null) // If this is the player's lock on script
+            else if (playerMovement != null) // If this is the player's lock on script and they are locked on
                 UnLockOn();
         }
 

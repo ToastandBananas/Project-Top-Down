@@ -1827,6 +1827,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   gold: 0
+  currentAlliance: 1
+  enemyAlliances: 02000000
   maxHealth: 300
   health: 300
   healthRegenRate: 0
@@ -2002,7 +2004,7 @@ MonoBehaviour:
     m_Bits: 1024
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 8448
+    m_Bits: 917760
   targetsInViewRadius: []
   closestEnemy: {fileID: 0}
   meshResolution: 1
@@ -2239,7 +2241,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5363199645066194768}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
   m_Name: 
@@ -2651,7 +2653,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 66626
+  m_InstanceId: 24700
 --- !u!1 &5638075717431976091
 GameObject:
   m_ObjectHideFlags: 0
