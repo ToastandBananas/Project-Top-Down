@@ -3,22 +3,38 @@ using PixelCrushers.DialogueSystem;
 
 public class Dialogue : MonoBehaviour
 {
-    PixelCrushers.DialogueSystem.DialogueSystemTrigger dialogue;
+    DialogueSystemTrigger dialogueSystemTrigger;
+    StandardBarkUI barkUI;
     GameManager gm;
 
     bool playerInRange;
+    Transform playerTransform;
 
     void Start()
     {
-        dialogue = GetComponent<DialogueSystemTrigger>();
-        dialogue.conversationActor = PlayerMovement.instance.transform;
+        dialogueSystemTrigger = GetComponent<DialogueSystemTrigger>();
+        dialogueSystemTrigger.conversationActor = PlayerMovement.instance.transform;
+        barkUI = GetComponentInChildren<StandardBarkUI>();
+
+        playerTransform = PlayerMovement.instance.transform;
         gm = GameManager.instance;
     }
 
     void Update()
     {
-        if (playerInRange && GameControls.gamePlayActions.playerInteract.WasPressed && gm.menuOpen == false && gm.currentlySelectedInteractable == null)
-            DialogueManager.StartConversation(dialogue.conversation, PlayerMovement.instance.transform, transform);
+        if (GameControls.gamePlayActions.playerInteract.WasPressed && playerInRange && gm.menuOpen == false && gm.dialogueUIPanel.isOpen == false && gm.currentlySelectedInteractable == null)
+            DialogueManager.StartConversation(dialogueSystemTrigger.conversation, playerTransform, transform);
+    }
+
+    void FixedUpdate()
+    {
+        if ((gm.menuOpen || gm.dialogueUIPanel.isOpen) && barkUI.barkText.text != "" && barkUI.isPlaying)
+            DisableBark();
+    }
+
+    public void DisableBark()
+    {
+        barkUI.barkText.text = "";
     }
 
     void OnTriggerEnter2D(Collider2D collision)

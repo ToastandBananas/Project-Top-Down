@@ -1886,6 +1886,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 10
   gold: 0
+  currentAlliance: 2
+  enemyAlliances: 010000000000000003000000
   maxHealth: 20
   health: 20
   healthRegenRate: 0
@@ -1987,8 +1989,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 0
   currentState: 0
-  currentAlliance: 2
-  enemyAlliances: 010000000000000003000000
   targetPos: {fileID: 0}
   attackTarget: {fileID: 0}
   patrolPoint: {fileID: 0}
@@ -2050,6 +2050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d0e6eaec1ea2242b5fd08b555366b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
   viewAngle: 135
   viewRadius: 6
   showFOV: 0

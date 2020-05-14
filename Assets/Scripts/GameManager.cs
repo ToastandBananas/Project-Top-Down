@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using PixelCrushers.DialogueSystem;
+using PixelCrushers;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -23,15 +24,16 @@ public class GameManager : MonoBehaviour
 
     [Header("Interactable")]
     public Interactable currentlySelectedInteractable;
-
+    [HideInInspector] public Transform dialogueManager;
+    [HideInInspector] public DialogueSystemController dialogueSystemController;
     [HideInInspector] public StandardUIQuestLogWindow questLog;
     [HideInInspector] public StandardDialogueUI dialogueUI;
+    [HideInInspector] public UIPanel dialogueUIPanel;
 
     InventoryUI invUI;
     Inventory inv;
     UIControllerNavigation UIControllerNav;
     ButtonHints buttonHints;
-    Transform dialogueManager;
 
     #region Singleton
     public static GameManager instance;
@@ -57,8 +59,10 @@ public class GameManager : MonoBehaviour
         buttonHints = ButtonHints.instance;
 
         dialogueManager = GameObject.Find("Dialogue Manager").transform;
+        dialogueSystemController = FindObjectOfType<DialogueSystemController>();
         dialogueUI = dialogueManager.GetChild(0).GetComponentInChildren<StandardDialogueUI>();
         questLog = dialogueManager.GetChild(0).GetComponentInChildren<StandardUIQuestLogWindow>();
+        dialogueUIPanel = dialogueUI.transform.GetChild(1).GetComponent<UIPanel>();
 
         if (invUI.inventoryMenu.activeSelf == true)
             invUI.ToggleInventory();

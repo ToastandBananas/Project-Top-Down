@@ -2294,17 +2294,6 @@ MonoBehaviour:
     onConversationStart:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 5758829945124634367}
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 6546667260028242751}
           m_MethodName: set_enabled
           m_Mode: 6
@@ -2341,17 +2330,6 @@ MonoBehaviour:
     onConversationEnd:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 5758829945124634367}
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
         - m_Target: {fileID: 6546667260028242751}
           m_MethodName: set_enabled
           m_Mode: 6
@@ -2610,6 +2588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d0e6eaec1ea2242b5fd08b555366b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
   viewAngle: 135
   viewRadius: 6
   showFOV: 0
@@ -3174,7 +3153,7 @@ MonoBehaviour:
   - {x: -0.45756006, y: -0.0024194717, z: 0}
   m_ShapePathHash: 96897045
   m_Mesh: {fileID: 0}
-  m_InstanceId: 24442
+  m_InstanceId: 24444
 --- !u!1 &6546667260049553376
 GameObject:
   m_ObjectHideFlags: 0
