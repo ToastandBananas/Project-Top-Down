@@ -62,6 +62,9 @@ TextureImporter:
   - first:
       213: 6198765421898481450
     second: Hair
+  - first:
+      213: 5282940703409127588
+    second: Head
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -364,6 +367,27 @@ TextureImporter:
       bones: []
       spriteID: a2fbb3a0f40760650800000000000000
       internalID: 6198765421898481450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Head
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 42
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a0472c5496c05940800000000000000
+      internalID: 5282940703409127588
       vertices: []
       indices: 
       edges: []
