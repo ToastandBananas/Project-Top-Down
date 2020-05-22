@@ -1,0 +1,563 @@
+fileFormatVersion: 2
+guid: 57989a34758357647b7a1a4aa9cc9351
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6334257105260879139
+    second: Greaves
+  - first:
+      213: 4125230028286184151
+    second: Boot_Front_Right
+  - first:
+      213: 6805553040718312289
+    second: Helmet
+  - first:
+      213: -9185345539130877957
+    second: Gauntlet_Right
+  - first:
+      213: -4209056851793857511
+    second: Greaves_Left
+  - first:
+      213: 5712228305600886090
+    second: Greaves_Right
+  - first:
+      213: 5758204438302034063
+    second: Cuirass
+  - first:
+      213: 8757085454425344628
+    second: Boot_Back_Left
+  - first:
+      213: 6670237628905862797
+    second: Boot_Back_Right
+  - first:
+      213: -2015368934175654514
+    second: Helmet
+  - first:
+      213: 2344319963005889192
+    second: Boot_Back_Left
+  - first:
+      213: -698023229687377912
+    second: Boot_Back_Right
+  - first:
+      213: 7324862280198327241
+    second: Quiver
+  - first:
+      213: 2868453405604742721
+    second: Backpack
+  - first:
+      213: -1495898982956204682
+    second: Greaves
+  - first:
+      213: -1713325753174385961
+    second: Boot_Front_Right
+  - first:
+      213: -7881180172106991489
+    second: Gauntlet_Left
+  - first:
+      213: -2615928482061350547
+    second: Gauntlet_Right
+  - first:
+      213: -9038301582077910817
+    second: Greaves_Left
+  - first:
+      213: -1822898404066236678
+    second: Greaves_Right
+  - first:
+      213: -3904666316617662258
+    second: Cuirass
+  - first:
+      213: 3571097429419868541
+    second: Boot_Back_Left
+  - first:
+      213: 3397025800577889607
+    second: Boot_Back_Right
+  - first:
+      213: -4306484723886719691
+    second: Helmet
+  - first:
+      213: -1954165668555751441
+    second: Boot_Back_Left
+  - first:
+      213: 6636081500839805094
+    second: Boot_Back_Right
+  - first:
+      213: 838875094753837504
+    second: Quiver
+  - first:
+      213: -3636531616888394702
+    second: Backpack
+  - first:
+      213: -1495898982956204682
+    second: Boot_Front_Left
+  - first:
+      213: 6805553040718312289
+    second: Gauntlet_Left
+  - first:
+      213: 3571097429419868541
+    second: UpperArm_Left
+  - first:
+      213: 3397025800577889607
+    second: UpperArm_Right
+  - first:
+      213: 6334257105260879139
+    second: Boot_Front_Left
+  - first:
+      213: 8757085454425344628
+    second: UpperArm_Left
+  - first:
+      213: 6670237628905862797
+    second: UpperArm_Right
+  - first:
+      213: -1497530370288011244
+    second: Strap_Left
+  - first:
+      213: 468959803918358528
+    second: Strap_Right
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Boot_Front_Right
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 33
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7da13891e4b0938e0800000000000000
+      internalID: -1713325753174385961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gauntlet_Right
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 33
+        width: 10
+        height: 27
+      alignment: 9
+      pivot: {x: 0.5, y: 0.13}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6908e4c7ea52bbd0800000000000000
+      internalID: -2615928482061350547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Greaves_Left
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 1
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd0256b1990819280800000000000000
+      internalID: -9038301582077910817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Greaves_Right
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 1
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af661044f83c3b6e0800000000000000
+      internalID: -1822898404066236678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cuirass
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 13
+        width: 43
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec0429f3ca6dfc9c0800000000000000
+      internalID: -3904666316617662258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Helmet
+      rect:
+        serializedVersion: 2
+        x: 473
+        y: 11
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53df51ad5fa4c34c0800000000000000
+      internalID: -4306484723886719691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boot_Back_Left
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 5
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fef78759da861e4e0800000000000000
+      internalID: -1954165668555751441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boot_Back_Right
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 5
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a0091e27f8181c50800000000000000
+      internalID: 6636081500839805094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quiver
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 10
+        width: 49
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c189b1447844ab00800000000000000
+      internalID: 838875094753837504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Backpack
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 3
+        width: 33
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23ce3e8f2c1788dc0800000000000000
+      internalID: -3636531616888394702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gauntlet_Left
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 33
+        width: 10
+        height: 27
+      alignment: 9
+      pivot: {x: 0.5, y: 0.13}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1633814ee6e227e50800000000000000
+      internalID: 6805553040718312289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boot_Front_Left
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 33
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32d9113e64dc7e750800000000000000
+      internalID: 6334257105260879139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UpperArm_Left
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 15
+        width: 17
+        height: 20
+      alignment: 9
+      pivot: {x: 0.78, y: 0.184}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47a43c2e2da678970800000000000000
+      internalID: 8757085454425344628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UpperArm_Right
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 15
+        width: 16
+        height: 20
+      alignment: 9
+      pivot: {x: 0.22, y: 0.184}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d86b06678c1719c50800000000000000
+      internalID: 6670237628905862797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Strap_Left
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 10
+        width: 6
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 418bf9eff04b73be0800000000000000
+      internalID: -1497530370288011244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Strap_Right
+      rect:
+        serializedVersion: 2
+        x: 553
+        y: 11
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0089d7ef474128600800000000000000
+      internalID: 468959803918358528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
